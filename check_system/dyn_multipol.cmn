@@ -1,0 +1,57 @@
+*KEEP,dyn_multipol.
+      integer nzp,nzf0,nzfpi,nzfpih,nz,iplot,mode,itherot,nslice,
+     &  iuheli,irecu,imodutype,ITHEMSYM,ITHESYML,ITHESYMD,
+     &  iustep,moduname,modustep,nperi
+
+      parameter (nzp=1000)
+
+      integer nparp
+      parameter (nparp=100)
+      integer nvarp
+      parameter (nvarp=100)
+
+      double precision z0(nzp),
+     &  f0(nzp),
+     &  zpi(nzp),
+     &  fpi(nzp),
+     &  zpih(nzp),
+     &  fpih(nzp),
+     &  y2f0(nzp),
+     &  y2fpi(nzp),
+     &  y2fpih(nzp),
+     &  ws1(nzp),
+     &  ws2(nzp),
+     &  ws3(nzp),
+     &  ws4(nzp),
+     &  phi,z,f,shift,radin,bcr,
+     &  paropt(nparp),var(3,nvarp)
+     &  ,zmin,zmax,dz
+     &  ,xstart,xstop,xianf,xiend,urshift,period,xiustep,xfustep
+     &  ,thegrotu,thegrotl,scalmod
+
+      real xplmin,xplmax,yplmin,yplmax
+
+      character(50) comment
+
+      common/dynmulc/
+     &  moduname,modustep,
+     &  z0,f0,zpi,fpi,zpih,fpih,phi,z,f,shift,radin,bcr,
+     &  y2f0,
+     &  y2fpi,
+     &  y2fpih,ws1,ws2,ws3,ws4,paropt,var,
+     &  xplmin,xplmax,yplmin,yplmax,zmin,zmax,dz,
+     &  nzf0,nzfpi,nzfpih,nz,iplot,mode,itherot,nslice,
+     &  iuheli,irecu,imodutype,ITHEMSYM,ITHESYML,ITHESYMD,
+     &  iustep,nperi
+     &  ,xstart,xstop,xianf,xiend,urshift,period,xiustep,xfustep,
+     &  thegrotu,thegrotl,scalmod,
+     &  comment
+
+      namelist/dynmuln/
+     &  moduname,modustep,xstart,xianf,xiend,xstop,mode,
+     &  iplot,xplmin,xplmax,dz,yplmin,yplmax,
+     &  irecu,iuheli,urshift,period,imodutype,ITHEMSYM,ITHESYML,ITHESYMD,
+     &  itherot,nperi,
+     &  nslice,radin,bcr,xiustep,xfustep,
+     &  thegrotu,thegrotl,scalmod,
+     &  comment

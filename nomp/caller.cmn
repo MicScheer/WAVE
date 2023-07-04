@@ -1,0 +1,4 @@
+*KEEP,caller.
+      integer icaller,ncaller
+      character(2048) caller, comcall
+      common /callc/ icaller,ncaller,caller,comcall

@@ -1,0 +1,14 @@
+*KEEP,ELLIP.
+      DOUBLE PRECISION
+     &  B0ELLIPH,B0ELLIPV,XLENELL,XLELLIP,XKELLIP,PERELLIP,ELLSHFT,
+     &  harmell,parkell,xcenell,elltap,yampell,zampell
+
+      integer nharmell,kelltap
+
+      COMMON /ELLIPC/
+     &  B0ELLIPH,B0ELLIPV,XLENELL,XLELLIP,XKELLIP,PERELLIP,ELLSHFT,
+     &  harmell,parkell,xcenell,elltap,nharmell,kelltap,yampell,zampell
+
+      NAMELIST /ELLIPN/
+     & B0ELLIPH,B0ELLIPV,XLELLIP,PERELLIP,ELLSHFT,harmell,parkell,xcenell
+     &  ,nharmell,elltap,kelltap

@@ -1,0 +1,9 @@
+*KEEP,datetime.
+      integer *8 i_util_date_time
+      real util_time
+      integer idatetime(8), i_util_date, i_util_time
+      character(10) dtday,dttime,dtzone
+      character(14) ch_i_util_date_time
+      common/datec/idatetime,i_util_date,i_util_time,
+     &  i_util_date_time,dtday,dttime,dtzone,
+     &  ch_i_util_date_time

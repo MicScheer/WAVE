@@ -1,0 +1,21 @@
+*KEEP,SPECHIS.
+      INTEGER
+     &          IDSPEC,IDSPECF
+     &         ,IDSPECH,IDSPECV,
+     &         ,IDSPECFH,IDSPECFV,
+     &         ,IDFOLFNZ,IDFOLFNY
+     &          ,IDTRACKZ,IDTRACKY,IDBX,IDBY,IDBZ,IDBETAH
+     &         ,IDBETAV,IDBETAPH,IDBETAPV,IDETA
+     &         ,IDAX,IDAY,IDAZ
+     &         ,IDPHASE
+
+      COMMON/PAWVMX/
+     &         ,IDSPEC,IDSPECF
+     &         ,IDSPECH,IDSPECV
+     &         ,IDSPECFH,IDSPECFV
+     &         ,IDFOLFNZ,IDFOLFNY
+     &          ,IDTRACKZ,IDTRACKY,IDBX,IDBY,IDBZ,IDBETAH
+     &         ,IDBETAV,IDBETAPH,IDBETAPV,IDETA
+     &         ,IDAX,IDAY,IDAZ
+     &         ,IDPHASE
+

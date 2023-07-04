@@ -1,0 +1,338 @@
+*CMZ :  4.00/15 28/03/2022  12.42.45  by  Michael Scheer
+*CMZ :  4.00/11 19/04/2021  17.04.06  by  Michael Scheer
+*CMZ :  3.01/04 21/03/2014  14.02.03  by  Michael Scheer
+*CMZ :  2.70/12 01/03/2013  16.28.23  by  Michael Scheer
+*CMZ :  2.54/04 15/03/2007  11.13.54  by  Michael Scheer
+*CMZ :  2.52/09 29/10/2004  12.30.12  by  Michael Scheer
+*CMZ :  2.41/10 14/08/2002  17.34.01  by  Michael Scheer
+*CMZ :  2.16/04 17/07/2000  15.36.32  by  Michael Scheer
+*CMZ :  2.15/00 28/04/2000  10.32.34  by  Michael Scheer
+*CMZ :  2.13/05 08/02/2000  17.25.04  by  Michael Scheer
+*CMZ :  1.03/06 09/06/98  15.07.21  by  Michael Scheer
+*CMZ : 00.01/08 31/05/95  13.36.58  by  Michael Scheer
+*CMZ : 00.01/02 24/11/94  15.57.38  by  Michael Scheer
+*CMZ : 00.00/04 29/04/94  17.48.44  by  Michael Scheer
+*CMZ : 00.00/00 28/04/94  16.13.59  by  Michael Scheer
+*-- Author : Michael Scheer
+      SUBROUTINE BTABx(XIN,Y,Z,BX,BY,BZ,AX,AY,AZ,XS,XE)
+*KEEP,gplhint.
+!******************************************************************************
+!
+!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
+!      Hahn-Meitner-Platz 1
+!      D-14109 Berlin
+!      Germany
+!
+!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
+!
+! -----------------------------------------------------------------------
+!
+!    This program is free software: you can redistribute it and/or modify
+!    it under the terms of the GNU General Public License as published by
+!    the Free Software Foundation, either version 3 of the License, or
+!    (at your option) any later version.
+!
+!    This program is distributed in the hope that it will be useful,
+!    but WITHOUT ANY WARRANTY; without even the implied warranty of
+!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!    GNU General Public License for more details.
+!
+!    You should have received a copy (wave_gpl.txt) of the GNU General Public
+!    License along with this program.
+!    If not, see <http://www.gnu.org/licenses/>.
+!
+!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
+!    der GNU General Public License, wie von der Free Software Foundation,
+!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
+!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
+!
+!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
+!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
+!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
+!    Siehe die GNU General Public License fuer weitere Details.
+!
+!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
+!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
+!    siehe <http://www.gnu.org/licenses/>.
+!
+!******************************************************************************
+*KEND.
+
+C     BTAB-Version for longitudinal field Bx
+
+      IMPLICIT NONE
+
+      CHARACTER(60) BTABCOM
+
+      INTEGER :: ISYM,ICAL,I,NPOINT,ILOW,IHIGH,IWARN,ieof=0
+
+*KEEP,cmpara.
+      include 'cmpara.cmn'
+*KEEP,contrl.
+      include 'contrl.cmn'
+*KEEP,myfiles.
+      include 'myfiles.cmn'
+*KEEP,b0scglob.
+      include 'b0scglob.cmn'
+*KEND.
+
+      DOUBLE PRECISION XA(NBTABP),BYA(NBTABP),Y2A(NBTABP)
+      DOUBLE PRECISION XSCALE,BYSCALE,X,Y,Z,BX,BY,BZ,XIN,TOTLEN,TOTLEN2
+      DOUBLE PRECISION AL(3),AH(3),AX,AY,AZ
+      DOUBLE PRECISION XS,XE,ZDUM
+
+      integer luntbx
+
+      COMMON/BTABCx/XA,BYA,Y2A
+
+      DATA ILOW/0/
+      DATA IHIGH/0/
+      DATA ISYM/0/,ICAL/0/
+
+      IF (ICAL.NE.1) THEN
+
+        ZDUM=Z
+
+        OPEN (newUNIT=luntbx,FILE = FILETBx,STATUS = 'OLD',FORM = 'FORMATTED')
+
+        if (irbtabzy.gt.0.or.irbtabxyz.gt.0) then
+          READ(luntbx,'(1A60)') BTABCOM
+          READ(luntbx,*) XSCALE,BYSCALE
+          READ(luntbx,*) NPOINT
+        else
+          btabcom=trim(filetbx)
+          xscale=1.0d0
+          if (irbtabzy.eq.-2.or.irbtabxyz.eq.-2) xscale=0.001d0
+          byscale=1.0d0
+          npoint=0
+          do while (ieof.eq.0)
+            call util_skip_comment_end(luntbx,ieof)
+            read(luntbx,*)x,by
+            if (ieof.ne.0) then
+              rewind(luntbz)
+              exit
+            endif
+            npoint=npoint+1
+          enddo
+        endif
+
+        IF (NPOINT.GT.NBTABP.OR.-2*NPOINT-1.GT.NBTABP) THEN
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'*** ERROR IN BTABX ***'
+          WRITE(LUNGFO,*)'DIMENSION EXCEEDED, INCREASE NBTABP***'
+          WRITE(LUNGFO,*)
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN BTABX ***'
+          WRITE(6,*)'DIMENSION EXCEEDED, INCREASE NBTABP***'
+          WRITE(6,*)
+          STOP
+        ENDIF
+
+        IF (ABS(NPOINT).LT.2) THEN
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'*** ERROR IN BTABX ***'
+          WRITE(LUNGFO,*)
+     &      'LESS THAN TWO POINTS ON DATA FILE OF MAGNETIC FIELD'
+          WRITE(LUNGFO,*)
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN BTABX ***'
+          WRITE(6,*)'LESS THAN TWO POINTS ON DATA FILE OF MAGNETIC FIELD'
+          WRITE(6,*)
+        ENDIF
+
+        IF (NPOINT.GT.0.AND.NPOINT.LT.3) THEN
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'*** ERROR IN BTABX ***'
+          WRITE(LUNGFO,*)
+     &      'LESS THAN THREE POINTS ON DATA FILE OF MAGNETIC FIELD'
+          WRITE(LUNGFO,*)
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN BTABX ***'
+          WRITE(6,*)'LESS THAN THREE POINTS ON DATA FILE OF MAGNETIC FIELD'
+          WRITE(6,*)
+        ENDIF
+
+        IF (NPOINT.LT.0) THEN
+          ISYM=1
+          NPOINT=-NPOINT
+        ENDIF
+
+        DO I=1,NPOINT
+          READ(luntbx,*)XA(I),BYA(I)
+          XA(I)=XA(I)*XSCALE-XSHBTAB
+          BYA(I)=BYA(I)*BYSCALE
+        END DO
+
+        CLOSE(luntbx)
+
+        call util_sort_func(npoint,xa,bya)
+
+C--- SYMMETRISIEREN
+
+        IF (ISYM.EQ.1) THEN
+
+          IF(XA(1).LT.0.) THEN
+            WRITE(LUNGFO,*)
+            WRITE(LUNGFO,*)'*** ERROR IN BTABZ ***'
+            WRITE(LUNGFO,*)'FIRST X-VALUE ON DATA FILE LOWER ZERO'
+            WRITE(LUNGFO,*)'SYMMETRY OPTION REQUIRES POSITIV X-VALUES'
+            WRITE(LUNGFO,*)
+            WRITE(LUNGFO,*)
+            WRITE(6,*)
+            WRITE(6,*)'*** ERROR IN BTABZ ***'
+            WRITE(6,*)'FIRST X-VALUE ON DATA FILE LOWER ZERO'
+            WRITE(6,*)'SYMMETRY OPTION REQUIRES POSITIV X-VALUES'
+            WRITE(6,*)
+            STOP
+          ENDIF !XA
+
+          IF(XA(1).NE.0) THEN
+
+            DO I=1,NPOINT        !SHIFT
+              XA(I+NPOINT)= XA(I)
+              BYA(I+NPOINT)=BYA(I)
+            END DO
+
+            DO I=1,NPOINT
+              XA(I)=-XA(2*NPOINT-I+1)
+              BYA(I)=-BYA(2*NPOINT-I+1)
+            END DO
+
+            NPOINT=2*NPOINT
+
+          ELSE
+
+            DO I=1,NPOINT        !SHIFT
+              XA(2*NPOINT-I)= XA(NPOINT-I+1)
+              BYA(2*NPOINT-I)=BYA(NPOINT-I+1)
+            END DO
+
+            DO I=1,NPOINT-1
+              XA(I) =-XA(2*NPOINT-I)
+              BYA(I)=-BYA(2*NPOINT-I)
+            END DO
+
+            NPOINT=2*NPOINT-1
+
+          ENDIF
+
+        ENDIF
+
+        TOTLEN=DABS(XA(NPOINT)-XA(1))
+        TOTLEN2=TOTLEN/2.D0
+        DEVLEN=TOTLEN
+        DEVLEN2=TOTLEN2
+
+        WRITE (LUNGFO,*)
+        WRITE (LUNGFO,*)'     SR BTABX: Magnetic field data read from file'
+        WRITE (LUNGFO,*)'     ',FILETBx
+        WRITE (LUNGFO,*)
+        WRITE (LUNGFO,*)'     BTABX comment:',BTABCOM
+        WRITE (LUNGFO,*)
+        WRITE (LUNGFO,*)'     Length of device:     ',TOTLEN
+        WRITE (LUNGFO,*)'     Half length of device:',TOTLEN2
+        WRITE (LUNGFO,*)
+
+C060793  CALL SPLINETB(XA,BYA,NPOINT,2.D30,2.D30,Y2A)
+        CALL SPLINETB(XA,BYA,NPOINT,0.D0,0.D0,Y2A)
+
+        IF (XS.EQ.9999.)  XSTART=XA(1)
+        IF (XE.EQ.9999.)  XSTOP=XA(NPOINT)
+
+        ICAL=1
+
+      ENDIF !(ICAL)
+
+      IF(Y.NE.0.) THEN
+         WRITE(LUNGFO,*)
+         WRITE(LUNGFO,*)'*** ERROR IN BTABZ ***'
+         WRITE(LUNGFO,*)'Y-COORDINATE OF ELECTRON NOT ZERO'
+         WRITE(LUNGFO,*)
+         WRITE(6,*)
+         WRITE(6,*)'*** ERROR IN BTABZ ***'
+         WRITE(6,*)'Y-COORDINATE OF ELECTRON NOT ZERO'
+         WRITE(6,*)
+         STOP
+      ENDIF
+
+      IF (XIN.EQ.9999.) THEN
+          X=XSTART
+      ELSE
+          X=XIN
+      ENDIF
+
+      IF(X.LT.XA(1)-1./MYINUM.OR.X.GT.XA(NPOINT)+1./MYINUM) THEN
+        IF (IWARN.EQ.0) THEN
+         WRITE(LUNGFO,*)
+         WRITE(LUNGFO,*)'*** WARNING IN BTABZ ***'
+         WRITE(LUNGFO,*)'X MORE THAN ONE STEP OUT OF TABLE'
+         WRITE(LUNGFO,*)'X:',X
+         WRITE(LUNGFO,*)
+         WRITE(6,*)
+         WRITE(6,*)'*** WARNING IN BTABZ ***'
+         WRITE(6,*)'X MORE THAN ONE STEP OUT OF TABLE'
+         WRITE(6,*)'X:',X
+         WRITE(6,*)
+         IWARN=1
+       ENDIF
+       BX=0.0D0
+       BY=0.0D0
+       BZ=0.0D0
+       AX=0.0D0
+       AY=0.0D0
+       AZ=0.0D0
+       RETURN
+      ENDIF
+
+      IF(X.LT.XA(1)) THEN
+          IF (ILOW.NE.1) THEN
+         CALL PARABEL(XA(1),BYA(1),XA(2),BYA(2),XA(3),BYA(3),AL)
+          ILOW=1
+          ENDIF   ! ILOW
+
+          Bx=0.
+          By=0.
+          Bz=AL(1)+AL(2)*X+AL(3)*X*X
+
+          AX=-0.5*Bz*y
+          Ay= 0.5*Bz*x
+          Az= 0.0
+
+          RETURN
+      ENDIF !X.LT.XA(1)
+
+      IF(X.GT.XA(NPOINT)) THEN
+
+          IF (IHIGH.NE.1) THEN
+
+         CALL PARABEL(XA(NPOINT-2),BYA(NPOINT-2)
+     &                      ,XA(NPOINT-1),BYA(NPOINT-1)
+     &                      ,XA(NPOINT)  ,BYA(NPOINT)  ,AH)
+
+          IHIGH=1
+          ENDIF   ! IHIGH
+
+          By=0.
+          Bx=0.
+          Bz=AH(1)+AH(2)*X+AH(3)*X*X
+
+          AX=-0.5*Bz*y
+          Ay= 0.5*Bz*x
+          Az= 0.0
+
+          RETURN
+
+      ENDIF !X.GT.XA(NPOINT)
+
+
+      CALL SPLINTBx(NPOINT,X,Bx)
+
+      Bz=0.
+      By=0.
+
+      AX=-0.5*Bz*y
+      Ay= 0.5*Bz*x
+      Az= 0.0
+
+      RETURN
+      END

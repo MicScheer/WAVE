@@ -1,0 +1,24 @@
+*KEEP,waveenv.
+      integer, parameter :: maxinstp=100
+      integer iwstat(maxinstp),iwinstance,nwinstances,nwgood
+      integer kpython
+
+      character(32) chplatform, chrmtree, chrmdir,chrmfile,chmkdir,chcpfile,
+     &  chcptree,chmvfile
+      character(1024) chpythonpath,chhostname,chcompiler,chcwd,chwavepath,
+     &  chpythoncom,chuserhome,chwavehome,chwavedir,chuser,chwstage,
+     &  chpythonhome
+      character chpathsep
+
+      common/waveenvc/
+     &  iwstat,iwinstance,nwinstances,nwgood,kpython,
+     &  chplatform, chrmtree, chrmdir,chrmfile,chmkdir,chcpfile,
+     &  chcptree,chmvfile,chpythonpath,chhostname,chcompiler,chcwd,chwavepath,
+     &  chpythoncom,chuserhome,chwavehome,chwavedir,chuser,chwstage,
+     &  chpythonhome,chpathsep
+
+
+      namelist/platformn/ chpythonhome,
+     &  chplatform, chrmtree, chrmdir,chrmfile,chmkdir,chcpfile,chcptree,
+     &  chmvfile,chpathsep,chwavepath,chpythoncom
+

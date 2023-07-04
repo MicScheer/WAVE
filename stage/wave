@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# +PATCH,//WAVE/SHELL
+# +DECK,wave,T=SHELL.
+
+. $WAVE/shell/set_wave_environment.sh
+
+rm -f wave.out.bck 2>/dev/null
+cp wave.out wave.out.bck 2>/dev/null
+
+rm -f WAVE.mhb.bck 2>/dev/null
+cp WAVE.mhb WAVE.mhb.bck 2>/dev/null
+
+
+$WAVE/bin/wave.exe $1
+

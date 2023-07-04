@@ -1,0 +1,11 @@
+*KEEP,ompmod.
+      module ompmod
+
+c +PATCH,//WAVE/MOD
+c +KEEP,ompmod.
+
+      integer :: iomp=1
+      integer :: mmaxthreads=1
+      integer, save :: kompthread=0
+
+      end module ompmod

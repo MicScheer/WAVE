@@ -1,0 +1,66 @@
+*KEEP,uradcom.
+      integer nfour,nfourwls,ifour0,iprntf,maxfoumagp,nfoumags,nfoumagcp
+      parameter (maxfoumagp=100,nfoumagcp=2**10)
+
+      double precision
+     &  xfoubounds(5,maxfoumagp),foumags(nfoumagcp/2+3,maxfoumagp)
+     &  ,fouentr,fouexit,xshbfour
+
+c      character(2048) chfoumags(maxfoumagp)
+
+      integer kmonopole,intpolbmap,kbmap,kmagseq,kbmapu,kmagsequ
+
+      double precision xlenfour,xbhomf,dbhomf,emom
+      character(2048) fmagseq
+
+      common/cfourier/
+     &  xlenfour,xbhomf,dbhomf,emom
+     &  ,xfoubounds,foumags
+     &  ,fouentr,fouexit,xshbfour
+     &  ,kmagseq,fmagseq
+     &  ,nfour,nfourwls,ifour0,iprntf,nfoumags,kmonopole
+
+      integer iahwfour,nhhalbasy
+
+      double precision b0scale,hshift,vshift
+
+      integer khalbasy
+
+      common/bscalec/ b0scale,hshift,vshift,intpolbmap
+
+      double precision b0halbasy,
+     &  xlhalbasy,ylhalbasy,zlhalbasy,
+     &  xkhalbasy,ykhalbasy,zkhalbasy,
+     &  fasym,ahwpol,rhalbasy,xcenhal,hhalbasy,pkhalbasy,
+     &  ugamma,uenergy,ucur
+
+      common/uradhalbasym/
+     &  b0halbasy,
+     &  xlhalbasy,ylhalbasy,zlhalbasy,
+     &  xkhalbasy,ykhalbasy,zkhalbasy,
+     &  fasym,ahwpol,rhalbasy,xcenhal,hhalbasy,pkhalbasy,
+     &  ugamma,uenergy,ucur,
+     &  khalbasy,iahwfour
+
+      integer nmgsqp,mmag,irfilf,iwfilf
+      parameter(nmgsqp=10000)
+
+      character(3) ctyp(nmgsqp)
+
+      double precision pmag(13,nmgsqp),coz(2,nmgsqp+1)
+     &  ,corr(nmgsqp),uebounds(2,nmgsqp),
+     &  dibounds(2,nmgsqp),
+     &  dhbounds(2,nmgsqp),
+     &  qfbounds(2,nmgsqp),
+     &  sxbounds(2,nmgsqp),
+     &  bmsqbounds(2)
+
+      common/uradmgsqc/pmag,coz,corr,dibounds,dhbounds,
+     &  uebounds,qfbounds,sxbounds,bmsqbounds,mmag,irfilf,iwfilf,
+     &  kbmapu,kmagsequ,
+     &  ctyp
+
+      namelist/ufield/nfour,nfourwls,ifour0,xlenfour,dbhomf,iprntf,irfilf,
+     &  b0halbasy,xlhalbasy,ylhalbasy,hhalbasy,pkhalbasy,
+     &  zlhalbasy,fasym,ahwpol,iahwfour,xcenhal,nhhalbasy,
+     &  b0scale,hshift,vshift,kmonopole,intpolbmap,kbmap,kmagseq,fmagseq

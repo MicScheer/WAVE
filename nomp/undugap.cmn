@@ -1,0 +1,20 @@
+*KEEP,undugap.
+      INTEGER nhundugap
+
+      DOUBLE PRECISION undufullgap,
+     &  XLundugap,YLundugap,ZLundugap,
+     &  XKundugap,YKundugap,ZKundugap,
+     &  undugappol,Rundugap,xcenundugap,hundugap,pkundugap,
+     &  undugapa,undugapb,undugapc
+
+      COMMON/undugapM/
+     &  undufullgap,
+     &  XLundugap,YLundugap,ZLundugap,
+     &  XKundugap,YKundugap,ZKundugap,
+     &  undugappol,Rundugap,xcenundugap,hundugap,pkundugap,
+     &  undugapa,undugapb,undugapc,
+     &  nhundugap
+
+      NAMELIST/undugapn/undufullgap,XLundugap,YLundugap,
+     &  ZLundugap,undugappol,xcenundugap,
+     &  undugapa,undugapb,undugapc

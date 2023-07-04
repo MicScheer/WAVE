@@ -1,0 +1,13 @@
+*KEEP,wobsvmod.
+      module wobsvmod
+
+      double precision, dimension (:,:), allocatable :: obsv_th
+
+      double precision, dimension (:), allocatable ::
+     &  x_th,f_th,spec_th,
+     &  wobsv1_th,wobsv2_th,wobsv3_th,wobsv4_th,wobsv5_th,wobsv6_th,wobsv7_th
+
+!$OMP THREADPRIVATE(wobsv1_th,wobsv2_th,wobsv3_th,wobsv4_th,wobsv5_th,wobsv6_th,wobsv7_th,
+!$OMP&       spec_th,x_th,f_th)
+
+      end module wobsvmod

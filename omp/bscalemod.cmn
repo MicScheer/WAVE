@@ -1,0 +1,9 @@
+*KEEP,bscalemod.
+      module mrad_bscalemod
+
+      double precision, save :: bxscale_m=1.0, byscale_m=1.0, bzscale_m=1.0
+
+      double precision, save :: brotmat_m(3,3)=reshape([
+     &  1.,0.,0.,0.,1.,0.,0.,0.,1.],[3,3])
+
+      end module mrad_bscalemod

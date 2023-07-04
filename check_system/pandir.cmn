@@ -1,0 +1,20 @@
+*KEEP,PANDIR.
+      CHARACTER(32) PANTIT
+      INTEGER LPANB(NXPANP,NYPANP)
+
+      REAL*4   XPAN(NXPANP,NYPANP),YPAN(NXPANP,NYPANP),
+     &         XPANR(NXPANP,NYPANP),YPANR(NXPANP,NYPANP),
+     &         BXPAN(NXPANP,NYPANP),BYPAN(NXPANP,NYPANP),
+     &         BXPANR(NXPANP,NYPANP),BYPANR(NXPANP,NYPANP),
+     &         BPANMX,BPANSC
+
+      COMMON/PANDIR/
+     &             XPAN,YPAN,XPANR,YPANR
+     &            ,BXPAN,BYPAN,BXPANR,BYPANR
+     &            ,BPANMX,BPANSC
+     &            ,KMIN,KTOP
+     &            ,LMIN,LTOP,KTOPR,LTOPR
+     &            ,LPANB
+     &            ,PANTIT
+
+      NAMELIST/PANDIR/BPANMX,BPANSC

@@ -1,0 +1,241 @@
+* +PATCH,//WAVE/WKUMAC
+* +DECK,wave_export_standalone_incl,T=KUMAC.
+
+macro wave_export_standalone_incl
+
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+mess ''
+
+sel windows
+sel -windows
+sel linux
+
+exec dpython
+cd //waves/python
+seq .
+seq //waves/python
+set $WAVE_INCL/python/*.py -f
+cx waves waveplot m_hbook waveshop
+
+exec dwav
+
+set text -lan
+set $WAVE_INCL/doc/*.txt -f
+cx //wavedoc/text/readme
+
+set $WAVE_INCL/doc/wave.example -f
+cx //wave/input/wave
+
+mess Ggf. out_wave_system_check_incl.kumac ausfuehren!
+
+sel omp
+sel newbunch
+
+sel nocern
+sel noroot
+sel nohbook
+sel mshplt
+
+sel gplhint
+
+set F77 -lan
+tabs -f
+
+*********
+
+she rm $WAVE_INCL/mshcern/*.f
+she rm $WAVE_INCL/mshcern/*.o
+
+file ~/mshcern/cmz/mshcern
+
+seq .
+set $WAVE_INCL/mshcern/*.f -f
+cx //mshcern/for/aaa_license //mshcern/for
+release mshcern
+
+*********
+
+she rm $WAVE_INCL/mshplt/*.f
+she rm $WAVE_INCL/mshplt/*.o
+set $WAVE_INCL/mshplt/*.f -f
+
+file ~/mshplt/cmz/mshplt
+seq .
+cx //mshplt/for/aaa_license //mshplt/for //mshplt/mplot
+seq -f $WAVE_INCL/mshplt/*.cmn
+she 'rm $WAVE_INCL/mshplt/mshpltversion.cmn'
+she 'rm $WAVE_INCL/mshplt/mshpltincl.cmn'
+she 'rm $WAVE_INCL/mshplt/mplotincl.cmn'
+release //mshplt
+
+*********
+
+exec dwav
+
+buff .
+seq .
+
+she rm $WAVE_INCL/user/mod/*.f
+she rm $WAVE_INCL/user/mod/*.o
+
+set $WAVE_INCL/user/mod/*.f -f
+cx /usermod/usermodtmpl
+
+buff .
+seq .
+
+buff //WAVE/USER
+
+* special WAVE version
+*buff //wave/for/uradfield
+
+she rm $WAVE_INCL/user/*.f
+she rm $WAVE_INCL/user/*.o
+she rm $WAVE_INCL/user/*.mod
+
+set $WAVE_INCL/user/*.f -f
+cx -b
+
+seq -f $WAVE_INCL/user/*.cmn
+
+seq .
+seq /inclcmn
+cx -b
+
+*********
+
+seq .
+
+she rm $WAVE_INCL/omp/mod/*.f
+she rm $WAVE_INCL/omp/mod/*.o
+
+set $WAVE_INCL/omp/mod/*.f -f
+cx //wave/modomp //wave/uradmod/uradphasemod _
+//wave/modules/phasef90m //wave/modules/phasewsf90m
+
+she rm $WAVE_INCL/omp/*.f
+she rm $WAVE_INCL/omp/*.o
+she rm $WAVE_INCL/omp/*.mod
+
+set $WAVE_INCL/omp/*.f -f
+cx //wave/omp _
+//wave/uradphase/URAD_FIELD_INI _
+//wave/uradphase/URAD_AMPREP _
+//wave/uradphase/URAD_E_B_FIELD _
+//wave/urad/uradphoton _
+//wave/urad/uradestep _
+//wave/urad/uradrndm _
+//wave/uradphase/URAD_PHASE
+
+seq -f $WAVE_INCL/omp/*.cmn
+
+seq .
+seq /inclcmn
+cx //wave/omp
+
+*********
+
+exec dwav
+exec dgfor
+
+she rm $WAVE_INCL/nomp/mod/*.f
+she rm $WAVE_INCL/nomp/mod/*.o
+
+set $WAVE_INCL/nomp/mod/*.f -f
+cx //wave/modules //wave/uradmod/uradphasemod
+
+buff .
+
+buff //wave/for
+
+buff -//WAVE/FOR/aaaaaa
+buff -//WAVE/FOR/aaaaab
+buff -//WAVE/FOR/modules
+buff -//WAVE/FOR/bextern
+buff -//WAVE/FOR/uname
+buff -//WAVE/FOR/ustep
+buff -//WAVE/FOR/uout
+
+seq .
+
+she rm $WAVE_INCL/nomp/*.f
+she rm $WAVE_INCL/nomp/*.o
+she rm $WAVE_INCL/nomp/*.mod
+
+set $WAVE_INCL/nomp/*.f -f
+cx -b
+
+seq -f $WAVE_INCL/nomp/*.cmn
+
+seq .
+seq /cmnn
+seq -f $WAVE_INCL/nomp/*.cmn
+
+seq .
+seq /inclcmn
+cx -b
+
+*********
+
+exec out_mh_book_incl
+
+*********
+
+exec dwav
+exec dgfor
+exec dmain
+
+she rm $WAVE_INCL/main/mod/*.f
+she rm $WAVE_INCL/main/mod/*.o
+
+set $WAVE_INCL/main/mod/*.f -f
+cx /modules/clustermod
+
+she rm $WAVE_INCL/main/*.f
+she rm $WAVE_INCL/main/*.o
+she rm $WAVE_INCL/main/*.mod
+
+seq .
+set $WAVE_INCL/main/*.f -f
+cx wave_main
+seq -f $WAVE_INCL/main/*.cmn
+
+seq .
+seq /inclcmn
+set $WAVE_INCL/main/*.f -f
+cx wave_main
+
+*********
+
+exec outin
+
+exec dkumac
+*exec domp
+*exec dshell
+
+exitm

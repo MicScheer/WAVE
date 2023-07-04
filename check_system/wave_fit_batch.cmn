@@ -1,0 +1,11 @@
+*KEEP,wave_fit_batch.
+
+      integer nvarp,nvar,maxloop
+      parameter (nvarp=100)
+
+      double precision
+     &  chi2,chi2min,
+     &  varfin(nvarp),var(nvarp),paropt(nvarp),weight(nvarp)
+
+      common/fncc/
+     &  chi2,chi2min,varfin,var,paropt,weight,nvar,maxloop

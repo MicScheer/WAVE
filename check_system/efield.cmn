@@ -1,0 +1,5 @@
+*KEEP,efield.
+      double precision efieldx,efieldy,efieldz
+      integer kefield
+      common/efieldc/efieldx,efieldy,efieldz,
+     &  kefield

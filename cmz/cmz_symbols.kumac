@@ -1,0 +1,76 @@
+* +PATCH,//STANDARD/SYSTEM
+* +DECK,cmz_symbols,T=KUMAC.
+
+ali/cre g 'gdir' c
+ali/cre pa 'she pawX11' c
+ali/cre cxt 'exec cxbuft'
+ali/cre f 'exec fdir.kumac' c
+ali/cre fwave 'file ~/wav/cmz/wave' c
+ali/cre fwaves 'file ~/waves/cmz/waves' c
+ali/cre fpoly 'file ~/polymag/polymag' c
+ali/cre futil 'file ~/util/util' c
+ali/cre fshimmy 'file ~/shimmy/shimmy' c
+ali/cre fcom 'file ~/com/com' c
+ali/cre fpaw 'file ~/paw/paw' c
+ali/cre fperl 'file ~/perl/perl' c
+
+ali/cre elopaw 'k/edi pawlogon.kumac'
+*ali/cre e 'exec edila' c
+ali/cre el 'exec editlast' c
+ali/cre elx 'exec elx.kumac' c
+ali/cre exl 'exec elx.kumac' c
+ali/cre bl 'exec bufflast' c
+ali/cre cl 'exec cxlast' c
+ali/cre dxl 'exec dxlast' c
+ali/cre cxl 'exec cxlast' c
+ali/cre cxlr 'exec cxlastrun.kumac' c
+ali/cre ccl 'exec compilelast' c
+ali/cre cll 'exec cliblast' c
+ali/cre kei 'k/edi ei.kumac' c
+ali/cre ci 'cc decki' c
+ali/cre di 'diff decki' c
+ali/cre type 'read' c
+ali/cre ty 'read' c
+ali/cre typ 'read' c
+*ali/cre forlin 'she ~/com/forlin.sh' c
+*ali/cre forlind 'she ~/com/forlind.sh' c
+ali/cre forlin 'she perl ~/perl/forlin.pl' c
+ali/cre forlind 'she perl ~/perl/forlind.pl' c
+ali/cre rde 'she ddd --debugger idb -geometry +200' c
+
+alias/create esym 'k/edit ~/cmz/cmz_symbols.kumac' c
+alias/create ssym 'exec ~/cmz/cmz_symbols.kumac' c
+
+alias/create sf77 'set f77 -lan' c
+alias/create skumac 'set kumac -lan' c
+alias/create shs 'alias/lis' c
+ALIAS/CREATE S 'grep -i'
+ALIAS/CREATE ELO 'k/edit cmzlogon.kumac' c
+ALIAS/CREATE BUFT 'LMOD * TODAY'
+ALIAS/CREATE BUFY 'LMOD * YESTER'
+ALIAS/CREATE LMODL 'LMOD * LAST'
+
+ALIAS/CREATE SDIFF 'shell tkdiff /tmp/cmfile2.dat.$pid /tmp/cmfile1.dat.$pid &' C
+ALIAS/CREATE dif 'exec dif' C
+ALIAS/CREATE ldif 'exec ldif.kumac' C
+ALIAS/CREATE diff 'exec ldif.kumac' C
+ALIAS/CREATE diffl 'exec difflast.kumac' C
+ALIAS/CREATE dl 'exec difflast.kumac' C
+ALIAS/CREATE CM 'MESS *** CMZ LAEUFT SCHON !! ***'
+
+ALIAS/CREATE EB 'edi -b'
+ALIAS/CREATE CB 'CC -B'
+ALIAS/CREATE LB 'CLIB -B'
+ALIAS/CREATE OB 'OUT -B'
+
+alias/create eout 'k/edi out' c
+alias/create kedi 'k/edi' c
+alias/create ddat 'exec ddata' c
+alias/create dpy 'exec dpython' c
+
+ali/cre edi 'exec mshedit' c
+ali/cre e 'exec mshedit' c
+
+host_e '~/perl/cmzedit.pl'
+
+exitm

@@ -1,0 +1,22 @@
+*KEEP,bmapmod.
+      module mrad_bmapmod
+
+      double precision, dimension (:,:), allocatable,save :: bmappe
+
+      double precision,save :: bmxmin=1.0d99,bmxmax=-1.0d99
+      double precision,save :: bmymin=1.0d99,bmymax=-1.0d99
+      double precision,save :: bmzmin=1.0d99,bmzmax=-1.0d99
+
+      double precision,save :: bmbxmin=1.0d99,bmbxmax=-1.0d99
+      double precision,save :: bmbymin=1.0d99,bmbymax=-1.0d99
+      double precision,save :: bmbzmin=1.0d99,bmbzmax=-1.0d99
+
+      double precision,save :: scalex=1.0d0, scaley=1.0d0, scalez=1.0d0
+      double precision,save :: scalebx=1.0d0, scaleby=1.0d0, scalebz=1.0d0
+
+      double precision, save :: bmapdy,bmapdz
+
+      integer,save :: mbmapini_m=0, intpolbmap=-1, kbmap_m=1, kalloc_bmap_m=0
+      integer, save :: ntot,nx,ny,nz,nyz
+
+      end module mrad_bmapmod

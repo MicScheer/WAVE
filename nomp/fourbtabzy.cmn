@@ -1,0 +1,13 @@
+*KEEP,fourbtabzy.
+      module fbtabzymod
+
+      integer :: nfourzy,ifourzy0,klinearfbt,
+     &  nxbyfbt=0,nxbzfbt=0,inifbt=1,iallofbt=0,nfbtabc=0,nfbtabcz=0
+
+      double precision fourzsh,fourysh
+      double precision, dimension(:), allocatable :: xbyfbt,byfbt,xbzfbt,bzfbt
+
+      namelist/fbtabzyn/
+     &  fourzsh,fourysh,nfourzy,ifourzy0,klinearfbt
+
+      end module

@@ -1,0 +1,6 @@
+*KEEP,f1k.
+      module f1k
+
+      double precision f1kk(1000),f1kf(1000)
+
+      end module

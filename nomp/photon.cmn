@@ -1,0 +1,12 @@
+*KEEP,photon.
+      integer ihphotons, nidphotons,nbing1,idg1,iphmode,nqfphotons
+
+      double precision pphoton(3),dpphoton(3),
+     &  eecmaxg1,qfrms,qfmean
+
+      common/photonc/
+     &  pphoton,dpphoton,eecmaxg1,qfrms,qfmean,
+     &  nbing1,iphmode,nqfphotons,ihphotons,nidphotons,idg1
+
+      namelist/photonn/nbing1,eecmaxg1,ihphotons,iphmode
+

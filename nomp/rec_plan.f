@@ -1,0 +1,1341 @@
+*CMZ :  4.00/15 27/04/2022  08.36.21  by  Michael Scheer
+*CMZ :  3.06/00 15/02/2019  17.36.39  by  Michael Scheer
+*CMZ :  3.03/02 04/03/2016  18.30.51  by  Michael Scheer
+*CMZ :  3.02/03 03/11/2014  12.08.57  by  Michael Scheer
+*CMZ :  2.41/13 03/09/2002  14.04.33  by  Michael Scheer
+*CMZ :  2.41/12 22/08/2002  10.53.09  by  Michael Scheer
+*CMZ :  2.41/11 21/08/2002  10.56.44  by  Michael Scheer
+*CMZ :  2.16/04 20/06/2000  17.34.04  by  Michael Scheer
+*CMZ :  2.16/00 24/05/2000  18.51.09  by  Michael Scheer
+*CMZ :  2.15/00 19/05/2000  10.21.20  by  Michael Scheer
+*CMZ :  2.14/00 18/04/2000  11.44.03  by  Michael Scheer
+*-- Author : Michael Scheer
+      SUBROUTINE REC_PLAN(IUREC,GRARAD)
+*KEEP,gplhint.
+!******************************************************************************
+!
+!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
+!      Hahn-Meitner-Platz 1
+!      D-14109 Berlin
+!      Germany
+!
+!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
+!
+! -----------------------------------------------------------------------
+!
+!    This program is free software: you can redistribute it and/or modify
+!    it under the terms of the GNU General Public License as published by
+!    the Free Software Foundation, either version 3 of the License, or
+!    (at your option) any later version.
+!
+!    This program is distributed in the hope that it will be useful,
+!    but WITHOUT ANY WARRANTY; without even the implied warranty of
+!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!    GNU General Public License for more details.
+!
+!    You should have received a copy (wave_gpl.txt) of the GNU General Public
+!    License along with this program.
+!    If not, see <http://www.gnu.org/licenses/>.
+!
+!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
+!    der GNU General Public License, wie von der Free Software Foundation,
+!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
+!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
+!
+!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
+!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
+!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
+!    Siehe die GNU General Public License fuer weitere Details.
+!
+!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
+!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
+!    siehe <http://www.gnu.org/licenses/>.
+!
+!******************************************************************************
+*KEND.
+
+C EACH UNDULATOR POLE CONSIST OF 3 UPPER AND 3 LOWER MAGNETS
+C
+C     HALF LENGTH | FULL LENGTH | HALF LENGTH
+C       -----------   -----------   -----------
+C     HALF LENGTH | FULL LENGTH | HALF LENGTH
+C
+C THE ENDPOLES CONSISTS OF A FULL PERIOD. THE TWO ENDPOLES HAVE OPPOSITE FIELD.
+
+      IMPLICIT NONE
+
+*KEEP,cmpara.
+      include 'cmpara.cmn'
+*KEEP,klotz.
+      include 'klotz.cmn'
+*KEEP,uservar.
+      include 'uservar.cmn'
+*KEND.
+
+      INTEGER IPER,IUREC,IMAGTOTO,I,IMAGTOTS,NPOLMAIN,NPOLTOT,J,NMAGNETS
+
+      DOUBLE PRECISION RECEND,TOTLEN,TOTLEN2,GRARAD,DX1,BDIFF
+     &  ,BCORRI,BCORRE,UBCSUM,UBCSUM2,BCSIGN,B0,B0V
+     &  ,XLENS(NKLOTZ),YLENS(NKLOTZ),ZLENS(NKLOTZ)
+     &  ,DXS(NKLOTZ),DYS(NKLOTZ),DZS(NKLOTZ)
+     &  ,THETAS(NKLOTZ),PHIS(NKLOTZ),BCS(NKLOTZ),ANGERR
+
+      REAL xran(NKLOTZ),YRAN(NKLOTZ),XWALK,XCORR,rr(2)
+
+      IMAGTOTS=IMAGTOT
+      UBCSUM=0.D0
+      UBCSUM2=0.D0
+
+C--- UPPER AND LOWER POLES ARE CONSIDERED AS ONE!! POLE
+
+      NMAGNETS=(KRECPER(IUREC)+2)*12
+      NPOLMAIN=2*KRECPER(IUREC)
+      NPOLTOT=NPOLMAIN+2*2
+
+      TOTLEN=(2+KRECPER(IUREC))*4.D0*URECLX(IUREC)
+      TOTLEN2=TOTLEN/2.D0
+      RECEND=URECCX(IUREC)-TOTLEN2
+
+C--- FIRST ENDPOLE{
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=270.D0*GRARAD
+      PHI(IMAGTOT)=0.D0*GRARAD
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DX1=DX(IMAGTOT)
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)/4.D0
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=90.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)/4.D0
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=0.D0
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)/4.D0
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=0.D0
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)/4.D0
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=90.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)/4.D0
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=270.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)/4.D0
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=90.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)*0.75D0
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=270.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)*0.75D0
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=180.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)*0.75D0
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=180.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)*0.75D0
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=270.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)*0.75D0
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=90.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=-URECBC(IUREC)*0.75D0
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+C--- FIRST ENDPOLE}
+
+      IMAGTOTO=IMAGTOT
+      DO IPER=1,KRECPER(IUREC)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+
+        XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=90.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+
+        dmupar(IMAGTOT)=URECmupar(IUREC)
+        dmuper(IMAGTOT)=URECmuper(IUREC)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+        XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=270.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+
+        dmupar(IMAGTOT)=URECmupar(IUREC)
+        dmuper(IMAGTOT)=URECmuper(IUREC)
+
+        RECEND=RECEND+XLEN(IMAGTOT)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+        XLEN(IMAGTOT)=URECLX(IUREC)
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=180.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+
+        dmupar(IMAGTOT)=URECmupar(IUREC)
+        dmuper(IMAGTOT)=URECmuper(IUREC)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+        XLEN(IMAGTOT)=URECLX(IUREC)
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=180.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+
+        dmupar(IMAGTOT)=URECmupar(IUREC)
+        dmuper(IMAGTOT)=URECmuper(IUREC)
+
+        RECEND=RECEND+XLEN(IMAGTOT)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+        XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=270.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+
+        dmupar(IMAGTOT)=URECmupar(IUREC)
+        dmuper(IMAGTOT)=URECmuper(IUREC)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+        XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=90.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+        RECEND=RECEND+XLEN(IMAGTOT)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+        XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=270.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+
+        dmupar(IMAGTOT)=URECmupar(IUREC)
+        dmuper(IMAGTOT)=URECmuper(IUREC)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+        XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=90.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+
+        dmupar(IMAGTOT)=URECmupar(IUREC)
+        dmuper(IMAGTOT)=URECmuper(IUREC)
+
+        RECEND=RECEND+XLEN(IMAGTOT)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+        XLEN(IMAGTOT)=URECLX(IUREC)
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=0.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+
+        dmupar(IMAGTOT)=URECmupar(IUREC)
+        dmuper(IMAGTOT)=URECmuper(IUREC)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+        XLEN(IMAGTOT)=URECLX(IUREC)
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=0.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+
+        dmupar(IMAGTOT)=URECmupar(IUREC)
+        dmuper(IMAGTOT)=URECmuper(IUREC)
+
+        RECEND=RECEND+XLEN(IMAGTOT)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+        XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=90.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+
+        dmupar(IMAGTOT)=URECmupar(IUREC)
+        dmuper(IMAGTOT)=URECmuper(IUREC)
+
+        IMAGTOT=IMAGTOT+1
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+        XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+        YLEN(IMAGTOT)=URECLY(IUREC)
+        ZLEN(IMAGTOT)=URECLZ(IUREC)
+        THETA(IMAGTOT)=270.D0*GRARAD
+        PHI(IMAGTOT)=0.D0
+        DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+        DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+        DZ(IMAGTOT)=URECCZ(IUREC)
+        BC(IMAGTOT)=URECBC(IUREC)
+
+        dmupar(IMAGTOT)=URECmupar(IUREC)
+        dmuper(IMAGTOT)=URECmuper(IUREC)
+
+        RECEND=RECEND+XLEN(IMAGTOT)
+
+      ENDDO !KRECPER
+
+      IF (BCRAN.NE.0.D0) THEN
+        IF (NURANMOD.EQ.1) THEN
+          CALL RNORML(xran,NMAGNETS,rr)
+          DO I=1,NKLOTZ
+12          IF (ABS(xran(I)).GT.BCRANSIG) THEN
+              CALL RNORML(xran(I),1,rr)
+              GOTO 12
+            ENDIF
+          ENDDO
+          DO I=1,NKLOTZ
+            IF (DX(I)-XLEN(I)/2.D0.LT.BCSTART
+     &          .OR.DX(I)+XLEN(I)/2.D0.GT.BCEND) THEN
+              xran(I)=0.
+            ENDIF
+          ENDDO
+          IF (BCRAN.GE.0.D0) THEN
+            DO I=1,NKLOTZ
+              YRAN(I)=xran(I)*BCRAN
+            ENDDO
+          ELSE
+            DO I=1,NKLOTZ
+              YRAN(I)=-BCRAN
+            ENDDO
+          ENDIF
+          DO I=IMAGTOTO+1,IMAGTOTO+6
+            xran(I)=YRAN(I+6)/2.
+            YRAN(I)=0.D0
+          ENDDO   !IMAG
+          DO I=IMAGTOT-5,IMAGTOT
+            YRAN(I)=0.D0
+          ENDDO   !IMAG
+          DO I=IMAGTOTO+7,IMAGTOT-6
+            xran(I)=YRAN(I)+YRAN(I-6)/2.+YRAN(I+6)/2. ! "+" due to angles
+          ENDDO   !IMAG
+          DO I=IMAGTOT-5,IMAGTOT
+            xran(I)=YRAN(I-6)/2.
+          ENDDO   !IMAG
+          DO I=IMAGTOTO+1,IMAGTOT
+            BC(I)=BC(I)*(1.+xran(I))
+          ENDDO   !IMAG
+        ELSE IF (NURANMOD.EQ.2) THEN
+          CALL RNORML(xran,NMAGNETS,rr)
+          DO I=1,NKLOTZ
+22          IF (ABS(xran(I)).GT.BCRANSIG) THEN
+              CALL RNORML(xran(I),1,rr)
+              GOTO 22
+            ENDIF
+          ENDDO
+          DO I=1,NKLOTZ
+            IF (DX(I)-XLEN(I)/2.D0.LT.BCSTART
+     &          .OR.DX(I)+XLEN(I)/2.D0.GT.BCEND) THEN
+              xran(I)=0.
+            ENDIF
+          ENDDO
+          IF (BCRAN.GE.0.D0) THEN
+            DO I=1,NKLOTZ
+              YRAN(I)=xran(I)*BCRAN
+            ENDDO
+          ELSE
+            DO I=1,NKLOTZ
+              YRAN(I)=-BCRAN
+            ENDDO
+          ENDIF
+          DO I=IMAGTOT-5,IMAGTOT
+            YRAN(I)=0.D0
+          ENDDO   !IMAG
+          DO I=IMAGTOTO+1,IMAGTOT-6
+            xran(I)=YRAN(I)+YRAN(I+6) ! "+" due to angles
+          ENDDO   !IMAG
+          DO I=IMAGTOT-5,IMAGTOT
+            xran(I)=YRAN(I-6)
+          ENDDO   !IMAG
+          DO I=IMAGTOTO+1,IMAGTOT
+            IF (DX(I)-XLEN(I)/2.D0.GE.BCSTART
+     &          .AND.DX(I)+XLEN(I)/2.D0.LE.BCEND) THEN
+              BC(I)=BC(I)*(1.+xran(I))
+            ENDIF
+          ENDDO   !IMAG
+        ENDIF  !(NRANMOD.EQ...)
+      ENDIF !(BCRAN.NE.0.D0)
+
+C--- LAST ENDPOLE{
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=90.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)*0.75D0
+
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=270.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)*0.75D0
+
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=180.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)*0.75D0
+
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=180.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)*0.75D0
+
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=270.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)*0.75D0
+
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=90.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)*0.75D0
+
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=270.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)/4.D0
+
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=90.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)/4.D0
+
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=0.D0
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)/4.D0
+
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=0.D0
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)/4.D0
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=90.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC)
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)/4.D0
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+      IMAGTOT=IMAGTOT+1
+      IF(IMAGTOT.GT.NKLOTZ) THEN
+        WRITE(6,*)
+        WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+        WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+        WRITE(6,*)
+        STOP
+      ENDIF
+      XLEN(IMAGTOT)=URECLX(IUREC)/2.D0
+      YLEN(IMAGTOT)=URECLY(IUREC)
+      ZLEN(IMAGTOT)=URECLZ(IUREC)
+      THETA(IMAGTOT)=270.D0*GRARAD
+      PHI(IMAGTOT)=0.D0
+      DX(IMAGTOT)=RECEND+XLEN(IMAGTOT)/2.D0
+      DY(IMAGTOT)=-(URECLY(IUREC)/2.D0+URECGAP(IUREC)+(DX(IMAGTOT)-DX1)*UTAPER(IUREC))
+      DZ(IMAGTOT)=URECCZ(IUREC)
+      BC(IMAGTOT)=URECBC(IUREC)/4.D0
+      dmupar(IMAGTOT)=URECmupar(IUREC)
+      dmuper(IMAGTOT)=URECmuper(IUREC)
+      RECEND=RECEND+XLEN(IMAGTOT)
+
+C--- LAST ENDPOLE}
+
+      B0=BC(IMAGTOTS+15)
+
+      IF (BCRAN.NE.0.D0) THEN
+        IF (NURANMOD.EQ.0) THEN
+          CALL RNORML(xran,NMAGNETS,rr) !RANDOM NOISE OFF FIELD
+          DO I=1,NKLOTZ
+111         IF (ABS(xran(I)).GT.BCRANSIG) THEN
+              CALL RNORML(xran(I),1,rr)
+              GOTO 111
+            ENDIF
+          ENDDO
+          DO I=IMAGTOTS+1,IMAGTOT
+            IF (DX(I).GE.BCSTART.AND.DX(I).LE.BCEND) THEN
+              IF (K90270.NE.0) THEN
+                IF (ABS(ABS(THETA(I)/GRARAD)-90.D0).LT.1.
+     &              .OR.ABS(ABS(THETA(I)/GRARAD)-270.D0).LT.1.)  THEN
+                  IF(BCRAN.GT.0.D0) THEN
+                    BC(I)=BC(I)*(1.+BCRAN*xran(I))
+                  ELSE IF(BCRAN.LT.0.D0) THEN
+                    BC(I)=BC(I)*(1.-BCRAN)
+                  ENDIF !BCRAN
+                ENDIF    !THETA
+              ELSE  !K90270
+                IF(BCRAN.GT.0.D0) THEN
+                  BC(I)=BC(I)*(1.+BCRAN*xran(I))
+                ELSE IF(BCRAN.LT.0.D0) THEN
+                  BC(I)=BC(I)*(1.-BCRAN)
+                ENDIF   !BCRAN
+              ENDIF !K90270
+            ENDIF   !BCSTART
+          ENDDO !I
+
+        ELSE IF (NURANMOD.EQ.3.OR.NURANMOD.EQ.4) THEN
+
+          DO I=1,IMAGTOT
+            BCS(I)=BC(I)
+          ENDDO
+
+          CALL RNORML(xran,NMAGNETS,rr) !RANDOM NOISE OFF FIELD
+          DO I=1,NKLOTZ
+222         IF (ABS(xran(I)).GT.BCRANSIG) THEN
+              CALL RNORML(xran(I),1,rr)
+              GOTO 222
+            ENDIF
+          ENDDO
+          DO I=IMAGTOTS+14+1,IMAGTOT+1-14,6
+            BC(I-2)=BC(I-2)*(1.+BCRAN*xran(I))
+            BC(I-1)=BC(I-1)*(1.+BCRAN*xran(I))
+            BC(I)=BC(I)*(1.+BCRAN*xran(I))
+            BC(I+1)=BC(I+1)*(1.+BCRAN*xran(I))
+            BC(I+2)=BC(I+2)*(1.+BCRAN*xran(I))
+            BC(I+3)=BC(I+3)*(1.+BCRAN*xran(I))
+          ENDDO !I
+
+          IF (UBANGERR(IUREC).EQ.0.D0) THEN
+
+C--- COMPENSATE THE KICK
+
+            BDIFF=0.D0
+            DO I=IMAGTOTS+15,IMAGTOT+1-16,12
+              BDIFF=BDIFF-BC(I)-BC(I+1)+BC(I+6)+BC(I+7)
+            ENDDO !I
+
+            BCORRI=1.D0-BDIFF/2./B0
+            BCORRE=1.D0+BDIFF/2./B0
+
+            DO I=1,12
+              BC(IMAGTOTS+I)=BC(IMAGTOTS+I)*BCORRI
+            ENDDO
+
+            DO I=1,12
+              BC(IMAGTOT+1-I)=BC(IMAGTOT+1-I)*BCORRE
+            ENDDO
+
+C--- ENDPOLES
+
+            IF (NURANMOD.EQ.4) THEN
+
+C--- COMPENSATE OFFSET WITH BY ENDPOLE
+
+              UBCSUM2=0.D0
+              DO I=1,NPOLTOT
+                IF (I.EQ.1) THEN
+                  BCSIGN=1.D0
+                ELSE IF(I.EQ.2) THEN
+                  BCSIGN=-1.D0
+                ELSE IF(I.EQ.NPOLTOT-1) THEN
+                  BCSIGN=-1.D0
+                ELSE IF(I.EQ.NPOLTOT) THEN
+                  BCSIGN=1.D0
+                ELSE
+                  BCSIGN=(-1.D0)**I
+                ENDIF
+                J=-3+I*6
+                UBCSUM2=UBCSUM2+(NPOLTOT+1-I)*BCSIGN*(BC(J)+BC(J+1))
+              ENDDO !I
+
+              BCORRI=1.D0-UBCSUM2/(NPOLTOT-2)/B0
+
+              DO I=1,12
+                BC(IMAGTOTS+I)=BC(IMAGTOTS+I)*BCORRI
+              ENDDO
+
+              BCORRE=BCORRI
+
+              DO I=1,12
+                BC(IMAGTOT+1-I)=BC(IMAGTOT+1-I)*BCORRE
+              ENDDO
+            ENDIF   !NURANMOD.EQ.4
+
+C--- FINAL FIRST INTEGRAL
+C
+C     UBCSUM=0.D0
+C     UBCSUM=BC(IMAGTOTS + 3)+BC(IMAGTOTS + 4)
+C     &            -BC(IMAGTOTS + 9)-BC(IMAGTOTS +10)
+C     &            -BC(IMAGTOT+1-10)-BC(IMAGTOT+1- 9)
+C     &            +BC(IMAGTOT+1- 4)+BC(IMAGTOT+1- 3)
+C
+C     DO I=IMAGTOTS+15,IMAGTOT+1-16,12
+C        UBCSUM=UBCSUM-BC(I)-BC(I+1)+BC(I+6)+BC(I+7)
+C     ENDDO !I
+
+          ENDIF  !NURANMOD
+        ENDIF !(UBANGERR(IUREC.EQ.0.D0)
+      ENDIF !(BCRAN.NE.0.D0)
+
+C--- NOW THE ANGLE ERRORS
+
+      IF (UBANGERR(IUREC).NE.0.D0) THEN
+
+        IMAGTOT=IMAGTOT+NMAGNETS
+
+        IF(IMAGTOT.GT.NKLOTZ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN REC_PLAN: DIMENSION EXCEEDED ***'
+          WRITE(6,*)'INCREASE PARAMETER NKLOTZ IN FILE KLOTZ.CMN'
+          WRITE(6,*)
+          STOP
+        ENDIF
+
+        DO I=IMAGTOTS+1,IMAGTOTS+NMAGNETS
+          XLENS(2*I-1)=XLEN(I)
+          XLENS(2*I)=XLEN(I)
+          YLENS(2*I-1)=YLEN(I)
+          YLENS(2*I)=YLEN(I)
+          ZLENS(2*I-1)=ZLEN(I)
+          ZLENS(2*I)=ZLEN(I)
+          DXS(2*I-1)=DX(I)
+          DXS(2*I)=DX(I)
+          DYS(2*I-1)=DY(I)
+          DYS(2*I)=DY(I)
+          DZS(2*I-1)=DZ(I)
+          DZS(2*I)=DZ(I)
+          THETAS(2*I-1)=THETA(I)
+          THETAS(2*I)=THETA(I)
+          PHIS(2*I-1)=PHI(I)
+          PHIS(2*I)=PHI(I)
+          BCS(2*I-1)=BC(I)
+          BCS(2*I)=BC(I)
+        ENDDO
+
+        DO I=IMAGTOTS+1,IMAGTOTS+2*NMAGNETS
+          XLEN(I)=XLENS(I)
+          YLEN(I)=YLENS(I)
+          ZLEN(I)=ZLENS(I)
+          DX(I)=DXS(I)
+          DY(I)=DYS(I)
+          DZ(I)=DZS(I)
+        ENDDO
+
+        XWALK=0.D0
+        XCORR=0.D0
+        DO I=1,NMAGNETS,6
+
+123       CALL RNORML(xran,1,rr)
+          if (abs(xran(1)).gt.ubansig(iurec)) goto 123
+          XWALK=XWALK+(xran(1)-XCORR)
+          IF (ABS(XWALK).GT.USIGOFFY(IUREC)) THEN
+            XCORR=XWALK/2.D0
+          ENDIF
+          J=IMAGTOTS+(I+2)*2-1
+
+          ANGERR=(xran(1)-XCORR)*UBANGERR(IUREC)*GRARAD
+          BCORRI=SQRT(1.D0+ANGERR**2)
+
+          IF (I.LE.12.OR.I.GT.NMAGNETS-12) THEN
+
+            THETA(J-4)=THETAS(J-4)
+            PHI(J-4)=PHIS(J-4)
+            BC(J-4)=BCS(J-4)/2.D0
+            THETA(J-3)=THETAS(J-3)
+            PHI(J-3)=PHIS(J-3)
+            BC(J-3)=BCS(J-3)/2.D0
+
+            THETA(J-2)=THETAS(J-2)
+            PHI(J-2)=PHIS(J-2)
+            BC(J-2)=BCS(J-2)/2.D0
+            THETA(J-1)=THETAS(J-1)
+            PHI(J-1)=PHIS(J-1)
+            BC(J-1)=BCS(J-1)/2.D0
+
+            THETA(J)=THETAS(J)
+            PHI(J)=PHIS(J)
+            BC(J)=BCS(J)/2.D0
+            THETA(J+1)=THETAS(J+1)
+            PHI(J+1)=PHIS(J+1)
+            BC(J+1)=BCS(J+1)/2.D0
+
+            THETA(J+2)=THETAS(J+2)
+            PHI(J+2)=PHIS(J+2)
+            BC(J+2)=BCS(J+2)/2.D0
+            THETA(J+3)=THETAS(J+3)
+            PHI(J+3)=PHIS(J+3)
+            BC(J+3)=BCS(J+3)/2.D0
+
+            THETA(J+4)=THETAS(J+4)
+            PHI(J+4)=PHIS(J+4)
+            BC(J+4)=BCS(J+4)/2.D0
+            THETA(J+5)=THETAS(J+5)
+            PHI(J+5)=PHIS(J+5)
+            BC(J+5)=BCS(J+5)/2.D0
+
+            THETA(J+6)=THETAS(J+6)
+            PHI(J+6)=PHIS(J+6)
+            BC(J+6)=BCS(J+6)/2.D0
+            THETA(J+7)=THETAS(J+7)
+            PHI(J+7)=PHIS(J+7)
+            BC(J+7)=BCS(J+7)/2.D0
+
+          ELSE
+
+            THETA(J-4)=THETAS(J-4)
+            PHI(J-4)=PHIS(J-4)
+            BC(J-4)=BCS(J-4)/BCORRI
+            THETA(J-3)=90.D0*GRARAD
+            PHI(J-3)=90.D0*GRARAD
+            BC(J-3)=BCS(J-3)*ANGERR/BCORRI
+
+            THETA(J-2)=THETAS(J-2)
+            PHI(J-2)=PHIS(J-2)
+            BC(J-2)=BCS(J-2)/BCORRI
+            THETA(J-1)=90.D0*GRARAD
+            PHI(J-1)=90.D0*GRARAD
+            BC(J-1)=BCS(J-1)*ANGERR/BCORRI
+
+            THETA(J)=THETAS(J)
+            PHI(J)=PHIS(J)
+            BC(J)=BCS(J)/BCORRI
+            THETA(J+1)=90.D0*GRARAD
+            PHI(J+1)=90.D0*GRARAD
+            BC(J+1)=BCS(J+1)*ANGERR/BCORRI
+
+            THETA(J+2)=THETAS(J+2)
+            PHI(J+2)=PHIS(J+2)
+            BC(J+2)=BCS(J+2)/BCORRI
+            THETA(J+3)=90.D0*GRARAD
+            PHI(J+3)=90.D0*GRARAD
+            BC(J+3)=BCS(J+3)*ANGERR/BCORRI
+
+            THETA(J+4)=THETAS(J+4)
+            PHI(J+4)=PHIS(J+4)
+            BC(J+4)=BCS(J+4)/BCORRI
+            THETA(J+5)=90.D0*GRARAD
+            PHI(J+5)=90.D0*GRARAD
+            BC(J+5)=BCS(J+5)*ANGERR/BCORRI
+
+            THETA(J+6)=THETAS(J+6)
+            PHI(J+6)=PHIS(J+6)
+            BC(J+6)=BCS(J+6)/BCORRI
+            THETA(J+7)=90.D0*GRARAD
+            PHI(J+7)=90.D0*GRARAD
+            BC(J+7)=BCS(J+7)*ANGERR/BCORRI
+
+          ENDIF
+
+c     DX(J-3)=DX(J-3)+100.
+c     DX(J-1)=DX(J-1)+100.
+c     DX(J+1)=DX(J+1)+100.
+c     DX(J+3)=DX(J+3)+100.
+cc    DX(J+5)=DX(J+5)+100.
+c     DX(J+7)=DX(J+7)+100.
+
+        ENDDO
+
+        IF (NURANMOD.EQ.3.OR.NURANMOD.EQ.4) THEN
+
+C--- COMPENSATE THE HORIZONTAL KICK
+
+          BDIFF=0.D0
+          DO I=IMAGTOTS+30,IMAGTOT+1-32,24
+            BDIFF=BDIFF
+     &        -BC(I-1)-BC(I+1)+BC(I+11)+BC(I+13)
+          ENDDO !I
+
+          BCORRI=1.D0-BDIFF/2./B0
+          BCORRE=1.D0+BDIFF/2./B0
+
+          DO I=1,24
+            BC(IMAGTOTS+I)=BC(IMAGTOTS+I)*BCORRI
+          ENDDO
+
+          DO I=1,24
+            BC(IMAGTOT+1-I)=BC(IMAGTOT+1-I)*BCORRE
+          ENDDO
+
+C--- COMPENSATE THE VERTICAL KICK
+
+          BDIFF=0.D0
+          DO I=IMAGTOTS+30,IMAGTOT+1-32,24
+            BDIFF=BDIFF+BC(I)+BC(I+12)
+          ENDDO !I
+          B0V=BDIFF
+
+          DO I=1,24,2
+            BC(IMAGTOTS+I)=BC(IMAGTOTS+I)*2.D0
+          ENDDO
+
+          DO I=2,12,2
+            THETA(IMAGTOTS+I)=90.D0*GRARAD
+            PHI(IMAGTOTS+I)=90.D0*GRARAD
+            BC(IMAGTOTS+I)=+BDIFF/4.D0
+          ENDDO
+
+          DO I=14,24,2
+            THETA(IMAGTOTS+I)=90.D0*GRARAD
+            PHI(IMAGTOTS+I)=90.D0*GRARAD
+            BC(IMAGTOTS+I)=-BDIFF*3.D0/4.D0
+          ENDDO
+
+          DO I=1,24,2
+            BC(IMAGTOT+1-I-1)=BC(IMAGTOT+1-I-1)*2.D0
+          ENDDO
+
+          DO I=1,12,2
+            THETA(IMAGTOT+1-I)=90.D0*GRARAD
+            PHI(IMAGTOT+1-I)=90.D0*GRARAD
+            BC(IMAGTOT+1-I)=BDIFF/4.D0
+          ENDDO
+
+          DO I=13,24,2
+            THETA(IMAGTOT+1-I)=90.D0*GRARAD
+            PHI(IMAGTOT+1-I)=90.D0*GRARAD
+            BC(IMAGTOT+1-I)=-BDIFF*3.D0/4.D0
+          ENDDO
+
+          IF (NURANMOD.EQ.4) THEN
+
+C--- COMPENSATE HORIZONTAL OFFSET WITH BY ENDPOLE
+
+            UBCSUM2=0.D0
+
+            UBCSUM2=UBCSUM2
+     &        +NPOLTOT    *(BC(5)+BC(7))
+     &        -(NPOLTOT-1)*(BC(17)+BC(19))
+
+            DO I=3,NPOLTOT-2
+              BCSIGN=(-1.D0)**I
+              J=-7+I*12
+              UBCSUM2=UBCSUM2+(NPOLTOT+1-I)*BCSIGN*(BC(J)+BC(J+2))
+            ENDDO !I
+
+            J=NPOLTOT*12+1
+            UBCSUM2=UBCSUM2
+     &        +(BC(J-6)+BC(J-8))
+     &        -2.D0*(BC(J-18)+BC(J-20))
+
+            BCORRI=1.D0-UBCSUM2/(NPOLTOT-2)/B0
+
+            DO I=1,24,2
+              BC(IMAGTOTS+I)=BC(IMAGTOTS+I)*BCORRI
+            ENDDO
+
+            BCORRE=BCORRI
+
+            DO I=1,24,2
+              BC(IMAGTOT+1-I-1)=BC(IMAGTOT+1-I-1)*BCORRE
+            ENDDO
+
+C--- COMPENSATE VERTICAL OFFSET WITH BY ENDPOLE
+
+            UBCSUM2=0.D0
+            DO I=1,NPOLTOT
+              J=-7+I*12+1
+              UBCSUM2=UBCSUM2+(NPOLTOT+1-I)*(BC(J)+BC(J+2))
+            ENDDO !I
+
+            IF (UBCSUM2.NE.0.D0) THEN
+              BCORRI=1.D0-UBCSUM2/(NPOLTOT-1)/BC(6)/2.D0
+              BCORRE=1.D0+UBCSUM2/(NPOLTOT-1)/BC(IMAGTOT+1-5)/2.D0
+            ELSE
+              BCORRI=1.D0
+              BCORRE=1.D0
+            ENDIF
+
+            DO I=1,12,2
+              BC(IMAGTOTS+I+1)=BC(IMAGTOTS+I+1)*BCORRI
+            ENDDO
+
+
+            DO I=1,12,2
+              BC(IMAGTOT+1-I)=BC(IMAGTOT+1-I)*BCORRE
+            ENDDO
+
+          ENDIF   !NURANMOD.EQ.4
+
+        ENDIF  !NURANMOD
+      ENDIF !(BANGERR.NE.0.D0)
+
+      RETURN
+      END

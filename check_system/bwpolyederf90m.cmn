@@ -1,0 +1,33 @@
+*KEEP,bwpolyederf90m.
+      module bwpolyederf90m
+
+      integer lunbpe,nmag,iaxint,nstepint
+
+      DOUBLE PRECISION BSCALEPM,WINPM,RANGPM
+
+      DOUBLE PRECISION tiny,x0int,y0int,z0int,ranginti,ranginte
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: bpexpos
+      DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: bpebc,bflange
+      DOUBLE PRECISION, DIMENSION(:,:,:), ALLOCATABLE :: bpemat
+      DOUBLE PRECISION, DIMENSION(:,:,:,:), ALLOCATABLE :: bpemag,bpetm,bperot
+
+      double precision bfcenxmm,bfcenymm,bfcenzmm,
+     &  bflenxmm,bflenymm,bflenzmm,
+     &  torqcenxmm,torqcenymm,torqcenzmm,
+     &  shiftll,shiftlr,shiftul,shiftur,gappm
+
+      real forcol,forxpl(2),forypl(2),forzpl(2)
+
+      INTEGER, DIMENSION(:), ALLOCATABLE :: ibpeplan
+      INTEGER, DIMENSION(:,:), ALLOCATABLE :: ibpecorn
+
+      integer iforcol
+      integer lunpm,ibpnowarn
+
+      character(128) filebpe,filepm
+
+      NAMELIST/POLYMAGN/
+     &  BSCALEPM,WINPM,RANGPM,LUNPM,FILEPM,
+     &  shiftll,shiftlr,shiftul,shiftur,gappm,ibpnowarn
+
+      end module

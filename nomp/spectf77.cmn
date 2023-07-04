@@ -1,0 +1,136 @@
+*KEEP,SPECTF77.
+      INTEGER NPWALL,NPOLMX
+
+      COMPLEX*16 VPOLA(3),VSTOKES(4,3)
+      COMPLEX*16 REFLEC(3)
+
+
+      DOUBLE PRECISION SPEC(NLIOBFRP),SPECNOR,POWNOR
+      DOUBLE PRECISION SPECF(NLIOBFRP)
+
+      DOUBLE PRECISION SPECI(NLIOBP)
+      DOUBLE PRECISION SPECIF(NLIOBP)
+      DOUBLE PRECISION SPECTOT(NOBFRP)
+      DOUBLE PRECISION SPECTOTF(NOBFRP)
+      DOUBLE PRECISION SPECTOTI(NDOBSVP)
+
+      DOUBLE PRECISION SPECPOW(NLIOBP),SPECPOWV(NLIOBZP),SPECPOWVH(LIDIMP)
+      DOUBLE PRECISION SPECPOWT(NDOBSVP),SPECPOWVT(NDOBSVZP),SPECPOWVHT
+
+      DOUBLE PRECISION SPECIV(NLIOBP)
+      DOUBLE PRECISION SPECIVF(NLIOBP)
+
+      DOUBLE PRECISION ENEDOS(NDOBSVP),PINDOS
+      DOUBLE PRECISION SPECTOTIF(NDOBSVP)
+     &        ,SPCOEF(NDOBSVP)
+     &        ,SPCOEFM(NDOBSVP)  !FOR EMITTANCE FOLDING
+     &        ,WFLUX(NLIFRP)
+     &        ,WFLUXT(NDFREQP)
+     &        ,WFLUXF(NLIFRP)
+     &        ,WFLUXTF(NDFREQP)
+     &        ,WFLUXI(LIDIMP)
+     &        ,WFLUXTI
+     &        ,WFLUXIF(LIDIMP)
+     &        ,WFLUXTIF,SPECTOTMX(6)
+     &        ,WALL(2),POWBCUT,XWALLI,XWALLE
+     &        ,POWS2(NWMAXP),POWCOR,XABSORB,ZABSORB(2)
+     &        ,REAIMA(3,2,NOBFRP)
+     &        ,WOBS1(NDOBSVP),WOBS2(NDOBSVP),WOBS3(NDOBSVP),WOBS4(NDOBSVP)
+     &        ,WOBS5(NDOBSVP),WOBS6(NDOBSVP),WOBS7(NDOBSVP),WOBS8(NDOBSVP)
+
+      REAL*4 RADPOW(19,NDPOLP,NWMAXP),TOTGAM(6),TOTMAX(12)
+
+      REAL*4
+     &         STOKES(4,NOBFRP)
+     &        ,STOKESF(4,NOBFRP)
+     &        ,WSTOKES(4,NDFREQP)
+     &        ,WSTOKESF(4,NDFREQP)
+     &        ,WSTOKESE(4,NDFREQP)
+     &        ,WSTOKESEF(4,NDFREQP)
+     &        ,STOKEC(4,NDFREQP)
+     &        ,STOKECF(4,NDFREQP)
+     &        ,STOKECE(4,NDFREQP)
+     &        ,STOKECEF(4,NDFREQP)
+     &        ,STOKCMX(4,2),G3CMX(2)
+     &        ,STOKCMXF(4,2),G3CMXF(2)
+     &        ,STOKCMXE(4,2),G3CMXE(2)
+     &        ,STOKCMXEF(4,2),G3CMXEF(2)
+     &        ,BRILLC(4,NDFREQP)
+     &        ,BRILLCF(4,NDFREQP)
+     &        ,BRILLCE(4,NDFREQP)
+     &        ,BRILLCEF(4,NDFREQP)
+     &        ,BRILLCMX(4,2),B3CMX(2)
+     &        ,BRILLCMXF(4,2),B3CMXF(2)
+     &        ,BRILLCMXE(4,2),B3CMXE(2)
+     &        ,BRILLCMXEF(4,2),B3CMXEF(2)
+     &        ,WSTOKMX(4,2),WG3MX(2)
+     &        ,WSTOKMXF(4,2),WG3MXF(2)
+     &        ,WSTOKMXE(4,2),WG3MXE(2)
+     &        ,WSTOKMXEF(4,2),WG3MXEF(2)
+
+
+
+      COMMON/SPECTC/
+     &   VPOLA,VSTOKES,REFLEC
+     &  ,SPEC,SPECNOR,POWNOR
+     &  ,SPECF
+     &  ,SPECI
+     &  ,SPECIF
+     &  ,SPECTOT
+     &  ,SPECTOTF
+     &  ,SPECTOTI
+     &  ,SPECPOW,SPECPOWV,SPECPOWVH
+     &  ,SPECPOWT,SPECPOWVT,SPECPOWVHT
+     &  ,SPECIV
+     &  ,SPECIVF
+     &  ,ENEDOS,PINDOS
+     &  ,SPECTOTIF
+     &  ,WOBS1,WOBS2,WOBS3,WOBS4,WOBS5,WOBS6,WOBS7,WOBS8
+     &        ,SPCOEF
+     &        ,SPCOEFM
+     &        ,WFLUX
+     &        ,WFLUXT
+     &        ,WFLUXF
+     &        ,WFLUXTF
+     &        ,WFLUXI
+     &        ,WFLUXTI
+     &        ,WFLUXIF
+     &        ,WFLUXTIF,SPECTOTMX
+     &        ,WALL,POWBCUT,XWALLI,XWALLE
+     &        ,POWS2,POWCOR,XABSORB,ZABSORB
+     &        ,REAIMA
+     &        ,RADPOW,TOTGAM,TOTMAX
+     &        ,STOKES
+     &        ,STOKESF
+     &        ,WSTOKES
+     &        ,WSTOKESF
+     &        ,WSTOKESE
+     &        ,WSTOKESEF
+     &        ,STOKEC
+     &        ,STOKECF
+     &        ,STOKECE
+     &        ,STOKECEF
+     &        ,STOKCMX,G3CMX
+     &        ,STOKCMXF,G3CMXF
+     &        ,STOKCMXE,G3CMXE
+     &        ,STOKCMXEF,G3CMXEF
+     &        ,BRILLC
+     &        ,BRILLCF
+     &        ,BRILLCE
+     &        ,BRILLCEF
+     &        ,BRILLCMX,B3CMX
+     &        ,BRILLCMXF,B3CMXF
+     &        ,BRILLCMXE,B3CMXE
+     &        ,BRILLCMXEF,B3CMXEF
+     &        ,WSTOKMX,WG3MX
+     &        ,WSTOKMXF,WG3MXF
+     &        ,WSTOKMXE,WG3MXE
+     &        ,WSTOKMXEF,WG3MXEF
+     &        ,NPWALL,NPOLMX
+
+
+      NAMELIST/SPECTN/
+     &        VPOLA,REFLEC
+     &        ,WALL,POWBCUT,XWALLI,XWALLE,NPWALL,POWCOR,XABSORB
+     &        ,ZABSORB,NPOLMX
+

@@ -1,0 +1,69 @@
+*KEEP,KLOTZ.
+
+      INTEGER IURECP,NKLOTZ
+      PARAMETER(NKLOTZ=2**15)  !NUMBER OF MAGNETS FOR SR BREC
+      PARAMETER (IURECP=3)
+
+      DOUBLE PRECISION
+     &  shift_U,SHIFT_D,
+     &  dx0(NKLOTZ),dy0(NKLOTZ),dz0(NKLOTZ),
+     &  theta0(NKLOTZ),phi0(NKLOTZ),bc0(NKLOTZ),
+     &  dmupar(nklotz),dmuper(nklotz),
+     &  dmuparo(nklotz),dmupero(nklotz),bco(nklotz),
+     &  dx(NKLOTZ),dy(NKLOTZ),dz(NKLOTZ),
+     &  theta(NKLOTZ),phi(NKLOTZ),bc(NKLOTZ),
+     &  xlen(NKLOTZ),ylen(NKLOTZ),zlen(NKLOTZ),
+     &  dup,dlo,ddx(NKLOTZ),ddy(NKLOTZ),ddz(NKLOTZ),
+     &  WINREC,RANGREC,SCALADD,SCALKL
+     &  ,USHIFT,DSHIFT,RECGAP
+     &  ,URECLX(IURECP),URECLY(IURECP),URECLZ(IURECP)
+     &  ,URECCX(IURECP),URECCZ(IURECP)
+     &  ,URECBC(IURECP),URECMUPAR(IURECP),URECMUPER(IURECP),URECGAP(IURECP)
+     &  ,URSPLIT(IURECP),URSHIFT(IURECP),URSHADD(IURECP),UTAPER(IURECP)
+     &  ,UBANGERR(IURECP),ubansig(iurecp),USIGOFFY(IURECP),BCRAN,BCSTART,BCEND
+
+      INTEGER IRECMODU,IKRESTOR
+      INTEGER imagup,imaglo,imagnet,imod
+      INTEGER IMAGTOT,IPLREC,irecsolve
+
+      INTEGER IMAGADD,K90270,KRECPER(IURECP),IRECU,IUHELI(IURECP),IRECSEED
+     &  ,NURANMOD,IHTAPER,IVTAPER
+
+      REAL*4 RPLXMN,RPLXMX,RPLYMN,RPLYMX,RPLZMN,RPLZMX
+
+      REAL BCRANSIG
+
+      character*2048 rec_viewer,rec_viewer_kill
+
+      common/klotz/
+     &  shift_U,SHIFT_D,
+     &  dx0,dy0,dz0,
+     &  theta0,phi0,bc0,
+     &  dx,dy,dz,
+     &  theta,phi,bc,
+     &  dmupar,dmuper,dmuparo,dmupero,bco,
+     &  xlen,ylen,zlen,
+     &  dup,dlo,ddx,ddy,ddz,
+     &  BCRAN,BCSTART,BCEND
+     &  ,WINREC,RANGREC,SCALADD,SCALKL
+     &  ,USHIFT,DSHIFT,RECGAP
+     &  ,URECLX,URECLY,URECLZ,URECCX,URECCZ
+     &  ,URECBC,URECMUPAR,URECMUPER,URECGAP
+     &  ,URSPLIT,URSHIFT,URSHADD,UTAPER,ubansig,UBANGERR,USIGOFFY
+     &  ,RPLXMN,RPLXMX,RPLYMN,RPLYMX,RPLZMN,RPLZMX
+     &  ,BCRANSIG
+     &  ,imagup,imaglo,imagnet,imod,IMAGTOT,IPLREC,IRECMODU
+     &  ,IKRESTOR
+     &  ,IMAGADD,K90270,KRECPER,IRECU,IUHELI,IRECSEED
+     &  ,NURANMOD,IHTAPER,IVTAPER,rec_viewer,rec_viewer_kill,irecsolve
+
+      NAMELIST/RECN/BCRAN,BCRANSIG,BCSTART,BCEND,WINREC,RANGREC,SCALADD,IPLREC,SCALKL
+     &  ,USHIFT,DSHIFT,RECGAP
+     &  ,RPLXMN,RPLXMX,RPLYMN,RPLYMX,RPLZMN,RPLZMX,IRECMODU
+     &  ,URECLX,URECLY,URECLZ,URECCX,URECCZ
+     &  ,URECBC,URECMUPAR,URECMUPER
+     &  ,URECGAP,ubansig,UBANGERR
+     &  ,USIGOFFY
+     &  ,IKRESTOR,K90270,KRECPER,IRECU,IRECSEED
+     &  ,IUHELI,URSPLIT,URSHADD,UTAPER,URSHIFT
+     &  ,NURANMOD,IHTAPER,IVTAPER,rec_viewer,rec_viewer_kill

@@ -1,0 +1,138 @@
+*CMZ :  2.15/00 28/04/2000  10.34.14  by  Michael Scheer
+*CMZ :  1.01/00 29/10/97  17.25.05  by  Michael Scheer
+*-- Author :    Michael Scheer   29/10/97
+
+
+      PROGRAM WAVE_LOOP
+
+      IMPLICIT NONE
+
+      CHARACTER*60 RFILE,VFILE,UFILE
+        CHARACTER*4 CHOPT
+
+      INTEGER LUNRES,LUNVAR,LUNU,IVAR,ITRY
+
+      INTEGER ILOOP,JLOOP,NLOOP(2)
+
+      DOUBLE PRECISION VAR(2),VARMIN(2),VARMAX(2),DVAR(2),VAROUT(4)
+        REAL VAROPT(4),ZBUFF(101),B1BUFF(101)
+
+       INTEGER NPAW,NZ,IZ
+       PARAMETER (NPAW=200000)
+       REAL*4 RPAW(NPAW)
+       COMMON/PAWC/RPAW
+
+      DATA LUNU/19/
+      DATA UFILE/'UOUT.LOOP'/ !DUMMY TO PASS VARIABLES TO WAVE_LOOP
+
+      DATA LUNVAR/20/
+      DATA VFILE/'UNAME.LOOP'/ !DUMMY TO PASS VARIABLES TO WAVE
+      DATA LUNRES/21/
+      DATA RFILE/'WAVE.LOOP'/    !FILE OF RESULTS
+
+        DATA VAROPT(3)/1.E30/
+
+        CALL HLIMIT(NPAW)
+        CALL HPLINT(1)
+        OPEN(UNIT=40,FILE='SCS:WAVE_LOOP.PS',
+     &  CARRIAGECONTROL='LIST',STATUS='NEW')
+        CALL IGMETA(40,-111)
+        CHOPT=' '
+        CALL HPLFRA(-0.05,0.05,0.9,1.1,CHOPT)
+        CALL IUWK(0,1)
+
+        READ(5,*)NLOOP(1),VARMIN(1),VARMAX(1)
+        READ(5,*)NLOOP(2),VARMIN(2),VARMAX(2)
+
+      OPEN(UNIT=LUNVAR,FILE=VFILE,STATUS='NEW',FORM='FORMATTED')
+      CLOSE(LUNVAR)
+
+      OPEN(UNIT=LUNVAR,FILE='TERM.LOOP',STATUS='NEW',FORM='FORMATTED')
+      CLOSE(LUNVAR)
+
+      OPEN(UNIT=LUNRES,FILE=RFILE,STATUS='NEW',FORM='FORMATTED',
+     &     RECL=256)
+      CLOSE(LUNRES)
+
+        DO IVAR=1,2
+          IF (NLOOP(IVAR).GT.1) THEN
+            DVAR(IVAR)=(VARMAX(IVAR)-VARMIN(IVAR))/(NLOOP(IVAR)-1)
+          ELSE
+            DVAR(IVAR)=0.0
+          ENDIF
+        ENDDO !ILOOP
+
+      DO ILOOP=1,NLOOP(1)
+
+        VAR(1)=(VARMIN(1)+DVAR(1)*(ILOOP-1))
+
+        DO JLOOP=1,NLOOP(2)
+
+            VAR(2)=(VARMIN(2)+DVAR(2)*(JLOOP-1))
+
+            OPEN(UNIT=LUNVAR,FILE=VFILE,STATUS='OLD',FORM='FORMATTED')
+                WRITE(LUNVAR,*)VAR
+            CLOSE(LUNVAR)
+
+            CALL LIB$SPAWN('$PURGE/KEEP=5 WAVE.OUT,WH:WAVE_HISTO.HIS')
+            CALL LIB$SPAWN('$RUN/NODEBUG WE:WAVE')
+
+            OPEN(UNIT=LUNU,FILE='TERM.LOOP',STATUS='OLD',ERR=9999)
+            CLOSE(LUNU)
+
+            OPEN(UNIT=LUNU,FILE=UFILE,STATUS='OLD')
+                READ(LUNU,*)VAROUT
+                READ(LUNU,*)NZ
+                DO IZ=1,NZ
+              READ(LUNU,*)ZBUFF(IZ),B1BUFF(IZ)
+                ENDDO
+            CLOSE (LUNU)
+
+          ITRY=0
+999       CALL LIB$SPAWN('$WAIT 00:00:05')
+          ITRY=ITRY+1
+          IF (ITRY.GT.100) GOTO 9999
+
+          OPEN(UNIT=LUNRES,FILE=RFILE,STATUS='OLD',ACCESS='APPEND'
+     &   ,FORM='FORMATTED',RECL=256,ERR=999)
+            WRITE(LUNRES,*)VAROUT
+                DO IZ=1,NZ
+              WRITE(LUNRES,*)ZBUFF(IZ),B1BUFF(IZ)
+                ENDDO
+          CLOSE(LUNRES)
+
+          WRITE(6,*)
+          WRITE(6,*) 'NUMBER OF LOOPS DONE:',ILOOP,JLOOP
+          WRITE(6,*)VAROUT
+
+            IF (VAROUT(3).LT.VAROPT(3)) THEN
+                VAROPT(1)=VAROUT(1)
+                VAROPT(2)=VAROUT(2)
+                VAROPT(3)=VAROUT(3)
+                VAROPT(4)=VAROUT(4)
+          ENDIF
+
+                CALL IGRAPH(NZ,ZBUFF,B1BUFF,CHOPT)
+                DO IZ=1,NZ
+                ZBUFF(IZ)=-ZBUFF(IZ)
+                ENDDO
+                CALL IGRAPH(NZ,ZBUFF,B1BUFF,CHOPT)
+                CALL IUWK(0,1)
+
+          WRITE(6,*)
+          WRITE(6,*) 'BEST VALUE SO FAR:'
+          WRITE(6,*)VAROPT
+
+      ENDDO !JLOOP
+      ENDDO !ILOOP
+
+      WRITE(6,*)
+      WRITE(6,*)'--- Program WAVE_LOOP terminated ---'
+      WRITE(6,*)
+
+      STOP ' '
+
+9999    STOP '--- Program WAVE_LOOP aborted ---'
+
+      END
+

@@ -1,0 +1,7 @@
+*KEEP,strings.
+      external icfnbl,lnblnk
+
+      integer nd,ne,nf,ng,num(2),icfnbl,lnblnk
+      real dummy(34)
+
+      common /slate/ nd,ne,nf,ng,num,dummy !cern M432

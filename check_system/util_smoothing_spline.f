@@ -1,0 +1,224 @@
+*CMZ : 00.00/02 05/09/2006  09.27.07  by  Michael Scheer
+*-- Author :    Michael Scheer   13/01/2006
+      SUBROUTINE util_smoothing_spline(H, N, TNODE, G, WGS, RHO, GSMO, B, C, D)
+
+      IMPLICIT NONE
+
+c All changed to double precision
+
+c Routine from http://portal.acm.org
+c      SUBROUTINE DCSSMO(H, N, TNODE, G, WGS, RHO, GSMO, B, C, D)        DCS   10
+C
+
+C  THIS SUBROUTINE COMPUTES THE DISCRETE NATURAL CUBIC
+C  SPLINE DEFINED ON THE INTERVAL (TNODE(1),TNODE(N)) WHICH
+C  SMOOTHS THROUGH THE DATA (TNODE(I),G(I)),I=1,2,...,N.
+C  N MUST BE 2 OR GREATER. THE NODES MUST SATISFY TNODE(I)
+C  .LT.TNODE(I+1).
+
+C  THE SOLUTION S(T) FOR T IN THE INTERVAL (TNODE(I),TNODE(I+1)) IS GIVEN BY
+C
+C     S(T)=GSMO(I)+B(I)*(T-TNODE(I))+
+C             C(I)*(T-TNODE(I))**2+D(I)*(T-TNODE(I))**3
+C
+      DOUBLE PRECISION TNODE(N),G(N),WGS(N),GSMO(N),B(N),C(N),D(N),
+     &  BETA3,BETA4,BETA5,EPS3,EPS4,ETA3,ETA4,RHO,HK1,HK2,P,HI5,
+     &  HI4,HI3,H2,H3,H2DHI,H,R6
+
+      INTEGER N,N1,N2,N3,I,K,J,K1,K2,I2,I1,K3
+C
+C  INPUT  PARAMETERS(NONE OF THE INPUT PARAMETERS ARE CHANGED
+C         BY THIS SUBROUTINE)
+C
+C  H     - THE STEP SIZE USED FOR THE DISCRETE CUBIC SPLINE
+C  N     - NUMBER OF NODES (TNODE) AND DATA VALUES(G)
+C  TNODE - REAL ARRAY CONTAINING THE NODES (TNODE(I).LT.
+C          TNODE(I+1)).
+C  G     - REAL ARRAY CONTAINING THE DATA VALUES.
+C  WGS   - REAL ARRAY CONTAINING THE WEIGHTS WGS(I)
+C          CORRESPONDING TO THE DATA (TNODE(I),G(I)).
+C  RHO   - SIMPLE REAL VARIABLE CONTAINING THE POSITIVE
+C          PARAMETER FOR VARYING THE SMOOTHNESS OF THE FIT.
+C          IF RHO IS SMALL SMOOTHNESS IS EMPHASIZED.
+C          IF RHO IS LARGE DATA FITTING IS EMPHASIZED.
+C
+C  OUTPUT PARAMETERS
+C
+C  GSMO  - REAL ARRAY CONTAINING THE SMOOTHED VALUES OF
+C          THE DATA G(I),I=1,2,....,N.
+C  B     - REAL ARRAY CONTAINING THE COEFFICIENTS B(I) FOR
+C          THE TERMS (T-TNODE(I)).
+C  C     - REAL ARRAY CONTAINING THE COEFFICIENTS C(I) FOR
+C          THE TERMS (T-TNODE(I))**2.
+C  D     - REAL ARRAY CONTAINING THE COEFFICIENTS D(I) FOR
+C          THE TERMS (T-TNODE(I))**3.
+C
+
+      IF (N.EQ.2) GO TO 180
+
+      N1 = N - 1
+      N2 = N1 - 1
+      N3 = N2 - 1
+
+C  THE RIGHT HAND SIDE OF THE LINEAR SYSTEM FOR THE
+C  C(I)'S WILL NOW BE CONSTRUCTED.
+
+      DO 10 I=1,N
+        C(I) = G(I)
+   10 CONTINUE
+
+      DO 20 I=1,N1
+        C(I) = (C(I+1)-C(I))/(TNODE(I+1)-TNODE(I))
+   20 CONTINUE
+
+      DO 30 I=1,N2
+        C(I) = 3.0*(C(I+1)-C(I))
+   30 CONTINUE
+
+C  THE RIGHT HAND SIDE IS NOW IN ARRAY C.
+C
+C  THE P.D. 5 BANDED SYMMETRIC MATRIX WILL NOW BE CONSTRUCTED.
+C  THE THREE NEEDED DIAGONALS WILL BE STORED IN ARRAYS
+C  GSMO,B,D.
+      H2 = H*H
+      H3 = H2*H
+      R6 = 6.0*H3/RHO
+      HI3 = TNODE(2) - TNODE(1)
+      HI4 = TNODE(3) - TNODE(2)
+      ETA3 = HI3 + HI3 + H2/HI3
+      BETA3 = R6/(WGS(1)*HI3)
+      BETA4 = R6/(WGS(2)*HI3*HI4)
+      EPS3 = (BETA3+BETA4*HI4)/HI3
+      H2DHI = H2/HI4
+      ETA4 = HI4 + HI4 + H2DHI
+
+      IF (N.EQ.3) GO TO 60
+
+      HI5 = TNODE(4) - TNODE(3)
+      BETA5 = R6/(WGS(3)*HI4*HI5)
+      EPS4 = (BETA4*HI3+BETA5*HI5)/HI4
+      GSMO(1) = ETA3 + ETA4 + BETA4 + BETA4 + EPS3 + EPS4
+      P = H2DHI + BETA4 + BETA5 + EPS4
+      B(1) = HI4 - P
+
+      IF (N.EQ.4) GO TO 50
+
+      DO 40 I=2,N3
+        HI3 = HI4
+        HI4 = HI5
+        HI5 = TNODE(I+3) - TNODE(I+2)
+        ETA3 = ETA4
+        H2DHI = H2/HI4
+        ETA4 = HI4 + HI4 + H2DHI
+        BETA3 = BETA4
+        BETA4 = BETA5
+        BETA5 = R6/(WGS(I+2)*HI4*HI5)
+        EPS3 = EPS4
+        EPS4 = (BETA4*HI3+BETA5*HI5)/HI4
+        D(I-1) = BETA4
+        P = H2DHI + BETA4 + BETA5 + EPS4
+        B(I) = HI4 - P
+        GSMO(I) = ETA3 + ETA4 + BETA4 + BETA4 + EPS3 + EPS4
+
+   40 CONTINUE
+
+   50 HI3 = HI4
+      HI4 = HI5
+      ETA3 = ETA4
+      ETA4 = HI4 + HI4 + H2/HI4
+      BETA4 = BETA5
+      EPS3 = EPS4
+   60 BETA5 = R6/(WGS(N)*HI4)
+      EPS4 = (BETA4*HI3+BETA5)/HI4
+      GSMO(N2) = ETA3 + ETA4 + BETA4 + BETA4 + EPS3 + EPS4
+C  THE P.D. 5 BANDED SYMMETRIC MATRIX IS COMPLETE.
+C  THE SYSTEM OF LINEAR EQUATION WILL NOW BE SOLVED FOR THE
+C  C(I)'S.
+      IF (N.GT.3) GO TO 70
+      C(1) = C(1)/GSMO(1)
+      GO TO 150
+   70 IF (N.GT.4) GO TO 80
+      C(1) = (C(1)*GSMO(2)-C(2)*B(1))/(GSMO(1)*GSMO(2)-B(1)**2)
+      C(2) = (C(2)-C(1)*B(1))/GSMO(2)
+      GO TO 150
+C  THIS SOLVE THE 5 BANDED SYSTEM WHEN K=N-2.GT.3.
+   80 K = N2
+      K1 = K - 1
+      K2 = K1 - 1
+      K3 = K2 - 1
+C  THE 5 BANDED MATRIX WILL NOW BE FACTORED.
+      B(1) = B(1)/GSMO(1)
+      D(1) = D(1)/GSMO(1)
+      P = GSMO(1)*B(1)
+      GSMO(2) = GSMO(2) - P*B(1)
+      B(2) = (B(2)-P*D(1))/GSMO(2)
+      IF (K.EQ.3) GO TO 110
+      D(2) = D(2)/GSMO(2)
+      IF (K.EQ.4) GO TO 100
+      DO 90 I=3,K2
+        I1 = I - 1
+        I2 = I1 - 1
+        P = GSMO(I1)*B(I1)
+        GSMO(I) = GSMO(I) - GSMO(I2)*(D(I2)**2) - P*B(I1)
+        B(I) = (B(I)-P*D(I1))/GSMO(I)
+        D(I) = D(I)/GSMO(I)
+   90 CONTINUE
+  100 P = GSMO(K2)*B(K2)
+      GSMO(K1) = GSMO(K1) - GSMO(K3)*(D(K3)**2) - P*B(K2)
+      B(K1) = (B(K1)-P*D(K2))/GSMO(K1)
+  110 GSMO(K) = GSMO(K) - GSMO(K2)*(D(K2)**2) - GSMO(K1)*(B(K1)**2)
+C  FACTORIZATION COMPLETE.
+C  CARRY OUT FORWARD  AND BACKWARD SUBSTITUTION.
+      C(2) = C(2) - B(1)*C(1)
+      DO 120 I=3,K
+        I1 = I - 1
+        I2 = I - 2
+        C(I) = C(I) - B(I1)*C(I1) - D(I2)*C(I2)
+  120 CONTINUE
+      DO 130 I=1,K
+        C(I) = C(I)/GSMO(I)
+  130 CONTINUE
+      C(K1) = C(K1) - B(K1)*C(K)
+      DO 140 I=2,K1
+        J = K - I
+        C(J) = C(J) - B(J)*C(J+1) - D(J)*C(J+2)
+  140 CONTINUE
+C  THE 5 BANDED SYSTEM HAS BEEN SOLVED.THE SOLUTION IS IN
+C  ARRAY C. THE COEFFICIENTS GSMO, B, C, AND D WILL NOW BE
+C  SET UP.
+  150 C(N) = 0.0
+      D(N) = 0.0
+      C(N1) = C(N2)
+      HK1 = TNODE(N) - TNODE(N1)
+      D(N1) = -C(N1)/(3.0*HK1)
+      GSMO(N) = G(N) + R6*D(N1)/WGS(N)
+      IF (N.EQ.3) GO TO 170
+      DO 160 I=2,N2
+        K = N - I
+        K1 = K + 1
+        HK2 = HK1
+        HK1 = TNODE(K1) - TNODE(K)
+        C(K) = C(K-1)
+        D(K) = (C(K1)-C(K))/(3.0*HK1)
+        GSMO(K1) = G(K1) - R6*(D(K1)-D(K))/WGS(K1)
+        B(K1) = (GSMO(K1+1)-GSMO(K1))/HK2 - HK2*(C(K1)+C(K1)+C(K1+1))/
+     *    3.0
+  160 CONTINUE
+  170 C(1) = 0.0
+      HK2 = HK1
+      HK1 = TNODE(2) - TNODE(1)
+      D(1) = (C(2)-C(1))/(3.0*HK1)
+      GSMO(2) = G(2) - R6*(D(2)-D(1))/WGS(2)
+      GSMO(1) = G(1) - R6*D(1)/WGS(1)
+      B(2) = (GSMO(3)-GSMO(2))/HK2 - HK2*(C(2)+C(2)+C(3))/3.0
+      B(1) = (GSMO(2)-GSMO(1))/HK1 - HK1*(C(1)+C(1)+C(2))/3.0
+C  THE DISCRETE CUBIC SMOOTHING SPLINE IS NOW COMPLETE.
+      RETURN
+C  THE TRIVIAL CASE WHEN N=2 IS HANDLED HERE.
+  180 GSMO(1) = G(1)
+      GSMO(2) = G(2)
+      B(1) = (G(2)-G(1))/(TNODE(2)-TNODE(1))
+      C(1) = 0.0
+      D(1) = 0.0
+      RETURN
+      END

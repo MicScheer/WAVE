@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# +PATCH,//WAVE/SHELL
+# +DECK,undumag,T=SHELL.
+
+. $WAVE/shell/set_wave_environment.sh
+$WAVE/undumag/undumag.exe
+

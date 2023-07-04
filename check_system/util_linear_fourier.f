@@ -1,0 +1,110 @@
+*CMZ : 00.00/02 22/04/99  17.27.52  by  Michael Scheer
+*CMZ : 00.00/00 10/01/95  15.25.29  by  Michael Scheer
+*-- Author :
+      SUBROUTINE UTIL_LINEAR_FOURIER
+     &(X,Y,NX,OM,NOM,RESSIN,RESCOS,IFAIL)
+
+C---  CALCULATES INTEGRAL(F(x)*SIN(omega*x)) AND INTEGRAL(F(x)*COS(omega*x))
+
+      IMPLICIT NONE
+
+      INTEGER NX,NOM,MOM,IOM,I,IFAIL
+
+      REAL*8 X(NX),Y(NX),RESSIN(NOM),RESCOS(NOM),ADDSIN,ADDCOS
+
+      REAL*8 OM(NOM),DOM,XI,XI1,YI,YI1,A,W1,AW2,DWXI,DWXI1,YIW1,YI1W1
+      REAL*8 COSWXI,SINWXI,COSWXI1,SINWXI1,DX,W,WXI,WXI1
+      REAL*8 DCOSWXI,DSINWXI,DCOSWXI1,DSINWXI1
+      REAL*8 COSWXI2P,SINWXI2P,COSWXI12P,SINWXI12P
+
+      IFAIL=0
+
+      MOM=NOM
+
+      IF (MOM.GT.1) THEN
+          DOM=OM(2)-OM(1)
+      ELSEIF (MOM.LT.-1) THEN
+          DOM=OM(1)
+          MOM=-MOM
+      ELSE
+          IFAIL=1
+          RETURN
+      ENDIF
+
+      DO IOM=1,MOM
+          RESSIN(IOM)=0.0D0
+          RESCOS(IOM)=0.0D0
+      ENDDO
+
+      DO I=1,NX-1
+
+      XI=X(I)
+      XI1=X(I+1)
+      YI=Y(I)
+      YI1=Y(I+1)
+
+      DX=(xi1-xi)
+
+      W=OM(1)
+      W1=1.D0/W
+
+      A=(YI1-YI)/DX
+      AW2=A*W1*W1
+
+      WXI=W*XI
+      WXI1=W*XI1
+      YIW1=YI*W1
+      YI1W1=YI1*W1
+
+      COSWXI=cos(wxi)
+      SINWXI=SIN(wxi)
+      COSWXI1=cos(wxi1)
+      SINWXI1=SIN(wxi1)
+
+      ADDSIN=+coswxI*YIW1-coswxI1*YI1W1+AW2*(sinwxI1-sinwxI)
+        ADDCOS=-sinWXI*YIW1+sinwxI1*YI1W1+AW2*(coswxI1-coswxI)
+
+      RESSIN(1)=RESSIN(1)+ADDSIN
+      RESCOS(1)=RESCOS(1)+ADDCOS
+
+      IF (MOM.GT.1) THEN
+
+         DWXI=DOM*XI
+         DWXI1=DOM*XI1
+
+         DCOSWXI=cos(DWxi)
+         DSINWXI=SIN(Dwxi)
+         DCOSWXI1=cos(Dwxi1)
+         DSINWXI1=SIN(Dwxi1)
+
+      ENDIF
+
+      DO IOM=2,MOM
+
+      COSWXI2P=COSWXI*DCOSWXI-SINWXI*DSINWXI
+      SINWXI2P=SINWXI*DCOSWXI+COSWXI*DSINWXI
+      COSWXI12P=COSWXI1*DCOSWXI1-SINWXI1*DSINWXI1
+      SINWXI12P=SINWXI1*DCOSWXI1+COSWXI1*DSINWXI1
+
+      W=W+DOM
+      W1=1.D0/W
+
+      AW2=A*W1*W1
+
+      WXI=W*XI
+      WXI1=W*XI1
+      YIW1=YI*W1
+      YI1W1=YI1*W1
+
+      ADDSIN=+coswxI2P*YIW1-coswxI12P*YI1W1+AW2*(sinwxI12P-sinwxI2P)
+        ADDCOS=-sinWXI2P*YIW1+sinwxI12P*YI1W1+AW2*(coswxI12P-coswxI2P)
+
+      RESSIN(IOM)=RESSIN(IOM)+ADDSIN
+      RESCOS(IOM)=RESCOS(IOM)+ADDCOS
+
+      ENDDO   !IOM
+
+      ENDDO
+
+      RETURN
+      END

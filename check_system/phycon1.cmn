@@ -1,0 +1,42 @@
+*KEEP,phycon1.
+
+c{ SEQ,PYCON1.
+      HBAREV1=6.58211889D-16
+      CLIGHT1=2.99792458D8
+      EMASSKG1=9.10938188D-31
+      EMASSE1=0.510998902D6
+      EMASSG1=0.510998902D-3
+      ECHARGE1=1.602176462D-19
+      ERAD1=2.8179380D-15
+      EPS01=8.854187817D-12
+      PI1=3.141592653589793D0
+      GRARAD1=PI1/180.0d0
+      RADGRA1=180.0d0/PI1
+      HPLANCK1=6.626176D-34
+
+
+      HBAR1=HBAREV1*ECHARGE1
+      WTOE1=CLIGHT1*HPLANCK1/ECHARGE1*1.0d9
+      CQ1=55.0d0/32.0d0/DSQRT(3.0D0)*HBAR1/EMASSKG1/CLIGHT1
+      CGAM1=4.0d0/3.0d0*PI1*ERAD1/EMASSG1**3
+      POL1CON1=8.0d0/5.0d0/DSQRT(3.0D0)
+      POL2CON1=8.0d0/5.0d0/DSQRT(3.0D0)/2.0d0/PI1/3600.0d0
+     &  *EMASSKG1/HBAR1/ERAD1*EMASSG1**5
+
+      TWOPI1=2.0D0*PI1
+      HALFPI1=PI1/2.0D0
+      sqrttwopi1=sqrt(twopi1)
+      dnull1=0.0d0
+      done1=1.0d0
+      rmu01=4.0D0*PI1/1.0D7
+      rmu04pi1=1.0D-7
+      alpha1=echarge1**2/(4.0d0*pi1*eps01*hbar1*clight1)
+      gaussn1=1.0d0/sqrt(twopi1)
+
+      cK934=ECHARGE1/(2.0d0*PI1*EMASSKG1*CLIGHT1)/100.0d0
+      powcon1=cgam1/2.0d0/pi1*clight1*(clight1/1.0d9)**2*emassg1
+
+      ecdipkev1=3.0d0/2.0d0*hbarev1*(clight1/emasse1)**2/emasse1*1.0d15
+      ecdipev1=ecdipkev1*1000.0d0
+
+c} SEQ,PYCON1.

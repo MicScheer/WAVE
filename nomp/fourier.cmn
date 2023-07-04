@@ -1,0 +1,18 @@
+*KEEP,FOURIER.
+      INTEGER NFOUR,NFOURWLS,IFOUR0,IPRNTF,
+     &  maxfoumagp,nfoumags,nfoumagcp
+      parameter (maxfoumagp=100,nfoumagcp=2**10)
+
+      DOUBLE PRECISION XLENFOUR,XBHOMF,DBHOMF,
+     &  xfoubounds(5,maxfoumagp),foumags(nfoumagcp/2+3,maxfoumagp)
+     &  ,fouentr,fouexit,xshbfour,scbfour
+
+      character(2048) chfoumags(maxfoumagp)
+
+      COMMON/CFOURIER/
+     &  XLENFOUR,XBHOMF,DBHOMF,xfoubounds,foumags
+     &  ,fouentr,fouexit,xshbfour,scbfour
+     &  ,NFOUR,NFOURWLS,IFOUR0,IPRNTF,nfoumags
+
+      NAMELIST/FOURIER/NFOUR,NFOURWLS,IFOUR0,XLENFOUR,DBHOMF,IPRNTF
+     &  ,fouentr,fouexit,xshbfour,scbfour

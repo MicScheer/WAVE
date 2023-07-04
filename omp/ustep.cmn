@@ -1,0 +1,9 @@
+*KEEP,ustep.
+      double precision bxustep,byustep,bzustep,gammaustep,dgammaustep
+
+      integer
+     &  nutrack,nustep
+
+      common/ustepc/
+     &  bxustep,byustep,bzustep,gammaustep,dgammaustep,
+     &  nutrack,nustep

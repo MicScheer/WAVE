@@ -1,0 +1,17 @@
+*KEEP,HALBASY.
+      INTEGER      IAHWFOUR,nhhalbasy
+
+      DOUBLE PRECISION       B0HALBASY,
+     &          XLHALBASY,YLHALBASY,ZLHALBASY,
+     &          XKHALBASY,YKHALBASY,ZKHALBASY,
+     &          FASYM,AHWPOL,RHALBASY,xcenhal,hhalbasy,pkhalbasy
+
+      COMMON/HALBASYM/
+     &          B0HALBASY,
+     &          XLHALBASY,YLHALBASY,ZLHALBASY,
+     &          XKHALBASY,YKHALBASY,ZKHALBASY,
+     &          FASYM,AHWPOL,RHALBASY,xcenhal,hhalbasy,pkhalbasy
+     &         ,IAHWFOUR,nhhalbasy
+
+      NAMELIST/HALBASY/B0HALBASY,XLHALBASY,YLHALBASY,hhalbasy,pkhalbasy,
+     &                   ZLHALBASY,FASYM,AHWPOL,IAHWFOUR,xcenhal,nhhalbasy

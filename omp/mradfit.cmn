@@ -1,0 +1,52 @@
+*KEEP,mradfit.
+      module mrad_fit
+
+      integer nvar,nparp,npar
+      parameter (nparp=100)
+
+      integer, save :: ifitorbit_m=0, nfitpar_m_p=0, nfitcoupmaxelem_m=0,
+     &  lunfit_m=0, nfitcoupmaxpar_m=0, nfitelemaxpar_m=0, nfitorbit_m=0,
+     &  ifitoptic_m=0, nfitoptic_m, ifitco_m, nfitco_m
+
+      integer, save ::
+     &  nfitelem_m=0, nfitpar_m=0, lsave_m=7
+
+      double precision, dimension(:,:), allocatable ,save ::
+     &  fitpar_m, bpmfit_m, fitorbit_m
+
+      integer, dimension (:,:), allocatable, save ::
+     &  kfitcouplelem_m, nfitcoupelem_m,
+     &  kfitcouplpar_m, nfitcouppar_m,
+     &  kbpmparidx_m, idxfitelem_m, idxfitpar_m,
+     &  idxfitcoupelem_m, idxfitcouppar_m
+
+      character(128), dimension (:), allocatable, save ::
+     &  chfitelem_m, chfitbpm_m
+
+      character(10), dimension (:), allocatable, save :: chparam_m
+
+      double precision, save :: chi2, chi2min=1.0d30
+
+      double precision, dimension(:,:), allocatable ,save :: var, varopt_m
+      double precision, dimension(:), allocatable ,save ::
+     &  paramopt_m
+
+      integer, save ::
+     &  minit_fcn,ithread_fcn,ielec_fcn,icharge_fcn,
+     &  ivelofield_fcn,itrackback_fcn,nstep_fcn, nthstep_fcn,
+     &  ieneloss_fcn,nphener_fcn, maxcalls_fcn, ifitverbose_m, kfit_m
+
+      double precision, save ::
+     &  gammai_fcn, dgamtot_fcn, dmomtot_fcn(3),
+     &  xelec_fcn, yelec_fcn, zelec_fcn,
+     &  vxelec_fcn, vyelec_fcn, vzelec_fcn,
+     &  dxelec_fcn, ds_fcn,
+     &  xf_fcn, yf_fcn, zf_fcn, efx_fcn,efy_fcn,efz_fcn,
+     &  xobsv_fcn, yobsv_fcn, zobsv_fcn,
+     &  xexit_fcn, yexit_fcn, zexit_fcn,
+     &  vnxex_fcn, vnyex_fcn,vnzex_fcn,sexit_fcn,
+     &  texit_fcn,powden_fcn, tolerance_fcn
+
+      character(32) chmethod_fcn
+
+      end module mrad_fit

@@ -1,0 +1,5 @@
+*KEEP,random.
+      integer*8 irancalls
+      integer irnseed(64),irnmode,irnsize,irnseedi(64)
+      common /randomc/ irancalls,irnseed,irnmode,irnsize,irnseedi
+      namelist /randomn/ irnmode,irnseed

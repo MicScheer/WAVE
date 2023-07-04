@@ -1,0 +1,17 @@
+*KEEP,platform.
+      integer kpython
+
+      character chpathsep
+      character(32) chplatform, chrmtree, chrmdir,chrmfile,chmkdir,chcpfile,
+     &  chcptree,chmvfile
+
+      character(1024) chpythonpath,chhostname,chcompiler,chcwd,chwavepath,
+     &  chpythoncom
+
+      common/platformc/ kpython,chpythonpath,
+     &  chplatform, chrmtree, chrmdir,chrmfile,chmkdir,chcpfile,chcptree,
+     &  chmvfile,chpathsep,chhostname,chcompiler,chcwd,chwavepath,chpythoncom
+
+      namelist/platformn/ chpythonpath,
+     &  chplatform, chrmtree, chrmdir,chrmfile,chmkdir,chcpfile,chcptree,
+     &  chmvfile,chpathsep,chwavepath,chpythoncom

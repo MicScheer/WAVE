@@ -1,0 +1,35 @@
+*KEEP,mradlattice.
+      module mrad_lattice
+
+      integer, parameter :: ntramat_m_p=1000, nmap_m_p=1000, ndimring_m=63,
+     &  ndimlat_m=7
+
+      double precision, save ::
+     &  tramat_m(7,7,ntramat_m_p),offset_m(7,ntramat_m_p),
+     &  tfmat_m(6,6,ntramat_m_p)
+
+      double precision, dimension (:), save, allocatable :: bmaps
+
+      double precision, dimension (:,:,:), save, allocatable :: design_orbit_m
+      double precision, dimension (:,:), save, allocatable :: ring_m
+      character(128), dimension(:), allocatable :: chring_m
+
+      double precision, save :: delgam_m=0.002, deltf_m=0.00001,
+     &  epsbet_m=1.0d-8, btabeps_m=1.0d-4, fringe_m=1000.0d0, cavivolt_m=9999.
+
+      integer, save :: kalloc_lattice_m=0, nplane_m=0, mplane_m=0,
+     &  kplane_m=0, kmplane_m=0, kplaneold_m=0, kfouind_m=0, kreftrack_m=0,
+     &  koptic_m=0, ktfind_m=0, ntfind_m=0, nosind_m=0, kosind_m=0,
+     &  ntrmind_m=0, ktrmind_m=0, nquad_m=0, nmap_m=0, nsext_m=0, nocto_m=0,
+     &  nbxyz_m=0,icharge_m=-1, nbend_m=0, ncavi_m=0,
+     &  nmapsize_m(3,nmap_m_p),nmappoi_m=0, kelem_m=1, intpolbmaps_m=-1,
+     &  koffquad_m=0, koffsext_m=0, koffocto_m=0, nbpm_m, koffcavi_m=0
+
+      integer :: modfringe_m=2
+
+      integer, dimension(:,:), save, allocatable :: lattice_m
+      integer, dimension(:), save, allocatable :: kplanidx_m, kbpm_m
+
+!$OMP THREADPRIVATE(nmappoi_m,kfouind_m,kplane_m,kmplane_m,kplaneold_m,kelem_m,kosind_m,ktfind_m,ktrmind_m)
+
+      end module mrad_lattice

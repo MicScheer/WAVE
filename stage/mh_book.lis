@@ -1,0 +1,133 @@
+           1 , 1D Histogramm,            1  ,WAVE.EXAMPLE
+           1 , Ntuple,          222  ,Input Parameters
+           2 , Ntuple,          223  ,Variables of user common block
+           3 , Ntuple,           10  ,TRAJECTORY
+           4 , Ntuple,           20  ,TRAJECTORY ON GRID
+           2 , 1D Histogramm,        25100  ,VERTICAL FOLDING FUNCTION
+           3 , 1D Histogramm,        24100  ,HORIZONTAL FOLDING FUNCTION
+           4 , 1D Histogramm,        48000  ,PHOTON FLUX (pinhole)
+           5 , 1D Histogramm,        49000  ,PHOTON FLUX (pinhole, folded)
+           6 , 1D Histogramm,       248001  ,PHOTON FLUX (pinhole)
+           7 , 1D Histogramm,       249001  ,PHOTON FLUX (pinhole, folded)
+           8 , 1D Histogramm,        50000  ,S0 (pinhole)
+           9 , 1D Histogramm,        51000  ,S1 (pinhole)
+          10 , 1D Histogramm,        52000  ,S2 (pinhole)
+          11 , 1D Histogramm,        53000  ,S3 (pinhole)
+          12 , 1D Histogramm,        54000  ,P (pinhole)
+          13 , 1D Histogramm,        54500  ,P1 (pinhole)
+          14 , 1D Histogramm,        55000  ,P2 (pinhole)
+          15 , 1D Histogramm,        56000  ,P3 (pinhole)
+          16 , 1D Histogramm,        57000  ,P23 (pinhole)
+          17 , 1D Histogramm,        58000  ,G3 (pinhole)
+          18 , 1D Histogramm,        59000  ,G23 (pinhole)
+          19 , 1D Histogramm,        60000  ,S0 (pinhole, folded)
+          20 , 1D Histogramm,        61000  ,S1  (pinhole, folded)
+          21 , 1D Histogramm,        62000  ,S2 (pinhole, folded)
+          22 , 1D Histogramm,        63000  ,S3 (pinhole, folded)
+          23 , 1D Histogramm,        64000  ,P (pinhole, folded)
+          24 , 1D Histogramm,        64500  ,P1 (pinhole, folded)
+          25 , 1D Histogramm,        65000  ,P2 (pinhole, folded)
+          26 , 1D Histogramm,        66000  ,P3 (pinhole, folded)
+          27 , 1D Histogramm,        67000  ,P23 (pinhole, folded)
+          28 , 1D Histogramm,        68000  ,G3 (pinhole, folded)
+          29 , 1D Histogramm,        69000  ,G23 (pinhole, folded)
+          30 , 1D Histogramm,        70000  ,S0_E (pinhole)
+          31 , 1D Histogramm,        71000  ,S1_E (pinhole)
+          32 , 1D Histogramm,        72000  ,S2_E (pinhole)
+          33 , 1D Histogramm,        73000  ,S3_E (pinhole)
+          34 , 1D Histogramm,        74000  ,P_E (pinhole)
+          35 , 1D Histogramm,        74500  ,P1_E (pinhole)
+          36 , 1D Histogramm,        75000  ,P2_E (pinhole)
+          37 , 1D Histogramm,        76000  ,P3_E (pinhole)
+          38 , 1D Histogramm,        77000  ,P23_E (pinhole)
+          39 , 1D Histogramm,        78000  ,G3_E (pinhole)
+          40 , 1D Histogramm,        79000  ,G23_E (pinhole)
+          41 , 1D Histogramm,        80000  ,S0_E (pinhole, folded)
+          42 , 1D Histogramm,        81000  ,S1_E  (pinhole, folded)
+          43 , 1D Histogramm,        82000  ,S2_E (pinhole, folded)
+          44 , 1D Histogramm,        83000  ,S3_E (pinhole, folded)
+          45 , 1D Histogramm,        84000  ,P_E (pinhole, folded)
+          46 , 1D Histogramm,        84500  ,P1_E (pinhole, folded)
+          47 , 1D Histogramm,        85000  ,P2_E (pinhole, folded)
+          48 , 1D Histogramm,        86000  ,P3_E (pinhole, folded)
+          49 , 1D Histogramm,        87000  ,P23_E (pinhole, folded)
+          50 , 1D Histogramm,        88000  ,G3_E (pinhole, folded)
+          51 , 1D Histogramm,        89000  ,G23_E (pinhole, folded)
+          52 , 1D Histogramm,       148000  ,SELECTED FLUX DENSITY x 1.E-6
+          53 , 1D Histogramm,       149000  ,SELECTED FLUX DENSITY (FOLDED) x 1.E-6
+          54 , 1D Histogramm,       150000  ,SELECTED S0 x 1.E-6
+          55 , 1D Histogramm,       151000  ,SELECTED S1 x 1.E-6
+          56 , 1D Histogramm,       152000  ,SELECTED S2 x 1.E-6
+          57 , 1D Histogramm,       153000  ,SELECTED S3 x 1.E-6
+          58 , 1D Histogramm,       154000  ,SELECTED P
+          59 , 1D Histogramm,       154500  ,SELECTED P1
+          60 , 1D Histogramm,       155000  ,SELECTED P2
+          61 , 1D Histogramm,       156000  ,SELECTED P3
+          62 , 1D Histogramm,       157000  ,SELECTED P23
+          63 , 1D Histogramm,       158000  ,SELECTED G3 x 1.e-6
+          64 , 1D Histogramm,       159000  ,SELECTED G23 x 1.e-6
+          65 , 1D Histogramm,       170000  ,SELECTED S0_E x 1.E-6
+          66 , 1D Histogramm,       171000  ,SELECTED S1_E x 1.E-6
+          67 , 1D Histogramm,       172000  ,SELECTED S2_E x 1.E-6
+          68 , 1D Histogramm,       173000  ,SELECTED S3_E x 1.E-6
+          69 , 1D Histogramm,       174000  ,SELECTED P_E
+          70 , 1D Histogramm,       174500  ,SELECTED P1_E
+          71 , 1D Histogramm,       175000  ,SELECTED P2_E
+          72 , 1D Histogramm,       176000  ,SELECTED P3_E
+          73 , 1D Histogramm,       177000  ,SELECTED P23_E
+          74 , 1D Histogramm,       178000  ,SELECTED G3_E x 1.E-6
+          75 , 1D Histogramm,       179000  ,SELECTED G23_E x 1.E-6
+          76 , 1D Histogramm,       160000  ,SELECTED S0 (folded) x 1.E-6
+          77 , 1D Histogramm,       161000  ,SELECTED S1 (folded) x 1.E-6
+          78 , 1D Histogramm,       162000  ,SELECTED S2 (folded) x 1.E-6
+          79 , 1D Histogramm,       163000  ,SELECTED S3 (folded) x 1.E-6
+          80 , 1D Histogramm,       164000  ,SELECTED P (folded)
+          81 , 1D Histogramm,       164500  ,SELECTED P1 (folded)
+          82 , 1D Histogramm,       165000  ,SELECTED P2 (folded)
+          83 , 1D Histogramm,       166000  ,SELECTED P3 (folded)
+          84 , 1D Histogramm,       167000  ,SELECTED P23 (folded)
+          85 , 1D Histogramm,       168000  ,SELECTED G3 (folded) x 1.e-6
+          86 , 1D Histogramm,       169000  ,SELECTED G23 (folded) x 1.e-6
+          87 , 1D Histogramm,       180000  ,SELECTED S0_E (folded) x 1.E-6
+          88 , 1D Histogramm,       181000  ,SELECTED S1_E (folded) x 1.E-6
+          89 , 1D Histogramm,       182000  ,SELECTED S2_E (folded) x 1.E-6
+          90 , 1D Histogramm,       183000  ,SELECTED S3_E (folded) x 1.E-6
+          91 , 1D Histogramm,       184000  ,SELECTED P_E (folded)
+          92 , 1D Histogramm,       184500  ,SELECTED P1_E (folded)
+          93 , 1D Histogramm,       185000  ,SELECTED P2_E (folded)
+          94 , 1D Histogramm,       186000  ,SELECTED P3_E (folded)
+          95 , 1D Histogramm,       187000  ,SELECTED P23_E (folded)
+          96 , 1D Histogramm,       188000  ,SELECTED G3_E (folded) x 1.E-6
+          97 , 1D Histogramm,       189000  ,SELECTED G23_E (folded) x 1.E-6
+          98 , 1D Histogramm,       190000  ,SELECTED B0 x 1.E-12
+          99 , 1D Histogramm,       191000  ,SELECTED B1 x 1.E-12
+         100 , 1D Histogramm,       192000  ,SELECTED B2 x 1.E-12
+         101 , 1D Histogramm,       193000  ,SELECTED B3 x 1.E-12
+         102 , 1D Histogramm,       194000  ,SELECTED B0_E x 1.E-12
+         103 , 1D Histogramm,       195000  ,SELECTED B1_E x 1.E-12
+         104 , 1D Histogramm,       196000  ,SELECTED B2_E x 1.E-12
+         105 , 1D Histogramm,       197000  ,SELECTED B3_E x 1.E-12
+         106 , 1D Histogramm,       190500  ,SELECTED B0 x 1.E-12 (FOLDED)
+         107 , 1D Histogramm,       191500  ,SELECTED B1 x 1.E-12 (FOLDED)
+         108 , 1D Histogramm,       192500  ,SELECTED B2 x 1.E-12 (FOLDED)
+         109 , 1D Histogramm,       193500  ,SELECTED B3 x 1.E-12 (FOLDED)
+         110 , 1D Histogramm,       194500  ,SELECTED B0_E x 1.E-12 (FOLDED)
+         111 , 1D Histogramm,       195500  ,SELECTED B1_E x 1.E-12 (FOLDED)
+         112 , 1D Histogramm,       196500  ,SELECTED B2_E x 1.E-12 (FOLDED)
+         113 , 1D Histogramm,       197500  ,SELECTED B3_E x 1.E-12 (FOLDED)
+         114 , 2D Histogramm,        11000  ,DIST. IN PINHOLE
+         115 , 1D Histogramm,        10999  ,HORIZ. CUT OF DIST. IN PINH.
+         116 , 1D Histogramm,        10998  ,VERT. CUT OF DIST. IN PINH.
+           5 , Ntuple,         3700  ,ARRAYS SPECT, REAIMA
+           6 , Ntuple,         3702  ,BRILLIANCE
+           7 , Ntuple,         2000  ,POWER DENSITY
+           8 , Ntuple,         2001  ,HORIZ. POWER DENSITY (VERT. INT.)
+           9 , Ntuple,         3600  ,PHOTON FLUX THROUGH PINHOLE
+          10 , Ntuple,         3601  ,Photon flux-density for selected point
+          11 , Ntuple,         3701  ,ARRAYS SPECF
+          12 , Ntuple,         4700  ,STOKES ARRAYS
+          13 , Ntuple,         4701  ,STOKES ARRAYS (FOLDED)
+          14 , Ntuple,         4702  ,STOKES ARRAYS (E-FOLDED)
+          15 , Ntuple,         4703  ,STOKES ARRAYS (EMIT, E-FOLDED)
+  
+ Maximum index for storage:          19

@@ -1,0 +1,35 @@
+macro cmzsymbols
+
+alias/create eout 'kuip/edit cmz_wave_export_standalone_omp.kumac' c
+alias/create es 'kuip/edit cmzsymbols.kumac' c
+alias/create ej 'kuip/edit ~/wav/cmz/job.kumac' c
+alias/create ei 'she bash ~/wav/edi-wave-in.sh' c
+alias/create pa 'she bash ~/wav/shell/paw-wave.sh' c
+alias/create ro 'she  cd ~/wav && bash ~/com/root.sh' c
+alias/create r 'she ~/wav/wave' c
+alias/create r 'she bash run-wave-xterm.sh' c
+alias/create r 'she bash run-wave.sh' c
+alias/create rd 'she ~/wav/waved' c
+alias/create eo 'she bash ~/wav/edi-wave-out.sh' c
+alias/create ss 'exec cmzsymbols.kumac' c
+alias/create out 'exec cmz_wave_export_standalone_omp.kumac' c
+alias/create outd 'exec cmz_waveout_debug.kumac' c
+alias/create eoutd 'k/edi cmz_waveout_debug.kumac' c
+alias/create edim 'edi /cmnn/$cmpara' c
+alias/create wfl 'she ./wfl' c
+alias/create wfls 'she ../shell/wfl_static.sh' c
+alias/create wfld 'she ./wfld' c
+alias/create womp 'she ../shell/womp.sh' c
+alias/create wfld_nofpe 'she ~/wav/wfld_nofpe' c
+*alias/create rd 'she ./jobd' c
+* alias/create j 'she perl job.pl' c
+* alias/create jd 'she ./jobd' c
+alias/create j 'exec job.kumac' c
+alias/create wvers 'exec wave_version' c
+alias/crea outu 'exec cmz_waveout uname ustep uout' c
+*alias/cre dcmn 'cd cmn' c
+alias/cre dcmnn 'exec dcmn' c
+
+exitm
+
+exitm

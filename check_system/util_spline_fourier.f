@@ -1,0 +1,135 @@
+*CMZ : 00.00/15 12/10/2013  12.22.24  by  Michael Scheer
+*CMZ : 00.00/07 02/05/2008  13.10.59  by  Michael Scheer
+*CMZ : 00.00/02 15/04/99  14.00.22  by  Michael Scheer
+*CMZ : 00.00/00 10/01/95  15.25.29  by  Michael Scheer
+*-- Author :
+      SUBROUTINE UTIL_SPLINE_FOURIER
+     &(X,Y,NX,OM,NOM,RESSIN,RESCOS,COEF,WORK1,WORK2,WORK3,WORK4,IFAIL)
+
+C---  CALCULATES INTEGRAL(F(x)*SIN(omega*x)) AND INTEGRAL(F(x)*COS(omega*x))
+
+      IMPLICIT NONE
+
+      INTEGER NX,NOM,MOM,IFAIL,IOM,I
+
+      REAL*8 X(NX),Y(NX),RESSIN(NOM),RESCOS(NOM),ADDSIN,ADDCOS
+      REAL*8 COEF(NX),WORK1(NX),WORK2(NX),WORK3(NX),WORK4(NX)
+
+      REAL*8 OM(NOM),DOM,XI,XI1,YI,YI1,YPI,YPI1,DX,W,W1,W2,W21
+      REAL*8 DX2,DY6,DYP,WYI,WYI1,DWXI,DWXI1
+      REAL*8 WXI,WXI1,COSWXI,SINWXI,COSWXI1,SINWXI1,YPIW,YPIW1,DYP6W2,W2DX6
+      REAL*8 DCOSWXI,DSINWXI,DCOSWXI1,DSINWXI1
+      REAL*8 COSWXI2P,SINWXI2P,COSWXI12P,SINWXI12P
+
+      IFAIL=0
+
+         CALL UTIL_SPLINE_COEF(X,Y,NX,9999.0d0,9999.0d0,COEF,WORK1,WORK2,WORK3,WORK4)
+
+      MOM=NOM
+
+      IF (MOM.GT.1) THEN
+          DOM=OM(2)-OM(1)
+      ELSEIF (MOM.LT.-1) THEN
+          DOM=OM(1)
+          MOM=-MOM
+      ELSE
+          IFAIL=1
+          RETURN
+      ENDIF
+
+      DO IOM=1,MOM
+          RESSIN(IOM)=0.0D0
+          RESCOS(IOM)=0.0D0
+      ENDDO
+
+      DO I=1,NX-1
+
+      XI=X(I)
+      XI1=X(I+1)
+      YI=Y(I)
+      YI1=Y(I+1)
+      YPI=COEF(I)
+      YPI1=COEF(I+1)
+
+      DX=(xi1-xi)
+      DX2=DX*DX
+      DY6=(Yi1-Yi)*6.d0
+      DYP=(YPi1-YPi)
+
+      W=OM(1)
+      W2=W*W
+      W1=1.D0/W
+      W21=W1*W1
+      WXI=W*XI
+      WXI1=W*XI1
+      COSWXI=cos(wxi)
+      SINWXI=SIN(wxi)
+      COSWXI1=cos(wxi1)
+      SINWXI1=SIN(wxi1)
+      WYI=W*YI
+      YPIW=YPI*W1
+      WYI1=W*YI1
+      YPIW1=YPI1*W1
+      DYP6W2=6.D0*DYP*W21
+      W2DX6=1.D0/(-6.D0*W2*DX)
+
+
+      ADDSIN=(COSWXI*(WYI-YPIW)-COSWXI1*(WYI1-YPIW1))*W21
+     &        +(SINWXI*(-(2.D0*ypi+ypi1)*DX2+DY6-DYP6W2)
+     &         +SINWXI1*(-DX2*(ypi+2.D0*ypi1)-DY6+DYP6W2))*W2DX6
+
+      ADDCOS=(-SINWXI*(WYI-YPIW)+SINWXI1*(WYI1-YPIW1))*W21
+     &        +(COSWXI*(-(2.D0*ypi+ypi1)*DX2+DY6-DYP6W2)
+     &          +COSWXI1*(-DX2*(ypi+2.D0*ypi1)-DY6+DYP6W2))*W2DX6
+
+      RESSIN(1)=RESSIN(1)+ADDSIN
+      RESCOS(1)=RESCOS(1)+ADDCOS
+
+      IF (MOM.GT.1) THEN
+
+         DWXI=DOM*XI
+         DWXI1=DOM*XI1
+
+         DCOSWXI=cos(DWxi)
+         DSINWXI=SIN(Dwxi)
+         DCOSWXI1=cos(Dwxi1)
+         DSINWXI1=SIN(Dwxi1)
+
+      ENDIF
+
+      DO IOM=2,MOM
+
+      W=W+DOM
+      W2=W*W
+      W1=1.D0/W
+      W21=W1*W1
+      WXI=W*XI
+      WXI1=W*XI1
+      COSWXI2P=COSWXI*DCOSWXI-SINWXI*DSINWXI
+      SINWXI2P=SINWXI*DCOSWXI+COSWXI*DSINWXI
+      COSWXI12P=COSWXI1*DCOSWXI1-SINWXI1*DSINWXI1
+      SINWXI12P=SINWXI1*DCOSWXI1+COSWXI1*DSINWXI1
+      WYI=W*YI
+      YPIW=YPI*W1
+      WYI1=W*YI1
+      YPIW1=YPI1*W1
+      DYP6W2=6.D0*DYP*W21
+      W2DX6=1.D0/(-6.D0*W2*DX)
+
+      ADDSIN=(COSWXI2P*(WYI-YPIW)-COSWXI12P*(WYI1-YPIW1))*W21
+     &        +(SINWXI2P*(-(2.D0*ypi+ypi1)*DX2+DY6-DYP6W2)
+     &          +SINWXI12P*(-DX2*(ypi+2.D0*ypi1)-DY6+DYP6W2))*W2DX6
+
+      ADDCOS=(-SINWXI2P*(WYI-YPIW)+SINWXI12P*(WYI1-YPIW1))*W21
+     &        +(COSWXI2P*(-(2.D0*ypi+ypi1)*DX2+DY6-DYP6W2)
+     &          +COSWXI12P*(-DX2*(ypi+2.D0*ypi1)-DY6+DYP6W2))*W2DX6
+
+      RESSIN(IOM)=RESSIN(IOM)+ADDSIN
+      RESCOS(IOM)=RESCOS(IOM)+ADDCOS
+
+      ENDDO   !IOM
+
+      ENDDO
+
+      RETURN
+      END

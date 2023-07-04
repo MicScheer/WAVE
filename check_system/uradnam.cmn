@@ -1,0 +1,7 @@
+*KEEP,uradnam.
+      namelist/uradn/
+     &  energy,xobsv,yobsv,zobsv,
+     &  xelec,yelec,zelec,vxelec,vyelec,vzelec,
+     &  xf,yf,zf,efx,efy,efz,ds,
+     &  phelow,phehig,
+     &  nstep,nphener,ieneloss,ivelofield,nthstep

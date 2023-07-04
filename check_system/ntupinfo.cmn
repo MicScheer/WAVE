@@ -1,0 +1,3 @@
+*KEEP,ntupinfo.
+      integer ntupnvar(10000)
+      common/ntupinfo/ntupnvar

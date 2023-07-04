@@ -1,0 +1,1063 @@
+
+                                                   13:49:08 04.07.23
+
+
+           *********************************************
+           *          PROGRAM WAVE                     *
+           *                                           *
+           *       VERSION 4.01/03   4.7.2023          *
+           *                                           *
+           *          Michael Scheer                   *
+           *              BESSY                        *
+           *********************************************
+
+
+      Compiler-Version: GCC version 10.2.1 20210110
+      Hostname: lena
+      Working directory: /l3/scheer.sda/wav/for_incl/stage
+
+      USER COMMENT:
+
+      WAVE.EXAMPLE                                                     
+
+      CURRENT NUMBER:           4
+
+
+      USER NAMELIST:
+
+
+
+
+      MODE FLAGS:
+
+      IUNDULATOR,IWIGGLER:            1           0
+
+
+
+      CONTROL FLAGS:
+
+
+      IUNAME,IUSTEP,IUOUT:            0           0           0
+      IOPTIC,IGENFUN:                 0           0
+      IMAGSPLN:                   -9999
+      IEMIT,IEMIAHW:                  0           0
+      IWLSOPT,IBEAMPOL:               0           0
+      IENELOSS, IEFIELD:              1           0
+      IPOWER,ISPEC:                   0           1
+      IVELOFIELD,ISPECMODE:           0           2
+         IWFILL0,IRFILL0:                      0           0
+         ISPECINT,IPIN:                        0           1
+         ISTOKES,IBRILL:                       1           1
+         IPINCIRC,IRPHI:                       0           0
+         IFOLD,ISIGUSR:                        1           1
+         IF1DIM,IPOLA:                         0           0
+         IWFILSP0,IWFILSPF:                    0           0
+         IRFILSP0,IRFILSTO:                    0           0
+         IWFILSTO,IWFLSTOF:                    0           0
+         ISPECANA,ISPECANAF:                   0           0
+         IAMPLI,IAMPSKIP:                      0           0
+         IWFILFL0,IWFILFLF:                    0           0
+         IWFILS,IWFILSF:                       0           0
+         IWFILSE,IWFILSEF:                     0           0
+         IWFILB,IWFILBF:                       0           0
+         IWFILBE,IWFILBEF:                     0           0
+         IWFILINT,IPINALL:                     0           0
+         IRFILOB,IFILTER:                      0           0
+         IWFILRAY,IDESYNC:                     0           0
+         IPHASE,IPHASEANA:                     0           0
+         IDOSE,IEFOLD:                         0           1
+         ISPECDIP,IBL0CUT:                     0           0
+         IEFFI,IFILMUL:                        0           0
+         IBUNCH, IUBUNCH, NBUNCH:              0           0           0
+      IWFILF:                         0
+
+
+      MAGNETIC FIELD FLAGS:
+
+
+
+      ICHARGE,IBMASK,JBMASK:          -1           0           0
+      IBSUPER,IBERROR:                 1           0
+      ICUTFIBO:                        1
+
+      IPERIODG,IBSYM:                 0           0
+      IBSYMY,IBSYMZ:                  0           0
+      KBEXTERN,KBFELD:                0           0
+      KHALBA,KHALBASY:                0           0
+      KUCROSS,IRFILP:                 0           0
+      KMAGSEQ,IMGSQF:                 0           0
+             KMAGCOR:                 1
+      IRFILF,KELLIP:                  0           1
+      IRBTAB,IRBTABZY:                0           0
+      IFOURBTABZY:                    0
+      IRFILT0,IRBTABXYZ:              0           0
+      KBPOLYH,KBPOLY3D:               0           0
+      KBREC,KELLANA:                  0           0
+      KUNDUGAP,KBUNDUMAG:             0           0
+      KBPOLYMAG,KBGENESIS:            0           0
+      KBAMWLS,IRFILB0:                0           0
+      ICLUSTER:                       0
+
+  
+  
+        Max number of threads available, number of used ones:
+                   4           4
+
+
+      HISTOGRAM FLAGS:
+
+      IHBOOK,IHINDEX:                 1           0
+
+
+      OTHER OPTIONS:
+
+
+      IWBTAB,IWFILT0:                 0           0
+      IWSECTMAGS:                     0
+      IJUST,ISNORDER:                 0           0
+      IWBMAP,IWBPOLY3D:               0           0
+      IWBPOLY2DH,IWBPHARM:            0           0
+
+
+      SR BELLIP, Parameters of elliptical undulator:
+      horizontal and vertical peak field [T]:  0.353553385      0.353553385    
+      number of periods, period and device length [m]:
+         31.0000000       5.60000017E-02   1.75000000    
+      shift parameter [periods], B_h/B_v:      0.250000000       1.00000000    
+      B0_eff [T], deflection parameter K:  0.500000000       2.61444139    
+      Approximated path hori. and. vert. amplitudes [m]:   4.88943761E-06   4.88943761E-06
+      Hori. and. vert. deflection angle [rad]:   5.48593584E-04   5.48593584E-04
+      1. harmonical [nm] and [eV]:   10.8923893       113.828285    
+      critical energy [eV]:   985.995178    
+
+      longitudinal position of device center [m]:   0.0000000000000000     
+
+      taper factor to compensate energy-loss:   0.0000000000000000     
+
+      Estimate of 1. harm. on-axis flux-density in 10m / mm**2 / 0.1%BW
+         1.03719073E+14
+
+
+      Number of tracking steps per meter (MYINUM):         5000
+
+      Start and end of the trajectory [m](XSTART,XSTOP):
+       -0.875000000      0.875000000    
+
+      BMOVECUT:   9.99999997E-07
+
+      Initial energy [GeV] and gamma:    1.72200000       3369.8702546331497     
+      Final energy [GeV] and gamma:      1.72199917       3369.8686869227481     
+      Relative change:                  -4.65213873E-07
+
+
+      B-rho [Tm], current [A]:   -5.74397326      0.100000001    
+
+      Offset for vert. and hori. magnetic field (BYGOFF, BZGOFF):
+          0.00000000       0.00000000    
+      Global scaling factor for mag. field (B0SCGLOB,A0SCGLOB):
+          1.00000000       1.00000000    
+
+      Global rel. taper (XTAPER, BTAPERV, BTAPERH):
+          0.00000000       0.00000000       0.00000000    
+
+      Long. shift [m] of device (X(e-) -> X(e-)+XSHIFT):    0.00000000    
+      Vert. shift [m] of device (Y(e-) -> Y(e-)+VSHIFT):    0.00000000    
+      Hori. shift [m] of device (Z(e-) -> Z(e-)+HSHIFT):    0.00000000    
+      Rotation angle [degree] of device:                    0.00000000    
+      Y(e-) -> Y(e-)*sin(XROTD) + Y(e-)*cos(XROTD)
+      Z(e-) -> Z(e-)*cos(XROTD) - Y(e-)*sin(XROTD)
+
+
+      Magnetic field [T] at starting point:
+         0.00000000       0.00000000       0.00000000    
+
+      Vector potential [T-m] at starting point:
+         0.00000000       0.00000000       0.00000000    
+
+
+      Magnetic field [T] at stopping point:
+         6.72190119E-22   0.00000000      -6.66133815E-16
+
+      Vector potential [T-m] at stopping point:
+         0.00000000       0.00000000       1.47911420E-31
+
+      Extrema of magnetic field [T] and the trajectory [m]:
+
+      BXmax,BXmin:    2.88477022E-04  -3.34861514E-04
+      BYmax,BYmin:   0.353531241     -0.353531241    
+      BZmax,BZmin:   0.353531301     -0.353531301    
+
+      Xmax,Xmin:   0.875000000     -0.875000000    
+      Ymax,Ymin:    4.88933392E-06  -4.88976775E-06
+      Zmax,Zmin:    4.88933665E-06  -4.88947626E-06
+
+
+      Extrema of magnetic field [T] and the trajectory [m] between
+      XIANF and XIEND
+
+      BXmaxAE,BXminAE:    2.88477022E-04  -3.34861514E-04
+      BYmaxAE,BYminAE:   0.353531241     -0.353531241    
+      BZmaxAE,BZminAE:   0.353531301     -0.353531301    
+
+      XmaxAE,XminAE:   0.874999762     -0.875000000    
+      YmaxAE,YminAE:    4.88933392E-06  -4.88976775E-06
+      ZmaxAE,ZminAE:    4.88933665E-06  -4.88947626E-06
+
+
+      Start values (coordinates [m] and slopes) of trajectory:
+
+      X0:  -0.87500000000000000     
+      Y0:    0.0000000000000000     
+      Z0:    0.0000000000000000     
+
+      ZP0:   0.0000000000000000     
+      YP0:   0.0000000000000000     
+
+      VX0:   299792444.80029100     
+      VY0:   0.0000000000000000     
+      VZ0:   0.0000000000000000     
+
+      Values for X=0 (coordinates [m] and slopes) of trajectory:
+
+      YCEN:    3.4570663969664218E-006
+      ZCEN:    3.4572128680031478E-006
+
+      YPCEN:   3.8792234856717449E-004
+      ZPCEN:  -3.8792257367272398E-004
+
+      End values (coordinates [m] and slopes) of trajectory:
+
+      XF0:   0.87500000000000000     
+      YF0:   -4.4337817747002460E-010
+      ZF0:   -1.4475538276664121E-010
+
+
+      ZPF0:   -1.6567946376849587E-010
+      YPF0:   -3.4931908731583471E-010
+
+      VXF0:    299792444.80027872     
+      VYF0:  -0.10472322320181612     
+      VZF0:   -4.9669451496356577E-002
+
+
+      Values for X=XIANF (coordinates [m] and slopes) of trajectory:
+
+      XIANF:   -1.0000000000000000E+030
+      YIANF:   -9999.0000000000000     
+      ZIANF:   -9999.0000000000000     
+
+      YPIANF:  -9999.0000000000000     
+      ZPIANF:  -9999.0000000000000     
+
+
+
+      Values for X=XIEND (coordinates [m] and slopes) of trajectory:
+
+      XIEND:    1.0000000000000000E+030
+      YIEND:   -9999.0000000000000     
+      ZIEND:   -9999.0000000000000     
+
+      YPIEND:  -9999.0000000000000     
+      ZPIEND:  -9999.0000000000000     
+
+
+      ZF0/(XSTOP-XSTART):   -8.2717361580937831E-011
+      YF0/(XSTOP-XSTART):   -2.5335895855429975E-010
+
+      YF0-Y0:  -4.4337817747002460E-010
+      ZF0-Z0:  -1.4475538276664121E-010
+
+      YPF0-YP0:  -3.4931908731583471E-010
+      ZPF0-ZP0:  -1.6567946376849587E-010
+
+      Straight line fit of z(x):
+      offset:   5.8596152735204156E-008
+      slope:  -1.6925618939307225E-009
+
+      Straight line fit of vz(x)/vx(x):
+      offset:  -8.3724543033188026E-011
+      slope:  -2.2982819823486732E-007
+
+      Straight line fit of y(x):
+      offset:   5.8448931710740751E-008
+      slope:   1.3519070338629160E-009
+
+      Straight line fit of vy(x)/vx(x):
+      offset:  -2.5303581130420459E-010
+      slope:  -2.2983833057806190E-007
+
+      1. magnetic integral [T-m]:   -1.64186131E-04  -6.06067585E-10  -1.05003517E-09
+      2. mag. integral [T-m**2]:   -1.45884434E-04  -1.63279848E-10  -1.19190668E-09
+
+      Integrated By**2 [T**2-m]:                     0.213500157    
+      Energy irradiated by the device per e- [MeV]:   8.01098242E-04
+      Rel. energy loss:                               4.65213844E-07
+      Power irradiated by the device [kWATT]:         8.01098272E-02
+
+      Length of trajectory (BINT0) [m]:
+         1.7500002554140632     
+      Integrated (YP**2+ZP**2)/2 of trajectory (WTRA2I) [m]:
+         2.5541424595870220E-007
+      corresponding phase advance [nm and eV]:
+         332.46592256285078        3.7292902504984240     
+      dE/E and corresponding dL = 2 * dE/E * L [nm]:
+         1.00000005E-03  0.510828495    
+      Circumference of the ring [m]:                 240.000000    
+      Rel. change of total circumference (from BINT0):         
+         1.06422526E-09
+      Rel. change of total circumference (from WTRA2I):
+         1.06422604E-09
+
+      Max. and min. deflection angle [rad]:    5.48605400E-04  -5.48605574E-04
+
+
+      SPECTRUM
+      ===========
+
+      Start and end of points [m] of integration for spectrum
+      calculations (XIANF,XIEND):  -1.00000002E+30   1.00000002E+30
+
+
+      SR WFILL0:
+
+      Parameters:
+      WGWINFC:   2646.6899088765672     
+      WBL0CUT:   0.0000000000000000     
+      WBL0HYS:   1.0000000000000000     
+
+      Pinhole of collimators:
+      (X,Y,Z), width, height:
+
+        1.0000E+01  0.0000E+00  0.0000E+00  1.0000E+03  1.0000E+03
+        1.0000E+01  0.0000E+00  0.0000E+00  1.0000E+03  1.0000E+03
+
+      Number of sources:           1
+      Begin and end of sources (x,y,z):
+
+                 1 -0.875000000       0.00000000       0.00000000    
+                 1  0.875000000      -4.43378168E-10  -1.44755388E-10
+
+      Horiz., vert. slopes and mag. field
+      at begin and end of sources:
+
+                 1   0.00000000       0.00000000       0.00000000    
+                 1  -1.65679470E-10  -3.49319074E-10   5.44467874E-11
+
+
+      SR COHEREN:
+      Minimum and maximum number of phases  between
+      photons and electrons:
+         27.6205330       31.9111004    
+
+
+       selected observation point:
+
+          10.0000000       2.16840434E-19   0.00000000    
+
+
+        SUBROUTINE souintana_ini_omp:
+
+             SOURCE NUMBER           1 :
+
+        phase advance per step at beginning and end of source for
+        lowest and highest photon energy at selected observation point:
+
+        beginning:   4.59647086E-03   5.31048607E-03
+        end:         4.59647551E-03   5.31049073E-03
+
+
+        ROIs (boundary, precision, points):
+
+           1  -1.00000000E+10   1.00000000            8750
+           2   1.00000000E+10
+
+        SOURCE, TOTAL NUMBER OF STEPS:           1        8750
+        (controlled by NLPOI and namelist $ROIN)
+
+
+ *** WARNING SR WGFOUR:
+ ADJUSTED VALUES OF DGSIGY(ISOUR) DIFFER MORE THEN SIGMA FROM GIVEN VALUE
+ CHECK FOLDING FUNCTION AND DGSIGY
+
+
+      Source number, mean mag. field (sign from By), abs. mean and rel. rms
+      for sources, and critical photon energy [eV] or wavelength [nm]
+      (with respect to abs. mean):
+
+           1  -9.69404646E-04  0.347094029      0.112537995       684.466064    
+
+      Photon energy cut-off (SPECCUT):   0.00000000    
+
+      Max. field and photon energy cuts for source points:
+
+           1  0.398251534       0.00000000    
+
+      Results of spectrum calculations
+      ================================
+
+
+      Reflectivity coefficients (complex):
+
+                     (1.0000000000000000,0.0000000000000000)
+                     (1.0000000000000000,0.0000000000000000)
+                     (1.0000000000000000,0.0000000000000000)
+
+
+
+
+      Bandwidth:   1.00000005E-03
+
+
+      Pinhole position (x,y,z) [m]:
+         10.0000000       0.00000000       0.00000000    
+
+      Numbers defining inner vert. and hori. edges (MMEDGEY,MMEDGEZ):            0           0  (obsolete, MUST be zero)
+      Numbers defining outerer vert. and hori. edges (MEDGEY,MEDGEZ):            1           1
+      Total number of vert. and hori. points:                    25          39
+      Number of vert. and horiz. points inside pinhole:          21          21
+
+      Vertical and horizontal grid size [m]:        1.50000007E-04   1.50000007E-04
+      Vertical and horizontal size [m x m]:         3.00000003E-03   3.00000003E-03
+      Total vert. and horiz. size [m x m]:          3.60000017E-03   5.70000010E-03
+
+      Photon energy or wavelength and flux through pinhole:
+      (for all sources and sum)
+
+      103.000000       5.05768554E+13   5.05768554E+13
+      104.000000       8.49540001E+13   8.49540001E+13
+      105.000000       1.35747407E+14   1.35747407E+14
+      106.000000       2.14997641E+14   2.14997641E+14
+      107.000000       3.18362035E+14   3.18362035E+14
+      108.000000       4.15822862E+14   4.15822862E+14
+      109.000000       4.81207901E+14   4.81207901E+14
+      110.000000       5.19233528E+14   5.19233528E+14
+      111.000000       5.41484344E+14   5.41484344E+14
+      112.000000       5.26686404E+14   5.26686404E+14
+      113.000000       4.38240914E+14   4.38240914E+14
+      114.000000       2.84995172E+14   2.84995172E+14
+      115.000000       1.33783290E+14   1.33783290E+14
+      116.000000       4.64115424E+13   4.64115424E+13
+      117.000000       2.35155604E+13   2.35155604E+13
+      118.000000       2.37767775E+13   2.37767775E+13
+      119.000000       1.92082640E+13   1.92082640E+13
+
+      Estimated maximum:
+
+         111.100586       5.41671746E+14
+
+
+      Flux density for selected point:
+
+               103.000000       1.87085958E+17   1.87085958E+17
+               104.000000       1.52785607E+18   1.52785607E+18
+               105.000000       1.80554433E+18   1.80554433E+18
+               106.000000       2.30199699E+17   2.30199699E+17
+               107.000000       1.20830679E+18   1.20830679E+18
+               108.000000       5.63659413E+18   5.63659413E+18
+               109.000000       5.36913573E+18   5.36913573E+18
+               110.000000       1.59626085E+17   1.59626085E+17
+               111.000000       1.35074476E+19   1.35074476E+19
+               112.000000       6.74432780E+19   6.74432780E+19
+               113.000000       1.38615273E+20   1.38615273E+20
+               114.000000       1.67225128E+20   1.67225128E+20
+               115.000000       1.24717138E+20   1.24717138E+20
+               116.000000       5.09826433E+19   5.09826433E+19
+               117.000000       5.79217503E+18   5.79217503E+18
+               118.000000       2.04714029E+18   2.04714029E+18
+               119.000000       9.26061689E+18   9.26061689E+18
+
+      Estimated maximum:
+
+         113.902290       1.67564640E+20
+
+
+      Power through pinhole [W]:
+      (for all sources and sum)
+       1.31209099       1.31209099    
+
+
+      Power density at selected point [W/m**2]:
+
+                119062.070       119062.070    
+
+
+
+
+      Number of sigmas for horiz. folding:
+         3.43359208    
+
+      Number of sigmas for vert. folding:
+         4.18843699    
+
+
+      Sigmas of sources for horiz. folding:
+         3.93174269E-04
+
+      Sigmas of sources for vert. folding:
+         7.16257637E-05
+
+      Sigmas of horizontal beam size and divergence:
+      (if not zero, sigmas for folding are calculated from these values)
+         2.74999999E-04   2.80999993E-05
+
+      Sigmas of vertical beam size and divergence:
+      (if not zero, sigmas for folding are calculated from these values)
+         2.25000003E-05   6.79999994E-06
+
+
+
+      Sigmas for folding of components of STOKES vector:
+         3.93174269E-04   7.16257637E-05
+
+
+      Photon energy or wavelen. and flux through pinhole with emittance effects:
+
+      103.000000       7.39961544E+13   7.39961544E+13
+      104.000000       1.06473405E+14   1.06473405E+14
+      105.000000       1.50727146E+14   1.50727146E+14
+      106.000000       2.13075072E+14   2.13075072E+14
+      107.000000       2.90840757E+14   2.90840757E+14
+      108.000000       3.67644637E+14   3.67644637E+14
+      109.000000       4.30049908E+14   4.30049908E+14
+      110.000000       4.80668010E+14   4.80668010E+14
+      111.000000       5.18593813E+14   5.18593813E+14
+      112.000000       5.14310959E+14   5.14310959E+14
+      113.000000       4.31645186E+14   4.31645186E+14
+      114.000000       2.81907997E+14   2.81907997E+14
+      115.000000       1.32406837E+14   1.32406837E+14
+      116.000000       4.53530637E+13   4.53530637E+13
+      117.000000       2.25957433E+13   2.25957433E+13
+      118.000000       2.32245848E+13   2.32245848E+13
+      119.000000       1.88053256E+13   1.88053256E+13
+
+      Estimated maximum:
+
+         111.398529       5.21945766E+14
+
+
+      Flux density at selected point with emittance:
+
+               103.000000       6.01373418E+17   6.01373418E+17
+               104.000000       1.65109194E+18   1.65109194E+18
+               105.000000       1.36392617E+18   1.36392617E+18
+               106.000000       5.71116748E+17   5.71116748E+17
+               107.000000       2.67104030E+18   2.67104030E+18
+               108.000000       5.93490703E+18   5.93490703E+18
+               109.000000       5.07604771E+18   5.07604771E+18
+               110.000000       7.36454977E+18   7.36454977E+18
+               111.000000       3.45815253E+19   3.45815253E+19
+               112.000000       9.22588244E+19   9.22588244E+19
+               113.000000       1.45047873E+20   1.45047873E+20
+               114.000000       1.46079751E+20   1.46079751E+20
+               115.000000       9.25410207E+19   9.25410207E+19
+               116.000000       3.11237349E+19   3.11237349E+19
+               117.000000       3.14098806E+18   3.14098806E+18
+               118.000000       4.49788492E+18   4.49788492E+18
+               119.000000       8.06395847E+18   8.06395847E+18
+
+      Estimated maximum:
+
+         113.518906       1.52394898E+20
+
+
+
+      Photon energy or wavelength and normalized components S0, S1/S0,
+      S2/S0, S3/S0 of STOKES vector and polarization for pinhole:
+
+       1.0300E+02  5.0577E+13  3.7270E-03 -1.5868E-02 -9.9181E-01  9.9194E-01
+       1.0400E+02  8.4954E+13  1.6163E-03 -1.3265E-02 -9.9297E-01  9.9306E-01
+       1.0500E+02  1.3575E+14  3.8020E-04 -9.9209E-03 -9.9428E-01  9.9433E-01
+       1.0600E+02  2.1500E+14 -4.6256E-04 -8.3853E-03 -9.9566E-01  9.9570E-01
+       1.0700E+02  3.1836E+14 -9.3636E-04 -8.2299E-03 -9.9671E-01  9.9675E-01
+       1.0800E+02  4.1582E+14 -1.0629E-03 -7.5700E-03 -9.9747E-01  9.9750E-01
+       1.0900E+02  4.8121E+14 -9.0291E-04 -6.0737E-03 -9.9812E-01  9.9814E-01
+       1.1000E+02  5.1923E+14 -6.0281E-04 -4.9324E-03 -9.9872E-01  9.9873E-01
+       1.1100E+02  5.4148E+14 -4.1916E-04 -4.9522E-03 -9.9917E-01  9.9918E-01
+       1.1200E+02  5.2669E+14 -5.0828E-04 -4.9446E-03 -9.9942E-01  9.9943E-01
+       1.1300E+02  4.3824E+14 -8.4107E-04 -3.1195E-03 -9.9953E-01  9.9953E-01
+       1.1400E+02  2.8500E+14 -1.4131E-03  1.6552E-03 -9.9948E-01  9.9948E-01
+       1.1500E+02  1.3378E+14 -2.5251E-03  1.0500E-02 -9.9902E-01  9.9908E-01
+       1.1600E+02  4.6412E+13 -5.3997E-03  2.3400E-02 -9.9723E-01  9.9752E-01
+       1.1700E+02  2.3516E+13 -8.9521E-03  2.4394E-02 -9.9491E-01  9.9525E-01
+       1.1800E+02  2.3777E+13 -8.6509E-03  2.4216E-02 -9.9526E-01  9.9559E-01
+       1.1900E+02  1.9208E+13 -1.0042E-02  3.6705E-02 -9.9394E-01  9.9467E-01
+
+
+      Photon energy [eV] or wavelength [nm] for selected point
+      of pinhole, S0, S1/S0, S2/S0, S3/S0, P of
+      STOKES vector per unit area [m**2]:
+
+
+           Observation point (x,y,z) [m]:
+              10.0000000       2.16840434E-19   0.00000000    
+
+       1.0300E+02  1.8709E+17  6.7016E-02  1.6985E-01 -9.8319E-01  1.0000E+00
+       1.0400E+02  1.5279E+18  1.5456E-02 -1.3781E-02 -9.9979E-01  1.0000E+00
+       1.0500E+02  1.8055E+18  1.3587E-02 -7.6010E-02 -9.9701E-01  1.0000E+00
+       1.0600E+02  2.3020E+17  7.2878E-02 -2.4334E-01 -9.6720E-01  1.0000E+00
+       1.0700E+02  1.2083E+18  2.1645E-02  5.3103E-02 -9.9835E-01  1.0000E+00
+       1.0800E+02  5.6366E+18  8.0734E-03 -1.8443E-02 -9.9980E-01  1.0000E+00
+       1.0900E+02  5.3691E+18  7.8334E-03 -5.2128E-02 -9.9861E-01  1.0000E+00
+       1.1000E+02  1.5963E+17  2.3228E-01 -1.8773E-01 -9.5436E-01  1.0000E+00
+       1.1100E+02  1.3507E+19  6.1636E-03  9.9108E-03 -9.9993E-01  1.0000E+00
+       1.1200E+02  6.7443E+19  2.0328E-03 -8.7708E-03 -9.9996E-01  1.0000E+00
+       1.1300E+02  1.3862E+20  5.5293E-04 -1.1596E-02 -9.9993E-01  1.0000E+00
+       1.1400E+02  1.6723E+20 -5.9823E-04 -8.6700E-03 -9.9996E-01  1.0000E+00
+       1.1500E+02  1.2472E+20 -1.8031E-03 -1.1417E-03 -1.0000E+00  1.0000E+00
+       1.1600E+02  5.0983E+19 -3.6542E-03  1.3574E-02 -9.9990E-01  1.0000E+00
+       1.1700E+02  5.7922E+18 -1.3862E-02  5.9075E-02 -9.9816E-01  1.0000E+00
+       1.1800E+02  2.0471E+18 -2.1883E-02 -6.4726E-02 -9.9766E-01  1.0000E+00
+       1.1900E+02  9.2606E+18 -7.2243E-03  6.0423E-03 -9.9996E-01  1.0000E+00
+
+
+      Energy, S0, S1/S0, S2/S0, S3/S0 and P for pinhole with emittance:
+
+       1.0300E+02  7.3996E+13 -3.3192E-02 -1.4735E-02 -9.9073E-01  9.9139E-01
+       1.0400E+02  1.0647E+14 -2.6530E-02 -1.2951E-02 -9.9244E-01  9.9288E-01
+       1.0500E+02  1.5073E+14 -1.8472E-02 -1.0085E-02 -9.9396E-01  9.9418E-01
+       1.0600E+02  2.1308E+14 -9.3686E-03 -7.8782E-03 -9.9541E-01  9.9548E-01
+       1.0700E+02  2.9084E+14 -2.0539E-03 -7.2001E-03 -9.9657E-01  9.9660E-01
+       1.0800E+02  3.6764E+14  1.8541E-03 -6.7979E-03 -9.9743E-01  9.9746E-01
+       1.0900E+02  4.3005E+14  2.7110E-03 -5.8785E-03 -9.9812E-01  9.9814E-01
+       1.1000E+02  4.8067E+14  1.8252E-03 -5.1319E-03 -9.9872E-01  9.9873E-01
+       1.1100E+02  5.1859E+14  6.5878E-04 -5.1848E-03 -9.9916E-01  9.9917E-01
+       1.1200E+02  5.1431E+14 -1.0731E-04 -5.0843E-03 -9.9942E-01  9.9943E-01
+       1.1300E+02  4.3165E+14 -6.3307E-04 -3.2636E-03 -9.9952E-01  9.9953E-01
+       1.1400E+02  2.8191E+14 -1.2853E-03  1.4791E-03 -9.9947E-01  9.9947E-01
+       1.1500E+02  1.3241E+14 -2.5045E-03  1.0439E-02 -9.9900E-01  9.9906E-01
+       1.1600E+02  4.5353E+13 -5.3899E-03  2.3707E-02 -9.9713E-01  9.9742E-01
+       1.1700E+02  2.2596E+13 -8.8610E-03  2.4148E-02 -9.9458E-01  9.9491E-01
+       1.1800E+02  2.3225E+13 -8.8289E-03  2.3820E-02 -9.9504E-01  9.9537E-01
+       1.1900E+02  1.8805E+13 -1.0436E-02  3.7233E-02 -9.9373E-01  9.9448E-01
+
+
+      Photon energy [eV] or wavelength [nm] for selected point
+      of pinhole, S0, S1/S0, S2/S0, S3/S0, P of with emittance
+      STOKES vector per unit area [m**2]:
+
+       1.0300E+02  6.0137E+17  1.8318E-02  2.7606E-02 -9.9436E-01  9.9491E-01
+       1.0400E+02  1.6511E+18  1.0093E-02 -3.6100E-02 -9.9852E-01  9.9922E-01
+       1.0500E+02  1.3639E+18  1.2326E-02 -8.4173E-02 -9.9494E-01  9.9857E-01
+       1.0600E+02  5.7112E+17  1.9624E-02 -3.3173E-02 -9.8752E-01  9.8827E-01
+       1.0700E+02  2.6710E+18  3.9452E-03  3.1948E-03 -9.9898E-01  9.9899E-01
+       1.0800E+02  5.9349E+18  1.7311E-03 -2.8385E-02 -9.9933E-01  9.9973E-01
+       1.0900E+02  5.0760E+18 -3.7642E-03 -4.3694E-02 -9.9816E-01  9.9913E-01
+       1.1000E+02  7.3645E+18 -1.5197E-02 -3.9910E-03 -9.9881E-01  9.9893E-01
+       1.1100E+02  3.4582E+19 -8.1586E-03 -5.2919E-03 -9.9981E-01  9.9986E-01
+       1.1200E+02  9.2259E+19 -5.3582E-03 -1.0659E-02 -9.9988E-01  9.9995E-01
+       1.1300E+02  1.4505E+20 -4.4376E-03 -1.0587E-02 -9.9990E-01  9.9997E-01
+       1.1400E+02  1.4608E+20 -4.2027E-03 -6.3827E-03 -9.9994E-01  9.9997E-01
+       1.1500E+02  9.2541E+19 -4.4025E-03  2.1885E-03 -9.9996E-01  9.9997E-01
+       1.1600E+02  3.1124E+19 -5.7025E-03  1.8528E-02 -9.9973E-01  9.9991E-01
+       1.1700E+02  3.1410E+18 -2.2769E-02  4.9093E-02 -9.9664E-01  9.9811E-01
+       1.1800E+02  4.4979E+18 -1.7038E-02 -1.7293E-02 -9.9892E-01  9.9922E-01
+       1.1900E+02  8.0640E+18 -1.0363E-02  1.8346E-02 -9.9951E-01  9.9974E-01
+
+       Total absolute maxima found for Stokes-V. (z,y,Eph,fluxdens.)
+
+        2.1684E-19  0.0000E+00  1.1400E+02  1.6723E+20
+        1.5000E-03 -3.0000E-04  1.0700E+02  7.9868E+18
+        1.5000E-03  1.3500E-03  1.0300E+02  1.3303E+19
+        1.5000E-03  1.5000E-03  1.1900E+02 -2.0729E+16
+
+       Total absolute maxima found for Stokes-V. with emittance
+       (z,y,Eph,fluxdens.)
+
+        3.0000E-04  0.0000E+00  1.1300E+02  1.4936E+20
+       -1.5000E-03  0.0000E+00  1.0700E+02  7.5769E+18
+        1.5000E-03  1.2000E-03  1.0400E+02  5.8064E+18
+        1.5000E-03  1.5000E-03  1.1900E+02 -3.3884E+17
+
+
+
+      SR EFOLD called to perform energy folding
+      Beam energy spread (ESPREAD) and number of sigmas:
+         1.00000005E-03           3
+
+
+
+      Photon energy or wavelength and normalized components S0, S1/S0,
+      S2/S0, S3/S0 of STOKES vector and polarization for pinhole
+      (e-folded):
+
+       1.0300E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.0400E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.0500E+02  1.3604E+14  3.6699E-04 -9.9128E-03 -9.9432E-01  9.9436E-01
+       1.0600E+02  2.1503E+14 -4.6733E-04 -8.4115E-03 -9.9568E-01  9.9571E-01
+       1.0700E+02  3.1736E+14 -9.3298E-04 -8.2118E-03 -9.9672E-01  9.9676E-01
+       1.0800E+02  4.1387E+14 -1.0557E-03 -7.5346E-03 -9.9748E-01  9.9751E-01
+       1.0900E+02  4.7925E+14 -8.9789E-04 -6.0750E-03 -9.9812E-01  9.9814E-01
+       1.1000E+02  5.1758E+14 -6.0508E-04 -4.9659E-03 -9.9871E-01  9.9873E-01
+       1.1100E+02  5.3920E+14 -4.2639E-04 -4.9532E-03 -9.9916E-01  9.9917E-01
+       1.1200E+02  5.2332E+14 -5.1333E-04 -4.8985E-03 -9.9942E-01  9.9943E-01
+       1.1300E+02  4.3525E+14 -8.3998E-04 -3.0901E-03 -9.9952E-01  9.9953E-01
+       1.1400E+02  2.8430E+14 -1.4026E-03  1.5590E-03 -9.9947E-01  9.9948E-01
+       1.1500E+02  1.3528E+14 -2.4866E-03  1.0081E-02 -9.9903E-01  9.9909E-01
+       1.1600E+02  4.8108E+13 -5.2270E-03  2.2440E-02 -9.9734E-01  9.9761E-01
+       1.1700E+02  2.4002E+13 -8.7908E-03  2.4613E-02 -9.9503E-01  9.9537E-01
+       1.1800E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.1900E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+
+
+      Photon energy or wavelength and normalized components S0, S1/S0,
+      S2/S0, S3/S0 of STOKES vector and polarization for selected point of
+      pinhole (e-folded):
+
+       1.0300E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.0400E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.0500E+02  1.7376E+18  1.3902E-02 -7.5376E-02 -9.9695E-01  9.9989E-01
+       1.0600E+02  2.9534E+17  5.8341E-02 -1.8375E-01 -9.7531E-01  9.9418E-01
+       1.0700E+02  1.3173E+18  2.0053E-02  4.2014E-02 -9.9839E-01  9.9947E-01
+       1.0800E+02  5.4969E+18  8.1269E-03 -1.9051E-02 -9.9975E-01  9.9997E-01
+       1.0900E+02  5.1568E+18  8.0975E-03 -5.1551E-02 -9.9860E-01  9.9996E-01
+       1.1000E+02  5.8555E+17  6.5771E-02 -5.1948E-02 -9.8794E-01  9.9149E-01
+       1.1100E+02  1.4590E+19  5.7257E-03  7.3484E-03 -9.9992E-01  9.9996E-01
+       1.1200E+02  6.7813E+19  1.9692E-03 -8.8553E-03 -9.9996E-01  1.0000E+00
+       1.1300E+02  1.3709E+20  5.3195E-04 -1.1442E-02 -9.9993E-01  1.0000E+00
+       1.1400E+02  1.6474E+20 -5.9644E-04 -8.5641E-03 -9.9996E-01  1.0000E+00
+       1.1500E+02  1.2352E+20 -1.7755E-03 -1.2769E-03 -9.9999E-01  1.0000E+00
+       1.1600E+02  5.1757E+19 -3.5525E-03  1.2600E-02 -9.9990E-01  9.9999E-01
+       1.1700E+02  7.0640E+18 -1.1706E-02  4.8157E-02 -9.9856E-01  9.9978E-01
+       1.1800E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.1900E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+
+       Total absolute maxima found for Stokes-V. with
+       e-spread (z,y,Eph,fluxdens.)
+
+        2.1684E-19  0.0000E+00  1.1400E+02  1.6474E+20
+        1.5000E-03 -3.0000E-04  1.0700E+02  7.8785E+18
+        1.5000E-03  1.0500E-03  1.0500E+02  1.1449E+19
+        1.5000E-03  1.5000E-03  1.1800E+02  0.0000E+00
+
+
+      Energy, S0, S1/S0, S2/S0, S3/S0 and P for pinhole with emittance
+      (e-folded):
+
+       1.0300E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.0400E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.0500E+02  1.5074E+14 -1.8303E-02 -1.0055E-02 -9.9398E-01  9.9420E-01
+       1.0600E+02  2.1288E+14 -9.2809E-03 -7.8993E-03 -9.9542E-01  9.9550E-01
+       1.0700E+02  2.9003E+14 -2.0637E-03 -7.2017E-03 -9.9658E-01  9.9661E-01
+       1.0800E+02  3.6627E+14  1.8008E-03 -6.7751E-03 -9.9743E-01  9.9746E-01
+       1.0900E+02  4.2862E+14  2.6676E-03 -5.8760E-03 -9.9812E-01  9.9814E-01
+       1.1000E+02  4.7917E+14  1.8151E-03 -5.1553E-03 -9.9871E-01  9.9873E-01
+       1.1100E+02  5.1622E+14  6.6872E-04 -5.1834E-03 -9.9916E-01  9.9917E-01
+       1.1200E+02  5.1086E+14 -9.8980E-05 -5.0414E-03 -9.9941E-01  9.9943E-01
+       1.1300E+02  4.2863E+14 -6.2895E-04 -3.2333E-03 -9.9952E-01  9.9952E-01
+       1.1400E+02  2.8117E+14 -1.2736E-03  1.3877E-03 -9.9946E-01  9.9946E-01
+       1.1500E+02  1.3386E+14 -2.4584E-03  1.0014E-02 -9.9901E-01  9.9906E-01
+       1.1600E+02  4.7052E+13 -5.2129E-03  2.2693E-02 -9.9724E-01  9.9752E-01
+       1.1700E+02  2.3094E+13 -8.7153E-03  2.4414E-02 -9.9471E-01  9.9505E-01
+       1.1800E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.1900E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+
+
+      Energy, S0, S1/S0, S2/S0, S3/S0 and P for selected point of pinhole
+      with emittance (e-folded):
+
+       1.0300E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.0400E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.0500E+02  1.3356E+18  1.2419E-02 -8.2151E-02 -9.9494E-01  9.9840E-01
+       1.0600E+02  6.5053E+17  1.7426E-02 -3.1727E-02 -9.8929E-01  9.8996E-01
+       1.0700E+02  2.7078E+18  3.9131E-03  8.0005E-04 -9.9893E-01  9.9894E-01
+       1.0800E+02  5.7875E+18  1.6583E-03 -2.8451E-02 -9.9929E-01  9.9970E-01
+       1.0900E+02  5.0784E+18 -4.0503E-03 -4.1894E-02 -9.9821E-01  9.9909E-01
+       1.1000E+02  7.9736E+18 -1.4242E-02 -4.7880E-03 -9.9891E-01  9.9902E-01
+       1.1100E+02  3.5355E+19 -7.9933E-03 -5.7253E-03 -9.9981E-01  9.9986E-01
+       1.1200E+02  9.1938E+19 -5.3466E-03 -1.0605E-02 -9.9988E-01  9.9995E-01
+       1.1300E+02  1.4323E+20 -4.4483E-03 -1.0453E-02 -9.9990E-01  9.9997E-01
+       1.1400E+02  1.4414E+20 -4.2133E-03 -6.3408E-03 -9.9994E-01  9.9997E-01
+       1.1500E+02  9.2115E+19 -4.4046E-03  1.9282E-03 -9.9995E-01  9.9996E-01
+       1.1600E+02  3.2074E+19 -5.6371E-03  1.7155E-02 -9.9974E-01  9.9990E-01
+       1.1700E+02  4.0037E+18 -1.8653E-02  4.0688E-02 -9.9744E-01  9.9845E-01
+       1.1800E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+       1.1900E+02  1.0000E-10  0.0000E+00  0.0000E+00  0.0000E+00  0.0000E+00
+
+       Total absolute maxima found for Stokes-V. with
+       emit. and e-spread (z,y,Eph,fluxdens.)
+
+        3.0000E-04  0.0000E+00  1.1300E+02  1.4736E+20
+       -1.5000E-03  0.0000E+00  1.0700E+02  7.4819E+18
+        1.5000E-03  1.0500E-03  1.0500E+02  5.6933E+18
+        1.5000E-03  1.5000E-03  1.1800E+02  0.0000E+00
+
+
+       Estimated maxima of s0, s1, s2 ,s3 for selected point:
+          113.902290       1.67564640E+20
+          115.263939       2.30566764E+17
+          113.365730       1.68586895E+18
+          113.902344       1.67557884E+20
+
+
+       Estimated maxima of s0, s1, s2 ,s3 for selected point with emittance:
+          113.518906       1.52394880E+20
+          113.333992       6.53643995E+17
+          112.977905       1.53583921E+18
+          113.519012       1.52383691E+20
+
+
+       Estimated maxima of s0, s1, s2 ,s3 for selected point with energy spread:
+          113.901497       1.65074694E+20
+          115.273552       2.25159555E+17
+          113.359917       1.64147933E+18
+          113.901558       1.65068115E+20
+
+
+       Estimated maxima of s0, s1, s2 ,s3 for selected point
+       with emittance and energy spread:
+          113.517220       1.50305966E+20
+          113.329933       6.46661065E+17
+          112.972366       1.49755353E+18
+          113.517319       1.50294918E+20
+
+
+       Estimated maximum of s3*s3/s0 for selected point:
+          113.902405       1.67551146E+20
+
+
+       Estimated maximum of s3*s3/s0 for selected point with emittance:
+          113.519119       1.52372485E+20
+
+
+       Estimated maximum of s3*s3/s0 for selected point with energy spread:
+          113.901611       1.65061518E+20
+
+
+       Estimated maximum of s3*s3/s0 for selected point
+       with emittance and energy spread:
+          113.517418       1.50283853E+20
+
+
+       Estimated maxima of fluxes s0, s1, s2 ,s3:
+          111.100586       5.41671712E+14
+          108.450500       4.57338814E+11
+          108.200989       3.16299202E+12
+          111.105278       5.41238223E+14
+
+
+       Estimated maxima of fluxes s0, s1, s2 ,s3 with emittance:
+          111.398529       5.21945766E+14
+          104.400894       2.85763463E+12
+          111.250282       2.69807806E+12
+          111.401871       5.21569990E+14
+
+
+       Estimated maxima of fluxes s0, s1, s2 ,s3 with energy spread:
+          111.076569       5.39313071E+14
+          108.455070       4.52209803E+11
+          108.212311       3.13453891E+12
+          111.081238       5.38874749E+14
+
+
+       Estimated maxima of fluxes s0, s1, s2 ,s3
+       with emittance and energy spread:
+          111.373611       5.19182022E+14
+          105.278877       2.89673760E+12
+          111.172005       2.68029421E+12
+          111.376953       5.18802454E+14
+
+
+       Estimated maxima of fluxes s3*s3/s0:
+          111.109947       5.40805874E+14
+
+
+       Estimated maxima of fluxes s3*s3/s0 with emittance:
+          111.405190       5.21194986E+14
+
+
+       Estimated maxima of fluxes s3*s3/s0 with energy spread:
+          111.085884       5.38437535E+14
+
+
+       Estimated maxima of fluxes s3*s3/s0
+       with emittance and energy spread:
+          111.380280       5.18423658E+14
+
+
+
+      Brilliance calculations:
+      (only meaningful for undulators)
+
+      sigr=sqrt(2*lambda*L)/2/pi*sigrc and 
+      sigrp=sqrt(lambda/2/L)*sigrpc
+
+       sigrc,sigrpc:  0.84099999999999997       0.84099999999999997     
+
+      make sure that the device length agrees to the length
+      of the trajectory
+      (for rec-fields rangrec and rangpm are substracted by program)
+
+      Observation point:
+
+         10.0000000       2.16840434E-19   0.00000000    
+
+      considered device length [m]:   1.75000000    
+
+
+      Brilliance [photons/sec/BW/mm**2/mrad**2]
+
+          103.00        0.39448E+16    0.26436E+15    0.67003E+15   -0.38785E+16
+          104.00        0.32528E+17    0.50275E+15   -0.44828E+15   -0.32521E+17
+          105.00        0.38810E+17    0.52732E+15   -0.29499E+16   -0.38694E+17
+          106.00        0.49952E+16    0.36404E+15   -0.12155E+16   -0.48314E+16
+          107.00        0.26467E+17    0.57287E+15    0.14055E+16   -0.26424E+17
+          108.00        0.12462E+18    0.10061E+16   -0.22984E+16   -0.12459E+18
+          109.00        0.11981E+18    0.93849E+15   -0.62452E+16   -0.11964E+18
+          110.00        0.35945E+16    0.83494E+15   -0.67479E+15   -0.34305E+16
+          111.00        0.30693E+18    0.18918E+16    0.30419E+16   -0.30691E+18
+          112.00        0.15463E+19    0.31433E+16   -0.13563E+17   -0.15463E+19
+          113.00        0.32065E+19    0.17730E+16   -0.37183E+17   -0.32063E+19
+          114.00        0.39026E+19   -0.23346E+16   -0.33835E+17   -0.39024E+19
+          115.00        0.29361E+19   -0.52940E+16   -0.33522E+16   -0.29361E+19
+          116.00        0.12107E+19   -0.44240E+16    0.16434E+17   -0.12106E+19
+          117.00        0.13873E+18   -0.19231E+16    0.81956E+16   -0.13848E+18
+          118.00        0.49451E+17   -0.10821E+16   -0.32007E+16   -0.49336E+17
+          119.00        0.22560E+18   -0.16298E+16    0.13631E+16   -0.22559E+18
+
+
+      estimated brilliance maxima, flux and flux-density of S0, S1, S2, S3:
+
+          113.90        0.39072E+19    0.23159E+15    0.16756E+17
+          115.26        0.54405E+16    0.31491E+12    0.23057E+14
+          113.37        0.39125E+17    0.23411E+13    0.16859E+15
+          113.90        0.39070E+19    0.23158E+15    0.16756E+17
+
+      estimated brilliance maximum of S3*S3/S0:
+
+          113.90        0.39068E+19
+
+      Brilliance [photons/sec/BW/mm**2/mrad**2] with emittance
+
+          103.00        0.97523E+15    0.17865E+14    0.26922E+14   -0.96973E+15
+          104.00        0.26854E+16    0.27105E+14   -0.96944E+14   -0.26814E+16
+          105.00        0.22248E+16    0.27422E+14   -0.18727E+15   -0.22135E+16
+          106.00        0.93424E+15    0.18333E+14   -0.30992E+14   -0.92258E+15
+          107.00        0.43817E+16    0.17286E+14    0.13998E+14   -0.43772E+16
+          108.00        0.97629E+16    0.16900E+14   -0.27712E+15   -0.97563E+16
+          109.00        0.83730E+16   -0.31518E+14   -0.36585E+15   -0.83576E+16
+          110.00        0.12181E+17   -0.18512E+15   -0.48613E+14   -0.12166E+17
+          111.00        0.57351E+17   -0.46790E+15   -0.30349E+15   -0.57340E+17
+          112.00        0.15341E+18   -0.82199E+15   -0.16352E+16   -0.15339E+18
+          113.00        0.24181E+18   -0.10731E+16   -0.25600E+16   -0.24179E+18
+          114.00        0.24416E+18   -0.10262E+16   -0.15584E+16   -0.24415E+18
+          115.00        0.15507E+18   -0.68270E+15    0.33937E+15   -0.15506E+18
+          116.00        0.52285E+17   -0.29815E+15    0.96873E+15   -0.52270E+17
+          117.00        0.52896E+16   -0.12044E+15    0.25968E+15   -0.52718E+16
+          118.00        0.75933E+16   -0.12937E+15   -0.13131E+15   -0.75851E+16
+          119.00        0.13646E+17   -0.14142E+15    0.25036E+15   -0.13640E+17
+
+
+      estimated brilliance maxima, flux and flux-density of S0, S1, S2, S3
+      with emittance:
+
+          113.52        0.25440E+18    0.24882E+15    0.15239E+17
+          113.33        0.10907E+16    0.10687E+13    0.65364E+14
+          112.98        0.25603E+16    0.25180E+13    0.15358E+15
+          113.52        0.25438E+18    0.24881E+15    0.15238E+17
+
+      estimated brilliance maximum of S3*S3/S0 with emittance:
+
+          113.52        0.25437E+18
+
+      corresponding sigmas of source size [mm]
+      and divergence [mrad] without and with emittance
+      (including corr. factors sigrc,sigrpc):
+
+      L/mm, lambda/mm:    1750.00000       1.09220746E-05
+      without emit.:    2.61699390E-02   4.69801649E-02
+         with emit.:    9.76413265E-02   5.09766042E-02
+         (sigrf**2 = sigrxf*sigryf)
+
+
+
+      Brilliance [photons/sec/BW/mm**2/mrad**2] (e-folded)
+
+          103.00        0.21085E-11     0.0000         0.0000         0.0000    
+          104.00        0.21290E-11     0.0000         0.0000         0.0000    
+          105.00        0.37349E+17    0.51921E+15   -0.28152E+16   -0.37235E+17
+          106.00        0.64087E+16    0.37389E+15   -0.11776E+16   -0.62504E+16
+          107.00        0.28855E+17    0.57862E+15    0.12123E+16   -0.28808E+17
+          108.00        0.12153E+18    0.98767E+15   -0.23152E+16   -0.12150E+18
+          109.00        0.11507E+18    0.93176E+15   -0.59317E+16   -0.11491E+18
+          110.00        0.13186E+17    0.86722E+15   -0.68497E+15   -0.13027E+17
+          111.00        0.33153E+18    0.18982E+16    0.24362E+16   -0.33150E+18
+          112.00        0.15548E+19    0.30618E+16   -0.13768E+17   -0.15548E+19
+          113.00        0.31711E+19    0.16869E+16   -0.36285E+17   -0.31709E+19
+          114.00        0.38446E+19   -0.22931E+16   -0.32926E+17   -0.38445E+19
+          115.00        0.29078E+19   -0.51629E+16   -0.37129E+16   -0.29078E+19
+          116.00        0.12291E+19   -0.43663E+16    0.15487E+17   -0.12289E+19
+          117.00        0.16919E+18   -0.19806E+16    0.81479E+16   -0.16895E+18
+          118.00        0.24156E-11     0.0000         0.0000         0.0000    
+          119.00        0.24361E-11     0.0000         0.0000         0.0000    
+
+
+      estimated brilliance maxima, flux and flux-density of S0, S1, S2, S3
+      with energy spread:
+
+          113.90        0.38491E+19    0.22815E+15    0.16507E+17
+          115.27        0.53133E+16    0.30749E+12    0.22516E+14
+          113.36        0.38093E+17    0.22796E+13    0.16415E+15
+          113.90        0.38489E+19    0.22814E+15    0.16507E+17
+
+      estimated brilliance maximum of S3*S3/S0
+
+      with energy spread:
+
+          113.90        0.38488E+19
+
+      Brilliance [photons/sec/BW/mm**2/mrad**2] with emittance
+      (e-folded)
+
+          103.00        0.16217E-12     0.0000         0.0000         0.0000    
+          104.00        0.16264E-12     0.0000         0.0000         0.0000    
+          105.00        0.21786E+16    0.27056E+14   -0.17897E+15   -0.21676E+16
+          106.00        0.10641E+16    0.18543E+14   -0.33762E+14   -0.10528E+16
+          107.00        0.44419E+16    0.17382E+14    0.35538E+13   -0.44372E+16
+          108.00        0.95204E+16    0.15788E+14   -0.27086E+15   -0.95137E+16
+          109.00        0.83769E+16   -0.33929E+14   -0.35094E+15   -0.83618E+16
+          110.00        0.13188E+17   -0.18783E+15   -0.63145E+14   -0.13174E+17
+          111.00        0.58633E+17   -0.46867E+15   -0.33569E+15   -0.58622E+17
+          112.00        0.15287E+18   -0.81736E+15   -0.16213E+16   -0.15286E+18
+          113.00        0.23878E+18   -0.10622E+16   -0.24959E+16   -0.23875E+18
+          114.00        0.24092E+18   -0.10150E+16   -0.15276E+16   -0.24090E+18
+          115.00        0.15436E+18   -0.67988E+15    0.29763E+15   -0.15435E+18
+          116.00        0.53881E+17   -0.30374E+15    0.92432E+15   -0.53867E+17
+          117.00        0.67425E+16   -0.12577E+15    0.27434E+15   -0.67253E+16
+          118.00        0.16882E-12     0.0000         0.0000         0.0000    
+          119.00        0.16923E-12     0.0000         0.0000         0.0000    
+
+
+      estimated brilliance maxima, flux and flux-density of S0, S1, S2, S3
+      with emittance and energy spread:
+
+          113.52        0.25092E+18    0.20845E+15    0.15031E+17
+          113.33        0.10790E+16    0.89827E+12    0.64666E+14
+          112.97        0.24964E+16    0.20868E+13    0.14976E+15
+          113.52        0.25090E+18    0.20843E+15    0.15029E+17
+
+      estimated brilliance maximum of S3*S3/S0
+      with emittance and energy spread:
+
+          113.52        0.25088E+18
+  
+       Number of generated random numbers:                    0
+  
+
+      LAST CHECK:
+
+           BMAXGL:  0.39825152934204128     
+
+           XBMAXGL:  0.84769974531435865     
+           YBMAXGL:   4.8741603482078903E-006
+           ZBMAXGL:   1.0378879470537276E-006
+
+
+      CURRENT NUMBER:           4
+
+
+                     --- Program WAVE completed ---
+
+
+
+                                                   13:49:18 04.07.23
+

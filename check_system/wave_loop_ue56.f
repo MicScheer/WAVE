@@ -1,0 +1,83 @@
+*CMZ :  2.15/00 15/03/2007  11.13.54  by  Michael Scheer
+*CMZ :  1.00/00 04/08/97  10.40.05  by  Michael Scheer
+*CMZ : 00.01/08 20/06/95  10.20.26  by  Michael Scheer
+*CMZ : 00.01/05 01/02/95  10.23.00  by  Michael Scheer
+*CMZ : 00.01/04 08/12/94  10.42.32  by  Michael Scheer
+*CMZ : 00.01/02 22/11/94  11.09.55  by  Michael Scheer
+*CMZ : 00.01/01 28/10/94  12.18.20  by  Michael Scheer
+*CMZ : 00.00/07 26/05/94  11.17.12  by  Michael Scheer
+*CMZ : 00.00/02 28/04/94  17.57.07  by  Michael Scheer
+*-- Author :
+      PROGRAM WAVE_LOOP
+
+      IMPLICIT NONE
+
+*KEEP,contrl.
+      include 'contrl.cmn'
+*KEND.
+
+      CHARACTER*60 RFILE,VFILE,UFILE
+
+      INTEGER LUNRES,LUNVAR,LUNU
+
+      INTEGER ILOOP,NLOOP
+
+      INTEGER IC
+
+      REAL*4 B0H,FR,FL,FRC,FLC
+
+      DOUBLE PRECISION VAR,VARMIN,VARMAX,DVAR
+
+      DATA LUNU/19/
+      DATA UFILE/'UOUT.LOOP'/ !DUMMY TO PASS VARIABLES TO WAVE_LOOP
+
+      DATA LUNVAR/20/
+      DATA VFILE/'WAVE.LOOP'/ !DUMMY TO PASS VARIABLES TO WAVE
+
+      DATA LUNRES/21/
+      DATA RFILE/'WAVE_LOOP.LOOP'/    !FILE OF RESULTS
+
+      READ(5,*)NLOOP,VARMIN,VARMAX
+
+      OPEN(UNIT=LUNVAR,FILE=VFILE,STATUS='NEW',FORM='FORMATTED')
+      CLOSE(LUNVAR)
+
+      OPEN(UNIT=LUNRES,FILE=RFILE,STATUS='NEW',FORM='FORMATTED')
+      CLOSE(LUNRES)
+
+      DVAR=(VARMAX-VARMIN)/(NLOOP-1)
+
+      DO ILOOP=1,NLOOP
+
+          VAR=(VARMIN+DVAR*(ILOOP-1))
+          OPEN(UNIT=LUNVAR,FILE=VFILE,STATUS='OLD',FORM='FORMATTED')
+             WRITE(LUNVAR,*)VAR
+          CLOSE(LUNVAR)
+
+          CALL LIB$SPAWN('$PURGE/KEEP=10 WAVE.OUT,SCS:WAVE_HISTO.HIS')
+          CALL LIB$SPAWN('$RUN/NODEBUG WDEV:WAVE')
+
+          OPEN(UNIT=LUNU,FILE=UFILE,STATUS='OLD')
+            READ(LUNU,*)IC,B0H
+          CLOSE (LUNU)
+
+          OPEN(UNIT=LUNRES,FILE=RFILE,STATUS='OLD',ACCESS='APPEND'
+     &   ,FORM='FORMATTED')
+            WRITE(LUNRES,1000)IC,B0H,FR,FL,FRC,FLC
+          CLOSE(LUNRES)
+
+          WRITE(6,*)
+          WRITE(6,*) 'NUMBER OF LOOPS DONE:',ILOOP
+            WRITE(6,1000)IC,B0H,FR,FL,FRC,FLC
+          WRITE(6,*)
+
+      ENDDO !ILOOP
+
+      WRITE(6,*)
+      WRITE(6,*)'--- Program WAVE_LOOP terminated ---'
+      WRITE(6,*)
+
+      STOP ' '
+
+1000  FORMAT(' ',I6,5(1PE12.4))
+      END

@@ -1,0 +1,20 @@
+*KEEP,souintanac.
+
+      complex*16 :: zi=(0.0d0,1.0d0), zone=(1.0d0,0.0d0)
+      complex*16 :: zic,ziom,zidom
+
+      double precision
+     &  sqnphsp,sqnbunch,om,c,c1,dom,dtim00,dtim01,xendsou,roi(2,nroip),
+     &  ecmaxs
+
+      integer*8 NZAEHL10,MZAEHL,KZAEHL,iizaehl
+
+      integer iwarnbet1n,ntupp,jobunch,nelec,ix10
+      parameter (ntupp=38)
+
+      common /souintanac/
+     &  zic,ziom,zidom,
+     &  sqnphsp,sqnbunch,c,c1,dom,dtim00,dtim01,xendsou,roi,ecmaxs,
+c     &  NZAEHL10,MZAEHL,ix10,
+     &  iizaehl,kzaehl,
+     &  iwarnbet1n,jobunch,nelec

@@ -1,0 +1,12 @@
+*KEEP,cohfun.
+      integer ncoefcfp
+      parameter (ncoefcfp=1000)
+
+      double precision
+     &  ccf(0:ncoefcfp),cfxlenfou,cfbunlen
+
+      integer modecf,ncoefcf
+
+      common/cohfunc/
+     &  ccf,cfxlenfou,cfbunlen,
+     &  modecf,ncoefcf

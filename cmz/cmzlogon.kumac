@@ -1,0 +1,83 @@
+macro cmzlogon
+
+* +patch,//wave/system
+* +deck,cmzlogon,t=kumac.
+
+nocern=1
+sel nowarnings
+sel newbunch
+
+if [nocern].ne.0 then
+  sel noroot
+  sel nohbook
+*  sel mshhbook
+  sel mhbook
+  sel nocern
+endif
+
+sel mshplt
+sel dynlibs
+sel wsou
+
+author Michael Scheer
+
+sel scheer
+
+macro/default .,~/cmz
+macro/defaults -auto
+
+sel 64bit
+sel kind16
+
+sel lena
+sel gfortran
+sel bextern
+sel uname
+sel uout
+sel ustep
+sel ubunch
+sel unlimited
+sel qpu
+sel f90
+sel linux
+SEL NEWWAVE
+SEL BHELM
+sel nobpeqwarn
+*SEL WBTABTUP
+*SEL WBTABPARABEL
+
+*set '/usr/bin/ifort  -fpe0 -traceback -vms -w95 -warn all -132 -save -implicitnone -warn alignments -align all -align rec8byte -c $compfile' -C F77
+
+*file ~/root/cmz/ROOT.cmz
+
+file wavedoc -u
+file ~/undu/cmz/undumag
+file ~/util/util -r
+file ~/waves/cmz/waves.cmz
+file ~/ntupplot/cmz/ntupplot.cmz
+
+*file ~/msh_hbook/cmz/msh_hbook -u
+file wave -u
+
+set_file cmzedit.f -e
+set_file ~/wav/lib/libwave.a -l
+set_file ~/wav/cmz_*.f -f
+host_pager less
+
+vers
+lmod * last
+*lmod * yester
+mess ' '
+mess ' '
+mess ' '
+*buff
+
+exec 'cmz_symbols.kumac'
+exec 'cmzsymbols.kumac'
+
+*tabs -f
+
+sequence cmnn
+exec cmzgotolastdir.kumac
+
+exitm

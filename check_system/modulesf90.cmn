@@ -1,0 +1,325 @@
+*KEEP,MODULESF90.
+
+      MODULE SPECTF90
+
+c +PATCH,//WAVE/CMN
+c +KEEP,SPECTF90M.
+
+C NSOURCE*NOBSV*NFREQ
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPEC,SPECF,SPECRPHI
+
+C NSOURCE*NOBSV
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPECI,SPECIF
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPECIV,SPECIVF
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPECPOW,SPECPOWRPHI,
+     &  SPECPOWF,specpowtf
+
+C NSOURCE*NOBSVZ
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPECPOWV
+
+C NSOURCE*NFREQ
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: WFLUX,WFLUXF
+
+C NOBSV*NFREQ
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPECTOT,SPECTOTF
+
+      DOUBLE PRECISION, DIMENSION(:,:,:), ALLOCATABLE :: REAIMA,REAIMARPHI
+      REAL, DIMENSION(:,:), ALLOCATABLE :: STOKES,STOKESF
+      REAL, DIMENSION(:,:), ALLOCATABLE :: STOKESE,STOKESEF
+
+C NSOURCE
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPECPOWVH,WFLUXI,WFLUXIF
+
+C NOBSV
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPECTOTI,SPECTOTIF
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPECPOWT,ENEDOS,specpowtgraz
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPCOEF
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPCOEFM
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: WOBS1,WOBS2,WOBS3,WOBS4
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: WOBS5,WOBS6,WOBS7,WOBS8
+
+C NOBSVZ
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: SPECPOWVT
+
+C NFREQ
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: WFLUXT,WFLUXTF
+
+      REAL, DIMENSION(:,:), ALLOCATABLE :: WSTOKES,WSTOKESF
+      REAL, DIMENSION(:,:), ALLOCATABLE :: WSTOKESE,WSTOKESEF
+      REAL, DIMENSION(:,:), ALLOCATABLE :: STOKEC,STOKECF
+      REAL, DIMENSION(:,:), ALLOCATABLE :: STOKECE,STOKECEF
+      REAL, DIMENSION(:,:), ALLOCATABLE :: BRILLC,BRILLCF
+      REAL, DIMENSION(:,:), ALLOCATABLE :: BRILLCE,BRILLCEF
+
+C NSTEPMX
+
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: POWS2
+
+C NPOLMX,NSTEPMX
+
+      REAL, DIMENSION(:,:,:), ALLOCATABLE :: RADPOW
+      INTEGER, DIMENSION(:,:), ALLOCATABLE :: IPOLLIM
+
+C NCO
+
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: POWSPLU
+
+*? 12.3.2023 Wird auch in //wave/omp benutzt !$OMP THREADPRIVATE(spcoef,spcoefm)
+
+      END MODULE
+
+      MODULE SOURCEF90
+
+c +PATCH,//WAVE/MOD
+c +KEEP,SOURCEF90M.
+
+      DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: SOURCET,ECSOUR
+
+      COMPLEX*16, DIMENSION(:,:), ALLOCATABLE :: DARGEXPO
+
+      DOUBLE PRECISION, DIMENSION(:,:,:), ALLOCATABLE ::
+     &  SOURCEG,SOURCEA,SOURCEE,SOURCEN,schwingercen
+
+      DOUBLE PRECISION, DIMENSION(:,:,:), ALLOCATABLE :: SOURCEAO,SOURCEEO,WSOU
+
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: ECMAX,SPCSMSUM,WTRA2IS
+      REAL, DIMENSION(:), ALLOCATABLE :: SPCSMRAT
+
+      INTEGER, DIMENSION(:), ALLOCATABLE :: IPOISOU,ISOURCEN,IZTOT
+      INTEGER, DIMENSION(:), ALLOCATABLE :: IPOIROI
+      INTEGER, DIMENSION(:,:), ALLOCATABLE :: IWARNROI,ISOURAE
+
+      END MODULE
+      MODULE OBSERVF90
+
+      DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: OBSV, OBSVRPHI
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: OBSVZ,OBSVY,
+     &  OBSVR,OBSVPHI,TBUFF
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: FPHIR,XC,YC
+
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: DOBUFF,DOBUFF1,DOBUFF2
+      double precision, DIMENSION(:), ALLOCATABLE ::             FILL
+      INTEGER, DIMENSION(:), ALLOCATABLE ::          IOBUFF
+
+
+      INTEGER IOBSV_A,IOBSVZ_A,IOBSVY_A,IOBSVRPHI_A,IOBSVR_A,IOBSVPHI_A
+
+      END MODULE
+      MODULE REARGF90
+
+      INTEGER NDARGU,IARGUM
+
+      INTEGER, DIMENSION (:,:), ALLOCATABLE :: NARGUM
+      DOUBLE PRECISION, DIMENSION (:,:), ALLOCATABLE :: REARGUM
+
+      END MODULE
+      MODULE WFOLDF90
+
+      DOUBLE PRECISION, DIMENSION(:,:,:), ALLOCATABLE :: COFOLD
+      DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: SPCOEFU
+
+      END MODULE
+      MODULE AFREQF90
+
+      COMPLEX*16, DIMENSION(:,:), ALLOCATABLE :: AFREQ,EXPOM2P0,
+     &  AFREQRPHI
+
+      END MODULE
+      MODULE PHASEF90
+
+      DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE :: PHMEANZ,PHMEANY
+      DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE :: PHSIGZ,PHSIGY
+
+      END MODULE
+      MODULE PHASEWSF90
+
+      DOUBLE PRECISION, DIMENSION(:),   ALLOCATABLE :: WSUM
+
+      COMPLEX*16, DIMENSION(:),   ALLOCATABLE :: PHSHIFT,EXPOM,DEXPOM
+      COMPLEX*16, DIMENSION(:,:,:,:), ALLOCATABLE :: AMPLI
+      DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: phspec,phspecf
+
+      END MODULE
+      MODULE USEMF90
+
+      COMPLEX, DIMENSION(:,:), ALLOCATABLE ::Z2
+
+      END MODULE
+      MODULE TRACKF90
+
+c +PATCH,//WAVE/CMNN
+c +KEEP,TRACKF90M.
+
+      DOUBLE PRECISION DTMCO
+      DOUBLE PRECISION, DIMENSION(:,:,:), ALLOCATABLE :: WTRA
+      DOUBLE PRECISION, DIMENSION(:,:,:), ALLOCATABLE :: DWTRA
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: DWT,DWX,DWB,DWY,DWZ
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: DWX2P,DWB2P,DWY2P,DWZ2P
+
+      real (kind=16), DIMENSION(:,:,:), ALLOCATABLE :: DWTRA16
+      real (kind=16), DIMENSION(:), ALLOCATABLE :: DWT16,DWX16,DWB16,DWY16,DWZ16
+      real (kind=16), DIMENSION(:), ALLOCATABLE :: DWX2P16,DWB2P16,DWY2P16,DWZ2P16
+
+      DOUBLE PRECISION, DIMENSION(:,:),   ALLOCATABLE :: WSXYZ,WVXYZ,WBXYZ,WAXYZ
+     &  ,WVPXYZ
+      DOUBLE PRECISION, DIMENSION(:,:),   ALLOCATABLE :: WDIS,WGAMMA
+      DOUBLE PRECISION, DIMENSION(:),     ALLOCATABLE :: WTIM0,HTRA2,WTRA2
+      DOUBLE PRECISION, DIMENSION(:),     ALLOCATABLE :: XAMAG,BXAMAG,BYAMAG
+      DOUBLE PRECISION, DIMENSION(:),     ALLOCATABLE :: BZAMAG,BX2A,BY2A,BZ2A
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: TRAGAM
+
+      INTEGER IXAMAG_I
+
+      double precision
+     &  yslopetr,yoffstr,zslopetr,zoffstr,
+     &  ypslopetr,ypoffstr,zpslopetr,zpoffstr,
+     &  yslopeetr,yoffsetr,zslopeetr,zoffsetr,
+     &  ypslopeetr,ypoffsetr,zpslopeetr,zpoffsetr
+
+      END MODULE
+      MODULE WORKF90
+
+      DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE :: WS1,WS2,WS3,WS4
+
+      END MODULE
+
+      MODULE WBETAF90M
+
+      DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE ::
+     &  WBETA,WBZZPYYP,WBETAK,WTUNE,WBETASUB
+      DOUBLE PRECISION, DIMENSION(:,:,:), ALLOCATABLE :: WLTM
+
+      END MODULE
+      MODULE BMESSF90M
+
+      DOUBLE PRECISION, DIMENSION(:,:,:,:), ALLOCATABLE :: BMCOEF
+      REAL, DIMENSION(:,:,:,:), ALLOCATABLE :: BDATA
+
+      END MODULE
+      MODULE BPOLY3DF90M
+
+      DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE :: X,Y,Z,BX,BY,BZ
+      DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE :: BXF,BYF,BZF
+
+      END MODULE
+      MODULE BPOLY2DHF90M
+
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: X,Y,Z
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: BX,BY,BZ,BXF,BYF,BZF
+      DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: FUNDATA
+
+      END MODULE
+      MODULE BPHARMF90M
+
+      DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: FUNDATA
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: X,Y,Z
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: BX,BY,BZ,BXF,BYF,BZF
+
+      END MODULE
+      MODULE AMPLIF90
+
+      REAL, DIMENSION (:), ALLOCATABLE :: XRANA
+
+      END MODULE
+      MODULE BMPOT3DM
+
+      DOUBLE PRECISION, DIMENSION (:,:,:), ALLOCATABLE:: FSTAK
+      DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE:: XPOW,YPOW,ZPOW
+      DOUBLE PRECISION, DIMENSION (:,:), ALLOCATABLE:: A,WA
+      DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE:: VC,B,WS,WB
+      INTEGER, DIMENSION(:,:), ALLOCATABLE:: INDEX
+      INTEGER, DIMENSION(:,:,:), ALLOCATABLE:: ICG
+
+      ENDMODULE
+      module bunchmod
+
+c +PATCH,//WAVE/MOD
+c +KEEP,bunchf90m.
+
+      complex*16, dimension (:), allocatable :: unphexp
+
+      DOUBLE PRECISION , dimension (:), allocatable :: phaserphi
+      DOUBLE COMPLEX , dimension (:), allocatable :: expom1rphi
+
+      double complex , dimension (:,:), allocatable :: affe,
+     &  afferphi,unphrphi
+      double precision, dimension (:), allocatable :: ampz,azcos,azsin
+      double complex, dimension (:), allocatable :: phexp
+
+      double complex dexpbunch
+      double precision bunchlen,xelec,yelec,zelec,ypelec,zpelec,egamma,phelec,
+     &  vyelec,vzelec,vxelec
+     &  ,bunchp0,bunchr56,bunchcharge
+     &  ,bunnor,bunchx,xlintra,sourceaclu(3,4),sourceeclu(3,4)
+
+      real , dimension (:), allocatable :: unphrnrn
+      real, dimension (:), allocatable :: phrnrn
+
+      integer nphsp,neinbunch,nbunch,ibunphase,ibunnor,ibun,isub,ielec,iobunch,
+     &  ihbunch,nidbunch,iubunch,nbunchharm,iwbunch,ilintra,nbuncho,neinbuncho
+
+      namelist/bunchn/neinbunch,bunchlen,nbunch,
+     &  iubunch,bunchp0,bunchr56,bunchcharge,
+     &  ibunphase,ibunnor,iobunch,nbunchharm,
+     &  ihbunch,iwbunch,ilintra,xlintra
+
+      save ampz,azcos,azsin,phexp,unphexp,affe
+c!$OMP THREADPRIVATE(ampz,azcos,azsin,phexp,unphexp,affe)
+      end module
+      module bwpolyederf90m
+
+      integer lunbpe,nmag,iaxint,nstepint
+
+      DOUBLE PRECISION BSCALEPM,WINPM,RANGPM
+
+      DOUBLE PRECISION tiny,x0int,y0int,z0int,ranginti,ranginte
+      DOUBLE PRECISION, DIMENSION(:), ALLOCATABLE :: bpexpos
+      DOUBLE PRECISION, DIMENSION(:,:), ALLOCATABLE :: bpebc,bflange
+      DOUBLE PRECISION, DIMENSION(:,:,:), ALLOCATABLE :: bpemat
+      DOUBLE PRECISION, DIMENSION(:,:,:,:), ALLOCATABLE :: bpemag,bpetm,bperot
+
+      double precision bfcenxmm,bfcenymm,bfcenzmm,
+     &  bflenxmm,bflenymm,bflenzmm,
+     &  torqcenxmm,torqcenymm,torqcenzmm,
+     &  shiftll,shiftlr,shiftul,shiftur,gappm
+
+      real forcol,forxpl(2),forypl(2),forzpl(2)
+
+      INTEGER, DIMENSION(:), ALLOCATABLE :: ibpeplan
+      INTEGER, DIMENSION(:,:), ALLOCATABLE :: ibpecorn
+
+      integer iforcol
+      integer lunpm,ibpnowarn
+
+      character(128) filebpe,filepm
+
+      NAMELIST/POLYMAGN/
+     &  BSCALEPM,WINPM,RANGPM,LUNPM,FILEPM,
+     &  shiftll,shiftlr,shiftul,shiftur,gappm,ibpnowarn
+
+      end module
+      module clustermod
+
+      double precision wpspecnor,afspecnor
+
+      integer icluster,kpid,master,iclubun
+      character(256) wppath
+
+      namelist/cluster/
+     &  icluster, iclubun,
+     &  wppath
+
+      end module
+      module fbtabzymod
+
+      integer :: nfourzy,ifourzy0,klinearfbt,
+     &  nxbyfbt=0,nxbzfbt=0,inifbt=1,iallofbt=0,nfbtabc=0,nfbtabcz=0
+
+      double precision fourzsh,fourysh
+      double precision, dimension(:), allocatable :: xbyfbt,byfbt,xbzfbt,bzfbt
+
+      namelist/fbtabzyn/
+     &  fourzsh,fourysh,nfourzy,ifourzy0,klinearfbt
+
+      end module
+c+seq,waveenv.

@@ -1,0 +1,40 @@
+*CMZ : 00.00/02 26/01/2004  09.37.25  by  Michael Scheer
+*CMZ : 00.00/01 03/07/95  13.19.31  by  Michael Scheer
+*-- Author :
+      SUBROUTINE UTIL_STRING_STRIP(NCHAR,STRING,NSTR,STRIP,NRED)
+
+C--- ROUTINE REMOVES CHARACTERS CONTAINED IN STRIP(NSTR) FROM
+C    STRING(NCHAR). NRED IS LENGTH OF CLEANED STRING STRING(NRED)
+
+      IMPLICIT NONE
+      INTEGER NCHAR,NSTR,ICHAR,ISTR,IFOUND,JCHAR,NRED
+      CHARACTER(1) STRING(NCHAR),STRIP(NSTR),C
+
+      JCHAR=1
+      DO ICHAR=1,NCHAR
+          C=STRING(ICHAR)
+          IFOUND=0
+          DO ISTR=1,NSTR
+         IF (C.EQ.STRIP(ISTR)) THEN
+             IFOUND=1
+             GOTO 90
+         ENDIF
+          ENDDO
+90        CONTINUE
+          IF (IFOUND.EQ.0) THEN
+         STRING(JCHAR)=C
+         JCHAR=JCHAR+1
+         IF(JCHAR.GT.NCHAR) THEN
+            NRED=NCHAR
+            RETURN
+         ENDIF
+          ENDIF
+      ENDDO
+
+      NRED=JCHAR-1
+      DO ICHAR=JCHAR,NCHAR
+          STRING(ICHAR)=' '
+      ENDDO
+
+      RETURN
+      END

@@ -1,0 +1,58 @@
+*KEEP,mradmod.
+      module mrad_mradmod
+
+      integer, parameter :: ndim1elecs_p_m=17, ndim1optics_m=27
+
+      integer, save :: iwritefiles_m=0, iploteps_m=0, iwtra_m=1
+      integer, save :: nstepp_m=10000, nphp_m=1000
+      integer, save :: minit_m=0, modeobsrndm_m=1, modeobsv_m=1,
+     &  nturns_m=1, koptics_m=1, kapert_m=0, nturnstot_m=0, iturnstot_m=0,
+     &  n10turns_m=1,kdynaper_m=0,ndynang_m=2, kplstart_m=1, kltetolat_m=0,
+     &  ksubco_m=0, ksynpho_m=0, lunout_m, kturn_m=0
+
+      complex*16, dimension (:), save, allocatable ::  aradx_m,arady_m,aradz_m
+
+      double precision, dimension (:,:,:), allocatable :: stoksum_m, ampsum_m
+      double precision, dimension (:,:), save, allocatable :: elecs_m
+      double precision, dimension (:), allocatable :: powsum_m
+
+      double precision, dimension (:,:,:), save, allocatable ::
+     &  traxyz_m
+
+      double precision, dimension (:,:), save, allocatable ::
+     &  stokes_m, obsv_m, optics_m, dynr_m, dynaper_m, tref_m
+
+      double precision, dimension (:), save, allocatable :: phener_m
+
+      double precision, save :: betah_m, betav_m, betaph_m, betapv_m,
+     &  disph_m, dispv_m, dispph_m, disppv_m,
+     &  epsh_m, epsv_m, pathlen_m,circum_m,
+     &  tfinvbetah_m(2,2),tfinvbetav_m(2,2),tfbetah_m(2,2),tfbetav_m(2,2),
+     &  bmovecut_m, beta_per_h_m, betap_per_h_m, beta_per_v_m, betap_per_v_m,
+     &  tuneh_m,tunev_m,xelec_m,yelec_m,zelec_m,vxelec_m,vyelec_m,vzelec_m,
+     &  dynrstart_m,dyndrmin_m,dynangi_m,dynange_m,
+     &  traref_m(14,2),emithor_m=0.0d0,
+     &  xlat_m=0.0d0, ylat_m=0.0d0, zlat_m=0.0d0, dzlat_m=0.0d0,
+     &  exlat_m=0.0d0, eylat_m=0.0d0, ezlat_m=0.0d0, ebeam_m, brho_m, emom_m,
+     &  aperhor_m,aperver_m, beta_m,v0ele_m,gammai_m,ds_m,
+     &  cox_m,coy_m,coz_m,cos_m,coyp_m,cozp_m,cot_m,dering_m,cavigain_m,
+     &  dmomtot_m(3),dmom_m(3),quadscal_m,sextscal_m,dipscal_m,octoscal_m
+
+      integer, save :: kelec_m, kthread_m, kstep_m, ksteps_m, mobscen_m,
+     &  nphener_m,
+     &  nobsv_m, nelec_m, nthphplot_m=1, nthelec_m=1, ngoodelecs_m=0,
+     &  nyobsv_m,nzobsv_m,krun_m, kbecho_m=1, nelectra_m,
+     &  n1dimtra_m=19, klost_m, kfirstplane_m=1, klastplane_m=0
+
+      integer, save :: kalloc_obsv_m=0, kalloc_phener_m=0,
+     &  kalloc_elec_m=0, kalloc_track_m=0, kalloc_arad_m=0,
+     &  kalloc_stoksum_m(2)=0, kalloc_powsum_m=0, kalloc_ampsum_m(2)=0,
+     &  kalloc_optics_m=0, nmapdat_m=0, kisenall_m=1
+
+      integer :: ignoreaper_m=0
+
+!$OMP THREADPRIVATE(kelec_m,kthread_m,kturn_m,kstep_m,ksteps_m, kapert_m,
+!$OMP& kfirstplane_m, klastplane_m,aradx_m,arady_m,aradz_m,stokes_m,kalloc_arad_m,
+!$OMP& nphp_m)
+
+      end module mrad_mradmod

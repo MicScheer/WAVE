@@ -1,0 +1,20 @@
+*CMZ : 00.00/02 10/10/2005  15.50.46  by  Michael Scheer
+*-- Author :
+      SUBROUTINE UTIL_ADJUST(YF,X0,Y0,X,Y)
+
+C BERECHNET ITERATIV AUS EINGEGEBENEN WERTEN, DEN NULLDURCHGANG EINER GERADEN
+
+      IMPLICIT NONE
+
+      REAL*8 X0,Y0,X,A,B,YF,Y
+
+      A=(Y-Y0)/(X-X0)
+      B=Y-A*X
+
+      X0=X
+      Y0=Y
+
+      X=(YF-B)/A
+
+      RETURN
+      END

@@ -1,0 +1,41 @@
+*KEEP,util_smooth.
+      integer ndatap,nfitp,nivalp
+
+      parameter(ndatap=100000,nfitp=100,nivalp=100)
+
+      integer nvarp,nvar
+      parameter (nvarp=100)
+
+      double precision
+     &  fchi2,fchi2min,
+     &  fvarfin(nvarp),fvar(nvarp),fparopt(nvarp),fweight(nvarp)
+
+      double precision
+     &  chi2,chi2ndf,
+     &  xfit(nivalp+1),yfit(nivalp+1),
+     &  vfit(nivalp+1),
+     &  xcen(nivalp),ycen(nivalp),
+     &  xdata(ndatap),ydata(ndatap),edata(ndatap),
+     &  ysmooth(ndatap),xexe,xexa,xlow,xhig,ylow,yhig,
+     &  coef(nivalp+1),dspps1,xknots(nivalp+1),
+     &  ws(ndatap*(nivalp+5)+nivalp*(nivalp+1))
+
+      integer ndata,nfit,mdatival,nexpand,
+     &  interval(nivalp+1),ninterval(nivalp+1),ifixpar
+     &  ,modef,kvalf,mordf,nivalf,ifailf,lunxfitf,
+     &  nknots,nw,knotmode
+
+      character(256) filexfit
+      character(128) cerrf
+
+      common/usmooth/
+     &  chi2,chi2ndf,
+     &  xfit,yfit,vfit,
+     &  xcen,ycen,
+     &  xdata,ydata,edata,
+     &  ysmooth,xexa,xexe,xlow,xhig,ylow,yhig,
+     &  ndata,nfit,mdatival,interval,ninterval,nexpand,ifixpar,
+     &  filexfit,
+     &  fchi2,fchi2min,fvarfin,fvar,fparopt,fweight,nvar
+     &  ,modef,kvalf,mordf,nivalf,ifailf,lunxfitf,cerrf,
+     &  nknots,coef,xknots,nw,ws,knotmode

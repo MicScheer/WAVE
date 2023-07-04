@@ -1,0 +1,13 @@
+*KEEP,clustermod.
+      module clustermod
+
+      double precision wpspecnor,afspecnor
+
+      integer icluster,kpid,master,iclubun
+      character(256) wppath
+
+      namelist/cluster/
+     &  icluster, iclubun,
+     &  wppath
+
+      end module

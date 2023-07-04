@@ -1,0 +1,36 @@
+*KEEP,bunchf90m.
+      module bunchmod
+
+c +PATCH,//WAVE/MOD
+c +KEEP,bunchf90m.
+
+      complex*16, dimension (:), allocatable :: unphexp
+
+      DOUBLE PRECISION , dimension (:), allocatable :: phaserphi
+      DOUBLE COMPLEX , dimension (:), allocatable :: expom1rphi
+
+      double complex , dimension (:,:), allocatable :: affe,
+     &  afferphi,unphrphi
+      double precision, dimension (:), allocatable :: ampz,azcos,azsin
+      double complex, dimension (:), allocatable :: phexp
+
+      double complex dexpbunch
+      double precision bunchlen,xelec,yelec,zelec,ypelec,zpelec,egamma,phelec,
+     &  vyelec,vzelec,vxelec
+     &  ,bunchp0,bunchr56,bunchcharge
+     &  ,bunnor,bunchx,xlintra,sourceaclu(3,4),sourceeclu(3,4)
+
+      real , dimension (:), allocatable :: unphrnrn
+      real, dimension (:), allocatable :: phrnrn
+
+      integer nphsp,neinbunch,nbunch,ibunphase,ibunnor,ibun,isub,ielec,iobunch,
+     &  ihbunch,nidbunch,iubunch,nbunchharm,iwbunch,ilintra,nbuncho,neinbuncho
+
+      namelist/bunchn/neinbunch,bunchlen,nbunch,
+     &  iubunch,bunchp0,bunchr56,bunchcharge,
+     &  ibunphase,ibunnor,iobunch,nbunchharm,
+     &  ihbunch,iwbunch,ilintra,xlintra
+
+      save ampz,azcos,azsin,phexp,unphexp,affe
+c!$OMP THREADPRIVATE(ampz,azcos,azsin,phexp,unphexp,affe)
+      end module

@@ -1,0 +1,7 @@
+*KEEP,gseed.
+      integer
+     &  igseed1,igseed2,igseq
+     & ,igseed1u,igseed2u,igsequ
+      common/gseedc/igseed1,igseed2,igseq
+     &  ,igseed1u,igseed2u,igsequ
+      namelist/gseedn/igseed1,igseed2,igseq

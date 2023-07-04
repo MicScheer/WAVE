@@ -1,0 +1,6 @@
+*KEEP,ntuple2.
+      integer ntupip,nid222,ntupusp,nid223
+      parameter (ntupip=55,ntupusp=10)
+      double precision fillp(ntupip),fillu(ntupusp)
+
+      common/tupipc/nid222,nid223,fillp,fillu

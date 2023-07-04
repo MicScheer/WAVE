@@ -1,0 +1,9 @@
+*KEEP,circpinmod.
+      module circpinmod
+
+      double precision, dimension (:), allocatable ::
+     &  fphir_th, sumycirc, speccirc
+
+!$OMP THREADPRIVATE(fphir_th, sumycirc, speccirc)
+
+      end module circpinmod

@@ -1,0 +1,376 @@
+
+# +PATCH,//WAVE/PYTHON
+# +DECK,wave_make,T=PYTHON.
+
+import os
+import sys
+import pathlib
+import datetime
+import time
+import platform
+import glob
+
+def Quit(*args, delay=0):
+  #reakpoint()
+  nargs =  len(args)
+
+  text = ''
+  for i in range(nargs):
+    text += str(args[i]) + " "
+  #endif
+
+  if delay > 0:
+
+    if len(text):
+      print("\n",text, "\nWaiting",delay," seconds before kill")
+      #time.sleep(delay)
+    else:
+      print("\nWaiting",delay," seconds before kill")
+      #time.sleep(delay)
+    #endif len(text):
+
+    if platform.system() == 'Windows':
+      stat = os.system("sleep " + str(delay) + " && taskkill /F /PID " + str(os.getpid()) + " &")
+    else:
+      stat = os.system("sleep " + str(delay) + " && kill " + str(os.getpid()) + " &")
+    #endif platform.system() == 'Windows'
+
+  elif delay < 0:
+    return
+  else:
+    print("\n",text)
+    if platform.system() == 'Windows':
+      stat = os.system("taskkill /F /PID " + str(os.getpid()))
+    else:
+      stat = os.system("kill " + str(os.getpid()))
+    #endif platform.system() == 'Windows'
+
+#enddef Quit(text = '', delay=0)
+
+args=sys.argv; nargs = len(args)
+global Iverbose,Idry,Idebug
+
+Iverbose = 0
+Idebug = 0
+Idry = 0
+
+if nargs > 1: Iverbose = int(args[1])
+if nargs > 2: Idebug = int(args[2])
+
+global WI,Wave_tree,Scomp_bounds,Scomp_omp,Scomp
+global Texe,Tlwav,Tlmhbook,Tlcern,Tlurad,Tlomp,Tlplt,Tlwavm,Tlmhbookm,Tlompm
+
+Scomp = "gfortran -std=legacy -c -g -cpp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
+Scomp_bounds = "gfortran -std=legacy -c -g -cpp -fcheck=bounds -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
+Scomp_omp = "gfortran -std=legacy -c -g -cpp -finit-local-zero -fcheck=bounds -fopenmp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -ffixed-line-length-none -funroll-loops "
+
+def get_wave_tree():
+
+  global WI,Wave_tree,Iverbose,Idry,Idebug
+  global Texe,Tlwav,Tlmhbook,Tlcern,Tlurad,Tlomp,Tlplt,Tlwavm,Tlmhbookm,Tlompm
+
+  try:
+    WI = os.environ['WAVE_INCL'] + "/"
+  except:
+    Quit("*** Error: Shell variable WAVEINCL not defined ***")
+  #endtry
+
+  try:
+    Texe = os.stat(WI + '/bin/wave_debug.exe').st_mtime_ns
+  except:
+    Texe = 0
+  #endtry
+
+  top = glob.glob(WI+"/*")
+
+  Wave_tree = []
+  #reakpoint()
+
+  for topd in top:
+
+    ds = topd + "/"
+    dd = topd.split("/")[-1]
+
+    if dd == 'cmz' or dd == 'doc' or dd == 'check_system' or dd == 'bin': continue
+
+    t = os.stat(topd).st_mtime_ns
+
+    modf = glob.glob(topd+"/mod/*.f")
+
+    modfor = []
+    for ff in modf:
+      f = ff.split("/")[-1]
+      tf = os.stat(ff).st_mtime_ns
+      modfor.append([f,tf])
+    #endfor
+
+    modm = glob.glob(topd+"/*.mod")
+    modmod = []
+    for ff in modm:
+      f = ff.split("/")[-1]
+      tf = os.stat(ff).st_mtime_ns
+      modmod.append([f,tf])
+    #endfor
+
+    cm = glob.glob(topd+"/*.cmn")
+    cmn = []
+    for ff in cm:
+      f = ff.split("/")[-1]
+      tf = os.stat(ff).st_mtime_ns
+      cmn.append([f,tf])
+    #endfor
+
+    ff = glob.glob(topd+"/*.f")
+    fort = []
+    for fff in ff:
+      f = fff.split("/")[-1]
+      tf = os.stat(fff).st_mtime_ns
+      fort.append([f,tf])
+    #endfor
+
+    Wave_tree.append([topd,t,modfor,modmod,cmn,fort])
+
+  #endfor get_wave_tree
+
+#enddef get_wave_tree
+
+def wave_update():
+
+  global WI,Wave_tree,Texe,Scomp_bounds,Scomp_omp,Scomp,Iverbose,Idry,Idebug
+
+  kmain = 0
+
+  get_wave_tree()
+
+  for td in Wave_tree:
+
+    dd = td[0]
+    ds = dd + "/"
+    t = td[1]
+    modfor = td[2]
+    cmn = td[4]
+    fort = td[5]
+
+    scomp = Scomp
+
+    lib = ''
+    libm = ''
+    ddd = dd.split("/")[-1]
+
+    print("\n**********  ",ddd)
+    #reakpoint()
+
+    if ddd == 'mhbook':
+      lib = WI + 'lib/libmhbook_debug.a'
+      libm = WI + 'lib/libmhbook_modules_debug.a'
+    elif ddd == 'mshcern':
+      lib = WI + 'lib/libmshcern_debug.a'
+      libm = WI + 'lib/libmshcern_module_debug.a'
+    elif ddd == 'mshplt':
+      lib = WI + 'lib/libmshplt_debug.a'
+      libm = WI + 'lib/libmshplt_modules.a'
+    elif ddd == 'nomp':
+      lib = WI + 'lib/libwave_debug.a'
+      libm = WI + 'lib/libwave_modules_debug.a'
+      scomp = Scomp_bounds
+    elif ddd == 'omp':
+      lib = WI + 'lib/libwave_omp_debug.a'
+      libm = WI + 'lib/libwave_omp_modules_debug.a'
+      scomp = Scomp_omp
+    elif ddd == 'urad':
+      lib = WI + 'lib/liburad_debug.a'
+      libm = WI + 'lib/liburad_module_debug.a'
+      scomp = Scomp_bounds  # uradcfft does boundary tricks
+    elif ddd == 'user':
+      lib = WI + 'lib/libuser_debug.a'
+      libm = WI + 'lib/libuser_module_debug.a'
+      scomp = Scomp_omp
+    #endif
+
+    scomp = "cd " + dd + " && " + scomp
+
+    for f in modfor: # Compile modules
+
+      ff = f[0]
+      t = f[1]
+
+      if t < Texe: continue
+
+      if Iverbose > 0: print(ff)
+
+      fo = ff[:-1] + "o"
+      fm = ff[:-1] + "mod"
+
+      Flines = open(ds+ff,'r')
+      while True:
+        l = Flines.readline()
+        if not l: break
+        sl = l.split()
+        if len(sl) == 0: continue
+        key = sl[0].lower()
+        if key== 'module':
+          m = sl[1].lower()
+          break
+        #endif
+      #end while
+      Flines.close()
+
+      if Iverbose > 0: print("\nModule:",m)
+
+      scom = "cd " + WI + ddd + " && " + scomp + "-o " + fo + " " + ff
+      if Iverbose > 0: print("\n",scom,"\n")
+      if Idry == 0: os.system(scom)
+
+      scom = 'mv ' + fm + " " + dd
+      if Iverbose > 0: print("\n",scom,"\n")
+      if Idry == 0: os.system(scom)
+
+      scom = 'ar rc ' + libm + " " + fo
+      if Iverbose > 0: print("\n",scom,"\n")
+      if Idry == 0: os.system(scom)
+
+      scom = 'ranlib ' + libm
+      if Iverbose > 0: print("\n",scom,"\n")
+      if Idry == 0: os.system(scom)
+
+      # Search use of module in *.cmn
+      for ft in cmn:
+
+        f = ft[0]
+        t = ft[1]
+
+        if t < Texe: continue
+
+        Flines = open(ds+f,'r')
+        while True:
+          l = Flines.readline()
+          if Idebug > 1: print(l)
+          if not l: break
+          if len(l) < 10: break
+          sl = l.split()
+          if len(sl) > 1:
+            key = sl[0].lower()
+            if key== 'use':
+              if sl[1].lower() == m:
+                scom = 'touch ' + f
+                if Iverbose > 0: print("\n",scom,"\n")
+                if Idry == 0: os.system(scom)
+                break
+              #endif
+            #endif
+          #endif
+        #end while
+        Flines.close()
+
+      #endfor
+
+      # Search use of module in *.f
+      for ft in fort:
+
+        f = ft[0]
+        t = ft[1]
+
+        if Idebug > 1: print(f)
+
+        Flines = open(ds+f,'r')
+        while True:
+          l = Flines.readline()
+          if not l: break
+          if len(l) < 10: break
+          sl = l.split()
+          if len(sl) > 1:
+            key = sl[0].lower()
+            if key== 'implicit':
+              if sl[1].lower() == 'none': break
+            elif key== 'use':
+              if sl[1].lower() == m:
+                scom = 'touch ' + f
+                if Iverbose > 0: print("\n",scom,"\n")
+                if Idry == 0: os.system(scom)
+                break
+              #endif
+            #endif
+          #endif
+        #end while
+        Flines.close()
+
+      #endfor
+
+      pass
+
+    #endfor module
+
+    # Check *.cmn
+
+    fdo = []
+
+    for ft in cmn:
+
+      f = ft[0]
+      t = os.stat(ds+f).st_mtime_ns
+
+      if t < Texe: continue
+
+      fcmn = f.split("/")[-1]
+
+      for fft in fort:
+
+        Flines = open(ds+fft[0],'r')
+        while True:
+          l = Flines.readline()
+          if not l: break
+          if len(l) < 10: break
+          sl = l.split()
+          if sl[0][0] == '*' or sl[0][0] == '!' or len(sl) < 6: continue
+          key = sl[0].lower()
+          if key== 'include':
+            if sl[1].lower() == "'" + fcmn + "'" or sl[1].lower() == '"' + fcmn + '"':
+              scom = 'touch ' + f
+              if Iverbose > 0: print("\n",scom,"\n")
+              if Idry == 0: os.system(scom)
+              break
+            #endif
+          #endif
+        #end while
+        Flines.close()
+      #endfor fort
+    #endfor cmn
+
+    # Compile *.f if neccessary
+
+    for ft in fort:
+
+      f = ft[0]
+      t = os.stat(ds+f).st_mtime_ns
+
+      if t < Texe: continue
+
+      fo = f[:-1] + "o"
+
+      scom = scomp + "-o " + fo + " " + f
+      if Iverbose > 0: print("\n",scom,"\n")
+      if Idry == 0: os.system(scom)
+
+      scom = 'ar rc ' + lib + " " + ds + fo
+      if Iverbose > 0: print("\n",scom,"\n")
+      if Idry == 0: os.system(scom)
+
+      scom = 'ranlib ' + lib
+      if Iverbose > 0: print("\n",scom,"\n")
+      if Idry == 0: os.system(scom)
+
+      kmain = 1
+
+    #endfor
+
+  #endfor dir
+
+  if kmain:
+    scom = WI + "/shell/compile_wave_check_system_incl.sh"
+    if Iverbose > 0: print("\n",scom,"\n")
+    if Idry == 0: os.system(scom)
+  #endif
+
+#enddef wave_update
+
+wave_update()

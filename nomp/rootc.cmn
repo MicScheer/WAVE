@@ -1,0 +1,6 @@
+*KEEP,rootc.
+      integer nhismaxp
+      parameter (nhismaxp=1)
+      integer kindhis(nhismaxp)
+
+      common/rootc/kindhis

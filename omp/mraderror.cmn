@@ -1,0 +1,6 @@
+*KEEP,mraderror.
+      module mrad_error
+
+      integer, save :: kwarn_nstep_m=1, debug_m=0
+
+      end module mrad_error

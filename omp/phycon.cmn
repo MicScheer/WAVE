@@ -1,0 +1,22 @@
+*KEEP,PHYCON.
+      DOUBLE PRECISION
+     &  CLIGHT1,CGAM1,CQ1,alpha1,
+     &  dnull1,done1,sqrttwopi1,
+     &  EMASSG1,EMASSE1,ECHARGE1,EMASSKG1,EPS01,ERAD1,
+     &  GRARAD1,
+     &  HBAR1,HBAREV1,HPLANCK1,
+     &  PI1,POL1CON1,POL2CON1,
+     &  RADGRA1,rmu01,rmu04pi1,
+     &  TWOPI1,HALFPI1,
+     &  WTOE1,gaussn1,cK934,powcon1,ecdipev1,ecdipkev1
+
+      COMMON/PHYCON1/
+     &  CLIGHT1,CGAM1,CQ1,alpha1,
+     &  dnull1,done1,sqrttwopi1,
+     &  EMASSG1,EMASSE1,ECHARGE1,EMASSKG1,EPS01,ERAD1,
+     &  GRARAD1,
+     &  HBAR1,HBAREV1,HPLANCK1,
+     &  PI1,POL1CON1,POL2CON1,
+     &  RADGRA1,rmu01,rmu04pi1,
+     &  TWOPI1,HALFPI1,
+     &  WTOE1,gaussn1,cK934,powcon1,ecdipev1,ecdipkev1

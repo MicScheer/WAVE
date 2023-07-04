@@ -1,0 +1,10 @@
+*KEEP,mradfiles.
+      module mrad_files
+
+      integer, save :: kwtrack_m=0, kwtrack1_m=0, kwtrack2_m=0,
+     &  luntrack_m=0, luntracks_m=0, lunsyn_m, lunbpm_m,luncav_m
+
+      character(2048), save :: chfiletrack_m="mrad_reference_orbit.dat"
+      character(2048), save :: chfiletracks_m="mrad_trajectories.dat"
+
+      end module mrad_files

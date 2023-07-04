@@ -1,0 +1,59 @@
+*CMZ :  2.54/05 13/05/2005  14.18.46  by  Michael Scheer
+*-- Author :
+      PROGRAM BMAP_BIN_TO_ASCII
+
+      IMPLICIT NONE
+
+      DOUBLE PRECISION BMXMIN,BMXMAX,BMYMIN,BMYMAX,BMZMIN,BMZMAX
+      REAL X,Y,Z,BX,BY,BZ,XO,YO,ZO
+
+        INTEGER ICODEBM
+      INTEGER IBMESSX,IBMESSY,IBMESSZ
+      INTEGER NBMESSX,NBMESSY,NBMESSZ
+
+        CHARACTER(128) FILEB0,FILEASCII
+        CHARACTER(65) COMMENT
+
+        PRINT *,'Enter binary field map file:'
+        ACCEPT '(A)',FILEB0
+        PRINT *,'Enter ASCII output filename:'
+        ACCEPT '(A)',FILEASCII
+
+        OPEN(UNIT=21,FILE=FILEASCII,STATUS='NEW'
+     &    ,FORM='FORMATTED',ERR=9998)
+      OPEN(UNIT=20,FILE=FILEB0,STATUS='OLD'
+     &    ,FORM='UNFORMATTED',ERR=9999)
+
+        READ(20)ICODEBM,COMMENT
+        READ(20)NBMESSX,BMXMIN,BMXMAX
+      READ(20)NBMESSY,BMYMIN,BMYMAX
+      READ(20)NBMESSZ,BMZMIN,BMZMAX
+
+        WRITE(21,*)ICODEBM,COMMENT
+        WRITE(21,*)NBMESSX,BMXMIN,BMXMAX
+        WRITE(21,*)NBMESSY,BMYMIN,BMYMAX
+        WRITE(21,*)NBMESSZ,BMZMIN,BMZMAX
+
+        DO IBMESSX=1,NBMESSX
+          DO IBMESSY=1,NBMESSY
+            DO IBMESSZ=1,NBMESSZ
+
+              READ(20)BX,BY,BZ
+              WRITE(21,*)BX,BY,BZ
+
+            ENDDO
+          ENDDO
+        ENDDO
+
+      CLOSE(20)
+        CLOSE(21)
+
+        STOP
+
+9998    PRINT *,'***Error while opening output file'
+        STOP
+
+9999    PRINT *,'***Error while opening input file'
+        STOP
+
+      END

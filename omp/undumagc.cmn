@@ -1,0 +1,88 @@
+*KEEP,undumagc.
+
+      double precision ucorrtiny,urandox,urandoy,urandoz,uwwindow,
+     &  ucorrtinymm,urandoxmm,urandoymm,urandozmm,
+     &  umaglx,umagly,umaglz,undugap,umagbc,us2shift,us3shift,undusplit,
+     &  dxmapu,xmapminu,xmapmaxu,ymapminu,ymapmaxu,zmapminu,zmapmaxu,
+     &  umupar,uksiper,uebeam,ucoating,uairgap,perlenclc
+
+      integer kxstart,kxstop,ibunduini,nudivx,nuhdivx,nudivy,nudivz,
+     &  nxmapu,nymapu,nzmapu,kbunduverb_c,
+     &  nunduper,nunduperw,nunduclc,muthreads,kwrun,kbundumag_c,kbundumap_c
+
+      character(2048) chundumag,chunduclc,chundunam,chwcom
+
+      common/undumagc/
+     &  ucorrtiny,urandox,urandoy,urandoz,uwwindow,uebeam,
+     &  ucorrtinymm,urandoxmm,urandoymm,urandozmm,
+     &  umaglx,umagly,umaglz,undugap,umagbc,us2shift,us3shift,undusplit,
+     &  umupar,uksiper,ucoating,uairgap,
+     &  dxmapu,xmapminu,xmapmaxu,ymapminu,ymapmaxu,zmapminu,zmapmaxu,perlenclc,
+     &  nunduper,nunduperw,nunduclc,muthreads,kwrun,
+     &  kxstart,kxstop,ibunduini,nudivx,nuhdivx,nudivy,nudivz,
+     &  nxmapu,nymapu,nzmapu,kbundumag_c,kbundumap_c,kbunduverb_c,
+     &  chundumag,chunduclc,chundunam,chwcom
+
+      namelist /undumagn/
+     &  kxstart,kxstop,
+     &  ucorrtiny,urandox,urandoy,urandoz,
+     &  ucorrtinymm,urandoxmm,urandoymm,urandozmm,
+     &  uwwindow,nunduper,nunduperw,nunduclc,ucoating,uairgap,
+     &  umaglx,umagly,umaglz,undugap,umagbc,us2shift,us3shift,undusplit,
+     &  umupar,uksiper,nudivx,nuhdivx,nudivy,nudivz,
+     &  nxmapu,nymapu,nzmapu,
+     &  dxmapu,xmapminu,xmapmaxu,ymapminu,ymapmaxu,zmapminu,zmapmaxu,
+     &  chundumag,chunduclc,chundunam
+
+      double precision ucorrtiny_h,urandox_h,urandoy_h,urandoz_h,uwwindow_h,
+     &  ucorrtinymm_h,urandoxmm_h,urandoymm_h,urandozmm_h,
+     &  umaglx_h,uperlen_h,umagly_h,umaglz_h,undugap_h,umagbc_h,us2shift_h,us3shift_h,undusplit_h,
+     &  dxmapu_h,xmapminu_h,xmapmaxu_h,ymapminu_h,ymapmaxu_h,zmapminu_h,zmapmaxu_h,
+     &  umupar_h,uksiper_h,uebeam_h,
+     &  usmaglx_h(1000),usmagly_h(1000),usmaglz_h(1000),usmagch_h(1000),
+     &  usmagdy_h(1000),umagspac_h,
+     &  upollx_h,upolly_h,upollz_h,fracdivfe_h,fracdivfez_h,
+     &  usmagspac_h(1000),upolspac_h,umagch_h,upolch_h,ucoating_h
+
+      integer kxstart_h,kxstop_h,ibunduini_h,nudivx_h,nuhdivx_h,nudivy_h,nudivz_h,
+     &  muthreads_h,kwrun_h,
+     &  nxmapu_h,nymapu_h,nzmapu_h,
+     &  numdivx_h,numdivy_h,numdivz_h,nperiod_h,nperiodw_h,
+     &  nupdivx_h,nupdivy_h,nupdivz_h,nspec_h,msmag_h(1000),
+     &  ixsym_h,iysym_h,izsym_h
+
+      character(2048) chundumag_h,chunduiron_h,chundunam_h,chwcom_h
+
+      common/unduhybirdc/
+     &  ucorrtiny_h,urandox_h,urandoy_h,urandoz_h,uwwindow_h,uebeam_h,
+     &  ucorrtinymm_h,urandoxmm_h,urandoymm_h,urandozmm_h,
+     &  umaglx_h,uperlen_h,umagly_h,umaglz_h,undugap_h,umagbc_h,us2shift_h,us3shift_h,undusplit_h,
+     &  umupar_h,uksiper_h,
+     &  dxmapu_h,xmapminu_h,xmapmaxu_h,ymapminu_h,ymapmaxu_h,zmapminu_h,zmapmaxu_h,
+     &  upollx_h,upolly_h,upollz_h,ucoating_h,
+     &  usmagspac_h,upolspac_h,umagspac_h,umagch_h,upolch_h,fracdivfe_h,fracdivfez_h,
+     &  usmaglx_h,usmagly_h,usmaglz_h,usmagch_h,usmagdy_h,
+     &  muthreads_h,kwrun_h,
+     &  kxstart_h,kxstop_h,ibunduini_h,nudivx_h,nuhdivx_h,nudivy_h,nudivz_h,
+     &  chundumag_h,chunduiron_h,chundunam_h,chwcom_h,
+     &  numdivx_h,numdivy_h,numdivz_h,nperiod_h,nperiodw_h,
+     &  nupdivx_h,nupdivy_h,nupdivz_h,nspec_h,msmag_h,
+     &  ixsym_h,iysym_h,izsym_h
+
+      namelist /unduhybridn/
+     &  kxstart_h,kxstop_h,
+     &  ucorrtiny_h,urandox_h,urandoy_h,urandoz_h,
+     &  ucorrtinymm_h,urandoxmm_h,urandoymm_h,urandozmm_h,
+     &  uwwindow_h,
+     &  umaglx_h,uperlen_h,umagly_h,umaglz_h,undugap_h,umagbc_h,us2shift_h,us3shift_h,undusplit_h,
+     &  umupar_h,uksiper_h,
+     &  nxmapu_h,nymapu_h,nzmapu_h,
+     &  dxmapu_h,xmapminu_h,xmapmaxu_h,ymapminu_h,ymapmaxu_h,zmapminu_h,zmapmaxu_h,
+     &  chundumag_h,chunduiron_h,chundunam_h,
+     &  numdivx_h,numdivy_h,numdivz_h,
+     &  nupdivx_h,nupdivy_h,nupdivz_h,nspec_h,msmag_h,nperiod_h,nperiodw_h,
+     &  upollx_h,upolly_h,upollz_h,
+     &  usmagspac_h,upolspac_h,umagspac_h,umagch_h,upolch_h,fracdivfe_h,fracdivfez_h,
+     &  usmaglx_h,usmagly_h,usmaglz_h,usmagch_h,usmagdy_h,
+     &  ucoating_h,
+     &  ixsym_h,iysym_h,izsym_h

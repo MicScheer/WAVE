@@ -1,0 +1,10 @@
+*KEEP,primkin.
+      double precision
+     &  dmyenergyP,dmygammaP,dmybetaP
+     &  ,xstartP,ystartP,zstartP
+     &  ,vxinP,vyinP,vzinP
+
+      common/primkinc/
+     &  dmyenergyP,dmygammaP,dmybetaP
+     &  ,xstartP,ystartP,zstartP
+     &  ,vxinP,vyinP,vzinP

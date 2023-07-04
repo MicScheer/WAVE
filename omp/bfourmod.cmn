@@ -1,0 +1,28 @@
+*KEEP,bfourmod.
+      module mrad_bfourmod
+
+      integer, parameter :: maxfoumagp=2**10,
+     &  maxfour_p_m=2**10,
+     &  nfourd_p_m=2*maxfour_p_m
+
+      integer, save ::
+     &  nfour_m(maxfoumagp)=1,
+     &  ifour0_m(maxfoumagp)=0,
+     &  nfoumags_m(maxfoumagp)=1,
+     &  kbfourini_m=0,
+     &  kbfour_m=0
+
+      double precision, save ::
+     &  xlenfour_m(maxfoumagp)=0.0d0,
+     &  fouentr_m(maxfoumagp)=-9999.0d0,
+     &  fouexit_m(maxfoumagp)=-9999.0d0,
+     &  xshbfour_m(maxfoumagp)=0.0d0,
+     &  zl0four_m(maxfoumagp),zl0four2_m(maxfoumagp),xk0four_m(maxfoumagp),
+     &  a0_m(maxfoumagp)=0.0d0,a_m(maxfour_p_m,maxfoumagp)=0.0d0,
+     &  xkfour_m(maxfour_p_m,maxfoumagp)=0.0d0,
+     &  ykfour_m(maxfour_p_m,maxfoumagp)=0.0d0,
+     &  zkfour_m(maxfour_p_m,maxfoumagp)=0.0d0
+
+      character(2048) chfilebfour_m
+
+      end module mrad_bfourmod

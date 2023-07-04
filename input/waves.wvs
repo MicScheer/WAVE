@@ -1,0 +1,5395 @@
+$PWD/wave
+ipython3 -i ../python/waveplot.py
+$EDITOR wave.out
+$EDITOR
+0.1 0.085 0.85 0.75 arial 13
+1. 1. 1.
+0. 0. 0.
+1. 0. 0.
+0. 1. 0.
+0. 0. 1.
+1. 1. 0.
+1. 0. 1.
+0. 1. 1.
+*===================================================================
+* Version: 1.32/14
+*===================================================================
+*
+*  Trouble: Error in combination with mycommg.kumac: Reason:
+*  Sub-directory paw is missing, path in pawlogon.kumac wrong.
+*
+* Note:
+*------------------------------------------------------------------
+*
+* Namelists must not occur more than once in wave.in.
+* Strings must be given without quotes in waves.wvs (this file).
+*
+*------------------------------------------------------------------
+*
+* Lines in namelists must not contain more than one variable.
+*
+*------------------------------------------------------------------
+* Difference between MAPPING and BONDING:
+* For BONDING depending variables are set to zero, when BONDING variable
+* becomes zero, i.e. BONDING lists toggle.
+*
+*------------------------------------------------------------------
+* Mutual exclusion of TOGGLE variables, e.g. IBMASK / IBMASKP.
+* Unfortunately trigger of BBFELD then fails...
+*------------------------------------------------------------------
+* Several variables can be read simultaniously
+*
+*$TEXT
+*	text
+*	$VARIABLE
+*	VAR1
+*	$VARIABLE
+*	VAR2
+*------------------------------------------------------------------
+* Empty lines in the first 13 lines are not allowed.
+*------------------------------------------------------------------
+*
+* $COMMENT can only be used together with variables, mappings etc.
+* They must follow the declaration of the variables.
+*===================================================================
+*$CALC
+*
+* Allowed operators: +,-,*,/,.and.,.or., .nor. und .nand.
+* The first operator must not be a constant.
+* The second operator may be const=1 or const=-1 as a substitute for .not..
+*
+*************************************************************************
+* To put sub menues in menues after variables, the menue and submenue must
+* have the same name.
+*
+*************************************************************************
+$MENU
+        WAVE
+        WAVES
+        $TITLE
+        SETUP WAVE INPUT
+                $TEXT
+                        User title
+                $VARIABLE
+                        CODE
+$HELP
+User title:
+The user title is a comment, that is written to most output files of WAVE
+to identify and comment the program run. In addition there is a run number
+to identify the run. So, it's not always necessary to change the comment.
+$ENDHELP
+*************************************************************************
+$MENU
+        BEAM
+        WAVE
+        $TITLE
+        Beam and storage ring parameters
+                $TEXT
+                Sign of particle charge [-1/1]
+                $VARIABLE
+                        ICHARGE
+                $TEXT
+		Total beam energy [GeV]
+		$VARIABLE
+                        DMYENERGY
+                $TEXT
+		Take energy loss into account [1,0,-1]
+                $VARIABLE
+                        IENELOSS
+                $TEXT
+                        current [A]
+                $VARIABLE
+                        DMYCUR
+        $TEXT
+                X, where the Beta-function etc. refer to  [m]
+        $VARIABLE
+                XBETFUN
+        $TEXT
+	     Hor. beta-function [m]
+        $VARIABLE
+		 BETAH	
+        $TEXT
+	     Derivative of hori. beta-function
+        $VARIABLE
+		 BETAPH	
+	$TEXT
+	     Vert. beta-function [m]
+        $VARIABLE
+		 BETAV	
+        $TEXT
+	     Derivative of vert. beta-function
+        $VARIABLE
+		 BETAPV	
+	
+        $TEXT
+	     Natural emittance of the storage ring [rad-m]
+        $VARIABLE
+		 EPS0H
+        $TEXT
+		Vertical emittance of the storage ring [rad-m]
+        $VARIABLE
+                EPS0V
+                $TEXT
+                        Rel. energy-spread of the beam
+                $VARIABLE
+                        ESPREAD
+                $TEXT
+                        Circumference of the ring [m]
+                $VARIABLE
+                        UMFANG
+$HELP
+Beam energy:
+Total energy in GeV
+
+Energy loss:
+1:  continous energy loss
+-1: energy loss with quantum fluctuations
+0:  no energy loss
+
+For spectrum calculations beam size effects and beam enery spread can be
+taken into account by foldings procedures in the spectrum calculation menu.
+For multi particle tracking, beta-functions and dispersions are taken
+into account. The
+
+For multi particle tracking and the calculation of emittance effects and beam
+polarisation etc., please see also the menu
+SETUP WAVE INPUT/Continuation/Machine physics.
+
+$ENDHELP
+*************************************************************************
+$MENU
+        TRACKING
+        WAVE
+        $TITLE
+        Tracking parameters
+                $TEXT
+                        start value for X-Coord. [m] of elec. (9999. means set by WAVE)
+                $VARIABLE
+                        XSTART
+                $COMMENT
+                        X is longitudinal coordinate
+                $TEXT
+                Y-Coord. [m] of electron at starting X or Xref
+                $VARIABLE
+                        YSTART
+                $COMMENT
+                        Y is vertical coordinate
+                $TEXT
+                        Z-coord. [m] of electron at starting X or Xref
+                $VARIABLE
+                        ZSTART
+                $TEXT
+                        stop value for X-Coord. [m] of elec. (9999. means set by WAVE)
+                $VARIABLE
+                        XSTOP
+                $TEXT
+                        relative velocity in X at starting X or Xref
+                $VARIABLE
+                        VXIN
+                $TEXT
+                        relative velocity in Y at starting X or Xref
+                $VARIABLE
+                        VYIN
+                $TEXT
+                        relative velocity in Z at starting X or Xref
+                $VARIABLE
+                        VZIN
+                $TEXT
+                        X-reference for velocity vector
+                $VARIABLE
+                        XINTER
+                $COMMENT
+                        Xref = -9999. means velocity referes to starting point
+                $COMMENT
+                Xref = 9999. means default is used if possible
+                $TEXT
+                        number of steps per meter
+                $VARIABLE
+                        MYINUM
+$HELP
+Coordinate system:
+Right handed
+X is longitudinal coordinate
+Y is vertical coordinate
+Z is horizontal coordinate perpendicular to X and Y
+
+Velocity:
+The vector is normalized to the beam energy by WAVE.
+Usually the velocity referes to the starting point (Xi,Yi,Zi)
+of the trajectory. However, sometimes it is useful to refer to
+another point (Xref,Yref,Zref) of the trajectory. When Xref is
+used (i.e. Xref not set to -9999.) then the tracking starts at
+(Xref,Yi,Zi) to the point, where X=Xi. Then the actual
+tracking starts from that point with the corresponding velocity
+at that point. This can e.g. be used to track through a dipole
+adjusting the apex of the trajectory to the origin of the coordinate
+system.
+
+Note: Xref is XINTER in wave.in
+
+$ENDHELP
+*************************************************************************
+$MENU
+	MAGSEL
+	WAVE
+	$TITLE
+	Magnetic field selection
+		$TEXT
+                        Sequence of simple dipole magnets
+		$TOGGLE
+                        KBFELD
+		$TEXT
+                        Sequence of soft edge magnets
+		$TOGGLE
+                        KMAGSEQ
+		$TEXT
+                		Halbach undulator/wiggler
+		$TOGGLE
+                		KHALBA
+		$TEXT
+                		Hybrid undulator with end poles, gap controlled
+		$TOGGLE
+                		KUNDUGAP
+		$TEXT
+                		Halbach undulator/wiggler with end poles
+		$TOGGLE
+                		KHALBASY
+		$TEXT
+                		Elliptical undulator (analytical model)
+		$TOGGLE
+                		KELLIP
+                $TEXT
+                                Tabulated vertical field BY(X)
+		$TOGGLE
+                                IRBTAB
+                $TEXT
+                                Tabulated fields BY(X) and BZ(X)
+		$TOGGLE
+                                IRBTABZY
+                $TEXT
+                                3D field from Fourier expansion
+		$TOGGLE
+		       		IRFILF
+                $TEXT
+		                3D field map
+		$TOGGLE
+		                IRBMAP2
+*************************************************************************
+$MENU
+        RECIDS
+	MAGSEL
+	$TITLE
+        IDs based on Finite Element Codes
+	    $TEXT
+                REC-Undulators (program REC)
+            $TOGGLE
+	        KBREC
+	    $TEXT
+                Apple II undulator (program UNDUMAG)
+            $MAPPING
+	        KAPPLEM
+		3
+		KBUNDUMAG
+		2
+		KAPPLE
+		1
+		KHYBRID
+		0
+	    $TEXT
+                Planar hybrid undulator (program UNDUMAG)
+            $MAPPING
+	        KHYBRIDM
+		3
+		KBUNDUMAG
+		4
+		KAPPLE
+		0
+		KHYBRID
+		1
+	    $TEXT
+	        Use field from file undumag.wav
+            $MAPPING
+	        KUNDUWAM
+		3
+		KBUNDUMAG
+		-1
+		KAPPLE
+		0
+		KHYBRID
+		0
+*************************************************************************
+$MENU
+      BESSY
+      RECIDS
+      $TITLE
+      BESSY-IDs
+*************************************************************************
+$MENU
+        UE112
+        BESSY
+	$TITLE
+	UE112 (POLYMAG)
+		$TEXT
+                        deaktivate UE112
+		$MAPPING
+                        UEDEACT
+                        2
+                          IUE112MOD
+                          0
+                          NUE112MOD
+                          1
+		$TEXT
+                        parallel mode
+		$MAPPING
+                        UE112S3
+                        14
+				IUE56
+				0
+				IUE46
+				0
+				IUE112
+				1
+                	 	KBPOLYMAG
+                        	1
+                                BSCALEPM
+                                1.0
+                                WINPM
+                                2.0
+                                RANGPM
+                                1.0
+                                FILEPM
+                                ue112.polymag
+				SHUL
+				-0.5
+				SHLR
+				-0.5
+				SHUR
+				+0.5
+				SHLL
+				+0.5
+                                IUE112MOD
+                                1
+                                NUE112MOD
+                                0
+		$TEXT
+                        anti-parallel mode, pos. shift
+		$MAPPING
+                        UE112S2P
+                        14
+				IUE56
+				0
+				IUE46
+				0
+				IUE112
+				1
+                	 	KBPOLYMAG
+                        	1
+                                BSCALEPM
+                                1.0
+                                WINPM
+                                2.0
+                                RANGPM
+                                1.0
+                                FILEPM
+                                ue112.polymag
+				SHUL
+				 -1.0
+				SHLR
+				 +1.0
+				SHUR
+				 0.0
+				SHLL
+				 0.0
+                                IUE112MOD
+                                1
+                                NUE112MOD
+                                0
+		$TEXT
+                        anti-parallel mode, neg. shift
+		$MAPPING
+                        UE112S2N
+                        14
+				IUE56
+				0
+				IUE46
+				0
+				IUE112
+				1
+                	 	KBPOLYMAG
+                        	1
+                                BSCALEPM
+                                1.0
+                                WINPM
+                                2.0
+                                RANGPM
+                                1.0
+                                FILEPM
+                                ue112.polymag
+				SHUL
+				 0.0
+				SHLR
+				 0.0
+				SHUR
+				 1.0
+				SHLL
+				 -1.0
+                                IUE112MOD
+                                1
+                                NUE112MOD
+                                0
+		$TEXT
+                        full gap [mm]
+		$VARIABLE
+			GAPPM
+		$TEXT
+                        shift [mm]
+		$VARIABLE
+			UE112SH
+	        $COMMENT
+		to shift rows independently deaktivate UE112
+	        $COMMENT
+		and use POLYMAG menu
+        $TEXT
+               full window width for calculation of magnetic field [m]
+        $VARIABLE
+               winpm
+        $TEXT
+               extension of tracking range
+        $VARIABLE
+               rangpm
+	$COMMENT
+	      for XSTART/XSTOP equal 9999.
+        $TEXT
+               scaling factor for magnetic field
+        $VARIABLE
+               BSCALEPM
+$MENU
+        UE46
+        BESSY
+	$TITLE
+	UE46
+		$TEXT
+                        UE46 linear polarisation
+		$MAPPING
+                        UE46S2
+                        10
+                	 	KBREC
+                        	1
+                                SCALKL
+                                1.0
+                                SCALADD
+                                0.0
+                                FILEREC
+                                ue46-s2.par
+				IUE56
+				0
+				IUE46
+				1
+				IUE112
+				0
+                                IRECU
+                                0
+                                IRECMODU
+                                0
+				KBRECM
+				0
+		$TEXT
+                        UE46 elliptical polarisation
+		$MAPPING
+                        UE46S3
+                        10
+                	  	KBREC
+                        	1
+                                SCALKL
+                                1.0
+                                SCALADD
+                                0.0
+                                FILEREC
+                                ue46-s3.par
+				IUE56
+				0
+				IUE46
+				1
+				IUE112
+				0
+                                IRECU
+                                0
+                                IRECMODU
+                                0
+				KBRECM
+				0
+    		$TEXT
+                        half gap [mm]
+                $VARIABLE
+                        RECGAP
+		$TEXT
+                        shift [mm]
+                $VARIABLE
+                        USHIFT
+$HELP
+There is a bug in the FORTRAN-Version of WAVES that might cause the
+polarisation buttons to pop off, if a value in the menu is changed.
+Therefore set values and check buttons afterwards.
+$ENDHELP
+*************************************************************************
+$MENU
+        RECERRID
+        UE46
+        $TITLE
+        Field errors
+        $TEXT
+                sigma of rel. field strength errors
+        $VARIABLE
+                BCRAN
+        $TEXT
+                maximum of rel. field strength errors
+        $VARIABLE
+                BCRANSIG
+$HELP
+For the BESSY-IDs there is only the field amplitude error available:
+
+A Gaussian error is generated and applied to the
+magnetization of the considered magnet due to the selected scheme.
+If the allowed maximum is exceeded the generated error is generated once again.
+This type of error applies to all magnets.
+
+Easy axis error can be generated for the REC-Undulators in the Magnetic field
+selection menu.
+
+$ENDHELP
+$MENUVETO
+BCRAN
+0.
+RECERRID
+*************************************************************************
+$MENUVETO
+IUNDU2
+1
+MAGSEL
+*************************************************************************
+$MENU
+        TAPERUE46
+        UE46
+        $TITLE
+        Taper
+        $TEXT
+                apply vertical taper function
+        $TOGGLE
+                IHTAPER
+        $TEXT
+                apply vertical taper function
+        $TOGGLE
+                IVTAPER
+$MENUALLVETO
+IHTAPER
+0
+TAPERUE46
+$MENUALLVETO
+IVTAPER
+0
+TAPERUE46
+*************************************************************************
+$MENU
+        RECPLOTUE46
+        UE46
+        $TITLE
+        Plotting options
+        $TEXT
+                plot rec-structure [-1,0,1]
+        $VARIABLE
+                IPLREC
+		$COMMENT
+        $TEXT
+                start of plotting range in X [mm]
+        $VARIABLE
+                RPLXMN
+                $COMMENT
+                9999. means autoscaling
+        $TEXT
+                end of plotting range in X [mm]
+        $VARIABLE
+                RPLXMX
+                $COMMENT
+                9999. means autoscaling
+$HELP
+ IPLREC=-1 writes graphics to rec_plotm.ps without on-line picture.
+ IPLREC=0 no graphics at all
+ IPLREC=1 might crash for statically linked version of WAVE
+ due to incompatible libc on linux
+
+$ENDHELP
+$MENUALLVETO
+	KBREC
+	0
+	RECIDS
+$MENUVETO
+	IUE46
+	0
+	UE46
+$MENUALLVETO
+	IUE46
+	0
+	BESSY
+$MENUALLVETO
+	UE112S2P
+	0
+	UE112
+  $MENUALLVETO
+	UE112S2N
+	0
+	UE112
+$MENUALLVETO
+	UE112S3
+	0
+	UE112
+$MENUALLVETO
+	UE112S2P
+	0
+	BESSY
+$MENUALLVETO
+	UE112S2N
+	0
+	BESSY
+$MENUALLVETO
+	UE112S3
+	0
+	BESSY
+$MENUVETO
+IPLREC
+0
+RECPLOTUE46
+*************************************************************************
+$MENU
+        UE56
+        BESSY
+	$TITLE
+	UE56
+		$TEXT
+                        UE56 chicane-mode (200 mu-rad)
+		$MAPPING
+                        UE56CHIC
+                        27
+                	KBREC
+                        1
+			 	IRFILF
+				0
+                		KBFELD
+                                0
+                		KHALBA
+                                0
+                		KHALBASY
+                                0
+                		KUNDUGAP
+                                0
+                		KBUNDUMAG
+                                0
+                		KELLIP
+                                0
+                                IRBTAB
+                                0
+                                IRBTABZY
+                                0
+                                IRFILB0
+                                0
+                                SCALKL
+                                1.0
+                                SCALADD
+                                0.0
+                                FILEREC
+                                ue56-rl.par
+				IUE56
+				1
+				IUE46
+				0
+				IUE112
+				0
+                                IRECU
+                                0
+                                IRECMODU
+                                1
+				KBRECM
+				0
+				TROTCHIC0
+				1.
+				TROTMODU0
+				0.
+                                TROT
+                                73.6073
+                                TROTEND
+                                158.336
+				BCMOD(1)
+				0.0
+				BCMOD(2)
+				0.0
+				BCMOD(15)
+				0.0
+				BCMOD(16)
+				0.0
+		$TEXT
+                        UE56 modulator-mode
+		$MAPPING
+                        UE56MODU
+                        22
+                	KBREC
+                        1
+			 	IRFILF
+				0
+                		KBFELD
+                                0
+                		KHALBA
+                                0
+                		KHALBASY
+                                0
+                		KUNDUGAP
+                                0
+                		KELLIP
+                                0
+                                IRBTAB
+                                0
+                                IRBTABZY
+                                0
+                                IRFILB0
+                                0
+                                SCALKL
+                                1.0
+                                SCALADD
+                                0.0
+                                FILEREC
+				ue56-rr.par
+				IUE56
+				1
+				IUE46
+				0
+				IUE112
+				0
+                                IRECU
+                                0
+                                IRECMODU
+                                1
+				KBRECM
+				0
+				TROTCHIC0
+				0.
+				TROTMODU0
+				1.
+                                TROTEND
+                                90.
+		$TEXT
+                        half gap [mm]
+                $VARIABLE
+                        RECGAP
+		$TEXT
+                        shift [mm]
+                $VARIABLE
+                        USHIFT
+		$TEXT
+                        Rotation angle for modulator magnets (deg.)
+                $VARIABLE
+                        TROT
+		$TEXT
+                        Rotation angle for chicane magnets (deg.)
+                $VARIABLE
+                        TROTEND
+		$TEXT
+                        Scaling factor for chicane/modulator magnets
+                $VARIABLE
+                        SCALMOD
+$HELP
+There is a bug in the FORTRAN-Version of WAVES that might cause the
+polarisation buttons to pop off, if a value in the menu is changed.
+Therefore set values and check buttons afterwards.
+$ENDHELP
+*************************************************************************
+$MENU
+        RECPLOTUE56
+        UE56
+        $TITLE
+        Plotting options
+        $TEXT
+                plot rec-structure [0/1]
+        $VARIABLE
+                IPLREC
+		$COMMENT
+		statically linked version of WAVE might crash for 1
+        $TEXT
+                start of plotting range in X [mm]
+        $VARIABLE
+                RPLXMN
+                $COMMENT
+                9999. means autoscaling
+        $TEXT
+                end of plotting range in X [mm]
+        $VARIABLE
+                RPLXMX
+                $COMMENT
+                9999. means autoscaling
+$HELP
+ IPLREC=-1 writes graphics to rec_plotm.ps without on-line picture.
+ IPLREC=0 no graphics at all
+ IPLREC=1 might crash due to incompatible libc on linux
+$ENDHELP
+$MENUVETO
+	IUE46
+	0
+	UE46
+$MENUVETO
+	IUE56
+	0
+	UE56
+$MENUVETO
+	IUE112
+	0
+	UE112
+$MENUALLVETO
+	IUE46
+	0
+	BESSY
+$MENUALLVETO
+	IUE56
+	0
+	BESSY
+$MENUALLVETO
+	IUE112
+	0
+	BESSY
+$MENUVETO
+IPLREC
+0
+RECPLOTUE56
+*************************************************************************
+$MENU
+        MAGNET
+        WAVE
+        $TITLE
+        Magnetic field parameters
+*************************************************************************
+$MENU
+        MAGOPT
+        WAVE
+        $TITLE
+        Global magnetic field options
+	$TEXT
+	       offset to By [T]
+	$VARIABLE
+	       BYGOFF
+	$TEXT
+	       offset to Bz [T]
+	$VARIABLE
+	       BZGOFF
+	$TEXT
+	       scaling factor for magnetic field
+	$VARIABLE
+	       B0SCGLOB
+	$TEXT
+	       scaling factor for vector potential of magnetic field
+	$VARIABLE
+	       A0SCGLOB
+	$COMMENT
+               only needed for calculation of Generating Function
+	$TEXT
+	       scaling factor for vert. magnetic field
+	$VARIABLE
+	       B0SCGLOBY
+	$TEXT
+	       scaling factor for hori. magnetic field
+	$VARIABLE
+	       B0SCGLOBZ
+	$TEXT
+	       symmetry mode with respect to X [-1/0/1]
+	$VARIABLE
+	       IBSYM
+	$TEXT
+	       X-coordinate of symmetry point [m]
+	$VARIABLE
+	       XBSYM
+	$TEXT
+	       symmetry mode with respect to Y [-1/0/1]
+	$VARIABLE
+	       IBSYMY
+	$TEXT
+	       symmetry mode with respect to Z [-1/0/1]
+	$VARIABLE
+	       IBSYMZ
+$HELP
+Symmetry mode in X:
+  Bx(-x) is set to -Bx(x)
+  By(-x) is set to By(x)
+  Bz(-x) is set to Bz(x)
+  negative value means negative field for X < 0
+
+  X of symmetry point:
+  By(-(x-xsym))=By(x-xsym) etc. (depending on symmetry mode)
+
+Symmetry mode in Y:
+  Bx(-y) is set to Bx(y)
+  By(-y) is set to -By(y)
+  Bz(-y) is set to Bz(y)
+  negative value means negative field for Y < 0
+
+Symmetry mode in Z:
+  Bx(-z) is set to Bx(z)
+  By(-z) is set to By(z)
+  Bz(-z) is set to -Bz(z)
+  negative value means negative field for Z < 0
+$ENDHELP
+*************************************************************************
+$MENU
+        MAGOPTC
+        MAGOPT
+        $TITLE
+        Global magnetic field options (continued)
+	$TEXT
+	       Spline magnetic field after tracking for further use
+	$BONDING
+	       IMAGSPNM
+	       1
+	       IMAGSPLN
+	       -9999
+        $COMMENT
+               is effected by "main modes" in spectrum calculation menu
+        $COMMENT
+               defaults for XSTART, XSTOP, XINTER not allowed for this option
+	$TEXT
+	      Mask magnetic field with pattern of simple dipole menu
+        $TOGGLE
+	       IBMASK
+	$TEXT
+	       x-shift of device (x(elect) -> x(elect)+XSHIFT) [m]
+	$VARIABLE
+	       XSHIFT
+	$TEXT
+	       Vertical shift of device (y(elect) -> y(elect)+YSHIFT) [m]
+	$VARIABLE
+	       VSHIFT
+	$TEXT
+	       Horizontal shift of device (z(elect) -> z(elect)+YSHIFT) [m]
+	$VARIABLE
+	       HSHIFT
+	$TEXT
+	     Rotation angle around x-axis [degree]
+	$VARIABLE
+	        XROTD
+$HELP
+The spline option is not compatible with the writing of 3D field maps,
+Generating Functions and other menus which need to calculate a points
+not belonging to the particle's trajectory.
+
+The mask option allows to multiply the magnetic field with the field
+from menu a sequence of simple dipole magnets. See the corresponding
+menu for the Magnetic field selection.
+$ENDHELP
+*************************************************************************
+$MENU
+        MAGERR
+        MAGOPTC
+        $TITLE
+        Magnetic field errors
+	$TEXT
+	       Toggle magnet field errors
+	$TOGGLE
+	       IBERROR
+	$TEXT
+	       Amplitude of field errors [T]
+	$VARIABLE
+	       B0ERROR
+	$TEXT
+	       Mode
+	$VARIABLE
+	       NBERRMOD
+	$TEXT
+	       Period-length of error field [m]
+	$VARIABLE
+	       ZLENERR
+	$TEXT
+	       Period-length of transversal gradient  [m]
+	$VARIABLE
+	       XLENERR
+$HELP
+The error field is actually an undulator of model HALBASY or for a
+negative transversal gradient length of the model ELLANA (see wave.in)
+
+ Mode:
+1: Error applies for two poles with +B/-B
+2: Error applies for one pole with +B
+else: Error applies for three poles with -B/2, +B, -B/2
+
+For more options and details check the namelist BERRORN in wave.in
+$ENDHELP
+$MENUVETO
+IBERROR
+0
+MAGERR
+*************************************************************************
+$MENU
+      	MAGPER
+      	MAGOPTC
+        $TITLE
+        Making periodic fields
+	$TEXT
+	     Magnetic field is taken periodically [1,0,-1,-2,-3,-4]
+        $VARIABLE
+	     IPERIODG
+        $COMMENT
+             may cause problems with defaults of XSTART...
+	$TEXT
+	     lower X, for which field is taken periodically [m]
+	$VARIABLE
+	      XPERWMN
+	$TEXT
+	     upper X, for which field is taken periodically [m]
+	$VARIABLE
+	      XPERWMX
+	$TEXT
+	     period length of magnetic field [m]
+	$VARIABLE
+	     PERIODG
+	$TEXT
+	     longitudinal offset of period [m]
+	$VARIABLE
+	     PEROFFG
+$HELP
+*** Attention: All operations due to this option are applied
+BEFORE other option like shifting the field in X or symmetry
+operation are envolved. Defaults of XSTART, XINTER and XSTOP
+might cause problems.
+
+Value of symmetry option means:
+
+>0: magnetic field is taken periodically
+with period length PERIODG
+
+-1: magnetic field is taken periodically with period
+    length PERIODG, for XPERWMN < X < XPERWMMX
+
+-2: magnetic field is taken periodically with period
+    length PERIODG from half period,
+    for XPERWMN < X < XPERWMMX
+
+-3: magnetic field is taken periodically with period
+    length PERIODG from quarter of period for cosine-
+    like fields (in X) for XPERWMN < X < XPERWMMX
+
+-4: magnetic field is taken periodically with period
+    length PERIODG from quarter of period for sine-
+    like fields (in X) for XPERWMN < X < XPERWMMX
+$ENDHELP
+$MENUVETO
+	  IPERIODG
+	  0
+	  MAGPER
+$VETO
+	  IPERIODG
+	  1
+	  XPERWMN
+$VETO
+	  IPERIODG
+	  1
+	  XPERWMX
+*************************************************************************
+$MENU
+	FORCES
+        MAGOPTC
+        $TITLE
+        Forces and torques
+	$TEXT
+	     Activate calculation of forces and torques
+	$MAPPING
+	     IBFORCEM
+	     4
+             IBFORCE
+             1
+	     IUNDULATOR
+	     0
+	     IMAGSPLN
+	     0
+	     ISPEC
+	     0
+	$COMMENT
+	turns off spectrum calculations
+	$TEXT
+	     X-position of box center [m]
+	$VARIABLE
+	     BFCENX
+	$TEXT
+	     Y-position of box center [m]
+	$VARIABLE
+	     BFCENY
+	$TEXT
+	     Z-position of box center [m]
+	$VARIABLE
+	     BFCENZ
+	$TEXT
+	     length (X) of box [m]
+	$VARIABLE
+	     BFLENX
+	$TEXT
+	     heigth (Y) of box [m]
+	$VARIABLE
+	     BFLENY
+	$TEXT
+	     width (Z) of box [m]
+	$VARIABLE
+	     BFLENZ
+	$TEXT
+	     number of longitudinal intervalls
+	$VARIABLE
+	     NBFORCX
+	$TEXT
+	     number of vertical intervalls
+	$VARIABLE
+	     NBFORCY
+	$TEXT
+	     number of intervalls in Z
+	$VARIABLE
+	     NBFORCZ
+$HELP
+The forces and torques due to the magnetic field is calcutated for a
+virtual box. The position and the size of the box must be given. The
+number of the intervalls must be high enough for the numerical
+integration.
+$ENDHELP
+$MENUVETO
+	IBFORCE
+	0
+	FORCES
+*************************************************************************
+$MENU
+        BBFELD
+        MAGNET
+        $TITLE
+        Sequence of simple dipole magnets
+        $TEXT
+                Field of 1.magnet [T]
+        $VARIABLE
+                BBY1
+        $TEXT
+                X of entrance of 1.magnet [m]
+        $VARIABLE
+                XM1
+        $TEXT
+                X of exit of 1. magnet [m]
+        $VARIABLE
+                XP1
+        $TEXT
+                width of fring fields [m]
+        $VARIABLE
+                YSOFT1(1)
+        $VARIABLE
+                YSOFT1(2)
+        $TEXT
+                Field of 2.magnet [T]
+        $VARIABLE
+                BBY2
+        $TEXT
+                X of entrance of 2. magnet [m]
+        $VARIABLE
+                XM2
+        $TEXT
+                X of exit of 2. magnet [m]
+        $VARIABLE
+                XP2
+        $TEXT
+                width of fring fields [m]
+        $VARIABLE
+                YSOFT2(1)
+        $VARIABLE
+                YSOFT2(2)
+*************************************************************************
+$MENU
+        BBFELDF
+        BBFELD
+        $TITLE
+        Sequence of simple dipole magnets (continued)
+        $TEXT
+                Field of 3.magnet [T]
+        $VARIABLE
+                BBY3
+        $TEXT
+                X of entrance of 3. magnet [m]
+        $VARIABLE
+                XM3
+        $TEXT
+                X of exit of 3. magnet [m]
+        $VARIABLE
+                XP3
+        $TEXT
+                width of fring fields [m]
+        $VARIABLE
+                YSOFT3(1)
+        $VARIABLE
+                YSOFT3(2)
+        $TEXT
+                Field of 4.magnet [T]
+        $VARIABLE
+                BBY4
+        $TEXT
+                X of entrance of 4. magnet [m]
+        $VARIABLE
+                XM4
+        $TEXT
+                X of exit of 4. magnet [m]
+        $VARIABLE
+                XP4
+        $TEXT
+                width of fring fields [m]
+        $VARIABLE
+                YSOFT4(1)
+        $VARIABLE
+                YSOFT4(2)
+*************************************************************************
+$MENU
+        BBFELDFF
+        BBFELDF
+        $TITLE
+        Sequence of simple dipole magnets (continued)
+        $TEXT
+                Field of 5.magnet [T]
+        $VARIABLE
+                BBY5
+        $TEXT
+                X of entrance of 5. magnet [m]
+        $VARIABLE
+                XM5
+        $TEXT
+                X of exit of 5. magnet [m]
+        $VARIABLE
+                XP5
+        $TEXT
+                width of fring fields [m]
+        $VARIABLE
+                YSOFT5(1)
+        $VARIABLE
+                YSOFT5(2)
+        $TEXT
+                Field of 6.magnet [T]
+        $VARIABLE
+                BBY6
+        $TEXT
+                X of entrance of 6. magnet [m]
+        $VARIABLE
+                XM6
+        $TEXT
+                X of exit of 6. magnet [m]
+        $VARIABLE
+                XP6
+        $TEXT
+                width of fring fields [m]
+        $VARIABLE
+                YSOFT6(1)
+        $VARIABLE
+                YSOFT6(2)
+*************************************************************************
+$MENU
+        BMAGSEQ
+        MAGNET
+        $TITLE
+        Sequence soft edge magnets
+        $TEXT
+                Filename of magnet list
+        $VARIABLE
+                FILEMG
+$HELP
+The sequence of magnets is read from a formatted ascii-file.
+
+File format:
+
+1th column: dummy
+2th column: magnet typ (DI or QP)
+
+For dipoles (DI):
+
+3th column: deflection angle [rad]
+4th column: bending radius [m]
+5th column: x-position of magnet center [m]
+6th column: parameter s of fringe field function f
+            f = 1/(1+exp(s*...))
+Infinit s means hard edge.
+The field is a product of two Fermi distributions.
+It is not MAXWELL conform
+7th column: ---
+
+For quadrupoles (QP):
+3th column: lenght of magnet [m]
+4th column: gradient k of quadrupole
+5th column: x-position of magnet center [m]
+6th column: z-position of magnet center [m]
+            to take displacement of beam into account (due to dipoles)
+7th column: rotation angle of magnet in the orbit plane [rad]
+            to take slope of trajectory into account (due to dipoles)
+$ENDHELP
+*************************************************************************
+$MENU
+        HALBACH
+        MAGNET
+        $TITLE
+        Halbach undulator
+        $TEXT
+                Peak field [T]
+        $VARIABLE
+                B0HALBA
+        $TEXT
+                Number of periods
+        $VARIABLE
+                PERHAL
+        $TEXT
+                Period length (lz=2*pi/kz) [m]
+        $VARIABLE
+                ZLHALBA
+        $TEXT
+                Transversal dimension (lx=2*pi/kx) [m]
+        $VARIABLE
+                XLHALBA
+*************************************************************************
+$MENU
+        UNDUGAP
+        MAGNET
+        $TITLE
+        Hybrid undulator with end poles, gap controlled
+        $TEXT
+	        Full gap [m]
+        $VARIABLE
+	        UNDUFULLGAP
+        $TEXT
+                Number of main poles (should be odd)
+        $VARIABLE
+                UNDUGAPPOL
+        $TEXT
+                Period length (lz=2*pi/kz) [m]
+        $VARIABLE
+                ZLUNDUGAP
+        $TEXT
+                Transversal dimension (lx=2*pi/kx) [m]
+        $VARIABLE
+                XLUNDUGAP
+        $TEXT
+                Longitudinal position of the device center [m]
+        $VARIABLE
+                XCENUNDUGAP
+        $TEXT
+                Parameter a
+        $VARIABLE
+                UNDUGAPA
+        $TEXT
+                Parameter b
+        $VARIABLE
+                UNDUGAPB
+        $TEXT
+                Parameter c
+        $VARIABLE
+                UNDUGAPC
+$HELP
+Refer to NIM A 60711 (Bahrdt, Gluskin)
+
+  Beff = a * exp(b*gap/perlen+c*(gap/perlen)**2)
+
+$ENDHELP
+*************************************************************************
+$MENU
+        HALBASY
+        MAGNET
+        $TITLE
+        Halbach undulator with end poles
+        $TEXT
+	        K-parameter (overwrites peak field, if not zero)
+        $VARIABLE
+	        PKHALBASY
+        $TEXT
+                Peak field [T]
+        $VARIABLE
+                B0HALBASY
+        $TEXT
+                Number of main poles (should be odd)
+        $VARIABLE
+                AHWPOL
+        $TEXT
+                Peak field ratio of main to end poles (2 is recommended)
+        $VARIABLE
+                FASYM
+        $TEXT
+                Period length (lz=2*pi/kz) [m]
+        $VARIABLE
+                ZLHALBASY
+        $TEXT
+                Transversal dimension (lx=2*pi/kx) [m]
+        $VARIABLE
+                XLHALBASY
+        $TEXT
+                Longitudinal position of the device center [m]
+        $VARIABLE
+                XCENHAL
+        $TEXT
+	        Number of considered  harmonic to adjust K
+        $VARIABLE
+	        NHHALBASY
+        $TEXT
+	        Energy of considered harmonic
+        $VARIABLE
+	        HHALBASY
+$HELP
+The harmonic of the undulator is determined by the beam energy and
+the peak field. If the K parameter is not zero, B is calculated from K
+and the period-length.
+
+If the number of the considered harmonic is not zero, K is adjusted
+such that the considered harmonic has the photon energy given below.
+This option overwrites the given K and the peak field.
+
+When the photon energy is set to -9999. it is calculated as the center
+of the considered energy range.
+
+Please check the results in the file wave.out.
+$ENDHELP
+*************************************************************************
+$MENU
+        ELLIP
+        MAGNET
+        $TITLE
+        Elliptical undulator
+        $TEXT
+	        K-parameter of undulator
+        $VARIABLE
+	        PARKELL
+        $TEXT
+                Vertical peak field [T]
+        $VARIABLE
+                B0ELLIPV
+        $TEXT
+                Horizontal peak field [T]
+        $VARIABLE
+                B0ELLIPH
+        $TEXT
+                Number of periods
+        $VARIABLE
+                PERELLIP
+        $TEXT
+                Period length [m]
+        $VARIABLE
+                XLELLIP
+        $TEXT
+	        Number of considered  harmonic to adjust K
+        $VARIABLE
+	        NHARMELL
+        $TEXT
+	        Energy of considered harmonic
+        $VARIABLE
+	        HARMELL
+*        $TEXT
+*                Shift of horiz. and vert. fields [periods]
+*        $VARIABLE
+*                ELLSHFT
+$HELP
+The harmonic of the undulator is determined by the beam energy and
+the effective magnetic field Beff=Sqrt( Bhori**2 + Bvert**2).
+If the K parameter is not zero, Beff is scaled such that it matches K.
+The ratio of the horizontal and vertical field is kept.
+
+If the number of the considered harmonic is not zero, K is adjusted
+such that the considered harmonic has the photon energy given below.
+This option overwrites the given K or magnetic field amplitudes, but
+the ratio of the horizontal and vertical component are kept.
+
+When the photon energy is set to -9999. it is calculated as the center
+of the considered energy range.
+
+Please check the results in the file wave.out.
+$ENDHELP
+*************************************************************************
+$MENU
+        BFOUR
+        MAGNET
+        $TITLE
+	3D field from Fourier expansion
+	$TEXT
+	     Filename to read coeffients from
+        $VARIABLE
+                FILEF
+        $TEXT
+	     	Number of coefficients to take into account
+        $VARIABLE
+		NFOUR
+	$TEXT
+	     	Set coefficient A(0) to zero [0/1]
+        $TOGGLE
+	        IFOUR0
+        $TEXT
+	     	2*pi/kx (to superimpose horizontal gradient) [m]
+        $VARIABLE
+		XLENFOUR
+$HELP
+The coefficients A(i) are read from a file and used to generate a 3D field
+
+Bx(x,y,z) =          sum(Bx(x,y,z)(i);i=1,n)
+By(x,y,z) = A(0)/2 + sum(By(x,y,z)(i);i=1,n)
+Bz(x,y,z) =          sum(Bz(x,y,z)(i);i=1,n)
+
+with
+
+Bx(x,y,z)(i) = A(i) * kx/ky * sin(kx*x)*sinh(ky*y)*cos(i*kz*z)
+By(x,y,z)(i) = A(i) *         cos(kx*x)*cosh(ky*y)*cos(i*kz*z)
+Bz(x,y,z)(i) = A(i) * kz/ky * cos(kx*x)*sinh(ky*y)*sin(i*kz*z)
+
+kz userdefind
+kx userdefind
+ky = sqrt(kx**2 + (i*kz)**2)
+
+If A(0) is set to zero, the field is adjusted such that the trajectory
+has no resulting kick or offset.
+$ENDHELP
+*************************************************************************
+$MENU
+        BTAB
+        MAGNET
+        $TITLE
+        Tabulated field BY(X)
+                $TEXT
+                File name of field table
+                $VARIABLE
+                FILETB
+$HELP
+The fields BY(X) is given as formatted ascii files.
+Constant X-intervalls are not required, since field is splined.
+
+File format:
+
+1. line: Comment to appear on WAVE output
+2. line: Scaling factors for X and BY.
+         Factors equal 1. means X in meter and BY in Tesla.
+3. line: Nummer of data points
+        (if negativ, the field is expanded symmetrically in the long. direction)
+
+1. Column: X
+2. Column: BY(X)
+$ENDHELP
+*************************************************************************
+$MENU
+        BTABZY
+        MAGNET
+        $TITLE
+        Tabulated fields BY(X) and BZ(X)
+                $TEXT
+                File name of BY(X)
+                $VARIABLE
+                FILETB
+                $TEXT
+                File name of BZ(X)
+                $VARIABLE
+                FILETBZ
+$HELP
+The fields BY(X) and BZ(X) are given on formatted ascii files.
+(One file for BY(X) and one file BZ(X))
+X-values of both files may differ.
+Constant X-intervalls are not required, since field is splined.
+
+File formats:
+
+1. line: Comment to appear on WAVE output
+2. line: Scaling factors for X and BY.
+         Factors equal 1. means X in meter and BY in Tesla.
+3. line: Nummer of data points
+        (if negativ, the field is expanded symmetrically in the long. direction)
+
+1. Column: X
+2. Column: BY(X) or BZ(X)
+$ENDHELP
+*************************************************************************
+$MENU
+        BMAPP
+        MAGNET
+        $TITLE
+        3D field map
+                $TEXT
+                        Filename of field map
+                $VARIABLE
+                        FILEB0
+$HELP
+Field map must be given in Ascii-Format, with six columns, containing
+X,Y,Z,BX,BY,BZ. X can be non-equidistant.
+$ENDHELP
+*************************************************************************
+$MENU
+        POLYMAG
+        MAGNET
+        $TITLE
+        REC-Structure from file (POLYMAG)
+        $TEXT
+               file with REC-structure
+        $VARIABLE
+               filepm
+ 	$TEXT
+ 	       gap [mm]
+	$VARIABLE
+			GAPPM
+        $TEXT
+               shift of upper-left row [mm]
+        $VARIABLE
+               shiftul
+        $TEXT
+               shift of lower-right row [mm]
+        $VARIABLE
+               shiftlr
+        $TEXT
+               shift of upper-right row [mm]
+        $VARIABLE
+               shiftur
+        $TEXT
+               shift of lower-left row [mm]
+        $VARIABLE
+               shiftll
+        $TEXT
+               full window width for calculation of magnetic field [m]
+        $VARIABLE
+               winpm
+        $TEXT
+               extension of tracking range
+        $VARIABLE
+               rangpm
+	$COMMENT
+	      for XSTART/XSTOP equal 9999.
+        $TEXT
+               scaling factor for magnetic field
+        $VARIABLE
+               BSCALEPM
+ $HELP
+
+ The values of this menu may be overwritten by the BESSY IDs. To get
+ control, deaktivate all BESSY IDs which use POLYMAG-routines, e.g. UE112.
+
+ $ENDHELP
+*************************************************************************
+$MENU
+        BREC
+        MAGNET
+        $TITLE
+        REC-undulator (Option KBREC)
+        $TEXT
+                length of magnets [mm]
+        $VARIABLE
+                URECLX(1)
+        $TEXT
+                height of magnets [mm]
+        $VARIABLE
+                URECLY(1)
+        $TEXT
+                width of magnets [mm]
+        $VARIABLE
+                URECLZ(1)
+        $TEXT
+                number of periods
+        $VARIABLE
+                KRECPER(1)
+        $TEXT
+                half gap of undulator [mm]
+        $VARIABLE
+                URECGAP(1)
+        $TEXT
+                strength of magnets [T]
+        $VARIABLE
+                URECBC(1)
+        $TEXT
+                undulator type
+        $VARIABLE
+                IUHELI(1)
+        $COMMENT
+                0: planar, 1: helical, S3 mode, -1: planar, S2 mode
+        $TEXT
+                horizontal distance of rows for helical undulator [mm]
+        $VARIABLE
+                URSPLIT(1)
+        $TEXT
+                rowshift for helical undulator [mm]
+        $VARIABLE
+                URSHIFT(1)
+        $TEXT
+                additional shift for lower rows [mm]
+        $VARIABLE
+                URSHADD(1)
+*************************************************************************
+$MENU
+        UNDUAPPLE
+        MAGNET
+        $TITLE
+        APPLE-II undulator (UNDUMAG)
+	$TEXT
+	        number of periods
+        $VARIABLE
+                NUNDUPER
+        $TEXT
+                full gap [mm]
+        $VARIABLE
+                UNDUGAP
+	$TEXT
+                length of magnets [mm]
+        $VARIABLE
+	        UMAGLX
+	$TEXT
+                height of magnets [mm]
+        $VARIABLE
+	        UMAGLY
+	$TEXT
+                width of magnets [mm]
+        $VARIABLE
+	        UMAGLZ
+	$TEXT
+                S2-shift
+        $VARIABLE
+                US2SHIFT
+	$TEXT
+                S3-shift
+        $VARIABLE
+                US3SHIFT
+	$TEXT
+	        coating and dead layer of magnets
+        $VARIABLE
+                UCOATING
+	$TEXT
+	        remanence of magnets [T]
+        $VARIABLE
+                UMAGBC
+	$TEXT
+	        mu parallel for linear REC material
+        $VARIABLE
+                UMUPAR
+	$TEXT
+	        ksi perpendicular for linear REC material
+        $VARIABLE
+                UKSIPER
+	$TEXT
+	        horizontal distance of rows for helical undulator [mm]
+        $VARIABLE
+                UNDUSPLIT
+	$TEXT
+	        number of divisions of magnets in X
+        $VARIABLE
+                NUDIVX
+	$TEXT
+	        number of divisions of half magnets in X
+        $VARIABLE
+                NUHDIVX
+	$TEXT
+	        number of divisions of magnets in Y
+        $VARIABLE
+                NUDIVY
+	$TEXT
+	        number of divisions of magnets in Z
+        $VARIABLE
+                NUDIVZ
+*************************************************************************
+$MENU
+        APPLEMAP
+        UNDUAPPLE
+        $TITLE
+        Field Map
+	$TEXT
+	        xmin for field map [mm]
+        $VARIABLE
+                XMAPMINU
+        $COMMENT
+	        9999.: Auto scaling
+	$TEXT
+	        step size of field map in x [mm]
+        $VARIABLE
+                DXMAPU
+        $COMMENT
+	        9999.: Same as for Beff calculations
+	$TEXT
+	        number of steps in x, if dxmap is zero
+        $VARIABLE
+                NXMAPU
+	$TEXT
+	        ymin for field map [mm]
+        $VARIABLE
+                YMAPMINU
+	$TEXT
+	        ymax for field map [mm]
+        $VARIABLE
+                YMAPMAXU
+	$TEXT
+		number of steps for field map in y
+        $VARIABLE
+	        NYMAPU
+	$TEXT
+	        zmin for field map [mm]
+        $VARIABLE
+                ZMAPMINU
+	$TEXT
+	        zmax for field map [mm]
+        $VARIABLE
+                ZMAPMAXU
+	$TEXT
+		number of steps for field map in z
+        $VARIABLE
+	        NZMAPU
+*************************************************************************
+$MENU
+        UNDUTUNE
+        UNDUAPPLE
+        $TITLE
+        Tuning parameters
+	$TEXT
+	        mode of XSTART of WAVE
+        $VARIABLE
+                KXSTART
+        $COMMENT
+                1: Use XELEC of UNDUMAG for XSTART (if XSTART=9999.)
+        $COMMENT
+	       -1: Use xMapMin of UNDUMAG for XSTART (if XSTART=9999.)
+	$TEXT
+	        mode of XSTOP of WAVE
+        $VARIABLE
+                KXSTOP
+        $COMMENT
+                1: Use XF of UNDUMAG for XSTOP (if XSTOP=9999.)
+        $COMMENT
+	       -1: Use xMapMax of UNDUMAG for XSTOP (if XSTOP=9999.)
+	$TEXT
+	        x,y,z-shift for corrections of boundary singularites [mm]
+        $VARIABLE
+                UCORRTINY
+	$TEXT
+	        smear x for field calculations to avoid singularties [mm]
+        $VARIABLE
+                URANDOX
+	$TEXT
+	        smear y [mm]
+        $VARIABLE
+                URANDOY
+	$TEXT
+	        smear z [mm]
+        $VARIABLE
+                URANDOZ
+	$TEXT
+	        window to for relevant magnetic items
+        $VARIABLE
+                UWWINDOW
+        $COMMENT
+                only items with x-window <= x = x+window are considered	
+	$TEXT
+	        executable of UNDUMAG
+        $VARIABLE
+                CHUNDUMAG
+        $COMMENT
+	        all files are expected in the sub-directory undumag
+        $COMMENT
+	        of the directory, where WAVE is installed.
+	$TEXT
+	        template for undulator setup undumag.nam
+        $VARIABLE
+                CHUNDUNAM
+*************************************************************************
+$MENU
+        UNDUHYBRID
+        MAGNET
+        $TITLE
+        Hybrid undulator (UNDUMAG)
+        $TEXT
+                Full gap [mm]
+        $VARIABLE
+                UNDUGAP_H
+        $TEXT
+                Number of special magnets and poles
+        $ARRAY
+	        USPECMAGS
+                Number of special magnets and poles
+                NSPEC_H
+	        7 1000
+                Length of specials [mm]
+                USMAGLX_H
+                Height of specials [mm]
+                USMAGLY_H
+                Width of specials [mm]
+                USMAGLZ_H
+		Chamfer [mm]
+                USMAGCH_H
+		Material index (+/- 1 for REC, 2 for iron)
+                MSMAG_H
+		Spacer to previous item [mm]
+		USMAGSPAC_H
+		Vertical offset [mm]
+		USMAGDY_H
+
+$HELP
+The easy axis of the magnets is parallel or antiparallel according to
+the sign of the material index.
+
+To show or to edit the Nth item, set the index of the current item to N.
+If the index is outside the range of the number of special items and
+not defined in wave.in the item is created, and also all missing items
+with an index lower N.
+To delete the item enter M, set the index to -M. The indices will be
+renumbered, i.e. if the 3rd item is deleted, the 4th one will become
+the third an so on.
+$ENDHELP
+*************************************************************************
+$MENU
+        BRECC
+        BREC
+        $TITLE
+        Options
+*************************************************************************
+$MENU
+        RECERR
+        BRECC
+        $TITLE
+        Field errors
+        $TEXT
+                sigma of rel. field strength errors
+        $VARIABLE
+                BCRAN
+        $TEXT
+                maximum of rel. field strength errors
+        $VARIABLE
+                BCRANSIG
+        $TEXT
+                mode of field strengths errors[0/1/2/3/4]
+        $VARIABLE
+                NURANMOD
+                $COMMENT
+                0:uncorrelated, 1: -B/2;+B;-B/2 scheme, 2: -B;+B scheme
+                $COMMENT
+3:kick comp. by endpl. (planar IDs) 4: like 3, but kick and offset
+        $TEXT
+                sigma angle error (degree)
+        $VARIABLE
+                UBANGERR(1)
+        $TEXT
+                maximum of accummulated angle error
+        $VARIABLE
+                USIGOFFY(1)
+$HELP
+There are several magnetic field errors available:
+
+1. Amplitude errors: A Gaussian error is generated and applied to the
+magnetization of the considered magnet due to the selected scheme.
+If the allowed maximum is exceeded the generated error is generated once again.
+This type of error applies to all magnets.
+
+2. Easy axis error: An error is generated for the direction of the
+magnetization. The accummulating error exceeds the allow maximum, the center
+of the Gaussian is shifted such, that the trajektory tends to come back to the
+orbit plane. (A zero value is set to 1.E30 internally.)
+
+$ENDHELP
+*************************************************************************
+$MENUALLVETO
+BCRAN
+0.
+RECERR
+$MENUALLVETO
+UBANGERR(1)
+0.
+RECERR
+*******************************************************************
+$TRIGGER
+        KHYBRIDM
+	UNDUHYBRID
+$TRIGGER
+        KAPPLEM
+	UNDUAPPLE
+$TRIGGER
+        IBMASK
+	BBFELD
+$TRIGGER
+	KBFELD
+	BBFELD
+$TRIGGER
+	KMAGSEQ
+	BMAGSEQ
+$TRIGGER
+	IRFILF
+	BFOUR
+$TRIGGER
+	IRBTAB
+	BTAB
+$TRIGGER
+	IRBTABZY
+	BTABZY
+$TRIGGER
+	KBRECM
+	BREC
+$TRIGGER
+	KBPOLYMAG
+	POLYMAG
+$TRIGGER
+	KHALBA
+	HALBACH
+$TRIGGER
+	KUNDUGAP
+	UNDUGAP
+$TRIGGER
+	KHALBASY
+	HALBASY
+$TRIGGER
+	KELLIP
+	ELLIP
+$TRIGGER
+	IRBMAP2
+	BMAPP
+*************************************************************************
+$MENUVETO
+	KBFELD
+        0
+	BBFELD
+$MENUVETO
+	KMAGSEQ
+        0
+	BMAGSEQ
+$MENUVETO
+	IRFILF
+        0
+	BFOUR
+$MENUVETO
+	IRBTAB
+        0
+	BTAB
+$MENUVETO
+	IRBTABZY
+        0
+	BTABZY
+$MENUVETO
+	KBRECM
+        0
+	BREC
+$MENUVETO
+	KBPOLYMAG
+        0
+	POLYMAG
+$MENUVETO
+        KHALBA
+        0
+	HALBACH
+$MENUVETO
+	KUNDUGAP
+        0
+	UNDUGAP
+$MENUVETO
+	KHALBASY
+        0
+	HALBASY
+$MENUVETO
+	KELLIP
+        0
+	ELLIP
+$MENUVETO
+	KBRECM
+        0
+	BREC
+$MENUVETO
+	IRFILB0
+        0
+	BMAPP
+$MENUALLVETO
+	IBMASK
+        0
+	BBFELD
+*************************************************************************
+$MENU
+        MANMAG
+        WAVE
+        $TITLE
+        Handling of magnetic field data
+*************************************************************************
+$MENU
+        FOURIER
+        MANMAG
+        $TITLE
+        Calculate FOURIER expansion of magnetic field
+        $TEXT
+                Activate FOURIER expansion [0/1]
+        $TOGGLE
+                IWFILF
+        $TEXT
+                Filename to write coefficients to
+        $VARIABLE
+                FILEF
+        $TEXT
+	     	Number of coefficients to calculate
+        $VARIABLE
+		NFOURWLS
+$HELP
+The field vertical field By(z,y=0,z=0) is expanded in a series of
+cosine functions:
+
+By(x,y=0,z=0) ~ A(0)/2 + sum(A(i)*cos(i*kz*z;i=1,n)
+
+The A(i) are written to a file and can be used by WAVE to generate a 3D field
+
+Bx(x,y,z) =          sum(Bx(x,y,z)(i);i=1,n)
+By(x,y,z) = A(0)/2 + sum(By(x,y,z)(i);i=1,n)
+Bz(x,y,z) =          sum(Bz(x,y,z)(i);i=1,n)
+
+with
+
+Bx(x,y,z)(i) = A(i) * kx/ky * sin(kx*x)*sinh(ky*y)*cos(i*kz*z)
+By(x,y,z)(i) = A(i) *         cos(kx*x)*cosh(ky*y)*cos(i*kz*z)
+Bz(x,y,z)(i) = A(i) * kz/ky * cos(kx*x)*sinh(ky*y)*sin(i*kz*z)
+
+kz userdefind
+kx userdefind
+ky = sqrt(kx**2 + (i*kz)**2)
+$ENDHELP
+*************************************************************************
+$MENU
+        WBTAB
+        MANMAG
+        $TITLE
+        Write field on trajectory or straight line to file
+        $TEXT
+                Mode [0/1/100]
+        $VARIABLE
+                IWBTAB
+        $TEXT
+	     Filename to write to
+	$VARIABLE
+	     FILEWBT
+        $TEXT
+	     x of first point [m]
+        $VARIABLE
+	     BTABS
+        $COMMENT
+	      9999. means begin of trajectory
+        $TEXT
+	     x of last point [m]
+        $VARIABLE
+	     BTABE
+        $COMMENT
+	      9999. means end of trajectory
+        $TEXT
+	     y of first point [m]
+        $VARIABLE
+	     BTABY
+        $TEXT
+	     z of first point [m]
+        $VARIABLE
+	     BTABZ
+        $TEXT
+	     number of points
+        $VARIABLE
+	      NPWBTAB
+        $COMMENT
+	      9999 means number of points of trajectory taken
+        $TEXT
+	     Epsilon for numerical differentiations [m]
+        $VARIABLE
+	     BTABEPS
+$HELP
+The vertical magnetic field By(x,y,z)  along a straight line parallel to
+the x-axis (mode 1) or along the trajectory (mode 100) as well as the
+first and second field integrals and integrated quadrupole and sextupole
+terms are calculated step by step and written to the file.
+
+The written file can be used by WAVE as input for a tabulated field
+By(x).
+$ENDHELP
+*************************************************************************
+$MENU
+        WBMAP
+        MANMAG
+        $TITLE
+        Write field map to file
+        $TEXT
+                Enable/disable writing of map file
+        $TOGGLE
+	       IWBMAPT
+        $TEXT
+                Column format (ASCII: X,Y,Z,BX,BY,BZ)
+        $MAPPING
+        	 IWBMAPAM
+                 7
+                 IWBMAP
+                 2
+                 IBMAPX
+                 1
+                 IBMAPY
+                 1
+                 IBMAPZ
+                 1
+                 IBMRADIAL
+                 0
+                 IWBMAPEXT
+                 0
+                 IWBMAPT
+                 1
+        $TEXT
+                Binary format for linear interpolation with WAVE
+        $MAPPING
+        	 IWBMAPHM
+                 7
+                 IWBMAP
+                 3
+                 IBMAPX
+                 1
+                 IBMAPY
+                 1
+                 IBMAPZ
+                 1
+                 IBMRADIAL
+                 0
+                 IWBMAPEXT
+                 0
+                 IWBMAPT
+                 1
+        $TEXT
+                Binary format for higher order interpolation with WAVE
+        $MAPPING
+        	 IWBMAPHM
+                 7
+                 IWBMAP
+                 4
+                 IBMAPX
+                 1
+                 IBMAPY
+                 1
+                 IBMAPZ
+                 1
+                 IBMRADIAL
+                 0
+                 IWBMAPEXT
+                 0
+                 IWBMAPT
+                 1
+        $TEXT
+                Convert from column format to binary for lin. interpol.
+        $MAPPING
+        	 IWBMAPCM
+                 7
+                 IWBMAP
+                 5
+                 IBMAPX
+                 1
+                 IBMAPY
+                 1
+                 IBMAPZ
+                 1
+                 IBMRADIAL
+                 0
+                 IWBMAPEXT
+                 0
+                 IWBMAPT
+                 1
+        $COMMENT
+The grid of the input must match the grid of this menu
+        $TEXT
+                Filename for map
+        $VARIABLE
+                FILEBMAP
+        $TEXT
+                Filename of input map (last option)
+        $VARIABLE
+                FILEB0
+$HELP
+***Attention
+This options are neither compatible with the undulator and wiggler modes
+in menu (Main modes) nor with the spline option in the menu "Global
+magnetic field options".
+$ENDHELP
+*************************************************************************
+$MENU
+      	WBOPT
+        WBMAP
+        $TITLE
+        Grid of field map
+        $TEXT
+                xmin of map [m] (9999. means begin of trajectory)
+        $VARIABLE
+        	XMAPMN
+        $TEXT
+                xmax of map [m] (9999. means begin of trajectory)
+        $VARIABLE
+        	XMAPMX
+        $TEXT
+                number of data points in x
+        $VARIABLE
+        	NMAPX
+        $TEXT
+                ymin of map [m] (9999. means begin of trajectory)
+        $VARIABLE
+        	YMAPMN
+        $TEXT
+                ymax of map [m] (9999. means begin of trajectory)
+        $VARIABLE
+        	YMAPMX
+        $TEXT
+                number of data points in y
+        $VARIABLE
+        	NMAPY
+        $TEXT
+                zmin of map [m] (9999. means begin of trajectory)
+        $VARIABLE
+        	ZMAPMN
+        $TEXT
+                zmax of map [m] (9999. means begin of trajectory)
+        $VARIABLE
+        	ZMAPMX
+        $TEXT
+                number of data points in z
+        $VARIABLE
+        	NMAPZ
+*************************************************************************
+$MENU
+        SPEC
+        WAVE
+        $TITLE
+        Spectrum calculations
+                $TEXT
+                        Spectrum calc. on/off (flux, Stokes...) [0/1]
+                $MAPPING
+                        ISPECM
+                        3
+                        ISPEC
+                        1
+                        ISTOKES
+                        1
+                        IBRILL
+                        1
+*                $COMMENT
+*                incl. STOKES vectors and spectral brightness
+$MENUVETO
+	ISPECM
+	0
+	SPEC
+*************************************************************************
+$SELECT
+        SPECMODES
+        SPEC
+        $TITLE
+        Main modes
+        $TEXT
+                undulator mode 1 for single electron (full)
+        $MAPPING
+                UNDUM
+                9
+		IUNDU2
+                0
+                IUNDULATOR
+                1
+                IWIGGLER
+                0
+	        IMAGSPNM
+                1
+	        IMAGSPLN
+                -9999
+                IEXPERT
+                0
+                IEMIT
+                0
+                IPHELLIP
+                0
+		IBUNCH
+		0
+        $TEXT
+                undulator mode 1 for electrons in bunches (full)
+        $MAPPING
+                UNDUBM
+                10
+                IUNDULATOR
+                1
+                IWIGGLER
+		0
+		IUNDU2
+                0
+	        IMAGSPNM
+                0
+	        IMAGSPLN
+                0
+                IEXPERT
+                0
+                IPHELLIP
+                0
+		IBUNCH
+		1
+		IFOLD
+		0
+		IEFOLD
+		0
+        $TEXT
+                undulator mode 2 (fast)
+        $MAPPING
+                UNDUFM
+		31
+		IUNDU2
+		1
+		KBFELD
+		0
+		KBREC
+		0
+		KMAGSEQ
+		0
+		KHALBA
+		0
+		KUNDUGAP
+		0
+		KBUNDUMAG
+		0
+		IRFILB0
+		0
+		KHALBASY
+		0
+		KELLIP
+		1
+		IRBTAB
+		0
+		IRBTABZY
+		0
+		IRFILF
+		0
+		IRMAP2
+		0
+		KAPPLEM
+		0
+		KHYBRID
+		0
+		KAPPLE
+		0
+		KHYBRIDM
+		0
+		KUNDUWAM
+		0
+		  NOEMITPH
+		    0
+		  NOESPREADPH
+		    0
+		  PHRPERL
+		    9999.
+		  PHRB0H
+		    9999.
+		  PHRB0V
+		    9999.
+		  PHRSHIFT
+		    9999.
+		  IUNDULATOR
+		    2
+		  IWIGGLER
+		    0
+		  IMAGSPNM
+		    1
+		  IMAGSPLN
+		    -9999
+		  IEXPERT
+		    0
+		  IEMIT
+		    0
+		  IPHELLIP
+		    0		
+***********************************************************************
+        $TEXT
+                wiggler mode 1
+        $MAPPING
+                WIGMOD1
+                7
+                IWIGGLER
+                1
+                IUNDULATOR
+                0
+	        IMAGSPNM
+                1
+	        IMAGSPLN
+                -9999
+                IEXPERT
+                0
+                IEMIT
+                0
+                IPHELLIP
+                0
+        $TEXT
+                wiggler mode 2
+        $MAPPING
+                WIGMOD2
+                7
+                IWIGGLER
+                2
+                IUNDULATOR
+                0
+	        IMAGSPNM
+                1
+	        IMAGSPLN
+                -9999
+                IEXPERT
+                0
+                IEMIT
+                0
+                IPHELLIP
+                0
+        $TEXT
+                expert mode
+        $MAPPING
+                IEXPERTM
+                2
+                IUNDULATOR
+                0
+                IWIGGLER
+                0
+$HELP
+Undulator mode:
+WAVE takes the whole trajectory as coherent source of radiation.
+Most integration parameters are set by WAVE to reasonable values.
+However, for very precise calculations the export mode should be
+used and the ingration parameters should be adjusted by the user.
+
+Wiggler mode:
+WAVE scans the trajectory for source of radiation and sums up
+the contribution of all sources incoherently. A source is defined
+by the fact, that the radiation cone hits the observeration point
+or pinhole.
+
+Most integration parameters are set by WAVE to reasonable values.
+However, for very precise calculations the export mode should be
+used and the ingration parameters should be adjusted by the user.
+
+Wiggler mode 1:
+Calculation by explicit integration through the source.
+(Slow, but in some cases the "Truth"; experts only)
+
+Wiggler mode 2:
+Schwinger's formular is applied to calculate spectra of poles
+(recommended).
+
+Expert mode:
+All parameters for the calculation are controlled by the user.
+Check the appropriate menu.
+
+$ENDHELP
+*************************************************************************
+********************************************************************
+$MENUVETO
+        ISPECM
+        0
+        SPECMODES
+*************************************************************************
+$MENU
+        INTSPEC
+        SPEC
+        $TITLE
+        Integration parameters (expert mode)
+                $TEXT
+                        Integration mode [0:5]
+                $VARIABLE
+                        ISPECMODE
+                $TEXT
+                        opening angle of radiation cone to be considered
+                $VARIABLE
+                        WGWINFC
+                $COMMENT
+                        in units of 1/GAMMA; 9999. means set by WAVE
+                $TEXT
+                        number of integration steps per source
+                $VARIABLE
+                        NLPOI
+                $COMMENT
+                        -9999. means set by WAVE
+                $COMMENT
+                        see also number of tracking steps in tracking menu
+                $TEXT
+                        begin of range in X considered for spectrum calc. [m]
+                $VARIABLE
+                        XIANF
+                $COMMENT
+                        9999. means set by WAVE
+                $TEXT
+                        end of range in X considered for spectrum calc. [m]
+                $VARIABLE
+                        XIEND
+                $COMMENT
+                        9999. means set by WAVE
+$HELP
+
+Usually the whole trajectory or source is taken into account for spectrum
+calculations. Set the values of begin and end or X-range to '9999.'
+to do so.
+
+However, sometimes it is useful to restrict the range, e.g. to ignore the
+contribution of end poles.
+
+Integration mode:
+0 or 2: Conventionally, i.e. stepping through source by small steps
+1: Use spline interpolation of trajectory
+2: Track source part of trajectory separately with small step size
+3: Older mode, used for PHASE and phase repetition mode
+   $ENDHELP
+*************************************************************************
+$MENU
+        SCHWINGER
+        INTSPEC
+        $TITLE
+        Schwinger
+                $TEXT
+                        Mode [-3,-2,-1,0,1]
+                $VARIABLE
+                        ISPECDIP
+                $COMMENT
+                        expert mode in menu "Main modes"
+                $TEXT
+                        Field strength [T]
+                $VARIABLE
+                        BYDIP(1)
+                $TEXT
+                        X-position of magnet [m]
+                $VARIABLE
+                        X0DIP(1)
+                $TEXT
+                        Y-position of magnet [m]
+                $VARIABLE
+                        Y0DIP(1)
+                $TEXT
+                        Z-position of magnet [m]
+                $VARIABLE
+                        Z0DIP(1)
+                $TEXT
+                        X-comp. of velocity vector of electron at source
+                $VARIABLE
+                        VXDIP(1)
+                $COMMENT
+                        will be normalized due to beam energy in WAVE
+                $TEXT
+                        Y-comp. of velocity vector of electron at source
+                $VARIABLE
+                        VYDIP(1)
+                $TEXT
+                        Z-comp. of velocity vector of electron at source
+                $VARIABLE
+                        VZDIP(1)
+
+$HELP
+
+Mode:
+
+0: deactivated
+
+>0: Calc. spectrum according to parameters in this menu
+
+-1: calc. spectrum at center of found sources
+according to SCHWINGER (fast)
+
+-2: calc. spectrum at according to SCHWINGER the source is located where the
+observation angle has a mininum the angle is calculated from particle
+trajectory
+*** recommended ***
+
+-3: calc. spectrum at according to SCHWINGER
+the source is located where the observation angle has a mininum
+the angle is calculated from particle trajectory retracked within source with
+high resolution (slow but more precise!?)
+
+all:
+Mag. field is pure By-field i.e. vertical field.
+
+$ENDHELP
+**********************************************************************
+$MENUVETO
+        ISPECM
+        0
+        INTSPEC
+$INVERSMENUVETO
+	IUNDULATOR
+	0
+	INTSPEC
+$INVERSMENUVETO
+	IWIGGLER
+	0
+	INTSPEC
+$TRIGGER
+	IEXPERT
+	INTSPEC
+*************************************************************************
+$MENU
+        WBL0
+        INTSPEC
+        $TITLE
+        Magnetic field cuts to define sources
+        $TEXT
+                Minimum mag. field strength to contribute to radiation [T]
+        $VARIABLE
+                WBL0CUT
+        $TEXT
+                Hysteresis factor for cut on magnetic field strength
+        $VARIABLE
+                WBL0HYS
+        $COMMENT
+                at beginning of source WBL0CUT-->WBL0CUT/WBL0HYS
+        $COMMENT
+                at end of source WBL0CUT-->WBL0CUT*WBL0HYS
+        $TEXT
+                Split source where mag. field is zero [0/1]
+        $TOGGLE
+                IBL0CUT
+*************************************************************************
+$MENU
+        COLLI
+        INTSPEC
+        $TITLE
+        Collimator to define sources
+        $TEXT
+        X-position of first aperture [m]
+        $VARIABLE
+                CX1
+        $TEXT
+        Y-position of first aperture [m]
+        $VARIABLE
+                CY1
+        $TEXT
+        Z-position of first aperture [m]
+        $VARIABLE
+                CZ1
+        $TEXT
+        Width of first apertur [m]
+        $VARIABLE
+                WID1
+        $TEXT
+        Height of first apertur [m]
+        $VARIABLE
+                HIG1
+        $TEXT
+        X-position of second aperture [m]
+        $VARIABLE
+                CX2
+        $TEXT
+        Y-position of second aperture [m]
+        $VARIABLE
+                CY2
+        $TEXT
+        Z-position of second aperture [m]
+        $VARIABLE
+                CZ2
+        $TEXT
+        Width of second apertur [m]
+        $VARIABLE
+                WID2
+        $TEXT
+        Height of second apertur [m]
+        $VARIABLE
+                HIG2
+$HELP
+When WAVE scans the trajectory for sources it checkes, if the radiation
+cone passes a collimator defined by to rectangular apertures. Default
+values of 9999. tell WAVE to use resonable defaults. In most cases the
+collimeter is not used for spectrum calculations
+$ENDHELP
+*************************************************************************
+$MENU
+        INTSPECC
+        INTSPEC
+        $TITLE
+        Integration parameters (continuation)
+*************************************************************************
+$MENU
+        ROI
+        INTSPECC
+        $TITLE
+        Boundaries for regions of interest of sources
+        $TEXT
+                Number of boundaries (i.e. number of ROI plus 1; max. 6)
+        $VARIABLE
+                NROI
+        $TEXT
+                X-value of 1. boundary [m]
+        $VARIABLE
+                ROIX(1)
+        $TEXT
+                Relative precision of calculation in 1. ROI
+        $VARIABLE
+                ROIP(1)
+        $TEXT
+                X-value of 2. boundary [m]
+        $VARIABLE
+                ROIX(2)
+        $TEXT
+                Relative precision of calculation in 2. ROI
+        $VARIABLE
+                ROIP(2)
+        $TEXT
+                X-value of 3. boundary [m]
+        $VARIABLE
+                ROIX(3)
+        $TEXT
+                Relative precision of calculation in 3. ROI
+        $VARIABLE
+                ROIP(3)
+$HELP
+$ENDHELP
+*************************************************************************
+$MENU
+        VELO
+        INTSPECC
+        $TITLE
+        Velocity field
+        $TEXT
+        include velocity field
+        $MAPPING
+                IVELOM1
+                1
+                IVELOFIELD
+                0
+        $TEXT
+        no velocity field
+        $MAPPING
+                IVELOM2
+                1
+                IVELOFIELD
+                1
+        $TEXT
+        velocity field only
+        $MAPPING
+                IVELOM3
+                1
+                IVELOFIELD
+                -1
+*************************************************************************
+$MENU
+        ROICONT
+        ROI
+        $TITLE
+        Boundaries for regions of interest of sources (continuation)
+        $TEXT
+                X-value of 4. boundary [m]
+        $VARIABLE
+                ROIX(4)
+        $TEXT
+                Relative precision of calculation in 4. ROI
+        $VARIABLE
+                ROIP(4)
+        $TEXT
+                X-value of 5. boundary [m]
+        $VARIABLE
+                ROIX(5)
+        $TEXT
+                Relative precision of calculation in 5. ROI
+        $VARIABLE
+                ROIP(5)
+        $TEXT
+                X-value of 6. boundary [m]
+        $VARIABLE
+                ROIX(6)
+*************************************************************************
+$MENU
+        PINHOLE
+        SPEC
+        $TITLE
+        Pinhole definition
+                $TEXT
+                        single point (X,Y,Z)
+                $MAPPING
+                        IPIN0M
+			4
+			IPIN3
+			0
+			IPINHV
+			1
+			IPINWV
+			1
+			IPINRV
+			1
+                $TEXT
+                        rectangular pinhole
+                $MAPPING
+                        IPINRECTM
+			4
+			IPINCIRC
+			0
+			IPINWV
+			0
+			IPINHV
+			0
+			IPINRV
+			1
+                $TEXT
+                        circular pinhole
+                $MAPPING
+                        IPINCIRCM
+			4
+			IPINCIRC
+			1
+			IPINWV
+			1
+			IPINHV
+			1
+			IPINRV
+			0
+                $TEXT
+		        Monte-Carlo mode
+		$TOGGLE
+			IPIN3
+                $TEXT
+                        full width of pinhole [m]
+                $VARIABLE
+                        PINW
+                $TEXT
+                        full height of pinhole [m]
+                $VARIABLE
+                        PINH
+                $TEXT
+                        radius of circular pinhole [m]
+                $VARIABLE
+                        PINR
+                $TEXT
+                        Number of horizontal grid points in pinhole
+                $VARIABLE
+                        MPINZ
+                $TEXT
+                        Number of vertical grid points in pinhole
+                $VARIABLE
+                        MPINY
+                $TEXT
+                        X of pinhole center [m]
+                $VARIABLE
+                        PINCEN(1)
+                $TEXT
+                        Y of pinhole center [m]
+                $VARIABLE
+                        PINCEN(2)
+                $TEXT
+                        Z of pinhole center [m]
+                $VARIABLE
+                        PINCEN(3)
+                $TEXT
+		        use radial grid internally
+                $TOGGLE
+                        MPINRT
+                $TEXT
+                        number of interally used radial grid points
+                $VARIABLE
+                        MPINR
+                $TEXT
+                        number of azimuthal grid points
+                $VARIABLE
+                        MPINPHI
+                $TEXT
+		        assume 4-fold symmetry for virtual pinhole
+                $VARIABLE
+                        IQUADPHI
+		$COMMENT
+			use with care, especially for Stokes vectors
+                $TEXT
+                        X of single point [m]
+                $VARIABLE
+                        OBS1X
+                $TEXT
+                        Y of single point [m]
+                $VARIABLE
+                        OBS1Y
+                $TEXT
+                        Z of single point [m]
+                $VARIABLE
+                        OBS1Z
+
+$HELP
+The treatment of circular pinholes and the grid of observation points
+is for historical reasons somewhat tricky.
+
+The flux through a circular pinhole is calculated in two steps
+(except for the Monte-Carlo mode).
+In the first step, the flux-density is calculated on a rectangular
+grid which contains the circular pinhole. Then the flux is calculated
+by a spline integration within the boundary of the circular pinhole.
+
+In the case of undulator radiation it can be useful to calculate the radiation
+cone on a radial grid, since the flux-density is not variing too fast
+with the azimutal angle. If this option is used, the flux-density is
+calculated internally on a radial grid and than interpolated to get
+the flux-density on the rectangular grid as needed for example for the
+emittance folding procedure. For this option the pinhole should be
+centered on the x-axis.
+
+In the Monte-Carlo mode all these tricks are not necessary. However this
+mode makes only sense for the multi-particle tracking mode, when
+the undulator mode 2 is selected in the menu of main modes or the
+multi-particle mode is selected in the beam parameters menu.
+
+$ENDHELP
+
+$MENUVETO
+        ISPECM
+        0
+        PINHOLE
+*************************************************************************
+$MENU
+        FREQ
+        SPEC
+        $TITLE
+        Spectral range
+        $TEXT
+                Mode [1/2/3]
+        $VARIABLE
+                IFREQ2P
+        $COMMENT
+                1:only lowest energy | 2:E(n)=2*E(n-1) | 3: E(n)=E(n-1)+dE
+        $TEXT
+                Lowest photon energy [eV]
+        $VARIABLE
+                FREQLOW
+        $TEXT
+                Highest photon energy [eV]
+        $VARIABLE
+                FREQHIG
+        $TEXT
+                Number of photon energies
+        $VARIABLE
+                NINTFREQ
+$HELP
+Mode 1: Only one photon energy (i.e. the lowest)
+Mode 2: Beginning with the lowest energy the value of the next one
+is twice the previous until the highest photon energy is exceeded.
+Mode 3: Equally spacing from lowest to highest value
+$ENDHELP
+
+$MENUVETO
+        ISPECM
+        0
+        FREQ
+$VETO
+     IPIN0M
+     1
+     MPINRT
+$VETO
+     MPINRT
+     0
+     PINRAD
+$VETO
+     MPINRT
+     0
+     IQUADPHI
+$VETO
+     MPINRT
+     0
+     MPINR
+$VETO
+     MPINRT
+     0
+     MPINPHI
+$VETO
+	IPIN0M
+	1
+	PINCEN(1)
+$VETO
+	IPIN0M
+	1
+	PINCEN(2)
+$VETO
+	IPIN0M
+	1
+	PINCEN(3)
+$VETO
+	IPINHV
+	1
+	PINH
+$VETO
+	IPINWV
+	1
+	PINW
+$VETO
+	IPINRV
+	1
+	PINR
+$VETO
+	IPIN0M
+	1
+	MPINZ
+$VETO
+	IPIN0M
+	1
+	MPINY
+$INVERSVETO
+	IPIN
+	0
+	OBS1X
+$INVERSVETO
+	IPIN
+	0
+	OBS1Y
+$INVERSVETO
+	IPIN
+	0
+	OBS1Z	
+*************************************************************************
+$MENU
+        SPEC
+        SPEC
+        $TITLE
+        Spectrum calculations
+                $TEXT
+                        Integrate spectrum to get irradiated power
+                $TOGGLE
+                        ISPECINT
+*************************************************************************
+$MENU
+PHRMENU
+        MAGNET
+        $TITLE
+        Settings for undulator mode 2
+        $TEXT
+	        K-parameter of undulator
+        $VARIABLE
+	        PARKELL
+        $TEXT
+                Vertical peak field [T]
+        $VARIABLE
+                B0ELLIPV
+        $TEXT
+                Horizontal peak field [T]
+        $VARIABLE
+                B0ELLIPH
+        $TEXT
+                Number of periods
+        $VARIABLE
+                PERELLIP
+        $TEXT
+                Period length [m]
+        $VARIABLE
+                XLELLIP
+        $TEXT
+	        Number of considered  harmonic to adjust K
+        $VARIABLE
+	        NHARMELL
+        $TEXT
+	        Energy of considered harmonic
+        $VARIABLE
+	        HARMELL
+*        $TEXT
+*                Shift of horiz. and vert. fields [periods]
+*        $VARIABLE
+*                ELLSHFT
+$HELP
+The harmonic of the undulator is determined by the beam energy and
+the effective magnetic field Beff=Sqrt( Bhori**2 + Bvert**2).
+If the K parameter is not zero, Beff is scaled such that it matches K.
+The ratio of the horizontal and vertical field is kept.
+
+If the number of the considered harmonic is not zero, K is adjusted
+such that the considered harmonic has the photon energy given below.
+This option overwrites the given K or magnetic field amplitudes, but
+the ratio of the horizontal and vertical component are kept.
+
+When the photon energy is set to -9999. it is calculated as the center
+of the considered energy range.
+
+Please check the results in the file wave.out.
+$ENDHELP
+*************************************************************************
+$MENU
+        EMIT
+        SPEC
+        $TITLE
+        Beam emittance and energy-spread
+        $TEXT
+	Activate/deactivate folding procedure for the emittance
+	$MAPPING
+	        IFOLDM
+		2
+		IFOLD
+		1
+		IBUNCH
+		0
+	$COMMENT
+	not compatible with multi-particle beam, except for undulator mode 2
+        $TEXT
+	Activate/deactivate folding procedure for the energy-spread
+	$MAPPING
+	        IEFOLDM
+		2
+		IEFOLD
+		1
+		IBUNCH
+		0
+	$COMMENT
+	not compatible with multi-particle beam, except for undulator mode 2
+ 	$TEXT
+ 	     Multi particle beam on/off (for undulator mode 2, check HELP)	
+ 	$MAPPING
+			IBUNCHM
+			3
+			IBUNCH
+			1
+			IFOLD
+			0
+			IEFOLD
+			0
+        $TEXT
+                horizontal beam size [m]
+        $VARIABLE
+                BSIGZ(1)
+        $TEXT
+                horizontal beam size divergence [rad]
+        $VARIABLE
+                BSIGZP(1)
+        $TEXT
+                number of sigmas to be taken into account
+        $VARIABLE
+                DGSIGZ(1)
+        $TEXT
+                vertical beam size [m]
+        $VARIABLE
+                BSIGY(1)
+        $TEXT
+                vertical beam size divergence [rad]
+        $VARIABLE
+                BSIGYP(1)
+        $TEXT
+                number of sigmas to be taken into account
+        $VARIABLE
+                DGSIGY(1)
+        $TEXT
+                rel. beam energy-spread
+        $VARIABLE
+                ESPREAD
+        $TEXT
+                number of sigmas to be taken into account
+        $VARIABLE
+                NSIGE
+        $TEXT
+                Number of bunches (bunches are treated incoherently)
+        $VARIABLE
+                NBUNCH
+        $TEXT
+                Number of particles per bunch (treated coherently)
+        $VARIABLE
+                NEINBUNCH
+        $TEXT
+                Bunchlength [m]
+        $VARIABLE
+                BUNCHLEN
+        $TEXT
+                Mode of phase space distribution [-1,-2,0,2,3,4]
+        $VARIABLE
+                IUBUNCH
+        $TEXT
+                Charge per bunch [C]
+        $VARIABLE
+                BUNCHCHARGE
+        $TEXT
+	       Number of electrons to write to file wave_phasespace_bunch.dat
+        $VARIABLE
+               IWBUNCH
+	$COMMENT
+		gamma,xbunch,x,y,z,dpy/p,dpz/p
+$HELP
+     Two cases are distinguished:
+
+     The multi particle tracking in the beam parameter menu is activated
+     (IBUNCH=1). Then the emittance and energy-spread are reflected by
+     the phase-space distribution of the electrons. The activation can also
+     be triggered by the undulator mode 2 in the main mode menu.
+
+     Alternativly (IBUNCH=0):
+     The beam emittance is taken into account by a folding procedure,
+     The distribution of the flux density in the pinhole is folded with a
+     2-dim. Gaussian. The width is calculated from the beam size and
+     divergence. This option is only available, when the multi particle
+     tracking is switch off in the beam parameter menu or via the main
+     modes (e.g. undulator mode 1)
+
+     The treatment of bunches is still under development. Please see namelist
+     $BUNCHN in file wave.in for explanations.
+
+$ENDHELP
+$TRIGGER
+        UNDUBM
+	EMIT
+$TRIGGER
+        UNDUFM
+	PHRMENU
+*************************************************************************
+$MENU
+        SPECCONT
+        SPEC
+        $TITLE
+        Spectrum calculations (continuation)
+*************************************************************************
+$MENU
+        SPECWRITE
+        SPECCONT
+        $TITLE
+        Write spectrum calculations to ASCII-files
+        $TEXT
+                Write spectrum calculations to file
+	$TOGGLE
+                IWFILSP0
+        $TEXT
+                filename
+        $VARIABLE
+                FILESP0
+        $TEXT
+                Write calculations of Stokes vectors to file
+	$TOGGLE
+                IWFILSTO
+        $TEXT
+                filename
+        $VARIABLE
+                FILESTO
+$MENUVETO
+ISPECM
+0
+SPECWRITE
+$MENUALLVETO
+IWFILSP0
+0
+SPECWRITE
+$MENUALLVETO
+IWFILSTO
+0
+SPECWRITE
+$VETO
+ISPECM
+0
+IWFILSP0
+$VETO
+IWFILSP0
+0
+FILESP0
+$VETO
+ISPECM
+0
+IWFILSTO
+$VETO
+IWFILSTO
+0
+FILESTO
+*************************************************************************
+$MENU
+        SPECWRITEF
+        SPECCONT
+        $TITLE
+        Write spectrum calculations with emittance to ASCII-files
+        $TEXT
+                Write spectrum calculations (with emittance) to file
+	$TOGGLE
+                IWFILSPF
+        $TEXT
+                filename
+        $VARIABLE
+                FILESPF
+        $TEXT
+                Write calculations of Stokes vectors (with emittance) to file
+	$TOGGLE
+                IWFLSTOF
+        $TEXT
+                filename
+        $VARIABLE
+                FILESTOF
+$MENUVETO
+ISPECM
+0
+SPECWRITEF
+$MENUALLVETO
+IWFILSPF
+0
+SPECWRITEF
+$MENUALLVETO
+IWFLSTOF
+0
+SPECWRITEF
+$VETO
+ISPECM
+0
+IWFILSPF
+$VETO
+IWFILSPF
+0
+FILESPF
+$VETO
+ISPECM
+0
+IWFLSTOF
+$VETO
+IWFLSTOF
+0
+FILESTOF
+*************************************************************************
+$MENU
+        SPECPOW
+        SPECCONT
+        $TITLE
+        Write power calculations to ASCII-files
+        $TEXT
+        Write power calculations to ASCII-files [mm, W/mm^2]
+	$TOGGLE
+                IWFILPOW
+        $TEXT
+                filename
+        $VARIABLE
+                FILEPOW
+$HELP
+File format:
+1. line: user comment of wave run
+Data lines:
+(X,Y,Z)
+(TOTAL POWER IRRADIATED TOWARDS OBSERVER,
+TOTAL POWER WITHIN CONSIDERED SPECTRUM,
+TOTAL POWER WITHIN CONSIDERED SPECTRUM WITH EMITTANCE)
+The power calculated from the trajectory is scaled according to the phase
+repetition!
+Unit: mm and W/mm^2
+$ENDHELP
+$MENUVETO
+ISPECM
+0
+SPECPOW
+$VETO
+ISPECM
+0
+IWFILPOW
+$VETO
+IWFILPOW
+0
+FILEPOW
+*************************************************************************
+$MENU
+        RAYPHASE
+        SPECCONT
+        $TITLE
+        Interfaces to RAY and PHASE
+        $TEXT
+                Write file for program RAY
+        $TOGGLE
+                IWFILRAY
+        $TEXT
+                File name for RAY
+        $VARIABLE
+                FILERAY
+        $TEXT
+                Write files for program PHASE
+        $BONDING
+                IPHASEM
+                1
+                IMAMPLI
+                3
+        $TEXT
+                File name for to store amplitudes for WAVE!!
+        $VARIABLE
+                FILEAMPLI
+        $COMMENT
+               Files for PHASE are named eyre*.dat, eyim*.dat, ezre*.dat, ezim*.dat, ey2*.dat!
+$MENUALLVETO
+        IPHASEM
+	0
+	RAYPHASE
+$MENUALLVETO
+	IWFILRAY
+	0
+	RAYPHASE
+$MENUVETO
+        ISPECM
+        0
+        RAYPHASE
+*************************************************************************
+$MENUALLVETO
+	IFOLD
+	0
+	EMIT
+$MENUALLVETO
+	IEFOLD
+	0
+	EMIT
+$MENUALLVETO
+	IBUNCH
+	0
+	EMIT
+$MENUVETO
+	ISPECM
+	0
+	EMIT
+$VETO
+        IBEAMFOLD
+        0
+        BSIGZ(1)
+$VETO
+        IBEAMFOLD
+        0
+        BSIGZP(1)
+$VETO
+        IBEAMFOLD
+        0
+        BSIGY(1)
+$VETO
+        IBEAMFOLD
+        0
+        BSIGYP(1)
+$VETO
+        IFOLD
+        0
+        NGFOURZ
+$VETO
+        IFOLD
+        0
+        DGSIGZ(1)
+$VETO
+        IFOLD
+        0
+        NGFOURY
+$VETO
+        IFOLD
+        0
+        DGSIGY(1)
+$VETO
+        IBEAMEFOLD
+        0
+        ESPREAD
+$VETO
+        IEFOLD
+        0
+        NSIGE
+$VETO
+        ISPEC
+        0
+        ISPECINT
+$VETO
+        ISPEC
+        0
+        IFOLD
+$VETO
+        ISPEC
+        0
+        IEFOLD
+$VETO
+        ISPEC
+        0
+        IFILTER
+$VETO
+        IBUNCH
+	0
+	NBUNCH
+$VETO
+        IBUNCH
+	0
+	NEINBUNCH
+$VETO
+        IBUNCH
+	0
+	BUNCHLEN
+$VETO
+        IBUNCH
+	0
+	IUBUNCH
+$VETO
+        IBUNCH
+	0
+	BUNCHCHARGE
+$VETO
+        IBUNCH
+	0
+	IWBUNCH
+*************************************************************************
+$MENU
+        FILTER
+        SPECCONT
+        $TITLE
+        Filter options and radiation dose calculation
+        $TEXT
+                Apply filter to spectrum [0/1]
+        $TOGGLE
+                IFILTER
+*        $COMMENT
+*        0: no filter
+*        $COMMENT
+*        1: exp. interpolation, 2: lin. interpolation
+        $TEXT
+                File name of absorption coefficents
+        $VARIABLE
+                FILEABS
+        $TEXT
+                Thickness of filter [m]
+        $VARIABLE
+                ABSTHI
+        $TEXT
+                Apply yield factors to spectrum
+        $BONDING
+                EFFIB
+                1
+                IEFFI
+                -1
+*        $TEXT
+*                Apply yield factors to spectrum [0/1/-1/-2]
+*        $VARIABLE
+*                IEFFI
+*        $COMMENT
+*        0: no yield function, 1: spline interpolation
+*        $COMMENT
+*        -1: exp. interpolation, -2: lin. interpolation
+        $TEXT
+                File name of yield table
+        $VARIABLE
+                FILEFF
+        $TEXT
+                Apply polarisation filter
+        $TOGGLE
+                IPOLA
+        $TEXT
+                Horizontal component (complex)
+        $VARIABLE
+                VPOLA(3)
+        $TEXT
+                Vertical component (complex)
+        $VARIABLE
+                VPOLA(2)
+        $TEXT
+                Calculate radiation dose [0/1]
+        $TOGGLE
+                IDOSE
+$HELP
+The file with the absorption coefficients is formatted:
+
+1. line: comment
+2. line: density [kg/m**3]
+3. line: number of data lines
+
+1. column: photon energy [eV]
+2. column: absorption coefficent [kg/mm**2]
+
+The file with the yield factors is formatted:
+
+1. line: comment
+2. line: number of data lines
+
+1. column: photon energy [eV]
+2. column: yield factors
+
+Both, the absorption coefficients and the yield factors contain
+absorption edges. Thus, the interpolation scheme of the tabulated
+function should be checked, by comparing the raw and the corrected
+spectra.
+
+Polarisation filter:
+If flag is set the flux is calculated from component
+of complex amplitude parallel to complex vector VPOLA
+STOKES-Vectors are not affected!
+Example right handed: (1.,0.) horizontal and (0.,-1.) vertical
+$ENDHELP
+$MENUVETO
+	ISPECM
+	0
+	FILTER
+$MENUALLVETO
+	IFILTER
+	0
+	FILTER
+$MENUALLVETO
+	IEFFI
+	0
+	FILTER
+$MENUALLVETO
+	IPOLA
+	0
+	FILTER
+$MENUALLVETO
+	IDOSE
+	0
+	FILTER
+$VETO
+        IFILTER
+        0
+        FILEABS
+$VETO
+        IEFFI
+        0
+        FILEFF
+$VETO
+        IPOLA
+        0
+        VPOLA(2)
+$VETO
+        IPOLA
+        0
+        VPOLA(3)
+$MENUALLVETO
+        IFILTER
+        0
+        SPECCONT
+$MENUALLVETO
+        IWFILSP0
+        0
+        SPECCONT
+$MENUALLVETO
+        IWFILSPF
+        0
+        SPECCONT
+$MENUALLVETO
+        IWFILSTO
+        0
+        SPECCONT
+$MENUALLVETO
+        IWFLSTOF
+        0
+        SPECCONT
+$MENUALLVETO
+        IWFILPOW
+        0
+        SPECCONT
+*************************************************************************
+$MENU
+        TAPER
+        BRECC
+        $TITLE
+        Taper
+        $TEXT
+                taper (dy/dx of half gap)
+        $VARIABLE
+                UTAPER(1)
+        $TEXT
+                apply vertical taper function
+        $TOGGLE
+                IHTAPER
+        $TEXT
+                apply vertical taper function
+        $TOGGLE
+                IVTAPER
+$MENUALLVETO
+UTAPER(1)
+0.
+TAPER
+$MENUALLVETO
+IHTAPER
+0
+TAPER
+$MENUALLVETO
+IVTAPER
+0
+TAPER
+*************************************************************************
+$MENU
+        RECPLOT
+        BRECC
+        $TITLE
+        Plotting options
+        $TEXT
+                plot rec-structure [0/1]
+        $VARIABLE
+                IPLREC
+		$COMMENT
+		statically linked version of WAVE might crash for 1
+        $TEXT
+                start of plotting range in X [mm]
+        $VARIABLE
+                RPLXMN
+                $COMMENT
+                9999. means autoscaling
+        $TEXT
+                end of plotting range in X [mm]
+        $VARIABLE
+                RPLXMX
+                $COMMENT
+                9999. means autoscaling
+$HELP
+ IPLREC=-1 writes graphics to rec_plotm.ps without on-line picture.
+ IPLREC=0 no graphics at all
+ IPLREC=1 might crash due to incompatible libc on linux
+$ENDHELP
+$MENUVETO
+IPLREC
+0
+RECPLOT
+*************************************************************************
+$MENU
+        HISTO
+        WAVE
+        $TITLE
+        Histograms
+                $TEXT
+                        Filename of histogram file
+                $VARIABLE
+                        FILEHB
+                $TEXT
+                        Trajectory (Ntuple) [0/1]
+                $BONDING
+                        IHTRACKMM
+                        1
+                        IHTRACK
+                        1
+                $TEXT
+                        spacing of points taken for trajectory NTuple
+                $VARIABLE
+                        IHTRSMP
+                $TEXT
+                        Source of syncrotron radiation [0/1]
+                $BONDING
+                        IHTRACKMMM
+                        1
+                        IHTRACKM
+                        1
+                $TEXT
+                        Histograms of optical functions
+                $TOGGLE
+                        IHBETA
+		$COMMENT
+			Machine physics menu for optical functions must be active
+                $TEXT
+                        Histograms of spectral flux [0/1]
+                $VARIABLE
+                        IHFREQ
+                $TEXT
+                        Histograms of flux distributions in pinhole [0/n]
+                $BONDING
+                        IHPINM
+                        1
+                        IHPIN
+                        -1
+                $TEXT
+                        Histograms of emittance folding functions [0/1]
+                $TOGGLE
+                        IHFOLD
+                $TEXT
+                        ASCII-Files of histograms
+                $VARIABLE
+                        IHISASCII
+                $COMMENT
+                see HELP for details
+                $TEXT
+                        Get histograms for root [-1: root only, 1: root and PAW]
+                $VARIABLE
+                        IROOTTREES
+                $TEXT
+                        Convert root file wave.root to HDF5 - Format (wave.h5)
+                $TOGGLE
+		        IROOTHDF5
+                $COMMENT
+	        roottohdf5_main.exe must be in search path
+
+                $HELP
+If histograms of flux are selected, every Nth photon energy is
+considered.
+
+Non zero value generates ASCII-Files of histograms.
+Filenames are *.wva
+1 means 1D histos.
+10 means 2D histos.
+100 means ntuples.
+For combinations add numbers, e.g. 1+10=11
+means 1D and 2D histos to be treated.
+Negative values means no header on file.
+                $ENDHELP
+$MENUALLVETO
+	IHTRACKMM
+	0
+	HISTO
+$MENUALLVETO
+	IHTRACKMMM
+	0
+	HISTO
+$MENUALLVETO
+	IHFREQ
+	0
+	HISTO
+$MENUALLVETO
+	IHPINM
+	0
+	HISTO
+*************************************************************************
+$MENU
+        MACHINE
+        WAVE
+        $TITLE
+        Machine physics
+*************************************************************************
+$MENU
+        UFACE
+        WAVE
+        $TITLE
+        User interfaces
+        $TEXT
+                User initialization routine UNAME to be called
+        $TOGGLE
+                IUNAME
+        $TEXT
+                User routine USTEP to be called
+        $TOGGLE
+                IUSTEP
+        $TEXT
+                User output routine UOUT to be called
+        $TOGGLE
+                IUOUT
+*************************************************************************
+$MENU
+        PHASE
+        SPECCONT
+        $TITLE
+        Field amplitude propagation
+        $TEXT
+                Mode [-1,0,1]
+        $VARIABLE
+                IPHASE
+        $COMMENT
+                -1/1:Activate propagation, -1: use spline interpolation;
+        $TEXT
+                X of source plan center (m)
+        $VARIABLE
+                PHCENX
+        $TEXT
+                Y of source plan center (m)
+        $VARIABLE
+                PHCENY
+        $TEXT
+                Z of source plan center (m)
+        $VARIABLE
+                PHCENZ
+        $TEXT
+                Full width of source plan (m)
+        $VARIABLE
+                PHWID
+        $COMMENT
+                -9999.: Estimated from device length and photon energy
+        $TEXT
+                Full height of source plan (m)
+        $VARIABLE
+                PHHIG
+        $COMMENT
+                -9999.: Estimated from device length and photon energy
+        $TEXT
+                Number of horizontal mesh points
+        $VARIABLE
+                NPHASEZ
+        $TEXT
+                Number of vertical mesh points
+        $VARIABLE
+                NPHASEY
+        $TEXT
+                Total number of horizontal mesh points (for emittance folding)
+        $VARIABLE
+                MPHASEZ
+        $COMMENT
+                -9999.:  According to width of folding Gaussian DSIGZ(1)
+        $TEXT
+                Total number of vertical mesh points (for emittance folding)
+        $VARIABLE
+                MPHASEY
+        $COMMENT
+                -9999.:  According to width of folding Gaussian DSIGY(1)
+        $TEXT
+	        Take emittance effects into account
+        $VARIABLE
+	        IPHFOLD
+	$COMMENT
+	        -1/0/1: lin. integr. / no emittance effects / higher order integr.
+        $TEXT
+	        Hori. beta-function (m)
+        $VARIABLE
+	        PHBETH
+	$COMMENT
+	       -9999: Calculated by option IEMIT=1
+        $TEXT
+	        Vert. beta-function (m)
+        $VARIABLE
+	        PHBETV
+	$COMMENT
+	       -9999: Calculated by option IEMIT=1
+        $TEXT
+                Get histograms of integrated phasespace
+        $TOGGLE
+                IHSEL
+$HELP
+For further features and variables refer to WAVE-inputfile file WAVE.IN.
+$ENDHELP
+$MENUVETO
+IPHASE
+0
+PHASE
+*************************************************************************
+$MENU
+      	OPTFUN
+      	MACHINE
+        $TITLE
+        Magnet-optical functions and radiation integrals
+        $TEXT
+            Calculation of magnet optics on/off
+        $MAPPING
+                IEMITM
+                6
+                IUNDULATOR
+                0
+                WIGMOD1
+                0
+                WIGMOD2
+                0
+                IEXPERT
+                1
+                IEMIT
+                1
+                IMAGSPLN
+                0
+	$COMMENT
+		only in "export mode" in "spectrum calculations/ main modes"
+        $TEXT
+                Hori. beta-function in the center of the device  [m]
+        $VARIABLE
+                BETFUN
+	$COMMENT
+		if zero, it is calculated from values at beginning of the device
+	$COMMENT
+		if -9999., hori. beta function is calculated as period solution
+        $TEXT
+	     Hor. beta-function at the entrance of the device
+        $VARIABLE
+		 BETAH	
+	$COMMENT
+		if 9999., it is calculated from parabolic ansatz and value in the center
+	$COMMENT
+		if -9999., it is calculated analytically from value in the center
+        $TEXT
+	     Derivative of hori. beta-function at the entrance of the device
+        $VARIABLE
+		 BETAPH	
+	$COMMENT
+		if 9999., it is calculated from parabolic ansatz and value in the center
+	$COMMENT
+		if -9999., it is calculated analytically from value in the center
+	
+        $TEXT
+                Vert. beta-function in the center of the device  [m]
+        $VARIABLE
+                BETFUNV
+	$COMMENT
+		if zero, it is calculated from values at beginning of the device
+	$COMMENT
+		if -9999., vert. beta function is calculated as period solution
+        $TEXT
+	     Vert. beta-function at the entrance of the device
+        $VARIABLE
+		 BETAV	
+	$COMMENT
+		if 9999., it is calculated from parabolic ansatz and value in the center
+	$COMMENT
+		if -9999., it is calculated analytically from value in the center
+        $TEXT
+	     Derivative of vert. beta-function at the entrance of the device
+        $VARIABLE
+		 BETAPV	
+	$COMMENT
+		if 9999., it is calculated from parabolic ansatz and value in the center
+	$COMMENT
+		if -9999., it is calculated analytically from value in the center
+	
+        $TEXT
+	     Natural emittance of the storage ring [rad-m]
+        $VARIABLE
+		 EPS0H
+	$COMMENT
+	   If zero, it is calculated from the beam dimensions
+	
+        $TEXT
+		Vertical emittance of the storage ring [rad-m]
+        $VARIABLE
+                EPS0V
+	$COMMENT
+	   If zero, it is calculated from the beam dimensions
+$HELP
+"In the center of the device" means x=0. When the beta-functions and
+their derivatives at the entrance of the device are calculated from
+the values in the center, it is assumed, that the derivatives are zero
+at the center.
+$ENDHELP
+*************************************************************************
+$MENUVETO
+IEMITM
+0
+OPTFUN
+*************************************************************************
+$MENU
+      	RING
+      	OPTFUN
+        $TITLE
+        Other parameters of the storage ring
+        $TEXT
+                Dipole radius [m]
+        $VARIABLE
+                RDIPOL
+        $TEXT
+                Circumference of the storage ring [m]
+        $VARIABLE
+                UMFANG
+        $TEXT
+                Critical beam polarisation time [h]
+        $VARIABLE
+                TAUKRIT
+        $TEXT
+		External dispersion [m]
+        $VARIABLE
+		DISP0
+        $TEXT
+	     Derivative of external dispersion [m]
+        $VARIABLE
+        	 DDISP0
+
+        $TEXT
+	     Radiation integral I2 of storage the ring
+        $VARIABLE
+		 DI2RING
+        $TEXT
+	     Radiation integral I4 of storage the ring
+        $VARIABLE
+		 DI4RING
+        $TEXT
+	     Radiation integral I5 of storage the ring
+        $VARIABLE
+		 DI5RING
+*************************************************************************
+$MENU
+      	TRALIN
+      	MACHINE
+        $TITLE
+        Linear Transfer Matrix
+        $TEXT
+                horizontal coordinate [m]
+        $VARIABLE
+                DELTAZ
+        $TEXT
+                horizontal slope [rad]
+        $VARIABLE
+                DELTAZP
+        $TEXT
+                vertical coordinate [m]
+        $VARIABLE
+                DELTAY
+        $TEXT
+                vertical slope [rad]
+        $VARIABLE
+                DELTAYP
+        $TEXT
+                Rel. energy deviation
+        $VARIABLE
+                DELTAE
+$HELP
+The linear transfer matrix is estimated from four trajectories
+(DELTAZ,0,0,0), (0,DELTAZP,0,0), ...
+The matrix is written to file TRALIN.WAV
+Entrance and exit planes are perpendicular to closed orbit
+Be careful for dipoles (are treated as sectors).
+$ENDHELP
+*************************************************************************
+$MENU
+      	OPTI
+      	MACHINE
+        $TITLE
+        Track particles for fitting the Generating Function
+        $TEXT
+                Activate the tracking and writing to file [0/1]
+        $MAPPING
+                IOPTICM
+                6
+                IUNDULATOR
+                0
+                WIGMOD1
+                0
+                WIGMOD2
+                0
+                IEXPERT
+                1
+                IOPTIC
+                1
+                IHPHSPAC
+                1
+	$COMMENT
+	only in "export mode" in "spectrum calculations/ main modes"
+        $TEXT
+                Filename to write trajectories to
+        $VARIABLE
+                FILEO
+*************************************************************************
+$MENU
+        OPTIMASH
+      	OPTI
+        $TITLE
+        Mash for tracking to fit Generating Function
+        $TEXT
+                Half number of mash points in z
+        $VARIABLE
+                NZOPT
+        $TEXT
+                Mash size in z
+        $VARIABLE
+                DZOPT
+        $TEXT
+                Half number of mash points in y
+        $VARIABLE
+                NYOPT
+        $TEXT
+                Mash size in Y
+        $VARIABLE
+                DYOPT
+        $TEXT
+                Half number of mash points in zp
+        $VARIABLE
+                NZPOPT
+        $TEXT
+                Mash size in z-slope
+        $VARIABLE
+                DZPOPT
+        $TEXT
+                Half number of mash points in yp
+        $VARIABLE
+                NYPOPT
+        $TEXT
+                Mash size in y-slope
+        $VARIABLE
+                DYPOPT
+*************************************************************************
+$MENU
+        OPTIAPER
+      	OPTI
+        $TITLE
+        Aperture for fitting the Generating Function
+        $TEXT
+                Half width of aperture [m]
+        $VARIABLE
+                ZAPERT
+        $TEXT
+                Half height of aperture [m]
+        $VARIABLE
+                YAPERT
+        $TEXT
+                Considered length for phase space cuts due to aperture [m]
+        $VARIABLE
+                DLAPER
+        $COMMENT
+                9999. means length of device
+*************************************************************************
+$MENU
+        INPLANE
+      	OPTI
+        $TITLE
+                Entrance plane of device
+        $TEXT
+                X of point in entrance plane of device [m]
+        $VARIABLE
+                OPSTARTX
+        $COMMENT
+                9999. means (X,Y,Z) are taken from reference orbit
+        $TEXT
+                Y of point in entrance plane of device [m]
+        $VARIABLE
+                OPSTARTY
+        $TEXT
+                Z of point in entrance plane of device [m]
+        $VARIABLE
+                OPSTARTZ
+        $TEXT
+                X-component of normal vector of entrance plane
+        $VARIABLE
+                OPNX
+        $COMMENT
+                9999. means (X,Y,Z) are taken from reference orbit
+        $TEXT
+                Y-component of normal vector of entrance plane
+        $VARIABLE
+                OPNY
+        $TEXT
+                Z-component of normal vector of entrance plane
+        $VARIABLE
+                OPNZ
+*************************************************************************
+$MENU
+        OUTPLANE
+      	OPTI
+        $TITLE
+                Exit plane of device
+        $TEXT
+                X of point in exit plane of device [m]
+        $VARIABLE
+                OPENDX
+        $COMMENT
+                9999. means (X,Y,Z) are taken from reference orbit
+        $TEXT
+                Y of point in exit plane of device [m]
+        $VARIABLE
+                OPENDY
+        $TEXT
+                Z of point in exit plane of device [m]
+        $VARIABLE
+                OPENDZ
+        $TEXT
+                X-component of normal vector of end plane
+        $VARIABLE
+                OPNFX
+        $COMMENT
+                9999. means (X,Y,Z) are taken from reference orbit
+        $TEXT
+                Y-component of normal vector of end plane
+        $VARIABLE
+                OPNFY
+        $TEXT
+                Z-component of normal vector of end plane
+        $VARIABLE
+                OPNFZ
+*************************************************************************
+$MENU
+      	GENFUN
+      	MACHINE
+        $TITLE
+        Fitting the Generating Function
+        $TEXT
+                Activate the fitting [0/1]
+        $TOGGLE
+                IGENFUN
+	$COMMENT
+	only in "export mode" in "spectrum calculations/ main modes"
+        $TEXT
+                Filename to read trajectories from
+        $VARIABLE
+                FILEO
+        $TEXT
+                Each nth of the tracks is printed
+        $VARIABLE
+                ISELECT
+        $TEXT
+                Print coefficients to wave.out [0/1]
+        $TOGGLE
+                IKOEFF
+        $TEXT
+                Calculate equivalent HALBACH device [0/1]
+        $TOGGLE
+                IHALBA
+        $TEXT
+                Number of periods of equivalent HALBACH device
+        $VARIABLE
+                NPERTRA
+        $TEXT
+                Calculate quadrupole matrix [0/1]
+        $TOGGLE
+                IQUAD
+        $TEXT
+                Assumed symmetric device with respect to orbit plane [0/1]
+        $TOGGLE
+                ISYM
+*************************************************************************
+$MENU
+      	GENFUNC
+      	GENFUN
+        $TITLE
+        Fitting the Generating Function (continued)
+        $TEXT
+                Do NOT fit A1000        [0/1]
+        $TOGGLE
+                IA1000
+        $TEXT
+                Do NOT fit A0100        [0/1]
+        $TOGGLE
+                IA0100
+        $TEXT
+                Do NOT fit A0010        [0/1]
+        $TOGGLE
+                IA0010
+        $TEXT
+                Do NOT fit A0001        [0/1]
+        $TOGGLE
+                IA0001
+        $TEXT
+                Set A1100=1 and A2000=0 [0/1]
+        $TOGGLE
+                IA11A20
+        $COMMENT
+                coefficients are not fitted
+        $TEXT
+                Fit in the horizontal plane only 1. and 2. order [0/1]
+        $TOGGLE
+                IWLSHOR
+*------------------------------------------------------------------------
+$MENUALLVETO
+	     IEMITM
+	     0.0
+	     MACHINE
+$MENUALLVETO
+	     DELTAZ
+	     0.0
+	     MACHINE
+$MENUALLVETO
+	     DELTAZP
+	     0.0
+	     MACHINE
+$MENUALLVETO
+	     DELTAY
+	     0.0
+	     MACHINE
+$MENUALLVETO
+	     DELTAYP
+	     0.0
+	     MACHINE
+$MENUALLVETO
+	     DELTAZ
+	     0.0
+	     TRALIN
+$MENUALLVETO
+	     DELTAZP
+	     0.0
+	     TRALIN
+$MENUALLVETO
+	     DELTAY
+	     0.0
+	     TRALIN
+$MENUALLVETO
+	     DELTAYP
+	     0.0
+	     TRALIN
+$MENUALLVETO
+	     IOPTIC
+	     0
+	     MACHINE
+$MENUALLVETO
+	     IOPTIC
+	     0
+	     OPTI
+$MENUALLVETO
+	     IGENFUN
+	     0
+	     MACHINE
+$MENUALLVETO
+	     IGENFUN
+	     0
+	     GENFUN
+*-------------------------------------------------------------------
+$MENUVETO
+	IWFILF
+	0
+	FOURIER
+$MENUVETO
+	IWBTAB
+	0
+	WBTAB
+$MENUVETO
+	IWBMAP
+	0
+	WBMAP
+$MENUALLVETO
+	IWFILF
+	0
+	MANMAG
+$MENUALLVETO
+	IWBTAB
+	0
+	MANMAG
+$MENUALLVETO
+	IWBMAP
+	0
+	MANMAG
+$VETO
+        IUNDULATOR
+        1
+        IMAGSPNM
+$VETO
+        IUNDULATOR
+        1
+        ISPECMODE
+$VETO
+        IUNDULATOR
+        1
+        WGWINFC
+$VETO
+        IUNDULATOR
+        1
+        NLPOI
+$VETO
+        IUNDULATOR
+        1
+        IOPTICM
+$VETO
+        IUNDULATOR
+        1
+        IGENFUN
+$VETO
+        IWIGGLER
+        1
+        IMAGSPNM
+$VETO
+        IWIGGLER
+        1
+        WGWINFC
+$VETO
+        IWIGGLER
+        1
+        NLPOI
+$VETO
+        IWIGGLER
+        1
+        IOPTICM
+$VETO
+        IWIGGLER
+        1
+        IEMITM
+$VETO
+        IWIGGLER
+        1
+        IGENFUN
+$VETO
+        IWIGGLER
+        1
+        ISPECMODE
+$VETO
+        IBUNCH
+        0
+        IPIN3
+$VETO
+        IPIN
+        0
+        IPIN3
+*---------------------------------------------------------------
+$MENUALLVETO
+	IUOUT
+	0
+	UFACE
+$MENUALLVETO
+	IUNAME
+	0
+	UFACE
+$MENUALLVETO
+	IUSTEP
+	0
+	UFACE
+*---------------------------------------------------------------
+$MENUALLVETO
+        IBERROR
+        0
+        MAGOPTC
+$MENUALLVETO
+        IBERROR
+        0
+        MAGOPT
+$MENUALLVETO
+        BYGOFF
+        0.
+        MAGOPT
+$MENUALLVETO
+        BZGOFF
+        0.
+        MAGOPT
+$MENUALLVETO
+        B0SCGLOB
+        1.
+        MAGOPT
+$MENUALLVETO
+	A0SCGLOB
+        1.
+        MAGOPT
+$MENUALLVETO
+        B0SCGLOBY
+        1.
+        MAGOPT
+$MENUALLVETO
+        B0SCGLOBZ
+        1.
+        MAGOPT
+$MENUALLVETO
+        IBSYM
+        0
+        MAGOPT
+$MENUALLVETO
+        IMAGSPNM
+        1
+        MAGOPT
+$MENUALLVETO
+        IBMASK
+        0
+        MAGOPT
+$MENUALLVETO
+        XSHIFT
+        0.
+        MAGOPT
+$MENUALLVETO
+        IBFORCE
+        0
+        MAGOPT
+*---------------------------------------------------------------
+$MENUVETO
+        IEXPERTM
+        0
+        INTSPEC
+*---------------------------------------------------------------
+$MENUVETO
+        ISPECDIP
+        0
+        SCHWINGER
+*---------------------------------------------------------------
+$MENUALLVETO
+        ISPECMODE
+        0
+        INTSPEC
+$MENUALLVETO
+        WBL0CUT
+        0.1
+        WBL0
+$MENUALLVETO
+        WBL0HYS
+        1.0
+        WBL0
+$MENUALLVETO
+        WGWINFC
+        9999.
+        INTSPEC
+$MENUALLVETO
+        NLPOI
+        -9999
+        INTSPEC
+$MENUALLVETO
+        XIANF
+        9999.
+        INTSPEC
+$MENUALLVETO
+        XIEND
+        9999.
+        INTSPEC
+$MENUALLVETO
+        ISPECDIP
+        0
+        INTSPEC
+$MENUALLVETO
+        WBL0CUT
+        0.1
+        INTSPEC
+$MENUALLVETO
+        WBL0HYS
+        1.0
+        INTSPEC
+$MENUALLVETO
+        NROI
+        0
+        INTSPECC
+$MENUALLVETO
+        IVELOFIELD
+        0
+        INTSPECC
+$MENUALLVETO
+        NROI
+        0
+        INTSPEC
+$MENUVETO
+        IVELOFIELD
+        0
+        VELO
+*---------------------------------------------------------------
+$MENUVETO
+        NROI
+        0
+        ROI
+*---------------------------------------------------------------
+$MENUALLVETO
+        CX1
+        9999.
+        COLLI
+$MENUALLVETO
+        CY1
+        9999.
+        COLLI
+$MENUALLVETO
+        CZ1
+        9999.
+        COLLI
+$MENUALLVETO
+        CX2
+        9999.
+        COLLI
+$MENUALLVETO
+        CY2
+        9999.
+        COLLI
+$MENUALLVETO
+        CZ2
+        9999.
+        COLLI
+$MENUALLVETO
+        WID1
+        9999.
+        COLLI
+$MENUALLVETO
+        HIG1
+        9999.
+        COLLI
+$MENUALLVETO
+        WID2
+        9999.
+        COLLI
+$MENUALLVETO
+        HIG2
+        9999.
+        COLLI
+*---------------------------------------------------------
+$MENUALLVETO
+        IPERIODG
+        0
+        MAGOPTC
+$MENUALLVETO
+        HSHIFT
+        0.
+        MAGOPTC
+$MENUALLVETO
+        VSHIFT
+        0.
+        MAGOPTC
+$MENUALLVETO
+        XROTD
+        0.
+        MAGOPTC
+$MENUALLVETO
+        IBFORCE
+        0
+        MAGOPTC
+*---------------------------------------------------------
+$MENUALLVETO
+BCRAN
+0.
+BRECC
+$MENUALLVETO
+UBANGERR(1)
+0.
+BRECC
+$MENUALLVETO
+UTAPER(1)
+0.
+BRECC
+$MENUALLVETO
+IHTAPER
+0
+BRECC
+$MENUALLVETO
+IVTAPER
+0
+BRECC
+$MENUALLVETO
+IPLREC
+0
+BRECC
+$MENUVETO
+IWFILPOW
+0
+SPECPOW
+*-------------------------------------------------------------
+$CALC
+     IBUNCH
+     .AND.
+     IBUNCH
+     IWORK1
+$CALC
+     IWORK1
+     -
+     IONE
+     IWORK1
+$CALC
+     IWORK1
+     .AND.
+     IWORK1
+     IWORK1
+$CALC
+     IWAVES
+     *
+     IWORK1
+     IWAVES
+$CALC
+     IBUNCH
+     .OR.
+     IFOLD
+     IBEAMFOLD
+$CALC
+     IBUNCH
+     .OR.
+     IEFOLD
+     IBEAMEFOLD
+$CALC
+      SHLL
+      *
+      UE112SH
+      UESHIFTLL
+$CALC
+      SHLR
+      *
+      UE112SH
+      UESHIFTLR
+$CALC
+      SHUL
+      *
+      UE112SH
+      UESHIFTUL
+$CALC
+      SHUR
+      *
+      UE112SH
+      UESHIFTUR
+*----------------
+$CALC
+  SHIFTLL
+  *
+  NUE112MOD
+  SHIFTLLM
+$CALC
+  UESHIFTLL
+  *
+  IUE112MOD
+  UESHIFTLLM
+$CALC
+  SHIFTLLM
+  +
+  UESHIFTLLM
+  SHIFTLL
+*----------------
+$CALC
+  SHIFTLR
+  *
+  NUE112MOD
+  SHIFTLRM
+$CALC
+  UESHIFTLR
+  *
+  IUE112MOD
+  UESHIFTLRM
+$CALC
+  SHIFTLRM
+  +
+  UESHIFTLRM
+  SHIFTLR
+*----------------
+$CALC
+  SHIFTUL
+  *
+  NUE112MOD
+  SHIFTULM
+$CALC
+  UESHIFTUL
+  *
+  IUE112MOD
+  UESHIFTULM
+$CALC
+  SHIFTULM
+  +
+  UESHIFTULM
+  SHIFTUL
+*----------------
+$CALC
+  SHIFTUR
+  *
+  NUE112MOD
+  SHIFTURM
+$CALC
+  UESHIFTUR
+  *
+  IUE112MOD
+  UESHIFTURM
+$CALC
+  SHIFTURM
+  +
+  UESHIFTURM
+  SHIFTUR
+*---------------------------------------------------------
+$CALC
+     ISPECDIP
+     .AND.
+     ISPECDIP
+     NDIP
+$CALC
+     IWIGGLER
+     .NOR.
+     IUNDULATOR
+     IEXPERT
+$CALC
+     IAMPREPP
+     *
+     -1
+     IAMPREP
+$CALC
+     IAMPLI
+     *
+     INULL
+     IAMPLI
+$CALC
+     IWAVES
+     *
+     -1
+     IWAVES
+$CALC
+     IWAVES
+     .AND.
+     IWAVES
+     IAMPW
+$CALC
+     IWAVES
+     .NAND.
+     IWAVES
+     IAMPNW
+$CALC
+     IPHASEM
+     .NAND.
+     IPHASEM
+     IAMPNP
+$CALC
+     IAMPW
+     .AND.
+     IPHASEM
+     IAMPLI11
+$CALC
+     IAMPNW
+     .AND.
+     IPHASEM
+     IAMPLI12
+$CALC
+     IAMPW
+     .AND.
+     IAMPNP
+     IAMPLI21
+$CALC
+     IAMPNW
+     .AND.
+     IAMPNP
+     IAMPLI22
+$CALC
+     IAMPLI11
+     *
+     IWAVES
+     IAMPLI11
+$CALC
+     IAMPLI12
+     *
+     IONE
+     IAMPLI12
+$CALC
+     IAMPLI21
+     *
+     IWAVES
+     IAMPLI21
+$CALC
+     IAMPLI22
+     *
+     INULL
+     IAMPLI22
+$CALC
+     IAMPLI
+     +
+     IAMPLI11
+     IAMPLI
+$CALC
+     IAMPLI
+     +
+     IAMPLI12
+     IAMPLI
+$CALC
+     IAMPLI
+     +
+     IAMPLI21
+     IAMPLI
+$CALC
+     IAMPLI
+     +
+     IAMPLI22
+     IAMPLI
+$CALC
+     IWAVES
+     *
+     -1
+     IWAVES
+$CALC
+     BYDIP(1)
+     /
+     BYDIP(1)
+     NDIP
+$CALC
+     BYDIP(1)
+     /
+     BYDIP(1)
+     NDIP
+$CALC
+     BYDIP(1)
+     -
+     BYDIP(1)
+     BXDIP(1)
+$CALC
+     BYDIP(1)
+     -
+     BYDIP(1)
+     BZDIP(1)
+$CALC
+     KBRECM
+     .NAND.
+     KBRECM
+     INURAN
+$CALC
+     INURAN
+     *
+     NURANMOD
+     NURANMOD
+$CALC
+     B0SCGLOBZ
+     *
+     -1
+     A0SCGLOBZ
+$CALC
+     A0SCGLOBZ
+     *
+     -1
+     A0SCGLOBZ
+$CALC
+     B0SCGLOBY
+     *
+     -1
+     A0SCGLOBY
+$CALC
+     A0SCGLOBY
+     *
+     -1
+     A0SCGLOBY
+$CALC
+     IWBMAPT
+     *
+     IWBMAP
+     IWBMAP
+$CALC
+     IONE
+     /
+     IONE
+     IBSUPER
+$CALC
+     ISIX
+     *
+     IRBMAP2
+     IRFILB0
+$CALC
+     IRFILB0
+     *
+     -1
+     IRFILB0
+*-------------------------------------------------------------
+$CALC
+      TROTMODU0
+      *
+      TROT1800
+      TROT180
+$CALC
+      TROTMODU0
+      *
+      TROT900
+      TROT90
+*-------------------------------------------------------------
+$CALC
+      TROTMODU0
+      *
+      TROTEND
+      TROTMODU
+$CALC
+      TROTCHIC0
+      *
+      TROTEND
+      TROTCHIC
+*-------------------------------------------------------------
+$CALC
+      TROTMODU
+      +
+      TROTCHIC
+      THEROT(1)
+*-------------------------------------------------------------
+$CALC
+      THEROT(1)
+      *
+      -1
+      THEROT(2)
+*-------------------------------------------------------------
+$CALC
+      THEROT(1)
+      *
+      -1
+      THEROT(3)
+*-------------------------------------------------------------
+$CALC
+      THEROT(1)
+      *
+      1
+      THEROT(4)
+*-------------------------------------------------------------
+$CALC
+      THEROT(1)
+      *
+      1
+      THEROT(13)
+*-------------------------------------------------------------
+$CALC
+      THEROT(1)
+      *
+      -1
+      THEROT(14)
+*-------------------------------------------------------------
+$CALC
+      THEROT(1)
+      *
+      -1
+      THEROT(15)
+*-------------------------------------------------------------
+$CALC
+      THEROT(1)
+      *
+      1
+      THEROT(16)
+*-------------------------------------------------------------
+$CALC
+      TROTMODU0
+      *
+      TROT
+      TROTMODU
+$CALC
+      TROTCHIC0
+      *
+      TROT
+      TROTCHIC
+*-------------------------------------------------------------
+$CALC
+      TROTMODU
+      +
+      TROTCHIC
+      THEROT(5)
+$CALC
+      THEROT(5)
+      +
+      TROT180
+      THEROT(5)
+*-------------------------------------------------------------
+$CALC
+      TROT900
+      *
+      TROTCHIC0
+      TROTM
+$CALC
+      THEROT(5)
+      *
+      TROTMODU0
+      THEROT(5)
+$CALC
+      THEROT(5)
+      +
+      TROTM
+      THEROT(5)
+*-------------------------------------------------------------
+$CALC
+      TROTMODU
+      +
+      TROTCHIC
+      THEROT(6)
+$CALC
+      TROTMODU
+      -
+      TROTCHIC
+      THEROT(6)
+$CALC
+      THEROT(6)
+      +
+      TROT180
+      THEROT(6)
+*-------------------------------------------------------------
+$CALC
+      TROT900
+      *
+      TROTCHIC0
+      TROTM
+$CALC
+      THEROT(6)
+      *
+      TROTMODU0
+      THEROT(6)
+$CALC
+      THEROT(6)
+      -
+      TROTM
+      THEROT(6)
+*-------------------------------------------------------------
+$CALC
+      TROTMODU
+      -
+      TROTCHIC
+      THEROT(7)
+*-------------------------------------------------------------
+$CALC
+      TROTMODU
+      +
+      TROTCHIC
+      THEROT(8)
+*-------------------------------------------------------------
+$CALC
+      TROTCHIC
+      -
+      TROTMODU
+      THEROT(9)
+*-------------------------------------------------------------
+$CALC
+      TROTCHIC
+      *
+      -1
+      TROTCHIC
+$CALC
+      TROTCHIC
+      -
+      TROTMODU
+      THEROT(10)
+*-------------------------------------------------------------
+$CALC
+      TROTCHIC
+      -
+      TROTMODU
+      THEROT(11)
+$CALC
+      THEROT(11)
+      +
+      TROT180
+      THEROT(11)
+*-------------------------------------------------------------
+$CALC
+      TROT900
+      *
+      TROTCHIC0
+      TROTM
+$CALC
+      THEROT(11)
+      *
+      TROTMODU0
+      THEROT(11)
+$CALC
+      THEROT(11)
+      -
+      TROTM
+      THEROT(11)
+*-------------------------------------------------------------
+$CALC
+      TROTCHIC
+      *
+      -1
+      TROTCHIC
+$CALC
+      TROTCHIC
+      -
+      TROTMODU
+      THEROT(12)
+$CALC
+      THEROT(12)
+      +
+      TROT180
+      THEROT(12)
+*-------------------------------------------------------------
+$CALC
+      TROT900
+      *
+      TROTCHIC0
+      TROTM
+$CALC
+      THEROT(12)
+      *
+      TROTMODU0
+      THEROT(12)
+$CALC
+      THEROT(12)
+      +
+      TROTM
+      THEROT(12)
+*-------------------------------------------------------------
+$CALC
+      TROT900
+      *
+      TROTCHIC0
+      TROTM
+$CALC
+      THEROT(1)
+      *
+      TROTMODU0
+      THEROT(1)
+$CALC
+      THEROT(1)
+      +
+      TROTM
+      THEROT(1)
+*-------------------------------------------------------------
+$CALC
+      THEROT(1)
+      *
+      -1
+      THEROT(2)
+*-------------------------------------------------------------
+$CALC
+      THEROT(1)
+      *
+      -1
+      THEROT(15)
+*-------------------------------------------------------------
+$CALC
+      THEROT(1)
+      *
+      1
+      THEROT(16)
+$CALC
+      ESPREAD
+      *
+      1
+      DELGAM
+$CALC
+     MPINR
+     *
+     MPINRT
+     MPINR
+$CALC
+     PINRAD
+     *
+     INULL
+     PINRAD
+$CALC
+     PINRAD
+     +
+     R9999
+     PINRAD
+$CALC
+    IPIN
+    *
+    INULL
+    IPIN
+$CALC
+    IPIN
+    +
+    IONE
+    IPIN
+$CALC
+    IPIN
+    +
+    IONE
+    IPIN
+$CALC
+    IPIN
+    -
+    IPINHV
+    IPIN
+$CALC
+    IPIN
+    -
+    IPINRV
+    IPIN
+$CALC
+    IPIN
+    .AND.
+    IONE
+    IPIN
+$CALC
+    IPIN
+    +
+    IPIN3
+    IPIN
+$CALC
+    IPIN
+    +
+    IPIN3
+    IPIN
+$CALC
+  IBFORCEM
+  *
+  IONE
+  IBFORCE
+$CALC
+  IPIN
+  *
+  IFOLDM
+  IFOLDM
+$CALC
+  IPIN
+  *
+  IFOLD
+  IFOLD
+$VETO
+  IPIN
+  0
+  IFOLDM
+$CALC
+  ISPEC
+  .AND.
+  ISPEC
+  ISPECM
+$MENUACTIVE
+  RECIDS
+  KBREC, KBPOLYMAG
+$CALC
+  IHTRACK
+  .AND.
+  IHTRACK
+  IHTRACK
+$CALC
+  IHTRACKM
+  .AND.
+  IHTRACKM
+  IHTRACKM
