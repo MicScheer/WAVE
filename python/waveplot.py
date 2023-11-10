@@ -81,6 +81,8 @@ from scipy.stats import *
 from scipy.interpolate import interp1d
 from scipy.spatial import ConvexHull, convex_hull_plot_2d
 
+from PIL import Image
+
 from copy import *
 ###################################################
 
@@ -111,7 +113,6 @@ Wfd = []
 
 Vfd = None
 
-IsameCanvas = 0
 TextIn = ''
 LastPlot = []
 Lastwin = ''
@@ -120,6 +121,8 @@ Koverview = 0
 Icalloverview = 0
 
 WclipE = 1
+
+IsameCanvas = 0
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,plotglobal,T=PYTHON.
@@ -151,10 +154,10 @@ Statfontsize, Axislabeldist, Axislabeldist3d, Axisdist, Axisdist3d,\
 GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
 StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d,\
 AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles, Dummy,\
-ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax, Tdate, TdateOv, Trun, TrunOv, \
+ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax, ZoomZmin,ZoomZmax,Tdate, TdateOv, Trun, TrunOv, \
 LogX, LogY, LogZ, NxbBinMax, Khdeleted,WisLinux, Waveplot, \
-Mrun, Mcomment, Mdate, ROFx, ROFy, Hull3D, Kgrid,KyAxis,KxAxis,KzAxis,Kbox, \
-FillColor
+Mrun, Mcomment, Mdate, ROFx, ROFy, Hull2D,Hull3D, Kgrid,KyAxis,KxAxis,KzAxis,Kbox, \
+FillColor,Ishow
 
 
 FillColor = 'none'
@@ -173,6 +176,8 @@ ZoomXmin = -1.e30
 ZoomXmax = 1.e30
 ZoomYmin = -1.e30
 ZoomYmax = 1.e30
+ZoomZmin = -1.e30
+ZoomZmax = 1.e30
 LogX = 0
 LogY = 0
 LogZ = 0
@@ -463,6 +468,10 @@ KzAxis = True
 CanButIds = []
 CanButId = 0
 
+Hull2D = []
+Hull3D = []
+Ishow = 1
+
 # Histograms and Ntuples
 global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
 Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
@@ -719,18 +728,18 @@ def set_console_title(console='Python'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -1122,18 +1131,18 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -1597,6 +1606,8 @@ from scipy import *
 
 # begin of sequence mshimports
 
+
+# holla
 import tkinter as tk
 from tkinter import *
 from tkinter.font import Font
@@ -1629,13 +1640,21 @@ from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits import mplot3d
 from matplotlib import cm #color maps
 
+#import pyhull
+#from pyhull.convex_hull import ConvexHull
+try:
+  from pyhull import qconvex, qdelaunay, qvoronoi
+except:
+  print("*** Warning: Coulnd not import qconvex etc. from pyhull ***")
+  print("*** Please install module pyhull ***")
+#endtry
 
 global \
 clight1,cgam1,cq1,alpha1,dnull1,done1,sqrttwopi1,\
 emassg1,emasse1,echarge1,emasskg1,eps01,erad1,\
 grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
 radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
-ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21
+ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max
 
 hbarev1=6.58211889e-16
 clight1=2.99792458e8
@@ -1655,6 +1674,11 @@ cq1=55.e0/32.e0/(3.0e0)**0.5*hbar1/emasskg1/clight1
 cgam1=4.e0/3.e0*pi1*erad1/emassg1**3
 pol1con1=8.e0/5.e0/(3.0e0)**0.5
 pol2con1=8.e0/5.e0/(3.0e0)**0.5/2.e0/pi1/3600.e0*emasskg1/hbar1/erad1*emassg1**5
+
+h2const=1.327e13
+h2max=1.474
+g1const=2.457e13
+g1max=0.9212
 
 twopi1=2.0e0*pi1
 halfpi1=pi1/2.0e0
@@ -1741,6 +1765,357 @@ VlocDist = 0
 global Aspect
 Aspect = "auto"
 
+def plotfaces(faces, isame=0,
+                facecolor='b',edgecolor='black',alpha=0.5,
+                linewidth=-1,markercolor='!',ishow=1):
+
+  global Isame,Iso,Ax
+
+  Iso = Isame
+
+  if not isame:
+
+    xmn = 1.e30
+    xmx = -1.e30
+    ymn = 1.e30
+    ymx = -1.e30
+    zmn = 1.e30
+    zmx = -1.e30
+
+    for f in faces:
+      xmn = min(f.T[0].min(),xmn)
+      xmx = max(f.T[0].max(),xmx)
+      ymn = min(f.T[1].min(),ymn)
+      ymx = max(f.T[1].max(),ymx)
+      zmn = min(f.T[2].min(),zmn)
+      zmx = max(f.T[2].max(),zmx)
+    #endfor
+
+    dx = (xmx-xmn)*0.1
+    dy = (ymx-ymn)*0.1
+    dz = (zmx-zmn)*0.1
+
+    xmin = xmn - dx
+    xmax = xmx + dx
+    ymin = ymn - dy
+    ymax = ymx + dy
+    zmin = zmn - dz
+    zmax = zmx + dz
+
+    null3d(xmin,xmax,ymin,ymax,zmin,zmax)
+    Isame = 1
+
+  #endif
+
+  getzone('3d')
+
+  ax = Ax
+
+  if edgecolor == '!': edgecolor = getlinecolor()
+  if linewidth < 0: linewidth = getlinewidth()
+
+  face = mplot3d.art3d.Poly3DCollection(faces)
+
+  face.set_color(facecolor)
+  face.set_linewidth(linewidth)
+  face.set_edgecolor(edgecolor)
+  face.set_alpha(alpha)
+
+  ax.add_collection3d(face)
+
+  if ishow: showplot()
+
+  Isame = Iso
+
+#enddef plotfaces
+
+def read_faces(fname,cs='xyz'):
+
+  F=open(fname,'r')
+  fread = F.readlines()
+  F.close()
+
+  faces = []
+  voxels = []
+
+  l=0
+  nface=-1
+  #breakpoint()
+  nmag = int(fread[l].strip())
+  l += 1
+  for imag in range(nmag):
+    npoi = int(fread[l].split()[0])
+    voxels.append(fread[l].split())
+    nface += 1
+    l += 1
+    fac = []
+    for ipoi in range(npoi):
+      p = np.fromstring(fread[l].strip(),dtype=np.float,sep=' ')
+      if cs.lower() == 'xzy':
+        fac.append([p[0],p[2],p[1]])
+      else:
+        fac.append([p[0],p[1],p[2]])
+      #endif
+      l += 1
+    #endfor npoi
+    faces.append(np.array(fac))
+  #endfor nmag
+
+  return faces,voxels
+#enddef read_faces(fname)
+
+def plotqhull3d(vertices,ifaces,faces, isame=0,
+                facecolor='b',edgecolor='black',alpha=0.5,
+                linewidth=-1,markercolor='!',modus='faces',ishow=1):
+
+  global Isame,Iso,Ax
+
+  Iso = Isame
+
+  if not isame or modus != 'faces': xyz = vertices.T
+
+  if not isame:
+
+    xmn = xyz[0].min()
+    xmx = xyz[0].max()
+    ymn = xyz[1].min()
+    ymx = xyz[1].max()
+    zmn = xyz[2].min()
+    zmx = xyz[2].max()
+
+    dx = (xmx-xmn)*0.1
+    dy = (ymx-ymn)*0.1
+    dz = (zmx-zmn)*0.1
+
+    xmin = xmn - dx
+    xmax = xmx + dx
+    ymin = ymn - dy
+    ymax = ymx + dy
+    zmin = zmn - dz
+    zmax = zmx + dz
+
+    null3d(xmin,xmax,ymin,ymax,zmin,zmax)
+    Isame = 1
+
+  #endif
+
+  getzone('3d')
+
+  ax = Ax
+
+  if edgecolor == '!': edgecolor = getlinecolor()
+  if linewidth < 0: linewidth = getlinewidth()
+
+  if modus == 'points' or modus == 'vertices':
+
+    setcolor(markercolor)
+    if markercolor == '!': markercolor = getmarkercolor()
+    setmarkercolor(markercolor)
+
+    vplxyz(xyz[0],xyz[1],xyz[2])
+
+  else:
+
+    face = mplot3d.art3d.Poly3DCollection(faces)
+
+    face.set_color(facecolor)
+    face.set_linewidth(linewidth)
+    face.set_edgecolor(edgecolor)
+    face.set_alpha(alpha)
+
+    ax.add_collection3d(face)
+
+  #endif
+
+  if ishow: showplot()
+
+  Isame = Iso
+
+#enddef plotqhull3d
+
+def qhull3d(x,y=None,z=None):
+
+  global Hull3D,Tnpa,Tnone
+
+  if type(y) == Tnone:
+    xyz = np.array(x).T
+    x = xyz[0]
+    y = xyz[1]
+    z = xyz[2]
+  #endif
+
+  points = np.array([x,y,z]).T
+  lhull = qconvex('i p',points)
+
+  nface = int(lhull[0])
+  ivert = nface + 2
+  nvert = int(lhull[ivert])
+
+  ifaces = []
+  faces = []
+  for i in range(1,nface+1):
+    iface = np.fromstring(lhull[i],dtype=np.int,sep=' ')
+    ifaces.append(iface)
+    faces.append(points[iface])
+  #endfor
+
+  verts = []
+  xmin = 1.0e30
+  xmax = -1.0e30
+  ymin = 1.0e30
+  ymax = -1.0e30
+  zmin = 1.0e30
+  zmax = -1.0e30
+  for i in range(ivert+1,ivert+1+nvert):
+    dv = np.fromstring(lhull[i],sep=' ')
+    if dv[0] < xmin: xmin = dv[0]
+    if dv[0] > xmax: xmax = dv[0]
+    if dv[1] < ymin: ymin = dv[1]
+    if dv[1] > ymax: ymax = dv[1]
+    if dv[2] < zmin: zmin = dv[2]
+    if dv[2] > zmax: zmax = dv[2]
+    verts.append(dv)
+  #endfor
+  verts = np.array(verts)
+
+  Hull3D = faces
+
+  return verts,ifaces,faces,[xmin,xmax,ymin,ymax,zmin,zmax]
+
+#enddef qhull3d(x,y,z)
+
+def qhull2d(x,y=None):
+
+  global Hull2D,Tnpa,Tnone
+
+  if type(y) == Tnone:
+    xy = np.array(x).T
+    x = xy[0]
+    y = xy[1]
+  #endif
+
+  points = np.array([x,y]).T
+  lhull = qconvex('i p',points)
+
+  nface = int(lhull[0])
+  ivert = nface + 2
+  nvert = int(lhull[ivert])
+
+  ifaces = []
+  faces = []
+  for i in range(1,nface+1):
+    iface = np.fromstring(lhull[i],dtype=np.int,sep=' ')
+    ifaces.append(iface)
+    faces.append(points[iface])
+  #endfor
+
+  verts = []
+  xmin = 1.0e30
+  xmax = -1.0e30
+  ymin = 1.0e30
+  ymax = -1.0e30
+
+  for i in range(ivert+1,ivert+1+nvert):
+    dv = np.fromstring(lhull[i],sep=' ')
+    if dv[0] < xmin: xmin = dv[0]
+    if dv[0] > xmax: xmax = dv[0]
+    if dv[1] < ymin: ymin = dv[1]
+    if dv[1] > ymax: ymax = dv[1]
+    verts.append(dv)
+  #endfor
+  verts = np.array(verts)
+
+  Hull2D = faces
+
+  return verts,ifaces,faces,[xmin,xmax,ymin,ymax]
+
+#enddef qhull2d(x,y)
+
+def nqhull3d(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,
+             facecolor='b',mcolor='!',edgecolor='!',alpha=0.0,ishow=1):
+
+  global Isame
+
+  if type(nt) == str and nt == '?':
+    print("\nUsage: hull = nqhull3d(nt,varlis,select,iplot=1)")
+    return
+  #endif type(nt) == str and nt == '?'
+
+  if type(nt) == Tdf:
+    pass
+  elif type(nt) == str:
+    ind = GetIndexN(nt)
+    if ind == -1:
+      print("*** Error in nqhull3d: Unknown Ntuple ***")
+      return -1
+    #endif
+    nt = Ntup[ind]
+  elif type(nt) == int and nt > 0:
+    nt = Ntup[idn]
+  else:
+    print("*** Error in nqhull3d: Unknown Ntuple ***")
+    return -2
+  #endif nt >= 0:
+
+  if len(select):
+    N = nt.query(select)
+    nt = N
+  #endif len(select)
+
+  if not len(nt):
+    print("*** Error in nqhull3d: No data, check ntuple and selection ***")
+    return -1
+  #endif
+
+  if mcolor != '!':
+    setlinecolor(mcolor)
+  #endif
+
+  varl = nlistcolon(varlis)
+
+  sx = eval(nparse(nt,varl[0]))
+  sy = eval(nparse(nt,varl[1]))
+  sz = eval(nparse(nt,varl[2]))
+
+  ntd = ncre("ntd","ntd","x:y:z",1)
+  var = nlistcolon(varlis)
+  ntd.x = sx
+  ntd.y = sy
+  ntd.z = sz
+  ntd = ntd.drop_duplicates()
+  ntd.index = range(len(ntd))
+
+  points = np.array([ntd.x,ntd.y,ntd.z]).T
+
+  vert,ifaces,faces,bounds = qhull3d(ntd.x,ntd.y,ntd.z)
+  nface = len(faces)
+
+  data = []
+  for i in range(nface):
+    for ipoi in ifaces[i]:
+      data.append([ipoi+1,i+1,points[ipoi][0],points[ipoi][1],points[ipoi][2]])
+    #endfor
+    iclo = ifaces[i][0]
+    data.append([iclo+1,i+1,points[iclo][0],points[iclo][1],points[iclo][2]])
+  #endfor
+
+  npd = pd.DataFrame(data,columns=['ipoi','iplan','x','y','z'])
+  nhull = ncre("Nhull3d","Nqhull3d","ipoi:iplan:x:y:z",ioverwrite=1)
+  nhull = nfill("Nhull3d",npd)
+
+  if iplot:
+    plotoptions(plopt)
+    #if edgecolor == '!': edgecolor = facecolor
+    plotqhull3d(vert,ifaces,faces,Isame,
+                facecolor=facecolor,edgecolor=edgecolor,alpha=alpha,
+                linewidth=-1,markercolor='!',
+                modus='faces',ishow=ishow)
+  #endif
+
+  if iretval: return vert,ifaces,faces,bounds
+
+#enddef nqhull3d(nt='?')
+
 def set_aspect(asp='!'):
   global Aspect
 
@@ -1756,8 +2131,8 @@ def set_aspect(asp='!'):
 
 NL = "\n"
 
-def sind(phi): return sin(phi/180.*np.pi)
-def cosd(phi): return cos(phi/180.*np.pi)
+def sind(phi): return np.sin(phi/180.*np.pi)
+def cosd(phi): return np.cos(phi/180.*np.pi)
 def tand(phi): return tan(phi/180.*np.pi)
 def asind(x): return asin(x)/np.pi*180.
 def acosd(x): return acos(x)/np.pi*180.
@@ -1822,17 +2197,17 @@ def get_y_stat():
 
 def ellipse(x0,y0,a,b,alpha=0.0,n=1000):
 
-  cosa = cos(alpha)
-  sina = sin(alpha)
+  cosa = np.cos(alpha)
+  sina = np.sin(alpha)
 
   phi =vcre(n,0.,2.0*pi)
 
-  x = x0 + cosa*a*cos(phi) - sina*b*sin(phi)
-  y = y0 + sina*a*cos(phi) + cosa*b*sin(phi)
+  x = x0 + cosa*a*np.cos(phi) - sina*b*np.sin(phi)
+  y = y0 + sina*a*np.cos(phi) + cosa*b*np.sin(phi)
 
   istat,area,pathlen = polygon2d(x,y)
 
-  return x,y,phi,area[:-1],pathlen[:-1]
+  return x,y,phi/pi*180.,area[:-1],pathlen[:-1]
 
 #enddef ellipse
 
@@ -1879,20 +2254,166 @@ def polygon2d(x="?",y="?"):
   for i in range(n1):
 #    dx = x[i+1]-x[i]
 #    dy = y[i+1]-y[i]
-#    dl =  sqrt(dx**2+dy**2)
+#    dl =  np.sqrt(dx**2+dy**2)
 #    print(i,dx,dy,dl)
 #    pathlen[i+1] = pathlen[i] + dl
-    pathlen[i+1] = pathlen[i] + sqrt((x[i+1]-x[i])**2 + (y[i+1]-y[i])**2)
+    pathlen[i+1] = pathlen[i] + np.sqrt((x[i+1]-x[i])**2 + (y[i+1]-y[i])**2)
     area[i+1] = area[i] - (x[i+1]-x[i]) * (y[i+1]+y[i])/2.0
   #endfor
 
   n2 = n -2
 
-  pathlen[n] = pathlen[n1] + sqrt((x[0]-x[n1])**2 + (y[0]-y[n1])**2)
+  pathlen[n] = pathlen[n1] + np.sqrt((x[0]-x[n1])**2 + (y[0]-y[n1])**2)
   area[n] = area[n1] - (x[0]-x[n1]) * (y[0]+y[n1])/2.0
 
   return istat,area,pathlen
 #enddef
+
+def arc(x0=0.,y0=0.,a=1.,b=1.,alpha=0.0,phi=90.,dphi=360.,n=1000):
+
+  cosa = np.cos(alpha)
+  sina = np.sin(alpha)
+
+  phi1 = phi - dphi/2.0
+  phi2 = phi1 + dphi
+
+  phi1 = phi1*pi/180.
+  phi2 = phi2*pi/180.
+
+  phi =vcre(n,phi1,phi2)
+
+  x = x0 + cosa*a*np.cos(phi) - sina*b*np.sin(phi)
+  y = y0 + sina*a*np.cos(phi) + cosa*b*np.sin(phi)
+
+  istat,area,pathlen = polygon2d(x,y)
+
+  return x,y,phi/pi*180,area[:-1],pathlen[:-1]
+#enddef arc
+
+def narc(nt='narc',x0=0.,y0=0.,a=1.,b=1.,alpha=0.0,phi=90.,dphi=360.,n=1000):
+  nt = ncre(nt,nt,"x:y:phi:area:path")
+  nt.x,nt.y,nt.phi,nt.area,nt.path = arc(x0,y0,a,b,alpha,phi,dphi,n)
+  nupdate_header(nt)
+  return nt
+#enddef
+
+def cylinder(x0=0.0,y0=0.0,z0=0,width=0.1,
+             a=1.0,b=1.0,h=1.0,alpha=0.0,phi=90.,dphi=360.,n=1000):
+
+  xi,zi,phii,ai,pathi = arc(x0,z0,a,b,alpha,phi,dphi,n)
+  xo,zo,phio,ao,patho = arc(x0,z0,a+width,b+width,alpha,phi,dphi,n)
+
+  yl = xi*0.0 - h/2.
+  yh = yl + h
+
+  return xi,zi,xo,zo,yl,yh,phio
+
+#enddef cylinder
+
+def ncylinder(nt='ncyl',x0=0.0,y0=0.0,z0=0,width=0.1,
+             a=1.0,b=1.0,h=1.0,alpha=0.0,phi=90.,dphi=360.,n=1000,ioverwrite=1):
+  nt = ncre(nt,nt,"xi:zi:xo:zo:yl:yh:phi",ioverwrite=ioverwrite)
+  nt.xi,nt.zi,nt.xo,nt.zo,nt.yl,nt.yh,nt.phi = \
+  cylinder(x0,y0,z0,width,a,b,h,alpha,phi,dphi,n)
+  nupdate_header(nt)
+  return nt
+#enddef ncylinder
+
+def cylinderpoly(nt='ncyl'):
+  global Nhead
+
+  nt = nget(nt)
+  nphi = len(nt)
+
+  xi = nt.xi
+  zi = nt.zi
+  yl = nt.yl
+
+  xo = nt.xo
+  zo = nt.zo
+  yh = nt.yh
+
+  poly = []
+
+  plow = []
+  for k in range(nphi):
+    i = k
+    plow.append([xi[i],yl[i],zi[i]])
+  #endfor
+  for k in range(nphi):
+    i = nphi - k - 1
+    plow.append([xo[i],yl[i],zo[i]])
+  #endfor
+  plow.append(plow[0])
+
+  ph = []
+  for k in range(nphi):
+    i = k
+    ph.append([xi[i],yh[i],zi[i]])
+  #endfor
+  for k in range(nphi):
+    i = nphi - k - 1
+    ph.append([xo[i],yh[i],zo[i]])
+  #endfor
+  ph.append(ph[0])
+
+  nh = Nhead[Ind]
+  ximin = nh[4][1]
+  ximax = nh[4][2]
+  zimin = nh[5][1]
+  zimax = nh[5][2]
+  xomin = nh[6][1]
+  xomax = nh[6][2]
+  zomin = nh[7][1]
+  zomax = nh[7][2]
+  ymin = nh[8][1]
+  ymax = nh[9][2]
+
+  bounds = [min(ximin,xomin),max(ximax,xomax),ymin,ymax,
+            min(zimin,zomin),max(zimax,zomax)]
+
+  phi1 = nh[3+nh[3]][1]
+  phi2 = nh[3+nh[3]][2]
+  dphi = phi2-phi1
+  dphi12 = dphi/(nphi-1)
+
+  angs = np.arange(phi1,phi2+dphi12,dphi12)
+  epsphi = dphi / 1000.
+
+  for ang in angs:
+    sel = "abs(phi-" + str(ang) + ")<" + str(epsphi)
+    na = nt.query(sel)
+    na.index = range(len(na))
+    xi = na.xi[0]
+    zi = na.zi[0]
+    xo = na.xo[0]
+    zo = na.zo[0]
+    yl = na.yl[0]
+    yh = na.yh[0]
+    poly.append([[xi,yl,zi],[xo,yl,zo],[xo,yh,zo],[xi,yh,zi]])
+  #endfor
+
+  poly.append(plow)
+  poly.append(ph)
+
+  return poly,bounds
+#enddef cylinderpoly
+
+def plotncylinder(nt='ncyl',isame=0,linecolor='r',ishow=1):
+  nc = nget(nt)
+  poly,bounds = cylinderpoly(nc)
+  pt = np.array(poly[0]).T
+  if isame:
+    vplxyz(pt[0],pt[1],pt[2],'samelineclosed',color=linecolor)
+  else:
+    vplxyz(pt[0],pt[1],pt[2],'line',color=linecolor)
+  #endif
+  for ip in range(1,len(poly)):
+    pt = np.array(poly[ip]).T
+    vplxyz(pt[0],pt[1],pt[2],'samelineclosed',color=linecolor)
+  #endfor
+  return poly,bounds
+#enddef plotncyl
 
 def get_master():
   wmain = plt.gcf()
@@ -2055,8 +2576,8 @@ def rotate2d(x,y,phi=0.0, x0=0.0, y0=0.0, mode='grad'):
 
   if mode.lower() == 'grad': phi = phi / 180. * pi
 
-  cosphi = cos(phi)
-  sinphi = sin(phi)
+  cosphi = np.cos(phi)
+  sinphi = np.sin(phi)
 
   xx0 = x - x0
   yy0 = y - y0
@@ -2174,7 +2695,15 @@ def _delPlot():
 #enddef _delPlot()
 
 def _zones():
-    global Wmain, Wmaster, Winz, Erows, Ecols, Ekzon, Myfont,Nyzone,Nxzone
+    global Wmain, Wmaster, Winz, Erows, Ecols, Ekzon, Myfont,Nyzone,Nxzone, \
+    IsameCanvas
+
+#    print("entered _zones")
+
+    if type(IsameCanvas) == int:
+      IsameCanvas = StringVar()
+      IsameCanvas.set(IsameCanvas)
+    #endif
 
     Winz = Toplevel()
     Winz.attributes('-topmost', 1)
@@ -2217,6 +2746,7 @@ def _zones():
     Winz.geometry(sgeo)
 
     Wmaster.wait_window(Winz)
+#    print("Leaving _zones")
 #enddef _zones():
 
 def _lines():
@@ -2945,69 +3475,130 @@ def getplotsize():
   return w*2.54,h*2.54
 #enddef getplotsize()
 
-def plothull3d(isame=0,facecolor='blue',alpha=0.5,edgecolor='black', ishow=1, mode='face'):
+from itertools import chain
+
+def vplothull3d(x,y,z,isame=0,facecolor='blue',alpha=0.5,edgecolor='black',
+                ishow=1, mode='simplices'):
+
+  global Ax, Isame
+
+  vs = np.array([x,y,z]).T
+  hull = ConvexHull(vs)
+
+  if not isame:
+
+    xyzt = hull.points.T
+
+    xmn = xyzt[0].min()
+    xmx = xyzt[0].max()
+    ymn = xyzt[1].min()
+    ymx = xyzt[1].max()
+    zmn = xyzt[2].min()
+    zmx = xyzt[2].max()
+
+    dx = (xmx-xmn)*0.1
+    dy = (ymx-ymn)*0.1
+    dz = (zmx-zmn)*0.1
+
+    xmin = xmn - dx
+    xmax = xmx + dx
+    ymin = ymn - dy
+    ymax = ymx + dy
+    zmin = zmn - dz
+    zmax = zmx + dz
+
+    null3d(xmin,xmax,ymin,ymax,zmin,zmax)
+
+  #endif isame
+
+  ax = Ax
+
+  if mode == 'simplices':
+
+    faces = mplot3d.art3d.Poly3DCollection(vs[hull.simplices])
+
+    faces.set_color(facecolor)
+    faces.set_edgecolor(edgecolor)
+    faces.set_alpha(alpha)
+
+    ax.add_collection3d(faces)
+
+  elif mode == 'volume':
+
+    vsims = vs[hull.simplices]
+
+    faces = mplot3d.art3d.Poly3DCollection(vsims,linewidth=0)
+
+    faces.set_color(facecolor)
+    faces.set_alpha(alpha)
+
+    ax.add_collection3d(faces)
+
+  #endif
+
+  if ishow: showplot()
+
+#enddef vplothull3d()
+
+def plothull3d(isame=0,facecolor='blue',alpha=0.5,edgecolor='black',
+               ishow=1, mode='face'):
+
   global Hull3D, Ax, Isame
 
   Isame = isame
   getzone('3d')
 
   if not isame:
-    xmina = []
-    xmaxa = []
-    ymina = []
-    ymaxa = []
-    zmina = []
-    zmaxa = []
-    for p in Hull3D:
-      xmin = amin(tuple(zip(p[0],p[1],p[2]))[0])
-      xmax = amax(tuple(zip(p[0],p[1],p[2]))[0])
-      ymin = amin(tuple(zip(p[0],p[1],p[2]))[1])
-      ymax = amax(tuple(zip(p[0],p[1],p[2]))[1])
-      zmin = amin(tuple(zip(p[0],p[1],p[2]))[2])
-      zmax = amax(tuple(zip(p[0],p[1],p[2]))[2])
-      xmina.append(xmin)
-      xmaxa.append(xmax)
-      zmina.append(zmin)
-      zmaxa.append(zmax)
-      ymina.append(ymin)
-      ymaxa.append(ymax)
+
+    if type(Hull3D) == list:
+      ht = []
+      for face in Hull3D:
+        for p in face:
+          ht.append(p)
+        #endfor
+      #endfor
+    #endif
+
+    try:
+      pt = np.array(ht).T
+    except:
+      print("\n*** Error in plothull3d: Bad Hull3D ***\n",Hull3D)
+    #endtry
+
+    xmn = pt[0].min()
+    xmx = pt[0].max()
+    ymn = pt[1].min()
+    ymx = pt[1].max()
+    zmn = pt[2].min()
+    zmx = pt[2].max()
+
+    dx = (xmx-xmn)*0.1
+    dy = (ymx-ymn)*0.1
+    dz = (zmx-zmn)*0.1
+
+    xmin = xmn - dx
+    xmax = xmx + dx
+    ymin = ymn - dy
+    ymax = ymx + dy
+    zmin = zmn - dz
+    zmax = zmx + dz
+
+    null3d(xmin,xmax,ymin,ymax,zmin,zmax)
+
     #endfor p  in Hull3D
-    xmin = amin(xmina)
-    xmax = amax(xmaxa)
-    ymin = amin(ymina)
-    ymax = amax(ymaxa)
-    zmin = amin(zmina)
-    zmax = amax(zmaxa)
   #endif not isame:
 
-  if mode == 'face':
+  if not mode == 'face': alpha = 0
 
-    face = mplot3d.art3d.Poly3DCollection(Hull3D)
-    face.set_color(facecolor)
-    face.set_edgecolor(edgecolor)
-    face.set_alpha(alpha)
+  faces = mplot3d.art3d.Poly3DCollection(Hull3D)
+  faces.set_color(facecolor)
+  faces.set_edgecolor(edgecolor)
+  faces.set_alpha(alpha)
 
-    Ax.add_collection3d(face)
-
-  else:
-
-    for closed in Hull3D:
-      Ax.plot(*zip(*closed),edgecolor)
-    #endfor closed in Hull3D
-
-  #endif mode == 'face'
-
-  if not isame:
-    dx = xmax - xmin
-    Ax.set_xlim3d(xmin-dx/10.,xmax+dx/10.)
-    dy = ymax - ymin
-    Ax.set_ylim3d(ymin-dy/10.,ymax+dy/10.)
-    dz = zmax - zmin
-    Ax.set_zlim3d(zmin-dz/10.,zmax+dz/10.)
-  #endif not isame:
+  Ax.add_collection3d(faces)
 
   if ishow: showplot()
-#enddef plothull3d()
+#enddef plothull3()
 
 def nmerge(n1,n2,n12,vars1='',vars2='',vars12=''):
 
@@ -3083,6 +3674,8 @@ def bundu(gl,a=3.598,b=-3.840,c=0.631):
   return a*exp(b*gl+c*gl*gl)
 #enddef bundu()
 
+def mh(): setmarkersize(10.)
+def ml(): setmarkersize(8.)
 def mn(): setmarkersize(6.)
 def mm(): setmarkersize(4.)
 def ms(): setmarkersize(2.)
@@ -3204,18 +3797,18 @@ def hdump(hist='?',filh='hdump.dat'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -3292,18 +3885,18 @@ def hprint(hist='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -3369,18 +3962,18 @@ def hfun(hist='?',fun='x', nx=101, xmin=-0.5, xmax=100.5):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -3480,18 +4073,18 @@ def h1header_update(hist='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -3650,18 +4243,18 @@ def h1reset(h):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -3729,18 +4322,18 @@ def hdelete(h='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -3814,18 +4407,18 @@ def hmin(h='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -3897,18 +4490,18 @@ def hmax(h='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -3967,11 +4560,11 @@ def printplopt():
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   if type(Klegend) == int or type(Klegend) == bool:
@@ -4042,16 +4635,19 @@ def plotoptions(plopt=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   Iplotopt = 0
 
-  if type(plopt) != str: return
+  if type(plopt) != str:
+    print('\n*** Warning in plotoptions: plopt must be a string ***')
+    return
+  #endif
 
   if plopt.lower() == '2d' or plopt == '': plopt = Mode2d
   elif plopt.lower() == '3d' or plopt == '': plopt = Mode3d
@@ -4076,7 +4672,8 @@ def plotoptions(plopt=''):
   Inoempty = 0
   Iclosed = 0
 
-  if not Fig: window()
+  if not Fig:
+    window()
 
   if type(Klegend) == int or type(Klegend) == bool:
     iledg = Klegend
@@ -4105,8 +4702,11 @@ def plotoptions(plopt=''):
     Iplotopt = 1;  Imarker = 1
   if re.search('spline',plopt) or re.search('C',plopt):
     Iplotopt = 1;  Ispline = 1; plopt = re.sub("spline","",plopt)
+
   if re.search('same',plopt) or re.search('S',plopt) or IsameGlobal.get() == 1:
-    Iplotopt = 1;  Isame = 1
+    Iplotopt = 1
+    Isame = 1
+
   if re.search('scatter',plopt):
     Iplotopt = 1;  Iscatter = 1
 
@@ -4230,18 +4830,18 @@ def mhb_mkdir(chdir='!'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4335,18 +4935,18 @@ def mhb_ldir():
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4410,18 +5010,18 @@ def mhb_pwd(isilent=0,iretval=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4480,18 +5080,18 @@ def mhb_cd(cdir='!'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4568,7 +5168,7 @@ def mhb_cd(cdir='!'):
 
 #enddef mhb_cd(cdir='!')
 
-def zoom(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30):
+def zoom(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30,zmin=1.2345e30,zmax=1.2345e30):
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -4599,11 +5199,12 @@ def zoom(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
+
 
   yn, yx = Ax.get_ylim()
   if ymin == -1.2345e30: ymn=yn
@@ -4611,12 +5212,86 @@ def zoom(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30):
   yn, yx = Ax.get_ylim()
   if ymax == 1.2345e30: ymx=yx
   else: ymx = ymax
+
   Ax.axis([xmin,xmax,ymn,ymx])
+
   ZoomXmin=xmin
   ZoomXmax=xmax
   ZoomYmin=ymin
   ZoomYmax=ymax
+
   showplot()
+#enddef zoom
+
+def zoom3d(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30,zmin=1.2345e30,zmax=1.2345e30):
+#+KEEP,plotglobind,T=PYTHON.
+#*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
+  global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
+  Fig1,Ax1,Fig6,Ax6,Fig2,Ax2,Fig7,Ax7,Fig3,Ax3,Fig8,Ax8, Figgeoms, \
+  Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
+  Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
+  FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
+  Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
+  Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
+  MarkerSize, MarkerType, MarkerColor, \
+  Markersize, Markertype, Markercolor, \
+  Fillstyle, FillStyle, \
+  Textcolor, WaveFilePrefix, \
+  LineStyle, LineWidth, LineColor, \
+  Linestyle, Linewidth, Linecolor, \
+  Author, \
+  Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
+  LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
+  Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
+  LexpX,LexpY,LexpRot,LexpPow,\
+  GtitFontSize,Titfontsize,Atitfontsize,Axislabelsize,Textfontsize,Datefontsize,\
+  Statfontsize, Axislabeldist, Axislabeldist3d, Axisdist, Axisdist3d, \
+  XFit, YFit, Xfit, Yfit,Ystat, YStat, \
+  GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
+  StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
+  AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
+  Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
+  LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
+
+
+  Ax = plt.gca()
+
+  xn, xx = Ax.get_xlim()
+  yn, yx = Ax.get_ylim()
+  zn, zx = Ax.get_zlim()
+
+  if ymin == -1.2345e30: ymn=yn
+  else: ymn = ymin
+  if ymax == 1.2345e30: ymx=yx
+  else: ymx = ymax
+
+  if zmin == -1.2345e30: zmn=zn
+  else: zmn = zmin
+  zn, zx = Ax.get_zlim()
+  if zmax == 1.2345e30: zmx=zx
+  else: zmx = zmax
+
+  Ax.set_xlim(xmin,xmax)
+  Ax.set_ylim(ymin,ymax)
+  Ax.set_zlim(zmin,zmax)
+
+  ZoomXmin=xmin
+  ZoomXmax=xmax
+  ZoomYmin=ymin
+  ZoomYmax=ymax
+  ZoomZmin=zmin
+  ZoomZmax=zmax
+
+  showplot()
+
+#enddef
 
 def setplotsize(fig='',w='A4',h='landscape',pad=2.):
 
@@ -4668,11 +5343,11 @@ def pplot(pname="WavePlot.pdf",w=0,h=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   Fig = plt.gcf()
@@ -4737,18 +5412,18 @@ def h1pack(idh='?', data=None):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4819,18 +5494,18 @@ def hcopn(idh='?', nt='', varlis='x:y:ey', ntit='!',kweedzero=1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4956,18 +5631,18 @@ def nrandom(nt='?',varlis='', n=100, mode='u', iplot=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -5043,18 +5718,18 @@ def nhull2d(nt='?',varlis='',select='', iplot=1, iretval=1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -5077,7 +5752,7 @@ def nhull2d(nt='?',varlis='',select='', iplot=1, iretval=1):
 
   varl = nlistcolon(varlis)
   if Ncolon != 1:
-    print("Bad list of variables: Must contain exactly tow, but is",varlis)
+    print("Bad list of variables: Must contain exactly two, but is",varlis)
     return -1
   #endif
 
@@ -5114,59 +5789,26 @@ def nhull2d(nt='?',varlis='',select='', iplot=1, iretval=1):
   points = np.array([wx,wy]).T
 
   nhull = ncre("Nhull2d","Nhull2d","ipoi:iedge:x:y",ioverwrite=1)
+
   fill = []
   nedge = 0
 
   try:
 
-    hull = ConvexHull(points)
-    ms = len(wx)
+    verts, iedges, edges, bounds = qhull2d(points)
 
-    s = []
-
-    for m in range(ms):
-      s.append(list(hull.simplices[m]))
-    #endfor
-
-    sc = []
-    sc.append(s[0])
-
-    kl = s[0][0]
-    il = s[0][1]
-
-    for i in range(1,ms):
-      for k in range(1,ms):
-        i1 = s[k][0]
-        i2 = s[k][1]
-        if i1 == il:
-          sc.append(s[k])
-          il = i2
-        elif i2 == il:
-          sw = s[k]
-          sc.append([sw[1],sw[0]])
-          il = i1
-        #endif
-      #endfor
-      if il == kl: break
-    #endfor
-
-    for ed in sc:
+    for i in range(len(iedges)):
       nedge += 1
-      i1 = ed[0]
-      i2 = ed[1]
-      #x1 = points[i1][0]
-      #y1 = points[i1][1]
-      #x2 = points[i2][0]
-      #y2 = points[i2][1]
-      x1 = vx[i1]
-      y1 = vy[i1]
-      x2 = vx[i2]
-      y2 = vy[i2]
+      i1 = iedges[i][0]
+      x1 = edges[i][0][0]
+      y1 = edges[i][0][1]
+      i2 = iedges[i][1]
+      x2 = edges[i][1][0]
+      y2 = edges[i][1][1]
       fill.append([i1,nedge,x1,y1])
       fill.append([i2,nedge,x2,y2])
-    #endfor
+    #endfor iplan
 
-    fill = np.array(fill)
     nhull = nfill(nhull,fill)
 
     if iplot:
@@ -5176,6 +5818,7 @@ def nhull2d(nt='?',varlis='',select='', iplot=1, iretval=1):
         nplot(nhull,"x:y",plopt='line')
       #endif
     #endif iplot
+
 
   except:
 
@@ -5285,18 +5928,18 @@ def vhull2d(vx,vy,varlis='',iplot=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -5338,7 +5981,7 @@ def vhull2d(vx,vy,varlis='',iplot=0):
 
 #enddef vhull2d(nt='?')
 
-def hull3d(points):
+def hull3dold(points):
 #+seq,mhbglobind.
   global Hull3D
 
@@ -5511,7 +6154,7 @@ def hull3d(points):
 
   return corns
 
-#enddef hull3d(points)
+#enddef hull3dold(points)
 
 def mhull3d(nt='?',varlis='',select='',isame=0,
             facecolor='blue',edgecolor='black', alpha=0.5, iplot=1):
@@ -5535,7 +6178,7 @@ def mhull3d(nt='?',varlis='',select='',isame=0,
   vx, vy, vz = ncopv(nt,varlis,select)
   points = np.array([vx,vy,vz]).T
 
-  vertices =  hull3d(points)
+  vertices,ifaces,faces,bounds =  hull3d(points)
 
   if iplot:
     plothull3d(isame,facecolor=facecolor,edgecolor=edgecolor,alpha=alpha)
@@ -5544,7 +6187,7 @@ def mhull3d(nt='?',varlis='',select='',isame=0,
 
 #enddef mhull3d(nt='?',varlis='',select='', plopt='',iplot=1)
 
-def nhull3d(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,color='!',
+def nhull3dbad(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,color='!',
            mcolor='!'):
 #+seq,mshimportsind.
 # +PATCH,//WAVES/PYTHON
@@ -5589,18 +6232,18 @@ def nhull3d(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,color='!',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -5608,7 +6251,7 @@ def nhull3d(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,color='!',
 
 
   if type(nt) == str and nt == '?':
-    print("\nUsage: hull = nhull3d(nt,varlis,select,iplot=1)")
+    print("\nUsage: hull = nhull3dbad(nt,varlis,select,iplot=1)")
     return
   #endif type(nt) == str and nt == '?'
 
@@ -5936,7 +6579,7 @@ def nhull3d(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,color='!',
   if iretval: return nhull
   else: return
 
-#enddef nhull3d(nt='?')
+#enddef nhull3dbad(nt='?')
 
 def nplothull3d(nt="Nhull3d",plopt=''):
 
@@ -6005,18 +6648,18 @@ def nappend(nt='?', nt2=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -6093,18 +6736,18 @@ def nfill(nt='?', data=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -6136,11 +6779,16 @@ def nfill(nt='?', data=''):
   #endfor
 
   nt = N
-  ndum = ncre("ndum","ndum",varlis,ioverwrite=1)
+  nfillwork = ncre("nfillwork","nfillwork",varlis,ioverwrite=1)
 
   if type(data) == list:
-    dat = []
-    dat.append(data)
+    try:
+      d = data[0][0]
+      dat = data
+    except:
+      dat = []
+      dat.append(data)
+    #endtry
     data = np.array(dat)
   #endif
 
@@ -6150,10 +6798,10 @@ def nfill(nt='?', data=''):
   for k in range(nvar):
     l = 4 + k
     var = nhead[l][0]
-    ndum[var] = dat[k]
+    nfillwork[var] = dat[k]
   #endfor k in range(nvar):
 
-  nn = pd.concat([nt,ndum])
+  nn = pd.concat([nt,nfillwork])
 
   idn = GetIndexN(nt,1)
   Ntup[idn] = nn
@@ -6215,18 +6863,18 @@ def npeaksabs(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretva
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -6343,18 +6991,18 @@ def hpeaks(h='?', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -6422,18 +7070,18 @@ def npeaks(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -6545,18 +7193,18 @@ def nstat(nt='?',var='',select='', iretval=1, isilent=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -6709,18 +7357,18 @@ def nmax(nt='?',var='',select='',iretval=1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -6820,18 +7468,18 @@ def nmin(nt='?',var='',select='', iretval=1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -6931,18 +7579,18 @@ def nminmax(nt='?',var='',select='',iretval=1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7260,18 +7908,18 @@ def nrenvars(nt,varlis):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7349,18 +7997,18 @@ def nparse(nt,varlis):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7539,18 +8187,18 @@ def set_linecolor(lcol='r'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7607,18 +8255,18 @@ def h2fill(idh='?', x=1.e30, y=1.e30, w=1.):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7825,18 +8473,18 @@ def h1fill(idh=-1, x=1.e30, wei=1.):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7985,18 +8633,18 @@ def hbook2(idh=-1, tit='Histogram2D',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -8150,18 +8798,18 @@ def h2reset(idh):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -8289,18 +8937,18 @@ def hbook1(idh=-1, tit='Histogram1D', nx=10, xmin=0., xmax=1., overwrite=False):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -8421,18 +9069,18 @@ def nscan(nt='?',varlis='',select='',isilent=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -8550,18 +9198,18 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -8846,18 +9494,18 @@ def nintern(nt='?',varlis='',select='',xint='!'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -8964,18 +9612,18 @@ def ninter(nt='?',varlis='',select='',xint='!'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9050,9 +9698,17 @@ def ninter(nt='?',varlis='',select='',xint='!'):
   Ninter.x = xint
   Ninter.y = yint
 
-  yp = deepcopy(xint)
-  ypp = deepcopy(xint)
-  yinteg = deepcopy(xint)
+  yp = np.zeros_like(xint)
+  ypp = np.zeros_like(xint)
+  yinteg = np.zeros_like(xint)
+
+  if xint.min() == xint.max():
+    Ninter.yp = yp
+    Ninter.ypp = ypp
+    Ninter.yint = yinteg
+    nupdate_header(Ninter)
+    return
+  #endif
 
   n = len(xint)-1
 
@@ -9128,18 +9784,18 @@ def nspline(nt='?',varlis='',select='',xspl='!',periodic=False):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9262,18 +9918,18 @@ def nsolve(nt='?',varlis='',select='',val=0.0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9386,18 +10042,18 @@ def ndump(nt='',varlis='',select='',fout='ndump.dat', sep=' ',floatform='%.5e',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9545,18 +10201,18 @@ def nreset(nt='?', varlis=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9655,18 +10311,18 @@ def ndelete(nt='?',isilent=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9752,18 +10408,18 @@ def ncre(ntname='', nttit='', varlis='', ioverwrite=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9903,18 +10559,18 @@ def GetIndexH2(idh='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10004,18 +10660,18 @@ def GetIndexN(nt='?', isilent=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10124,18 +10780,18 @@ def GetIndexNct(idh='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10208,18 +10864,18 @@ def GetIndexH1(idh='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10313,18 +10969,18 @@ def GetIndex(idh='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10415,18 +11071,18 @@ def h1opt(idh):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10543,18 +11199,18 @@ def voptpar(vx,vy):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10659,18 +11315,18 @@ def h1print(idh='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10739,18 +11395,18 @@ def H1Info(idh='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10841,18 +11497,18 @@ def H2Info(idh='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10964,18 +11620,18 @@ def H1List():
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11072,18 +11728,18 @@ def nentry(nt='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11154,18 +11810,18 @@ def ninfo(nt='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11256,18 +11912,18 @@ def nlist():
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11326,18 +11982,18 @@ def NctList():
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11395,18 +12051,18 @@ def ncolumns(fname='ntuple.dat', skiphead=-1, sep=' '):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11501,18 +12157,18 @@ def ncolumnsguess(fname='ntuple.dat'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11618,18 +12274,18 @@ silent=0, comment='*', sep=' ',iguessncols=1, iplot=1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11705,18 +12361,18 @@ silent=0, comment='*', sep=' ', iguessncols=1, iplot=1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11789,18 +12445,18 @@ comment='*', sep=' '):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11949,18 +12605,18 @@ comment='*', sep=' ',iguessncols=1, ioverwrite=1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12114,18 +12770,18 @@ def nproj2(nt='?', xy='', weight=1., select='',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12453,18 +13109,18 @@ def nproj1(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12768,18 +13424,18 @@ def hstat1d(idh='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12815,11 +13471,11 @@ def hstat1d(idh='?'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   global Debug, Ical
@@ -12928,18 +13584,18 @@ def vstat(x='?',y=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12975,11 +13631,11 @@ def vstat(x='?',y=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   #nreakpoint()
@@ -13079,18 +13735,18 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -13126,11 +13782,11 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   global Debug, Ical
@@ -13497,18 +14153,18 @@ def hplot(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', block
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -13575,18 +14231,18 @@ def hplave(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', bloc
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -13791,11 +14447,11 @@ def window(title='', geom="!", block=False, projection = '2d',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   global Tfig, Tax2d, Tax3d, IsameGlobal, ScreenWidth, ScreenHeight, Tdate, \
@@ -13934,11 +14590,11 @@ def win2(title='Win_2', geom="!", block=False, projection = '2d', getconsole=Tru
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
   if geom == '!': geom = Figgeom2
   window(title=title, geom=geom, block=block, projection =projection, getconsole=getconsole, visible=visible)
@@ -13976,11 +14632,11 @@ def winr(title='Win_r', geom="!", block=False, projection = '2d', getconsole=Tru
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
   if Nwins < 1: read_window_geometry(fname='ntupplot.cfg')
   if geom == '!':
@@ -14022,11 +14678,11 @@ def winl(title='Win_l', geom="!", block=False, projection = '2d', getconsole=Tru
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
   if Nwins < 1: read_window_geometry(fname='ntupplot.cfg')
   if geom == '!': geom = FiggeomL
@@ -14078,25 +14734,27 @@ def showplot(visible=True):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
-  global NxBinMax, Ical, Aspect, Figman
+  global NxBinMax, Ical, Aspect, Figman, Ishow
+
+  if not Ishow: return
 
   Nfigs = len(plt.get_fignums())
   if not Nfigs: return
@@ -14105,6 +14763,7 @@ def showplot(visible=True):
     plt.grid(Kgrid)
     if Igetconsole: get_console()
     plt.show(block=False)
+    Kplots[Kzone-1] = 1
     return
   #endif
 
@@ -14198,6 +14857,8 @@ def showplot(visible=True):
   if Igetconsole: get_console()
 #  getplotsize()
 
+  Kplots[Kzone-1] = 1
+
 #enddef showplot()
 
 def optconsole(con=True): global Igetconsole; Igetconsole = con
@@ -14250,18 +14911,18 @@ def hplot2d(idh, plopt='3d', block=False, scalex=1., scaley=1., scalez=1.,
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -14639,11 +15300,11 @@ def zone(nx=1, ny=1, kzone=1, isame='', projection='2d', visible=True):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 # +PATCH,//WAVES/PYTHON
 # +KEEP,statusglobind,T=PYTHON.
@@ -14821,11 +15482,11 @@ def window_close(win=-1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   if Nwins == 1:
@@ -14901,11 +15562,11 @@ def window_clear(win=-1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
   global Tfig, Tdate, Figman
 
@@ -14989,18 +15650,18 @@ def set_title(title='Title',tfs=-9.,titx=-9.,tity=-9):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -15065,18 +15726,18 @@ def set_x_title(xtit='xTit',pos=0.5):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -15132,18 +15793,18 @@ def set_y_title(ytit='yTit', pos=0.5):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -15199,18 +15860,18 @@ def set_z_title(ztit='zTit',pos=0.5):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -15268,18 +15929,18 @@ def set_titles(gtit='',pltit='Title',xtit='xTit', ytit='yTit', ztit=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -15339,18 +16000,18 @@ def set_global_title(gtit='', fontsize='!'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -15419,18 +16080,18 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -15567,11 +16228,11 @@ def null3d(xmin=-10., xmax=10., ymin=-10., ymax=10., zmin=-10., zmax=10.):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   global Tfig, Tax3d
@@ -15620,11 +16281,11 @@ def null(xmin=-10., xmax=10., ymin=-10., ymax=10.):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   global Tfig,Tax2d
@@ -15811,11 +16472,11 @@ def run_on_figure(x=0.03,y=0.95,fontsize='!',ishow=1, iforce=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
   global Krun,Kruns
 
@@ -15935,11 +16596,11 @@ def date_on_figure(x=0.04,y=0.02,fontsize='!',ishow=1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   global Kdate
@@ -16037,11 +16698,11 @@ def optnrun(krun=False):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
   Krun = krun
   run_on_figure()
@@ -16078,11 +16739,11 @@ def optrun(krun=True):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
   Krun = krun
   run_on_figure()
@@ -16119,11 +16780,11 @@ def optndate(kdate=False):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
   Kdate = kdate
   date_on_figure()
@@ -16160,11 +16821,11 @@ def optdate(kdate=True):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
   Kdate = kdate
   date_on_figure()
@@ -16211,11 +16872,11 @@ def set_author(author=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
   if author != '': Author = author
 #enddef set_author(author='')
@@ -16265,18 +16926,18 @@ def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0, overwrite=True):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -16380,18 +17041,18 @@ def hcopy2d(idh,idnew,tit='',scalex=1.,scaley=1., scalez=1., reset=0, overwrite=
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -16929,18 +17590,18 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -17344,10 +18005,10 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
 
     if cmap == '' or cmap == '!': cmap=Cmap
 
-    #s = np.ones_like(nparse(nt.varlis[3])) * Markersize**2
-    s = np.arange(1,len(nt)+1)
-    s = np.ones_like(s) * Markersize
-    sopt = ",s=s ,c=" + st + ",cmap='" + cmap + "',marker='" + Markertype + "'"
+    s = Markersize*Markersize
+
+    sopt = ",s=s" + ",c=" + st + ",cmap='" + cmap + "', linewidth=0.0, \
+    marker='" + Markertype + "'"
     scom = 'Ax.scatter(' + sx + ',' + sy + ',' + sz + sopt + ')'
     img = eval('Ax.scatter(' + sx + ',' + sy + ',' + sz + sopt + ')')
 
@@ -17488,18 +18149,18 @@ def vprint(v):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -17555,18 +18216,18 @@ def vprintxy(x,y):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -17634,18 +18295,18 @@ def vplxy(x='!',y='!',plopt='',label='',color='!',fillcolor='none'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -17656,7 +18317,7 @@ def vplxy(x='!',y='!',plopt='',label='',color='!',fillcolor='none'):
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 
   if type(x) == str and x == '!':
@@ -17778,7 +18439,6 @@ def vplxy(x='!',y='!',plopt='',label='',color='!',fillcolor='none'):
     tex = \
     "N, Sum: " + str(int(len(x))) + ", " + '{:.4g}'.format(y.sum()) + \
     "\nMean: " + '{:.4g}'.format(xmean) + \
-    "\nMean: " + '{:.4g}'.format(xmean) + \
     "\nRMS: " + '{:.4g}'.format(xrms)
 
     if xopt != None and yopt != None:
@@ -17806,6 +18466,15 @@ def vplls(x='!',y='!',plopt='sameline',label=''):
   vplxy(x,y,plopt,label,tit,xtit,ytit)
 def vplms(x='!',y='!',plopt='samemarker',label=''):
   vplxy(x,y,plopt,label,tit,xtit,ytit)
+
+def pmark(x,y,z='!',plopt='isame'):
+  if type(z) != str:
+    vplxyz(x,y,z,plopt)
+  else:
+    vplxy(x,y,plopt)
+  #endif
+  showplot()
+#enddef
 
 def vplxyey(x,y,ey='',plopt='o',label='',
             marker='o', mfc='', mec='', ms='', mew=0):
@@ -17852,18 +18521,18 @@ def vplxyey(x,y,ey='',plopt='o',label='',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -17933,18 +18602,18 @@ def vplxyerr(x,y,ey='',ex='',plopt='o',label='',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -18016,18 +18685,18 @@ def vinter(x,y,xint='!'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -18124,18 +18793,18 @@ def vintern(x,y,xint='!'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -18146,7 +18815,7 @@ def vintern(x,y,xint='!'):
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 
   n = len(x)
@@ -18298,18 +18967,18 @@ def vspline_index(x,y,nspl=1001, periodic=False, ypp1=0.0, yppn=0.0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -18320,7 +18989,7 @@ def vspline_index(x,y,nspl=1001, periodic=False, ypp1=0.0, yppn=0.0):
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 
   if type(nspl) != int:
@@ -18418,18 +19087,18 @@ def vspline(x,y,xspl='!', periodic=False, ypp1=0.0, yppn=0.0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -18440,7 +19109,7 @@ def vspline(x,y,xspl='!', periodic=False, ypp1=0.0, yppn=0.0):
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 
   if SplineMode.lower() != 'new': return vspline_old(x,y,xspl,periodic)
@@ -18590,18 +19259,18 @@ def vspline_old(x,y,xspl='!', periodic=False):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -18612,7 +19281,7 @@ def vspline_old(x,y,xspl='!', periodic=False):
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 
   import numpy as np
@@ -18807,18 +19476,18 @@ def nupdate_header(nt,reindex=1):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -18964,18 +19633,18 @@ def vsolve(x,y,val=0.0,xmin=-1.0e30,xmax=1.0e30):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19090,18 +19759,18 @@ def vsolvelin(x,y,val=0.0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19160,18 +19829,18 @@ def voptspl(x,y):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19265,18 +19934,18 @@ def ncopn(nt,ncnam,varlis='',select='',ioverwrite=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19372,18 +20041,18 @@ def ncopv(nt,varlis,select=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19503,18 +20172,18 @@ def nclone(nt,ncnam,nctit='',ioverwrite=0):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19790,6 +20459,10 @@ def vpeaks(x,y,pkmin=0.5,nsmooth=0,isilent=0):
 
   global Ical
 
+  x = np.array(x)
+  y = np.array(y)
+
+  #breakpoint()
   fmxtot=-1.0e30
   ndim = len(x)
 
@@ -19851,7 +20524,11 @@ def vpeaks(x,y,pkmin=0.5,nsmooth=0,isilent=0):
     sm=smooth[i-1]-s0
     sp=smooth[i+1]-s0
 
+    #print("tresh:",thresh)
+    #print(sm,s0,sp)
     if s0 >= thresh and sm < 0.0 and sp <= 0.0:
+
+      #breakpoint()
 
       npeaks=npeaks+1
 
@@ -20178,6 +20855,8 @@ def vfwhm(x='?',y='',nsmooth=0,isilent=0):
   npeaks = len(ixpeaks)
   npoi = len(x)
 
+  #breakpoint()
+
   for i in range(npeaks):
 
     if sigma[i] == -9999.: continue
@@ -20406,18 +21085,18 @@ def getzone(projection=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20426,16 +21105,23 @@ def getzone(projection=''):
 
   Fig = plt.gcf()
   Axes = Fig.get_axes()
+  #print("getzone 1:",Axes)
 
   if not len(Axes):
-    Ax = plt.gca()
-    Axes = Fig.get_axes()
+    #print("getzone 2:",Axes)
+    if projection.lower() == '3d':
+      Ax =  Axes3D(Fig)
+    else:
+      Ax = plt.gca()
+      Axes = Fig.get_axes()
+    #endif
     Nwins = 1
     Nxzone = 1
     Nyzone = 1
     Kzone = 1
     return
   #endif not len(Fig.get_axes())
+  #print("getzone 3:",Axes)
 
   if Nwins <= 0:
     window(projection=projection)
@@ -20554,18 +21240,18 @@ def set_console_title(console='Python'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20627,18 +21313,18 @@ def get_console(console=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20706,18 +21392,18 @@ def getax(visible=True):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20779,18 +21465,18 @@ def vplbxy(x,y,u,v,scale=-9999.0,plopt='',tit='',xtit='',ytit='',ztit='',label='
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20823,7 +21509,7 @@ def nplbxy(nt='?',varlis='x:y:bx:by',select='',scale=-9999.0,plopt='',
             tit='',xtit='',ytit='',label='',color='default'):
   x,y,bx,by = ncopv(nt,varlis,select)
   vplbxy(x,y,bx,by,scale,plopt,tit,xtit,ytit,label,color)
-#enddef nplbxyz
+#enddef nplbxy
 
 def nplbxyz(nt='?',varlis='x:y:z:bx:by:bz',select='',scale=1.,plopt='',
             tit='',xtit='',ytit='',ztit='',label='',color='default'):
@@ -20879,18 +21565,18 @@ def vplbxyz(x,y,z,u,v,w,scale,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20960,18 +21646,18 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20981,9 +21667,15 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   #if label: Klegend.set(1)
 
   if Nwins <=0: window()
-
   plotopt(plopt)
+
   if not Isame: getzone(projection='3d')
+
+  if type(x) == float:
+    if color == 'default': color = Markercolor
+    Ax.scatter(x,y,z,marker=Markertype,c=color,label=label)
+    return
+  #endif
 
   iplot = 0
 
@@ -21000,22 +21692,19 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
     txyz(tit,xtit,ytit)
     cbar.set_label(ztit, rotation=90)
     showplot()
-
-    return
   #endif Iscatter
 
   if Iclosed:
 
-    if type(x) == 'list':
-      x.append(x[0])
-      y.append(y[0])
-      z.append(z[0])
-    else:
-      l = len(x)
-      x[l] = x[0]
-      y[l] = y[0]
-      z[l] = z[0]
+    if type(x) != 'list':
+      x = list(x)
+      y = list(y)
+      z = list(z)
     #endif
+
+    x.append(x[0])
+    y.append(y[0])
+    z.append(z[0])
 
     Iline = 1
   #endif
@@ -21025,6 +21714,7 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
     if color == 'default': color = Linecolor
     plt.plot(x,y,z,c=color,ls=Linestyle,lw=Linewidth,label=label)
     txyz(tit,xtit,ytit,ztit)
+    Kplots[Kzone-1] = 1
     return
     iplot=1
 
@@ -21045,12 +21735,14 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
     iplot=1
 
   if Iscat3d:
-    Ax.scatter(x,y,z,marker=Markertype,c=Markercolor,label=label)
+    if color == 'default': color = Markercolor
+    Ax.scatter(x,y,z,marker=Markertype,c=color,label=label)
     iplot = 1
   #endif
 
   if not iplot:
-    Ax.scatter(x,y,z,marker=Markertype,c=Markercolor,label=label)
+    if color == 'default': color = Markercolor
+    Ax.scatter(x,y,z,marker=Markertype,c=color,label=label)
   #endif iplot == 0:
 
   txyz(tit,xtit,ytit,ztit)
@@ -21102,18 +21794,18 @@ def vplxyzt(x,y,z,t,plopt='',tit='',xtit='',ytit='',ztit='', label='',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -21132,11 +21824,11 @@ def vplxyzt(x,y,z,t,plopt='',tit='',xtit='',ytit='',ztit='', label='',
 
   if Iscat3d:
 
-    Ax.scatter(x,y,z,cmap=cmap,c=t,marker=Markertype,fillstyle=Fillstyle,label=label)
+    Ax.scatter(x,y,z,cmap=cmap,c=t,marker=Markertype,linewidth=Linewidth,fillstyle=Fillstyle,label=label)
     iplot = 1
 
   if not iplot:
-    Ax.scatter(x,y,z,cmap=cmap,c=t,marker=Markertype,fillstyle=Fillstyle,label=label)
+    Ax.scatter(x,y,z,cmap=cmap,c=t,marker=Markertype,linewidth=Linewidth,fillstyle=Fillstyle,label=label)
   #endif iplot == 0:
 
   txyz(tit,xtit,ytit,ztit)
@@ -21176,11 +21868,11 @@ def textbox(text,x=0.05, y=0.95, tcolor=None, bgcolor='white', alpha=0.9,
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
   props = dict(facecolor=bgcolor, alpha=alpha)
   if type(Ax) == Tax3d:
@@ -21259,18 +21951,18 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -21382,7 +22074,7 @@ def gauss(x, A=0.3989422804014, mu=0.0, sig=1.0):
 def fcos(x, A=1., x0=0.0, L=6.283185307179586):
   import numpy as np
   k = 2.*pi/L
-  return A * cos(k*(x-x0))
+  return A * np.cos(k*(x-x0))
 
 def fcosh(x, A=1., x0=0.0, L=6.283185307179586):
   import numpy as np
@@ -21395,7 +22087,8 @@ def b_to_K(bv='?',lam=None,bh=0.0):
   emassg1,emasse1,echarge1,emasskg1,eps01,erad1,\
   grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
-  ecdipev,ecdipkev
+  ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
+  g1const,h2const
 
   #Bh, Bv in Tesla, lam in mm
   if type(bv) == str:
@@ -21419,7 +22112,8 @@ def K_to_b(K='?',lam=None):
   emassg1,emasse1,echarge1,emasskg1,eps01,erad1,\
   grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
-  ecdipev,ecdipkev
+  ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
+  g1const,h2const
 
   #B in Tesla, lam in mm
   if type(K) == str:
@@ -21439,7 +22133,8 @@ def K_to_harm(K='?',lam=None,ebeam=None):
   emassg1,emasse1,echarge1,emasskg1,eps01,erad1,\
   grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
-  ecdipev,ecdipkev
+  ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
+  g1const,h2const
 
   if type(K) == str:
     print("\nUsage: K_to_harm(K, lamba/mm, Ebeam/GeV")
@@ -21461,7 +22156,8 @@ def b_to_harm(b='?',lam=None,ebeam=None):
   emassg1,emasse1,echarge1,emasskg1,eps01,erad1,\
   grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
-  ecdipev,ecdipkev
+  ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
+  g1const,h2const
 
   if type(b) == str:
     print("\nUsage: b_to_harm(B/T, lamba/mm, Ebeam/GeV")
@@ -21475,7 +22171,8 @@ def harm_to_K(ebeam='?',lam=None,nharm=None,harm=None):
   emassg1,emasse1,echarge1,emasskg1,eps01,erad1,\
   grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
-  ecdipev,ecdipkev
+  ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
+  g1const,h2const
 
 
   if type(ebeam) == str:
@@ -21581,18 +22278,18 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -21730,18 +22427,18 @@ def vfit(fitfun, x, y, ey = '', absolute_sigma='default', parstart=None,
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -21940,18 +22637,18 @@ def vfitexp(x,y, ey = '', absolute_sigma='default', parstart=None,
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22014,18 +22711,18 @@ def vfitexp2(x,y, ey = '', absolute_sigma='default', parstart=None,
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22094,18 +22791,18 @@ def vfitgauss(x,y, ey = '', absolute_sigma='default',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22166,18 +22863,18 @@ def vfitcosh(x,y, ey = '', absolute_sigma='default',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22238,18 +22935,18 @@ def vfitcos(x,y, ey = '', absolute_sigma='default',
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22307,18 +23004,18 @@ def hget(idh=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22385,18 +23082,18 @@ def nget(idn=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22824,6 +23521,26 @@ def setlinewidth(lw=1.5):
 
 def getlinewidth(): return mpl.rcParams.get('lines.linewidth')
 
+def getisame():
+  global Isame
+  return Isame
+#enddef getisame()
+
+def getishow():
+  global Ishow
+  return Ishow
+#enddef getishow()
+
+def setisame(isa=1):
+  global Isame
+  Isame = isa
+#enddef getisame()
+
+def setishow(isho=1):
+  global Ishow
+  Ishow = isho
+#enddef setisame()
+
 def settextcolor(tc='black'):
   global Textcolor
   Textcolor = tc
@@ -23024,6 +23741,11 @@ def optgrid(g=True):
     plt.grid(g)
     showplot()
 #enddef optgrid(g=True)
+
+def getgrid(g=True):
+    global Kgrid
+    return Kgrid
+#enddef getgrid
 
 def grid(g=True):
     global Kgrid
@@ -23609,7 +24331,6 @@ she = os.system
 
 setdump = optdump
 ndelet = ndelete
-pmark = vplm
 fexists = fexist
 
 vfitg = vfitgauss
@@ -23627,6 +24348,11 @@ setxstat = set_x_stat
 setystat = set_y_stat
 getxstat = get_x_stat
 getystat = get_y_stat
+
+nhull3d = nqhull3d
+hull3d = qhull3d
+plotncyl = plotncylinder
+read_facets = read_faces
 #end of aliases in m_hbook
 
 #end of m_hbook
@@ -23661,11 +24387,11 @@ def plotoptions_unklar(plopt=''):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   Iplotopt = 0
@@ -23891,6 +24617,26 @@ def ivmin(v): return pd.Series(v).idxmin()
 def vmin(v): return v.min(v)
 def ivmax(v): return pd.Series(v).idxmax()
 def vmax(v): return v.max(v)
+
+def vsymxy(x,y):
+  x = list(x)
+  y = list(y)
+  n=len(x)
+  xs = []
+  ys = []
+  for i in range(n):
+    xs.append(-x[n-i-1])
+    ys.append(y[n-i-1])
+  #endfor
+  for i in range(n):
+    if x[i] == 0: continue
+    xs.append(x[i])
+    ys.append(y[i])
+  #endfor
+
+  return np.array(xs),np.array(ys)
+
+#endef
 
 def vminmax(x='?',y=''):
 
@@ -25720,18 +26466,18 @@ def wave_title(gtit='Run_and_Code', fontsize=-9):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -25767,11 +26513,11 @@ def wave_title(gtit='Run_and_Code', fontsize=-9):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 
   global Wdirs, Wfiles, Wfile, Wcode, Wrun \
@@ -25884,18 +26630,18 @@ def wave_input_parameters():
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -26012,18 +26758,18 @@ def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='yes'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -26739,18 +27485,18 @@ def nspec(key='f', select='', plopt='surf', idh='Hspec'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -26865,18 +27611,18 @@ def hflux(key='f', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='yes'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -27500,18 +28246,18 @@ def create_hpin(overwrite=True):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -27606,18 +28352,18 @@ def create_hspec(overwrite=True):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -27686,18 +28432,18 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -27782,16 +28528,18 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
   ny = int(n37.iy.max())
   nz = int(n37.iz.max())
 
+  selold = select
+
   if ny > 1:
     dy = phtot / (ny-1)
+    iycut = np.mod(icbrill,ny)
+    ycut = ymin + dy*(iycut-1)
+    selcut = 'abs(y - ' + str(ycut) + ")"' < ' + str(dy/2.) + " and "
   else:
     dy = 0.0
+    ycut = ymin
+    selcut = ''
   #endif
-
-  selold = select
-  iycut = np.mod(icbrill,ny)
-  ycut = ymin + dy*(iycut-1)
-  selcut = 'abs(y - ' + str(ycut) + ")"' < ' + str(dy/2.)
 
   if key == 'F' or key == 'FD':
     idx37 = GetIndexN('n3700')
@@ -27807,7 +28555,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(select)
     #endif select != ''
     #n37=n37.query(select)
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'z','spec',select,1000.,1.e-6,0,'HpinH')
     tit = 'Hori. cut of flux-dens. dist.'
     if Kcurr == 0:
@@ -27829,7 +28577,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(select)
     #endif select != ''
     n37=n37.query(select + " and " + selcut)
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(n37,'z','spec','',1000.,1.e-6,0,'HpinH')
     tit = 'Hori. cut of flux-dens. dist.\nwith emittance'
     if Kcurr == 0:
@@ -27850,7 +28598,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'z','re_y',select,1000.,1.,0,'HpinH')
     tit = 'Hori. cut of Ay_Real.'
     ztit = 'a.u.'
@@ -27869,7 +28617,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'z','im_y',select,1000.,1.,0,'HpinH')
     tit = 'Hori. cut of Ay_Imag.'
     ztit = 'a.u.'
@@ -27887,7 +28635,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'z','re_z',select,1000.,1.,0,'HpinH')
     tit = 'Hori. cut of Az_Real.'
     ztit = 'a.u.'
@@ -27905,7 +28653,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'z','im_z',select,1000.,1.,0,'HpinH')
     tit = 'Hori. cut of Az_Imag.'
     ztit = 'a.u.'
@@ -27923,7 +28671,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'z','phi0',select,1000.,1.,0,'HpinH')
     tit = 'Phase Advance'
 
@@ -29048,18 +29796,18 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -29079,6 +29827,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
   global IzCut,IyCut
 
 
+  #breakpoint()
   if getecho():
     s = "ndistpinv(key='" + key + "', select='" + str(select) + "', plopt='" + plopt +  "', idh='" + idh + "')"
     print(s)
@@ -29140,14 +29889,16 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
 
   if nz > 1:
     dz = pwtot / (nz-1)
+    izcut = np.mod(icbrill,nz)
+    zcut = zmin + dz*(izcut-1)
+    selcut = 'abs(z - ' + str(zcut) + ")"' < ' + str(dz/2.) + ' and '
   else:
-    dz = 0.0
+    zcut = zmin
+    dz = 1.e-10
+    selcut = ''
   #endif
 
   #selcut = 'abs(z*1000. - ' + str(pinz) + ")"' < 1.e-10'
-  izcut = mod(icbrill,nz)
-  zcut = zmin + dz*(izcut-1)
-  selcut = 'abs(z - ' + str(zcut) + ")"' < ' + str(dz/2.)
 
   if key == 'F' or key == 'FD':
     idx37 = GetIndexN('n3700')
@@ -29163,7 +29914,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(select)
     #endif select != ''
     #n37=n37.query(select)
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'y','spec',select,1000.,1.e-6,0,'HpinV')
     tit = 'Vert. cut of flux-dens. dist.'
     if Kcurr == 0:
@@ -29184,7 +29935,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'y','re_y',select,1000.,1.0,0,'HpinV')
     tit = 'Vert. cut of Ay_Real'
     ztit='a.u.'
@@ -29202,7 +29953,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'y','re_z',select,1000.,1.0,0,'HpinV')
     tit = 'Vert. cut of Az_Real'
     ztit='a.u.'
@@ -29220,7 +29971,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'y','im_y',select,1000.,1.0,0,'HpinV')
     tit = 'Vert. cut of Ay_Imag'
     ztit='a.u.'
@@ -29238,7 +29989,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'y','im_z',select,1000.,1.0,0,'HpinV')
     tit = 'Vert. cut of Az_Imag'
     ztit='a.u.'
@@ -29256,7 +30007,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif
-    select = selcut + " and " + select
+    select = selcut + select
     istat = nproj1(idx37,'y','phi0',select,1000.,1.0,0,'HpinV')
     tit = 'Phase Advance'
 
@@ -29273,7 +30024,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n37=n37.query(selcut + " and " + select)
+    n37=n37.query(selcut + select)
     istat = nproj1(n37,'y','spec','',1000.,1.e-6,0,'HpinV')
     tit = 'Vert. cut of flux-dens. dist.\nwith emittance'
     if Kcurr == 0:
@@ -29295,7 +30046,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)**0.5','',1000.,1.,0,'HpinV')
     tit = 'Polarization\nwith emittance and e-spread'
     ztit = 'Degree of polarizaton'
@@ -29313,7 +30064,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s1/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P1\with emittance and e-spread'
     ztit = 'Degree of polarizaton'
@@ -29331,7 +30082,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s2/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P2\with emittance and e-spread'
     ztit = 'Degree of polarizaton'
@@ -29349,7 +30100,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s3/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P3\with emittance and e-spread'
     ztit = 'Degree of polarizaton'
@@ -29367,7 +30118,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)**0.5','',1000.,1.,0,'HpinV')
     tit = 'Polarization with e-spread'
     ztit = 'Degree of polarizaton'
@@ -29385,7 +30136,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','s1/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P1 with e-spread'
     ztit = 'Degree of polarizaton'
@@ -29403,7 +30154,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','s2/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P2 with e-spread'
     ztit = 'Degree of polarizaton'
@@ -29421,7 +30172,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','s3/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P3 with e-spread'
     ztit = 'Degree of polarizaton'
@@ -29439,7 +30190,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)**0.5','',1000.,1.,0,'HpinV')
     tit = 'Polarization with emittance'
     ztit = 'Degree of polarizaton'
@@ -29457,7 +30208,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','s1/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P1 with emittance'
     ztit = 'Degree of polarizaton'
@@ -29475,7 +30226,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','s2/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P2 with emittance'
     ztit = 'Degree of polarizaton'
@@ -29493,7 +30244,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','s3/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P3 with emittance'
     ztit = 'Degree of polarizaton'
@@ -29511,7 +30262,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)**0.5','',1000.,1.,0,'HpinV')
     tit = 'Polarization'
     ztit = 'Degree of polarizaton'
@@ -29529,7 +30280,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','s1/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P1'
     ztit = 'Degree of polarizaton'
@@ -29547,7 +30298,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','s2/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P2'
     ztit = 'Degree of polarizaton'
@@ -29565,7 +30316,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','s3/s0','',1000.,1.,0,'HpinV')
     tit = 'Polarization P3'
     ztit = 'Degree of polarizaton'
@@ -29586,7 +30337,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0'
     if Kcurr == 0:
@@ -29607,7 +30358,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1'
     if Kcurr == 0:
@@ -29628,7 +30379,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2'
     if Kcurr == 0:
@@ -29649,7 +30400,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3'
     if Kcurr == 0:
@@ -29670,7 +30421,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0\nwith emittance'
     if Kcurr == 0:
@@ -29691,7 +30442,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1\nwith emittance'
     if Kcurr == 0:
@@ -29712,7 +30463,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2\nwith emittance'
     if Kcurr == 0:
@@ -29733,7 +30484,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3\nwith emittance'
     if Kcurr == 0:
@@ -29754,7 +30505,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0 with e-spread'
     if Kcurr == 0:
@@ -29775,7 +30526,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1 with e-spread'
     if Kcurr == 0:
@@ -29796,7 +30547,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2 with e-spread'
     if Kcurr == 0:
@@ -29817,7 +30568,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3 with e-spread'
     if Kcurr == 0:
@@ -29838,7 +30589,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0\nwith emittance and e-spread'
     if Kcurr == 0:
@@ -29859,7 +30610,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1\nwith emittance and e-spread'
     if Kcurr == 0:
@@ -29880,7 +30631,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2\nwith emittance and e-spread'
     if Kcurr == 0:
@@ -29901,7 +30652,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3\nwith emittance and e-spread'
     if Kcurr == 0:
@@ -29924,7 +30675,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2'
     if Kcurr == 0:
@@ -29945,7 +30696,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2'
     if Kcurr == 0:
@@ -29966,7 +30717,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2'
     if Kcurr == 0:
@@ -29987,7 +30738,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4700=n4700.query(selcut + " and " + select)
+    n4700=n4700.query(selcut + select)
     istat = nproj1(n4700,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P3**2'
     if Kcurr == 0:
@@ -30008,7 +30759,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2\nwith emittance'
     if Kcurr == 0:
@@ -30029,7 +30780,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2\nwith emittance'
     if Kcurr == 0:
@@ -30050,7 +30801,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2\nwith emittance'
     if Kcurr == 0:
@@ -30071,7 +30822,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4701=n4701.query(selcut + " and " + select)
+    n4701=n4701.query(selcut + select)
     istat = nproj1(n4701,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P3**2\nwith emittance'
     if Kcurr == 0:
@@ -30092,7 +30843,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2 with e-spread'
     if Kcurr == 0:
@@ -30113,7 +30864,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2 with e-spread'
     if Kcurr == 0:
@@ -30134,7 +30885,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2 with e-spread'
     if Kcurr == 0:
@@ -30155,7 +30906,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4702=n4702.query(selcut + " and " + select)
+    n4702=n4702.query(selcut + select)
     istat = nproj1(n4702,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P3**2 with e-spread'
     if Kcurr == 0:
@@ -30176,7 +30927,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2\nwith emittance and e-spread'
     if Kcurr == 0:
@@ -30197,7 +30948,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2\nwith emittance and e-spread'
     if Kcurr == 0:
@@ -30218,7 +30969,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2\nwith emittance and e-spread'
     if Kcurr == 0:
@@ -30239,7 +30990,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
-    n4703=n4703.query(selcut + " and " + select)
+    n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit of S0*P3**2\nwith emittance and e-spread'
     if Kcurr == 0:
@@ -30252,7 +31003,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
   elif key == 'POW':
     idx2000 = GetIndexN('n2000')
     n2000 = Ntup[idx2000]
-    if select: n2000=n2000.query(selcut + " and " + select)
+    if select: n2000=n2000.query(selcut + select)
     elif selcut: n2000=n2000.query(selcut)
     istat = nproj1(n2000,'y','power','',1000.,1.e-6,0,'HpinV')
     tit = 'Total power density'
@@ -30261,7 +31012,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
   elif key == 'POWF':
     idx2000 = GetIndexN('n2000')
     n2000 = Ntup[idx2000]
-    if select: n2000=n2000.query(selcut + " and " + select)
+    if select: n2000=n2000.query(selcut + select)
     elif selcut: n2000=n2000.query(selcut)
     istat = nproj1(n2000,'y','powf','',1000.,1.e-6,0,'HpinV')
     tit = 'Total power density with emittance'
@@ -30277,7 +31028,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       return
     #endif
     n1999 = Ntup[idx1999]
-    if select: n1999=n1999.query(selcut + " and " + select)
+    if select: n1999=n1999.query(selcut + select)
     elif selcut: n1999=n1999.query(selcut)
     istat = nproj1(n1999,'y','power','',1000.,1.e-6,0,'HpinV')
     tit = 'Power density within spec. range'
@@ -30294,7 +31045,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       return
     #endif
     n1990 = Ntup[idx1990]
-    if select: n1990=n1990.query(selcut + " and " + select)
+    if select: n1990=n1990.query(selcut + select)
     elif selcut: n1990=n1990.query(selcut)
     istat = nproj1(n1990,'y','powf','',1000.,1.e-6,0,'HpinV')
     tit = 'Power density within spec. range, with emit.'
@@ -30395,18 +31146,18 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -30657,18 +31408,18 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -30920,18 +31671,18 @@ def ndistpin(key='f', select='', plopt='3d', idh='Hpin'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -32206,18 +32957,18 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -32466,18 +33217,18 @@ def ndistpowh(key='pow', select='', plopt='2d', idh='HpinH'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -32558,18 +33309,18 @@ def ndistpowvint(key='power', select='', plopt='2d', idh='HpinH'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -32707,18 +33458,18 @@ def ndistpowv(key='pow', select='', plopt='2d', idh='HpinV'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -32794,18 +33545,18 @@ def ndistpow(key='pow', select='', plopt='3d', idh='Hpin'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -33615,18 +34366,18 @@ def tobs1():
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -33697,18 +34448,18 @@ def tpinhole():
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -34107,18 +34858,18 @@ def WfileOpen():
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -34760,18 +35511,18 @@ def Mmenu_gray(fgcol='gray'):
   GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
   StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
   AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
