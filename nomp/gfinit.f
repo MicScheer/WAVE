@@ -1,3 +1,4 @@
+*CMZ :          07/11/2023  14.41.30  by  Michael Scheer
 *CMZ :  4.01/03 29/06/2023  10.07.32  by  Michael Scheer
 *CMZ :  4.01/03 15/05/2023  16.38.53  by  Michael Scheer
 *CMZ :  4.01/02 14/05/2023  13.42.26  by  Michael Scheer
@@ -241,47 +242,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,gplhint.
-!******************************************************************************
-!
-!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
-!      Hahn-Meitner-Platz 1
-!      D-14109 Berlin
-!      Germany
-!
-!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
-!
-! -----------------------------------------------------------------------
-!
-!    This program is free software: you can redistribute it and/or modify
-!    it under the terms of the GNU General Public License as published by
-!    the Free Software Foundation, either version 3 of the License, or
-!    (at your option) any later version.
-!
-!    This program is distributed in the hope that it will be useful,
-!    but WITHOUT ANY WARRANTY; without even the implied warranty of
-!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-!    GNU General Public License for more details.
-!
-!    You should have received a copy (wave_gpl.txt) of the GNU General Public
-!    License along with this program.
-!    If not, see <http://www.gnu.org/licenses/>.
-!
-!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
-!    der GNU General Public License, wie von der Free Software Foundation,
-!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
-!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
-!
-!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
-!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
-!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
-!    Siehe die GNU General Public License fuer weitere Details.
-!
-!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
-!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
-!    siehe <http://www.gnu.org/licenses/>.
-!
-!******************************************************************************
+*KEEP,GPLHINT.
 *KEEP,spectf90u.
       include 'spectf90u.cmn'
 *KEEP,sourcef90u.
@@ -325,7 +286,8 @@
      &  DTIM,BSHIFT,GAMMA,XJUST,YJUST,XSTARTO,XSTOPO
 
       DOUBLE PRECISION ZP,YP,VXINO,VYINO,VZINO,YSTARTO,ZSTARTO
-     &  ,GAMMAL,gamma1,omegac,emom1,rho1,vxi,vyi,vzi
+     &  ,GAMMAL,gamma1,omegac,emom1,rho1,vxi,vyi,vzi,
+     &  wlen1,rhv,park,b0eff
 
       COMPLEX*16 VPOLAN
       DOUBLE PRECISION VSTO
@@ -996,6 +958,51 @@ c        iundulator=0
         xcenell=0.0d0
 
         xstart=-(perellip*xlellip+ellshft*xlellip)/2.0d0+xcenell
+
+        park=parkell
+
+        if (nharmell.ne.0.and.harmell.ne.0.0d0) then
+          if (harmell.eq.-9999.0d0) then
+            if (ifreq2p.eq.1) then
+              harmell=freqlow
+            else
+              harmell=(freqlow+freqhig)/2.0d0
+            endif
+          endif
+          if (harmell.lt.0.0d0) then
+            harmell=-wtoe1/harmell
+          endif
+          WLEN1=wtoe1/abs(harmell/nharmell)
+          park=2.0d0*(wlen1/(xlellip*1.0D9/2.0d0/DMYGAMMA**2)-1.0d0)
+          if (park.lt.0.0d0) then
+            write(6,*)
+     &        '*** Error in GFINIT:'
+            write(6,*)
+     &        'Inconsistent values of NHARMELL, HARMELL, and XLELLIP'
+            write(6,*)' '
+            write(lungfo,*)
+     &        '*** Error in GFINIT:'
+            write(lungfo,*)
+     &        'Inconsistent values of NHARMELL, HARMELL, and XELLIP'
+            write(lungfo,*)' '
+            stop
+          endif
+          park=sqrt(park)
+          parkell=park
+        endif
+
+        IF (parkell.NE.0.0) THEN
+          B0EFF=parkell/(echarge1*XLELLIP/(2.*PI1*EMASSKG1*CLIGHT1))
+          if (b0elliph.eq.0.0d0.and.b0ellipv.ne.0d0) then
+            b0ellipv=b0ellipv/abs(b0ellipv)*b0eff
+          else if (b0ellipv.eq.0.0d0.and.b0elliph.ne.0d0) then
+            b0elliph=b0elliph/abs(b0elliph)*b0eff
+          else
+            rhv=b0elliph/b0ellipv
+            b0elliph=b0eff/sqrt(1.0d0+1.0d0/rhv**2)*b0elliph/abs(b0elliph)
+            b0ellipv=b0elliph/rhv
+          endif
+        endif
 
         if (phrb0h.eq.9999.0d0) phrb0h=B0ELLIPh
         if (phrb0v.eq.9999.0d0) phrb0v=B0ELLIPV

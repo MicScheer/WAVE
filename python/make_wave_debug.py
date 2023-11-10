@@ -90,12 +90,12 @@ if nargs > 1:
 
 if nargs > 2: Idebug = int(args[2])
 
-global Wave_tree,Scomp_bounds,Scomp_omp,Scomp,Texe,Tlib,Scomp_nowarn
+global Wave_tree,Scomp_all,Scomp_omp,Scomp,Texe,Tlib,Scomp_nowarn
 
 Scomp = "gfortran -std=legacy -c -g -cpp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
 Scomp_nowarn = "gfortran -w -std=legacy -c -g -cpp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
-Scomp_bounds = "gfortran -std=legacy -c -g -cpp -fcheck=bounds -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
-Scomp_omp = "gfortran -std=legacy -c -g -cpp -finit-local-zero -fcheck=bounds -fopenmp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -ffixed-line-length-none -funroll-loops "
+Scomp_all = "gfortran -std=legacy -c -g -cpp -fcheck=all -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
+Scomp_omp = "gfortran -std=legacy -c -g -cpp -finit-local-zero -fcheck=all -fopenmp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -ffixed-line-length-none -funroll-loops "
 
 def get_wave_tree():
 
@@ -162,7 +162,7 @@ def get_wave_tree():
 
 def wave_update():
 
-  global WI,Wave_tree,Texe,Scomp_bounds,Scomp_omp,Scomp,Iverbose,Idry,Idebug,Scomp_nowarn
+  global WI,Wave_tree,Texe,Scomp_all,Scomp_omp,Scomp,Iverbose,Idry,Idebug,Scomp_nowarn
 
   kmain = 0
 
@@ -205,7 +205,7 @@ def wave_update():
     elif ddd == 'nomp':
       lib = WI + 'lib/libwave_debug.a'
       libm = WI + 'lib/libwave_modules_debug.a'
-      scomp = Scomp_bounds
+      scomp = Scomp_all
     elif ddd == 'omp':
       lib = WI + 'lib/libwave_omp_debug.a'
       libm = WI + 'lib/libwave_omp_modules_debug.a'
@@ -213,7 +213,7 @@ def wave_update():
     elif ddd == 'urad':
       lib = WI + 'lib/liburad_debug.a'
       libm = WI + 'lib/liburad_modules_debug.a'
-      scomp = Scomp_bounds  # uradcfft does boundary tricks
+      scomp = Scomp_all  # uradcfft does boundary tricks
     elif ddd == 'user':
       lib = WI + 'lib/libuser_debug.a'
       libm = WI + 'lib/libuser_modules_debug.a'

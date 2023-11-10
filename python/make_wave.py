@@ -90,12 +90,12 @@ if nargs > 1:
 
 if nargs > 2: Idebug = int(args[2])
 
-global Wave_tree,Scomp_bounds,Scomp_omp,Scomp,Texe,Tlib,Scomp_nowarn
+global Wave_tree,Scomp_all,Scomp_omp,Scomp,Texe,Tlib,Scomp_nowarn
 
 Scomp = "gfortran -std=legacy -c -O2 -cpp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
 Scomp_nowarn = "gfortran -w -std=legacy -c -O2 -cpp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
-Scomp_bounds = "gfortran -std=legacy -c -O2 -cpp -fcheck=bounds -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
-Scomp_omp = "gfortran -std=legacy -c -O2 -cpp -finit-local-zero -fcheck=bounds -fopenmp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -ffixed-line-length-none -funroll-loops "
+Scomp_all = "gfortran -std=legacy -c -O2 -cpp -fcheck=all -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
+Scomp_omp = "gfortran -std=legacy -c -O2 -cpp -finit-local-zero -fcheck=all -fopenmp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -ffixed-line-length-none -funroll-loops "
 
 def print_wave_tree():
   global Wave_tree
@@ -220,7 +220,7 @@ def get_wave_tree():
 
 def wave_update():
 
-  global WI,Wave_tree,Texe,Scomp_bounds,Scomp_omp,Scomp,Iverbose,Idry,Idebug,Scomp_nowarn
+  global WI,Wave_tree,Texe,Scomp_all,Scomp_omp,Scomp,Iverbose,Idry,Idebug,Scomp_nowarn
 
   kmain = 0
 
@@ -266,7 +266,7 @@ def wave_update():
       if Iverbose >= 0: print("\nProcessing",dd)
       lib = WI + 'lib/libwave.a'
       libm = WI + 'lib/libwave_modules.a'
-      scomp = Scomp_bounds
+      scomp = Scomp_all
     elif ddd == 'omp':
       if Iverbose >= 0: print("\nProcessing",dd)
       lib = WI + 'lib/libwave_omp.a'
@@ -276,7 +276,7 @@ def wave_update():
       if Iverbose >= 0: print("\nProcessing",dd)
       lib = WI + 'lib/liburad.a'
       libm = WI + 'lib/liburad_modules.a'
-      scomp = Scomp_bounds  # uradcfft does boundary tricks
+      scomp = Scomp_all  # uradcfft does boundary tricks
     elif ddd == 'user':
       if Iverbose >= 0: print("\nProcessing",dd)
       lib = WI + 'lib/libuser.a'
