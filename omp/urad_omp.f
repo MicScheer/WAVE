@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 17/12/2023  11.45.19  by  Michael Scheer
 *CMZ :  4.01/02 08/05/2023  13.06.52  by  Michael Scheer
 *CMZ :  4.01/00 10/02/2023  13.27.16  by  Michael Scheer
 *CMZ :  4.00/15 28/04/2022  15.32.20  by  Michael Scheer
@@ -493,7 +494,7 @@ C--- THE DISTANCE R IS INTRODUCED HERE EXPLICITLY (S. PROGRAM OF CHAOEN WANG
 
       if(br2.lt.1.0d-4.and.rnr2.lt.1.0d-4) then
         bet1n=
-     &    1.0d0/(1+beta)/gamma**2
+     &    1.0d0/(1.0d0+beta)/gamma**2
      &    +beta*(rnr2/2.0d0
      &    +rnr4/8.0d0)
      &    +(br2/2.0d0

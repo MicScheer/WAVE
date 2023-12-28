@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 15/11/2023  12.38.14  by  Michael Scheer
 *CMZ :  3.02/03 03/11/2014  12.10.03  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.11  by  Michael Scheer
 *CMZ :  2.66/03 12/05/2010  13.34.28  by  Michael Scheer
@@ -120,7 +121,7 @@ c calculates phase of field amplitudes afreq and afreqrphi
               if (h2.lt.0.01) then
                 ddist=dist0*(h2/2.0d0-h2**2/8.0d0)
               else
-                ddist=dist0*(sqrt(h2)-1.0d0)
+                ddist=dist0*(sqrt(1.0d0+h2)-1.0d0)
               endif
 
               dphase=ddist/freq(ifreq)*wtoe1*1.0d9*twopi1

@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 14/11/2023  11.33.48  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  08.38.01  by  Michael Scheer
 *CMZ :  4.00/17 28/11/2022  17.49.12  by  Michael Scheer
 *CMZ :  4.00/13 07/11/2021  17.22.27  by  Michael Scheer
@@ -115,9 +116,10 @@ C---- RESULTS ARE STORE IN AFREQRPHI AND SPECPOWRPHI
       double precision, dimension (:), allocatable :: frq
       integer, dimension (:), allocatable :: iinside,kinside,linside
 
-      COMPLEX*16 ZIOM,ZI,ZIDOM,ZONE,ZICR1,ZIC,daff
+      COMPLEX*16 ZIOM,ZI,ZIDOM,ZONE,ZICR1,ZIC,baff(3),daff(3)
       COMPLEX*16 EXPOM,DEXPOMPH1,DEXPOMPH,DDEXPOMPH,DEXPOM,EXPOMV2
-      COMPLEX*16 DMODU,DMODU0,DDMODU,AX,AY,AZ,AX0,AY0,AZ0
+      COMPLEX*16 DMODU,DMODU0,DDMODU,AX,AY,AZ,AX0,AY0,AZ0,
+     &  bx0,by0,bz0
       COMPLEX*16 APOL,APOLH,APOLR,APOLL,APOL45
 
       DOUBLE PRECISION T0,T1,T2,TENDSOU,X0,X1,X2,X10,Y1,Y2,Z1,Z2,XENDSOU,R0
@@ -141,7 +143,7 @@ c     &  ,H2,H2R2
 
       DOUBLE PRECISION BX,BY,BZ,RX,RY,RZ,PX,PY,PZ,RNBX,RNBY,RNBZ
       DOUBLE PRECISION R1,RNX,RNY,RNZ,DOM1,DOM2,BET1N,DUM11,R,BPX,BPY,BPZ
-      DOUBLE PRECISION WGANG,OPANG
+      DOUBLE PRECISION WGANG,OPANG,rn
       double precision br2,rnr2,br4,rnr4,b3,yp2zp2i,
 c     &  yp2zp2ia,
      &  f(3),yp(3),ypp,a(3),fdt(3),filo,fihi,dfdt
@@ -163,14 +165,15 @@ c     &  yp2zp2ia,
      &  jvelofield,nfrq,ith,kungfo
 
       INTEGER NTUPP,IC
-      PARAMETER (NTUPP=29)
+      PARAMETER (NTUPP=38)
       REAL*8 FILLT(NTUPP)
       CHARACTER(5) CTUP(NTUPP)
 
       data ctup /'t','x','y','z','rx','ry','rz','rt','p','expr','expi','roi'
      &  ,'iob','ie','yob','zob','bet1n','om','dt','by2','isou'
-     &  ,'spec','reax','imax','reay','imay','reaz','imaz','dom1'/
-
+     &  ,'spec','reax','imax','reay','imay','reaz','imaz','dom1',
+     &  'betx','bety','betz','betxp','betyp','betzp','nx','ny','nz'/
+     &
       DATA ICAL/0/
       DATA ZI/(0.0D0,1.0D0)/
       DATA ZONE/(1.0D0,0.0D0)/
@@ -954,9 +957,15 @@ C--- LOOP OVER ALL FREQUENCES
             SPECPOWRPHI(jliob)=SPECPOWRPHI(jliob)+RARG(5)*DT
 
             DO ICOMP=1,3
-              daff=RARG(ICOMP)/BET1N/OM*EXPOM*(ZONE-DEXPOMPH)*DEXPbunch/sqnphsp
-              afferphi(icomp,ifrob)=afferphi(icomp,ifrob)+daff
+              daff(icomp)=RARG(ICOMP)/BET1N/OM*EXPOM*(ZONE-DEXPOMPH)*DEXPbunch/sqnphsp
+              afferphi(icomp,ifrob)=afferphi(icomp,ifrob)+daff(icomp)
             ENDDO   !ICOMP
+
+            baff(1)=(rny*daff(3)-rnz*daff(2))
+            baff(2)=(rnz*daff(1)-rnx*daff(3))
+            baff(3)=(rnx*daff(2)-rny*daff(1))
+
+            afferphi(4:6,ifrob)=afferphi(4:6,ifrob)+baff(1:3)/clight1
 
           ENDIF   !XIANF
 
@@ -1000,6 +1009,31 @@ C--- LOOP OVER ALL FREQUENCES
                 FILLT(27)=dREAL(afferphi(3,ifrob))*SPECNOR*bunnor
                 FILLT(28)=dIMAG(afferphi(3,ifrob))*SPECNOR*bunnor
                 FILLT(29)=DOM1
+
+                FILLT(30)=bx
+                FILLT(31)=by
+                FILLT(32)=bz
+                FILLT(33)=bpx
+                FILLT(34)=bpy
+                FILLT(35)=bpz
+c                ef(1:3)=real(afferphi(1:3,ifrob))
+c                bf(1:3)=real(afferphi(4:6,ifrob))
+c                rnx=ef(2)*bf(3)-ef(3)*bf(2)
+c                rny=ef(3)*bf(1)-ef(1)*bf(3)
+c                rnz=ef(1)*bf(2)-ef(2)*bf(1)
+                rnx=real(
+     &            afferphi(2,ifrob)*conjg(afferphi(6,ifrob))-
+     &            afferphi(3,ifrob)*conjg(afferphi(5,ifrob)))
+                rny=real(
+     &            afferphi(3,ifrob)*conjg(afferphi(4,ifrob))-
+     &            afferphi(1,ifrob)*conjg(afferphi(6,ifrob)))
+                rnz=real(
+     &            afferphi(1,ifrob)*conjg(afferphi(5,ifrob))-
+     &            afferphi(2,ifrob)*conjg(afferphi(4,ifrob)))
+                rn=sqrt(rnx**2+rny**2+rnz**2)
+                FILLT(36)=rnx/rn
+                FILLT(37)=rny/rn
+                FILLT(38)=rnz/rn
 
                 CALL hfm(NIDSOURCE,FILLT)
 
@@ -1049,11 +1083,18 @@ C--- LOOP OVER ALL FREQUENCES
               EXPOMV2=1.0D0/BET1N/OM*EXPOM*(ZONE-DEXPOMPH)
 
               DO ICOMP=1,3
-                daff=RARG(ICOMP)*EXPOMV2*DEXPbunch/sqnphsp
+                daff(icomp)=RARG(ICOMP)*EXPOMV2*DEXPbunch/sqnphsp
 c                print*,izaehl,ifrob,icomp,RARG(ICOMP),EXPOMV2,DEXPbunch,sqnphsp
 c                print*,daff
-                afferphi(ICOMP,ifrob)=afferphi(ICOMP,ifrob)+daff
+                afferphi(ICOMP,ifrob)=afferphi(ICOMP,ifrob)+daff(icomp)
               ENDDO
+
+              baff(1)=(rny*daff(3)-rnz*daff(2))
+              baff(2)=(rnz*daff(1)-rnx*daff(3))
+              baff(3)=(rnx*daff(2)-rny*daff(1))
+
+              afferphi(4:6,ifrob)=afferphi(4:6,ifrob)+baff(1:3)/clight1
+
             ENDIF !XIEND
 
             IF (IWFILINT.NE.0) THEN
@@ -1096,6 +1137,31 @@ c                print*,daff
                   FILLT(27)=dREAL(afferphi(3,ifrob))*SPECNOR*bunnor
                   FILLT(28)=dIMAG(afferphi(3,ifrob))*SPECNOR*bunnor
                   FILLT(29)=DOM1
+                  FILLT(30)=bx
+                  FILLT(31)=by
+                  FILLT(32)=bz
+                  FILLT(33)=bpx
+                  FILLT(34)=bpy
+                  FILLT(35)=bpz
+c                ef(1:3)=real(afferphi(1:3,ifrob))
+c                bf(1:3)=real(afferphi(4:6,ifrob))
+c                rnx=ef(2)*bf(3)-ef(3)*bf(2)
+c                rny=ef(3)*bf(1)-ef(1)*bf(3)
+c                rnz=ef(1)*bf(2)-ef(2)*bf(1)
+                  rnx=real(
+     &              afferphi(2,ifrob)*conjg(afferphi(6,ifrob))-
+     &              afferphi(3,ifrob)*conjg(afferphi(5,ifrob)))
+                  rny=real(
+     &              afferphi(3,ifrob)*conjg(afferphi(4,ifrob))-
+     &              afferphi(1,ifrob)*conjg(afferphi(6,ifrob)))
+                  rnz=real(
+     &              afferphi(1,ifrob)*conjg(afferphi(5,ifrob))-
+     &              afferphi(2,ifrob)*conjg(afferphi(4,ifrob)))
+                  rn=sqrt(rnx**2+rny**2+rnz**2)
+                  FILLT(36)=rnx/rn
+                  FILLT(37)=rny/rn
+                  FILLT(38)=rnz/rn
+
                   CALL hfm(NIDSOURCE,FILLT)
 
                 ELSE IF (ISOUR.EQ.IWFILINT.AND.IOBSV.EQ.1) THEN
@@ -1303,9 +1369,15 @@ c      stop "Ende"
             AY=AY0
             AZ=AZ0
 
-            afferphi(1,ifrob)=(0.0D0,0.0D0)
-            afferphi(2,ifrob)=(0.0D0,0.0D0)
-            afferphi(3,ifrob)=(0.0D0,0.0D0)
+            BX0=afferphi(4,ifrob)
+            BY0=afferphi(5,ifrob)
+            BZ0=afferphi(6,ifrob)
+
+            BX=BX0
+            BY=BY0
+            BZ=BZ0
+
+            afferphi(1:6,ifrob)=(0.0D0,0.0D0)
 
             R0=XRPHI-CENXEXI
             R02=R0*R0
@@ -1381,6 +1453,10 @@ c      stop "Ende"
               afferphi(2,ifrob)=afferphi(2,ifrob)+AY
               afferphi(3,ifrob)=afferphi(3,ifrob)+AZ
 
+              afferphi(4,ifrob)=afferphi(1,ifrob)+BX
+              afferphi(5,ifrob)=afferphi(2,ifrob)+BY
+              afferphi(6,ifrob)=afferphi(3,ifrob)+BZ
+
               IF (AMPRAN.NE.0.D0) THEN
                 PHI=2.D0*PI1*XRANA(I)/FREQR*frq(kfreq)
                 DDMODU=EXP(ZI*PHI)
@@ -1398,6 +1474,18 @@ c      stop "Ende"
               AX=AX*DMODU
               AY=AY*DMODU
               AZ=AZ*DMODU
+
+              BX0=BX0*DMODU0
+              BY0=BY0*DMODU0
+              BZ0=BZ0*DMODU0
+
+              BX=BX0*CORRR0
+              BY=BY0*CORRR0
+              BZ=BZ0*CORRR0
+
+              BX=BX*DMODU
+              BY=BY*DMODU
+              BZ=BZ*DMODU
 
               IF (kfreq.EQ.1) THEN
                 jliob=ISOUR+NSOURCE*(IOBSV-1)

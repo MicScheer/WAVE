@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 27/11/2023  12.51.04  by  Michael Scheer
 *CMZ :  4.00/17 04/10/2022  08.10.22  by  Michael Scheer
 *CMZ :  4.00/16 22/07/2022  08.40.59  by  Michael Scheer
 *CMZ :  4.00/15 28/04/2022  15.43.36  by  Michael Scheer
@@ -138,6 +139,9 @@ C*******************************************************************************
 
       if (kampli.gt.0) then
         CALL BELLIP(Xiii,Yiii,Ziii,BX,BY,BZ,AX,AY,AZ)
+        bx=bx*b0scglob
+        by=by*b0scglob
+        bz=bz*b0scglob
         return
       endif
 

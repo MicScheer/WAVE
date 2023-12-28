@@ -1,4 +1,4 @@
-*CMZ :          07/11/2023  14.41.30  by  Michael Scheer
+*CMZ :  4.01/04 27/12/2023  16.20.07  by  Michael Scheer
 *CMZ :  4.01/03 29/06/2023  10.07.32  by  Michael Scheer
 *CMZ :  4.01/03 15/05/2023  16.38.53  by  Michael Scheer
 *CMZ :  4.01/02 14/05/2023  13.42.26  by  Michael Scheer
@@ -242,7 +242,47 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,GPLHINT.
+*KEEP,gplhint.
+!******************************************************************************
+!
+!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
+!      Hahn-Meitner-Platz 1
+!      D-14109 Berlin
+!      Germany
+!
+!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
+!
+! -----------------------------------------------------------------------
+!
+!    This program is free software: you can redistribute it and/or modify
+!    it under the terms of the GNU General Public License as published by
+!    the Free Software Foundation, either version 3 of the License, or
+!    (at your option) any later version.
+!
+!    This program is distributed in the hope that it will be useful,
+!    but WITHOUT ANY WARRANTY; without even the implied warranty of
+!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!    GNU General Public License for more details.
+!
+!    You should have received a copy (wave_gpl.txt) of the GNU General Public
+!    License along with this program.
+!    If not, see <http://www.gnu.org/licenses/>.
+!
+!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
+!    der GNU General Public License, wie von der Free Software Foundation,
+!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
+!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
+!
+!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
+!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
+!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
+!    Siehe die GNU General Public License fuer weitere Details.
+!
+!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
+!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
+!    siehe <http://www.gnu.org/licenses/>.
+!
+!******************************************************************************
 *KEEP,spectf90u.
       include 'spectf90u.cmn'
 *KEEP,sourcef90u.
@@ -421,6 +461,7 @@ c+seq,gseed,if=grndm.
 *KEND.
 
       integer irootmode
+      character(32) c32
 
 
 C--- LOGICAL UNITS
@@ -539,6 +580,9 @@ C5.10.95      NBDIM=NBDIMP
 C--- READ PARAMETER AND CONTRL-FLAGS FROM NAMELISTS
 
       iclusterold=icluster
+
+      userchar=''
+      user=0.0d0
 
       OPEN (UNIT=LUNGFI,FILE=FILEI,STATUS='OLD')
 
@@ -683,14 +727,6 @@ C--- OPEN OUTPUT-FILE
       WRITE(6,*)
 
       WRITE(LUNGFO,*)
-      WRITE(LUNGFO,*)'     USER NAMELIST:'
-      WRITE(LUNGFO,*)
-      DO I=1,1000
-        IF (USER(I).NE.0.) THEN
-          WRITE(LUNGFO,*)'     USER(',I,'): ',USER(I)
-        ENDIF
-      ENDDO
-      WRITE(LUNGFO,*)
 
       icluster=iclusterold
 
@@ -808,6 +844,23 @@ c     WRITE(6,*)'READING NAMELIST BERRORN'
       if (ieneloss.lt.0) read(lungfi,photonn)
 c     WRITE(6,*)'READING NAMELIST USERN'
       READ(LUNGFI,USERN)
+      WRITE(LUNGFO,*)
+      WRITE(LUNGFO,*)'     USER NAMELIST:'
+      WRITE(LUNGFO,*)
+      DO I=1,1000
+        write(c32,*) i
+        IF (USER(I).NE.0.0d0) THEN
+          WRITE(LUNGFO,*)'     USER('//trim(adjustl(c32))//'): ',USER(I)
+        ENDIF
+      ENDDO
+      WRITE(LUNGFO,*)
+      DO I=1,1000
+        write(c32,*) i
+        IF (USERCHAR(I).NE.'') THEN
+          WRITE(LUNGFO,*)'     USERCHAR('//trim(adjustl(c32))//'): ',USERCHAR(I)
+        ENDIF
+      ENDDO
+      WRITE(LUNGFO,*)
       WRITE(6,*)
       WRITE(6,*)
       WRITE(6,*)
@@ -935,7 +988,7 @@ C}--- CONVERT B-FIELD TO MAP
 
       if (iundulator.eq.2) then
         ispec=1
-        ifreq2p=3
+c        ifreq2p=3
       endif
 
       if (iwiggler.ne.0.or.iundulator.ne.0) then
@@ -954,20 +1007,24 @@ c      endif
 
 c        iundulator=0
         kampli=nint(perellip)
-        perellip=5.
         xcenell=0.0d0
+c        perellip=5.0d0
 
-        xstart=-(perellip*xlellip+ellshft*xlellip)/2.0d0+xcenell
+        if (xstart.eq.9999.0d0.and.xinter.eq.-9999.0d0
+     &      .and.xstop.eq.9999.0d0) then
+c          xstart=-(perellip*xlellip+ellshft*xlellip)/2.0d0+xcenell
+          xstart=-(5.0d0*xlellip+ellshft*xlellip)/2.0d0+xcenell
+        endif
 
         park=parkell
 
         if (nharmell.ne.0.and.harmell.ne.0.0d0) then
           if (harmell.eq.-9999.0d0) then
-            if (ifreq2p.eq.1) then
-              harmell=freqlow
-            else
+c            if (ifreq2p.eq.1) then
+c              harmell=freqlow
+c            else
               harmell=(freqlow+freqhig)/2.0d0
-            endif
+c            endif
           endif
           if (harmell.lt.0.0d0) then
             harmell=-wtoe1/harmell
@@ -1063,7 +1120,10 @@ c        iundulator=0
 
         kellip=1
 
-        xstop=phrperl/2.0d0
+        if (xstart.eq.9999.0d0.and.xinter.eq.-9999.0d0
+     &      .and.xstop.eq.9999.0d0) then
+          xstop=phrperl/2.0d0
+        endif
         ieneloss=0
         !imagspln=0
 
@@ -1116,9 +1176,9 @@ c        iundulator=0
           Y0=YSTART
           Z0=ZSTART
 
-          VX0=VXIN*V0
-          VY0=VYIN*V0
-          VZ0=VZIN*V0
+          VX0=VXIN
+          VY0=VYIN
+          VZ0=VZIN
 
           IF (XINTER.GT.XSTART) THEN
 
@@ -1198,13 +1258,6 @@ c        iundulator=0
         ENDIF !(XINTER.NE.-9999.)
 
         xinter=-9999.0d0
-
-        call trackshort(isnorder,
-     &    xstart,ystart,zstart,vxin,vyin,vzin,
-     &    -xlellip/2.0d0,0.0d0,0.0d0,  1.0d0,0.0d0,0.0d0,
-     &    xstart,ystart,zstart,dum,vxin,vyin,vzin,
-     &    1.0d0/(clight1*dmybeta*myinum),0.5d0,dmygamma,bmovecut
-     &    ,0,0,GAMMAL)
 
       endif
 

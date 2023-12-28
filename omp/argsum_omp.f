@@ -1,4 +1,4 @@
-*CMZ :          04/07/2023  11.48.21  by  Michael Scheer
+*CMZ :  4.01/04 14/11/2023  11.36.12  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  09.03.03  by  Michael Scheer
 *CMZ :  4.00/14 11/02/2022  10.28.53  by  Michael Scheer
 *CMZ :  3.07/00 15/03/2019  12.15.25  by  Michael Scheer
@@ -35,7 +35,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE ARGSUM_omp(ISOUR,IOBSV,IBUFF,nreromp,reromp)
 
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -120,11 +120,11 @@
       double precision reromp(11,nreromp)
 
       INTEGER NTUPP
-      PARAMETER (NTUPP=22)
+      PARAMETER (NTUPP=38)
       REAL*8 FILLT(NTUPP)
 
       COMPLEX*16 APOL,EXPOM,DEXPOM,ZIOM,AX0,AY0,AZ0,AX,AY,AZ,ZI,ZONE,
-     &  DMODU,DMODU0,DDMODU,baff(3),daff(3),bx0,by0,bz0,bx,by,bz
+     &  DMODU,DMODU0,DDMODU,baff(3),daff(3),bx0,by0,bz0,bxc,byc,bzc
       COMPLEX*8 APOLH,APOLR,APOLL,APOL45
 
       DOUBLE PRECISION :: OM,DOM,RSPECNOR=1.0d0,DT,DT2,T
@@ -144,6 +144,12 @@
 
       save ical
 
+      if (ical.eq.0) then
+        print*,'*** Warning in argsum_omp: Histogram of sources not completly filled'
+        print*,'Please, consider ISPECMODE=2'
+        ical=1
+      endif
+
 c11.2.2022      RSPECNOR=DSQRT(SPECNOR) !to be consistent with hfreq, souintana etc.
 
 C--- PERFORMS INTEGRATION FOR ALL FREQUENCES
@@ -152,7 +158,6 @@ C    ASSUMES FREQ(I+1)=FREQ(I)*2   FOR IFREQ2P=2
 C    OR FREQ(I+1)=FREQ(I)+DELTA    FOR IFREQ2P>2
 
       DOM=(FREQ(2)-FREQ(1))/HBAREV1
-
 
 C-- LOOP OVER TIME STEPS (ACTUAL INTEGRATION)
 
@@ -197,9 +202,13 @@ C-- LOOP OVER TIME STEPS (ACTUAL INTEGRATION)
           afreq(ICOMP,ifrob)=afreq(ICOMP,ifrob)+daff(icomp)
         ENDDO
 
-        baff(1)=conjg(rny*daff(3)-rnz*daff(2))
-        baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
-        baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+c        baff(1)=conjg(rny*daff(3)-rnz*daff(2))
+c        baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
+c        baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+
+        baff(1)=(rny*daff(3)-rnz*daff(2))
+        baff(2)=(rnz*daff(1)-rnx*daff(3))
+        baff(3)=(rnx*daff(2)-rny*daff(1))
 
         afreq(4:6,IFROB)=afreq(4:6,IFROB)+baff(1:3)/clight1
 
@@ -229,9 +238,13 @@ c              ifrob=kfreq
               afreq(ICOMP,ifrob)=afreq(ICOMP,ifrob)+daff(icomp)
             ENDDO
 
-            baff(1)=conjg(rny*daff(3)-rnz*daff(2))
-            baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
-            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+c            baff(1)=conjg(rny*daff(3)-rnz*daff(2))
+c            baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
+c            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+
+            baff(1)=(rny*daff(3)-rnz*daff(2))
+            baff(2)=(rnz*daff(1)-rnx*daff(3))
+            baff(3)=(rnx*daff(2)-rny*daff(1))
 
             afreq(4:6,IFROB)=afreq(4:6,IFROB)+baff(1:3)/clight1
 
@@ -269,15 +282,48 @@ c              ifrob=kfreq
           FILLT(18)=0.0d0
           FILLT(19)=0.0d0
           FILLT(20)=0.0d0
+          FILLT(21)=dble(isour)
           ifrob=kfreq+NFREQ*(IOBSV-1)
 c              ifrob=kfreq
-          FILLT(21)=
+          FILLT(22)=
      &      DREAL(
      &      afreq(1,ifrob)*CONJG(afreq(1,ifrob))
      &      +afreq(2,ifrob)*CONJG(afreq(2,ifrob))
      &      +afreq(3,ifrob)*CONJG(afreq(3,ifrob))
      &      )*SPECNOR
-          FILLT(22)=0.0d0
+
+          FILLT(23)=DREAL(afreq(1,ifrob))
+          FILLT(24)=DIMAG(afreq(1,ifrob))
+          FILLT(25)=DREAL(afreq(2,ifrob))
+          FILLT(26)=DIMAG(afreq(2,ifrob))
+          FILLT(27)=DREAL(afreq(3,ifrob))
+          FILLT(28)=DIMAG(afreq(3,ifrob))
+          FILLT(29)=0.0d0
+          FILLT(30)=0.0d0
+          FILLT(31)=0.0d0
+          FILLT(32)=0.0d0
+          FILLT(33)=0.0d0
+          FILLT(34)=0.0d0
+          FILLT(35)=0.0d0
+c                ef(1:3)=real(afreq(1:3,ifrob))
+c                bf(1:3)=real(afreq(4:6,ifrob))
+c                rnx=ef(2)*bf(3)-ef(3)*bf(2)
+c                rny=ef(3)*bf(1)-ef(1)*bf(3)
+c                rnz=ef(1)*bf(2)-ef(2)*bf(1)
+          rnx=real(
+     &      afreq(2,ifrob)*conjg(afreq(6,ifrob))-
+     &      afreq(3,ifrob)*conjg(afreq(5,ifrob)))
+          rny=real(
+     &      afreq(3,ifrob)*conjg(afreq(4,ifrob))-
+     &      afreq(1,ifrob)*conjg(afreq(6,ifrob)))
+          rnz=real(
+     &      afreq(1,ifrob)*conjg(afreq(5,ifrob))-
+     &      afreq(2,ifrob)*conjg(afreq(4,ifrob)))
+          rn=sqrt(rnx**2+rny**2+rnz**2)
+
+          FILLT(36)=rnx/rn
+          FILLT(37)=rny/rn
+          FILLT(38)=rnz/rn
 
           CALL hfm(NIDSOURCE,FILLT)
 
@@ -332,9 +378,9 @@ c          ifrob=kfreq
             BY0=afreq(2,ifrob)
             BZ0=afreq(3,ifrob)
 
-            BX=BX0
-            BY=BY0
-            BZ=BZ0
+            BXc=BX0
+            BYc=BY0
+            BZc=BZ0
 
             afreq(1:6,ifrob)=(0.0D0,0.0D0)
 
@@ -374,9 +420,9 @@ c          ifrob=kfreq
               afreq(2,ifrob)=afreq(2,ifrob)+AY
               afreq(3,ifrob)=afreq(3,ifrob)+AZ
 
-              afreq(4,ifrob)=afreq(4,ifrob)+BX
-              afreq(5,ifrob)=afreq(5,ifrob)+BY
-              afreq(6,ifrob)=afreq(6,ifrob)+BZ
+              afreq(4,ifrob)=afreq(4,ifrob)+BXc
+              afreq(5,ifrob)=afreq(5,ifrob)+BYc
+              afreq(6,ifrob)=afreq(6,ifrob)+BZc
 
               IF (AMPRAN.NE.0.D0) THEN
                 PHI=2.D0*PI1*XRANA(I)/FREQR*FREQ(kfreq)
@@ -400,13 +446,13 @@ c          ifrob=kfreq
               BY0=BY0*DMODU0
               BZ0=BZ0*DMODU0
 
-              BX=BX0*CORRR0
-              BY=BY0*CORRR0
-              BZ=BZ0*CORRR0
+              BXc=BX0*CORRR0
+              BYc=BY0*CORRR0
+              BZc=BZ0*CORRR0
 
-              BX=BX*DMODU
-              BY=BY*DMODU
-              BZ=BZ*DMODU
+              BXc=BXc*DMODU
+              BYc=BYc*DMODU
+              BZc=BZc*DMODU
 
             ENDDO !IAMPLI
 

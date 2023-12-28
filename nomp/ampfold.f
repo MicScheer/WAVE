@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 14/11/2023  13.37.28  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.11  by  Michael Scheer
 *CMZ :  2.70/12 01/03/2013  16.28.24  by  Michael Scheer
 *CMZ :  2.66/03 29/04/2010  11.46.31  by  Michael Scheer
@@ -82,7 +83,7 @@ C    DISTRIBUTIONS (GAUSSIAN DISTRIBUTION)
       include 'spect.cmn'
 *KEND.
 
-      INTEGER IFREQ,IZ,IY,IOBSV,ICOMP,ireim
+      INTEGER IFREQ,IZ,IY,IOBSV,ICOMP,ireim,ieb,i1,i2
 
 C--- CALCULATE FOURIER-COEFFICIENTS OF GAUSSIAN
 
@@ -108,54 +109,67 @@ c      CALL WGFOUR ! already done in WFOLD
         write(lungfo,*)' '
       endif
 
-      DO icomp=2,3
-        DO ireim=1,2
+c14.11,2023      DO icomp=2,3
+      do ieb=1,2
 
-        DO IFREQ=1,NFREQ
+        if (ieb.eq.1) then
+          i1=1
+          i2=3
+        else
+          i1=6
+          i2=8
+        endif
+
+        DO icomp=i1,i2
+          DO ireim=1,2
+
+            DO IFREQ=1,NFREQ
 
 C--- PERFORM FOLDING
 
-            CALL AFOLINT(icomp,ireim,IFREQ)
+              CALL AFOLINT(icomp,ireim,IFREQ)
 
 C--- DELETE INTENSITY IN EDGES
 
-            DO IY=1,NOBSVY
-              DO IZ=1,NOBSVZ
+              DO IY=1,NOBSVY
+                DO IZ=1,NOBSVZ
 
-                IOBSV=NOBSVZ*(IY-1)+IZ
-                IOBFR=IOBSV+NOBSV*(IFREQ-1)
+                  IOBSV=NOBSVZ*(IY-1)+IZ
+                  IOBFR=IOBSV+NOBSV*(IFREQ-1)
 
-                IF (IPINCIRC.EQ.0) THEN
+                  IF (IPINCIRC.EQ.0) THEN
 
-                  IF (
-     &                IY.LT.(NOBSVY-MOBSVY)/2+1
-     &                .OR.IY.GT.(NOBSVY-MOBSVY)/2+MOBSVY
-     &                .OR.IZ.LT.(NOBSVZ-MOBSVZ)/2+1
-     &                .OR.IZ.GT.(NOBSVZ-MOBSVZ)/2+MOBSVZ
-     &                ) THEN
-                    reaima(icomp+2,ireim,iobfr)=0.0d0
-                  ENDIF
+                    IF (
+     &                  IY.LT.(NOBSVY-MOBSVY)/2+1
+     &                  .OR.IY.GT.(NOBSVY-MOBSVY)/2+MOBSVY
+     &                  .OR.IZ.LT.(NOBSVZ-MOBSVZ)/2+1
+     &                  .OR.IZ.GT.(NOBSVZ-MOBSVZ)/2+MOBSVZ
+     &                  ) THEN
+                      reaima(icomp+2,ireim,iobfr)=0.0d0
+                    ENDIF
 
-                ELSE  !IPINCIRC
+                  ELSE  !IPINCIRC
 
-                  IF (
-     &                (OBSVZ(IZ)-PINCEN(3))**2
-     &                +(OBSVY(IY)-PINCEN(2))**2
-     &                -PINR**2
-     &                .GT.1.D-10
-     &                ) THEN
-                    reaima(icomp+2,ireim,iobfr)=0.0d0
-                  ENDIF
+                    IF (
+     &                  (OBSVZ(IZ)-PINCEN(3))**2
+     &                  +(OBSVY(IY)-PINCEN(2))**2
+     &                  -PINR**2
+     &                  .GT.1.D-10
+     &                  ) THEN
+                      reaima(icomp+2,ireim,iobfr)=0.0d0
+                    ENDIF
 
-                ENDIF !IPINCIRC
+                  ENDIF !IPINCIRC
 
-              ENDDO !IZ
-            ENDDO !IY
+                ENDDO !IZ
+              ENDDO !IY
 
-        ENDDO !IFREQ
+            ENDDO !IFREQ
 
-      ENDDO !ireim
-      ENDDO !icomp
+          ENDDO !ireim
+        ENDDO !icomp
+
+      enddo !ieb=1,2
 
       RETURN
       END

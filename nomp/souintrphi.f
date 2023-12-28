@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 14/11/2023  11.43.26  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  13.04.35  by  Michael Scheer
 *CMZ :  4.01/02 14/05/2023  12.29.56  by  Michael Scheer
 *CMZ :  4.00/15 07/04/2022  09.03.04  by  Michael Scheer
@@ -145,7 +146,7 @@ C---- RESULTS ARE STORE IN AFREQRPHI AND SPECPOWRPHI
       COMPLEX*16 ZIOM,ZI,ZIDOM,ZONE,ZICR1,ZIC,daff(3),baff(3)
       COMPLEX*16 EXPOM,DEXPOMPH1,DEXPOMPH,DDEXPOMPH,DEXPOM,EXPOMV2
       COMPLEX*16 DMODU,DMODU0,DDMODU,AX,AY,AZ,AX0,AY0,AZ0,bx0,by0,bz0
-      COMPLEX*16 APOL,APOLH,APOLR,APOLL,APOL45
+      COMPLEX*16 APOL,APOLH,APOLR,APOLL,APOL45,bxc,byc,bzc
 
       DOUBLE PRECISION T0,T1,T2,TENDSOU,X0,X1,X2,X10,Y1,Y2,Z1,Z2,XENDSOU,R0
      &  ,T,DT,DT2,DT0,DTIM00,DTIM01,VXP,VYP,VZP,TENDSOU1
@@ -585,7 +586,7 @@ c      yp2zp2ia=0.0d0
 
               WRITE(LUNGFO,*)
               WRITE(LUNGFO,*)
-     &          '*** WARNING IN SOUINTWIGS, SOURCE, ROI:',ISOUR,IROI
+     &          '*** WARNING IN SOUINTRPHI, SOURCE, ROI:',ISOUR,IROI
               WRITE(LUNGFO,*)
               WRITE(LUNGFO,*)
      &          'STEP SIZE FOR SOURCE POINT IS LARGER THAN STEP'
@@ -595,7 +596,7 @@ c      yp2zp2ia=0.0d0
      &          'CHANGE NLPOI OR ROI-PARAMETERS OR BE AWARE OF STRANGE RESULTS!'
               WRITE(6,*)
               WRITE(6,*)
-     &          '*** WARNING IN SOUINTWIGS, SOURCE, ROI:',ISOUR,IROI
+     &          '*** WARNING IN SOUINTRPHI, SOURCE, ROI:',ISOUR,IROI
               WRITE(6,*)
               WRITE(6,*)'STEP SIZE FOR SOURCE POINT IS LARGER THAN STEP'
               WRITE(6,*)'SIZE FOR TRAJECTORY!'
@@ -966,9 +967,13 @@ C--- LOOP OVER ALL FREQUENCES
               afferphi(icomp,ifrob)=afferphi(icomp,ifrob)+daff(icomp)
             ENDDO   !ICOMP
 
-            baff(1)=conjg(rny*daff(3)-rnz*daff(2))
-            baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
-            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+c            baff(1)=conjg(rny*daff(3)-rnz*daff(2))
+c            baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
+c            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+
+            baff(1)=(rny*daff(3)-rnz*daff(2))
+            baff(2)=(rnz*daff(1)-rnx*daff(3))
+            baff(3)=(rnx*daff(2)-rny*daff(1))
 
             afferphi(4:6,ifrob)=afferphi(4:6,ifrob)+baff(1:3)/clight1
 
@@ -1078,9 +1083,13 @@ c                print*,daff
                 afferphi(ICOMP,ifrob)=afferphi(ICOMP,ifrob)+daff(icomp)
               ENDDO
 
-              baff(1)=conjg(rny*daff(3)-rnz*daff(2))
-              baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
-              baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+c              baff(1)=conjg(rny*daff(3)-rnz*daff(2))
+c              baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
+c              baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+
+              baff(1)=(rny*daff(3)-rnz*daff(2))
+              baff(2)=(rnz*daff(1)-rnx*daff(3))
+              baff(3)=(rnx*daff(2)-rny*daff(1))
 
               afferphi(4:6,ifrob)=afferphi(4:6,ifrob)+baff(1:3)/clight1
 
@@ -1343,9 +1352,9 @@ c     &  +((vy1/vx1)**2+(vy2/vx2)**2+(vz1/vx1)**2+(vz2/vx2)**2)*beta*clight1*dt2
             BY0=afferphi(5,ifrob)
             BZ0=afferphi(6,ifrob)
 
-            BX=BX0
-            BY=BY0
-            BZ=BZ0
+            BXc=BX0
+            BYc=BY0
+            BZc=BZ0
 
             afferphi(1:6,ifrob)=(0.0D0,0.0D0)
 
@@ -1444,14 +1453,16 @@ c     &          *GAMGAM0/GAMGAM+AMPDT
               afferphi(2,ifrob)=afferphi(2,ifrob)+AY
               afferphi(3,ifrob)=afferphi(3,ifrob)+AZ
 
-              afferphi(4,ifrob)=afferphi(1,ifrob)+BX
-              afferphi(5,ifrob)=afferphi(2,ifrob)+BY
-              afferphi(6,ifrob)=afferphi(3,ifrob)+BZ
+              afferphi(4,ifrob)=afferphi(1,ifrob)+BXc
+              afferphi(5,ifrob)=afferphi(2,ifrob)+BYc
+              afferphi(6,ifrob)=afferphi(3,ifrob)+BZc
 
               IF (AMPRAN.NE.0.D0) THEN
                 PHI=2.D0*PI1*XRANA(I)/FREQR*FREQ(IFREQ)
                 DDMODU=EXP(ZI*PHI)
               ENDIF   !(AMPRAN.NE.0.D0)
+
+              DMODU=DMODU0*DDMODU
 
               AX0=AX0*DMODU0
               AY0=AY0*DMODU0
@@ -1461,7 +1472,6 @@ c     &          *GAMGAM0/GAMGAM+AMPDT
               AY=AY0*CORRR0
               AZ=AZ0*CORRR0
 
-              DMODU=DMODU0*DDMODU
               AX=AX*DMODU
               AY=AY*DMODU
               AZ=AZ*DMODU
@@ -1470,13 +1480,13 @@ c     &          *GAMGAM0/GAMGAM+AMPDT
               BY0=BY0*DMODU0
               BZ0=BZ0*DMODU0
 
-              BX=BX0*CORRR0
-              BY=BY0*CORRR0
-              BZ=BZ0*CORRR0
+              BXc=BX0*CORRR0
+              BYc=BY0*CORRR0
+              BZc=BZ0*CORRR0
 
-              BX=BX*DMODU
-              BY=BY*DMODU
-              BZ=BZ*DMODU
+              BXc=BXc*DMODU
+              BYc=BYc*DMODU
+              BZc=BZc*DMODU
 
               IF (IFREQ.EQ.1) THEN
                 ILIOB=ISOUR+NSOURCE*(IOBSV-1)

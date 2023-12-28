@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 28/11/2023  14.20.34  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  10.59.52  by  Michael Scheer
 *CMZ :  4.00/14 07/02/2022  16.17.00  by  Michael Scheer
 *CMZ :  3.02/05 22/03/2015  19.55.19  by  Michael Scheer
@@ -131,25 +132,34 @@
       include 'wfoldf90.cmn'
 *KEEP,wbetaf90.
       include 'wbetaf90.cmn'
+*KEEP,ampli.
+      include 'ampli.cmn'
 *KEEP,whbook.
       include 'whbook.cmn'
 *KEEP,pawcmn.
+*KEEP,uservar.
+      include 'uservar.cmn'
 *KEND.
 
       CHARACTER(8) OLDDIR
+
+      integer :: idebug=1
 
       INTEGER ICYCLE,NTUP_P,IOBS,IPHZ,iy,iz,iy1,iz1,IPHY,ifrq,IEPS,I,NGEO_P,ISOUR
       INTEGER NIDGEO1,ISTAT,NIDGEO2,NBEAM_P,J,IELEM,NSIZE_P
       INTEGER IOBSY,IOBSZ,K,ix,is,mthreadso
 
+      complex*16 efc(3),bfc(3)
+
       integer
      &  mphasey_omp,mphasez_omp,nphasey_omp,nphasez_omp,iphfold_omp,
      &  nphelem_omp,ihsel_omp,ith,nfreq_omp,iphase_omp
+      integer ic,kobs
 
-      double precision reanor,
+      double precision reanor,dum,
      &  phaperzm_omp,phaperzp_omp,phaperzpm_omp,phaperzpp_omp,
      &  phaperym_omp,phaperyp_omp,phaperypm_omp,phaperypp_omp,
-     &  phelem_omp(5,4,nphelemp),dgsigz_omp,dgsigy_omp,r(3),ef(3),bf(3)
+     &  phelem_omp(5,4,nphelemp),dgsigz_omp,dgsigy_omp,r(3),ef(3) !,bf(3)
 
       PARAMETER(NTUP_P=24,NGEO_P=16,NBEAM_P=16,NSIZE_P=4)
 
@@ -234,6 +244,9 @@
       call zeit(6)
       write(6,*)"     Performing field propagation"
 
+c      print*,"************** kein OMP ************"
+c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
+
       mthreadso=mthreads
       mthreads=max(1,mthreads)
 
@@ -263,8 +276,13 @@
       endif
 
       wlen=wtoe1/freqlow/1.0d9
-      sigrp=sqrt(wlen/(sourceeo(1,1,1)-sourceao(1,1,1)))
+      if (iundulator.ne.2) then
+        sigrp=sqrt(wlen/(sourceeo(1,1,1)-sourceao(1,1,1)))
+      else
+        sigrp=sqrt(wlen/(dble(kampli)*phrperl))
+      endif
       sigr=wlen/twopi1/sigrp
+      call util_break
       if (phwid.eq.-9999.0d0) then
         phwid=10.0d0*sqrt(sigr**2+
      &    ((phcenx-sourcen(1,1,1))*sigrp)**2)
@@ -373,6 +391,9 @@
       allocate(freq_omp(nfreq))
 
       ampli=(0.0d0,0.0d0)
+      expom=(0.0d0,0.0d0)
+      dexpom=(0.0d0,0.0d0)
+      phshift=(0.0d0,0.0d0)
       specwz=0.0d0
       specwy=0.0d0
       phspec3=0.0d0
@@ -411,13 +432,26 @@
      &    nobsv*nfreq,CHTAGS)
       endif
 
+      if(user(4).ne.0.0d0) then
+        do iz=1,nobsvz/2
+          do iy=1,nobsvy/2
+            iobs=(iy-1)*nobsvz+iz
+            kobs=((nobsvy-iy+1)-1)*nobsvz+nobsvz-iz+1
+            do ic=1,3
+              dum=(reaima(ic,1,iobs)+reaima(ic,1,kobs))/2.0d0
+              reaima(ic,1,iobs)=dum
+              dum=(reaima(ic,2,iobs)+reaima(ic,2,kobs))/2.0d0
+              reaima(ic,2,kobs)=dum
+            enddo
+          enddo
+        enddo
+      endif
+
       isour=1
       smax=0.0d0
       do ifrq=1,nfreq
         DO iobs=1,nobsv
           iobfr=iobs+nobsv*(ifrq-1)
-          iphy=iobs/nobsvz+1
-          iphz=mod(iobs,nobsvy)
           if (spec(iobfr).gt.smax) then
             smax=spec(iobfr)
             reanor=
@@ -430,18 +464,25 @@
 
       reanor=sqrt(smax/reanor)
 
+      call util_break
+
       do ifrq=1,nfreq
         DO iobs=1,nobsv
           iobfr=iobs+nobsv*(ifrq-1)
-          iphy=iobs/nobsvz+1
-          iphz=mod(iobs,nobsvy)
+          iphy=(iobs-1)/nobsvz+1
+          iphz=iobs-(iphy-1)*nobsvz
+c          if (idebug.ne.0.and.iphy.eq.nobsvy/2+1.and.ifrq.eq.2) then
+c            write(99,*)iundulator,iphz,obsv(3,iobs),reaima(3,1,iobfr)*reanor
+c          endif
           TUP(1:3)=obsv(1:3,iobs)
-          TUP(4)=FREQ_omp(ifrq)
+          TUP(4)=FREQ(ifrq)
           TUP(5)=ifrq
           TUP(6)=IPHY
           TUP(7)=IPHZ
           ef(1:3)=reanor*reaima(1:3,1,iobfr)
-          bf(1:3)=reanor*reaima(8:10,1,iobfr)
+c          bf(1:3)=reanor*reaima(6:8,1,iobfr)
+          efc(1:3)=dcmplx(reaima(1:3,1,iobfr),reaima(1:3,2,iobfr))
+          bfc(1:3)=dcmplx(reaima(6:8,1,iobfr),reaima(6:8,2,iobfr))
           TUP(8)=ef(1)
           TUP(9)=reanor*reaima(1,2,iobfr)
           TUP(10)=ef(2)
@@ -454,15 +495,18 @@
           else
             tup(15)=0.0d0
           endif
-          TUP(16)=reanor*reaima(8,1,iobfr)
-          TUP(17)=reanor*reaima(8,2,iobfr)
-          TUP(18)=reanor*reaima(9,1,iobfr)
-          TUP(19)=reanor*reaima(9,2,iobfr)
-          TUP(20)=reanor*reaima(10,1,iobfr)
-          TUP(21)=reanor*reaima(10,2,iobfr)
-          rnx=ef(2)*bf(3)-ef(3)*bf(2)
-          rny=ef(3)*bf(1)-ef(1)*bf(3)
-          rnz=ef(1)*bf(2)-ef(2)*bf(1)
+          TUP(16)=reanor*reaima(6,1,iobfr)
+          TUP(17)=reanor*reaima(6,2,iobfr)
+          TUP(18)=reanor*reaima(7,1,iobfr)
+          TUP(19)=reanor*reaima(7,2,iobfr)
+          TUP(20)=reanor*reaima(8,1,iobfr)
+          TUP(21)=reanor*reaima(8,2,iobfr)
+c          rnx=ef(2)*bf(3)-ef(3)*bf(2)
+c          rny=ef(3)*bf(1)-ef(1)*bf(3)
+c          rnz=ef(1)*bf(2)-ef(2)*bf(1)
+          rnx=real(efc(2)*conjg(bfc(3))-efc(3)*conjg(bfc(2)))
+          rny=real(efc(3)*conjg(bfc(1))-efc(1)*conjg(bfc(3)))
+          rnz=real(efc(1)*conjg(bfc(2))-efc(2)*conjg(bfc(1)))
           rn=sqrt(rnx**2+rny**2+rnz**2)
           if (rn.eq.0.0d0) rn=1.0d0
           tup(22)=rnx/rn
@@ -471,7 +515,6 @@
           CALL hfm(NIDPHASE+1,TUP)
         ENDDO !iobs
       enddo !nfreq
-
 
       XPH=PHCENX
       XOBS=PINCEN(1)
@@ -614,10 +657,11 @@ C ans is actually reduce by 1.0 to avoid large overall phase
             IF (DR.NE.0.0d0) THEN
               EXPOM(IOBS)=CDEXP(DCMPLX(0.0d0,DRRED*OMC))/DR
             ELSE
-              EXPOM(IOBS)=1.D0
+              EXPOM(IOBS)=1.0D0
             ENDIF
 
             DEXPOM(IOBS)=CDEXP(DCMPLX(0.0d0,DRRED*DOMC))
+c            print*,ith,iobs,expom(iobs)
 c+seq,dum2.
           ENDDO   !NOBS
 
@@ -636,7 +680,8 @@ c+seq,dum2.
                 ELSE
                   PHSHIFT(IOBS)=PHSHIFT(IOBS)*DEXPOM(IOBS)
                 ENDIF   !(ifrq.EQ.1)
-
+c                print*,iobfr,iobs,expom(iobfr),phshift(iobs)
+c                stop
                 IF (DX.GE.0) THEN
 
                   ampli(1,iphz,iphy,ifrq)=ampli(1,iphz,iphy,ifrq)+
@@ -650,13 +695,13 @@ c+seq,dum2.
      &              *PHSHIFT(IOBS)
 
                   ampli(4,iphz,iphy,ifrq)=ampli(4,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(8,1,IOBFR),-reaima(8,2,IOBFR))
+     &              DCMPLX(reaima(6,1,IOBFR),-reaima(6,2,IOBFR))
      &              *PHSHIFT(IOBS)
                   ampli(5,iphz,iphy,ifrq)=ampli(5,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(9,1,IOBFR),-reaima(9,2,IOBFR))
+     &              DCMPLX(reaima(7,1,IOBFR),-reaima(7,2,IOBFR))
      &              *PHSHIFT(IOBS)
                   ampli(6,iphz,iphy,ifrq)=ampli(6,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(10,1,IOBFR),-reaima(10,2,IOBFR))
+     &              DCMPLX(reaima(8,1,IOBFR),-reaima(8,2,IOBFR))
      &              *PHSHIFT(IOBS)
 
                 ELSE
@@ -672,13 +717,13 @@ c+seq,dum2.
      &              *PHSHIFT(IOBS)
 
                   ampli(4,iphz,iphy,ifrq)=ampli(4,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(8,1,IOBFR),+REAIMA(1,2,IOBFR))
+     &              DCMPLX(reaima(6,1,IOBFR),+REAIMA(6,2,IOBFR))
      &              *PHSHIFT(IOBS)
                   ampli(5,iphz,iphy,ifrq)=ampli(5,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(9,1,IOBFR),+reaima(9,2,IOBFR))
+     &              DCMPLX(reaima(7,1,IOBFR),+reaima(7,2,IOBFR))
      &              *PHSHIFT(IOBS)
                   ampli(6,iphz,iphy,ifrq)=ampli(6,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(10,1,IOBFR),+reaima(10,2,IOBFR))
+     &              DCMPLX(reaima(8,1,IOBFR),+reaima(8,2,IOBFR))
      &              *PHSHIFT(IOBS)
 
                 ENDIF !(DX.GE.0)
@@ -715,13 +760,13 @@ c+seq,dummy.
      &                *PHSHIFT(IOBS)
 
                     ampli(4,iphz,iphy,ifrq)=
-     &                DCMPLX(reaima(8,1,IOBFR),-reaima(8,2,IOBFR))
+     &                DCMPLX(reaima(6,1,IOBFR),-reaima(6,2,IOBFR))
      &                *PHSHIFT(IOBS)
                     ampli(5,iphz,iphy,ifrq)=
-     &                DCMPLX(reaima(9,1,IOBFR),-reaima(9,2,IOBFR))
+     &                DCMPLX(reaima(7,1,IOBFR),-reaima(7,2,IOBFR))
      &                *PHSHIFT(IOBS)
                     ampli(6,iphz,iphy,ifrq)=
-     &                DCMPLX(reaima(10,1,IOBFR),-reaima(10,2,IOBFR))
+     &                DCMPLX(reaima(8,1,IOBFR),-reaima(8,2,IOBFR))
      &                *PHSHIFT(IOBS)
 
                   ELSE
@@ -737,13 +782,13 @@ c+seq,dummy.
      &                *PHSHIFT(IOBS)
 
                     ampli(4,iphz,iphy,ifrq)=
-     &                DCMPLX(reaima(8,1,IOBFR),+reaima(8,2,IOBFR))
+     &                DCMPLX(reaima(6,1,IOBFR),+reaima(6,2,IOBFR))
      &                *PHSHIFT(IOBS)
                     ampli(5,iphz,iphy,ifrq)=
-     &                DCMPLX(reaima(9,1,IOBFR),+reaima(9,2,IOBFR))
+     &                DCMPLX(reaima(7,1,IOBFR),+reaima(7,2,IOBFR))
      &                *PHSHIFT(IOBS)
                     ampli(6,iphz,iphy,ifrq)=
-     &                DCMPLX(reaima(10,1,IOBFR),+reaima(10,2,IOBFR))
+     &                DCMPLX(reaima(8,1,IOBFR),+reaima(8,2,IOBFR))
      &                *PHSHIFT(IOBS)
 
                   ENDIF !(DX.GE.0)
@@ -1001,7 +1046,9 @@ c     &            phws1,phws2,phws3,phws4)
             TUP(6)=IPHY
             TUP(7)=IPHZ
             ef(1:3)=DREAL(reanor*ampli(1:3,iphz,iphy,ifrq))
-            bf(1:3)=DREAL(reanor*ampli(4:6,iphz,iphy,ifrq))
+c            bf(1:3)=DREAL(reanor*ampli(4:6,iphz,iphy,ifrq))
+            efc(1:3)=ampli(1:3,iphz,iphy,ifrq)
+            bfc(1:3)=ampli(4:6,iphz,iphy,ifrq)
             TUP(8)=ef(1)
             TUP(9)=DIMAG(reanor*ampli(1,iphz,iphy,ifrq))
             TUP(10)=ef(2)
@@ -1016,9 +1063,12 @@ c     &            phws1,phws2,phws3,phws4)
             TUP(19)=DIMAG(reanor*ampli(5,iphz,iphy,ifrq))
             TUP(20)=DREAL(reanor*ampli(6,iphz,iphy,ifrq))
             TUP(21)=DIMAG(reanor*ampli(6,iphz,iphy,ifrq))
-            rnx=ef(2)*bf(3)-ef(3)*bf(2)
-            rny=ef(3)*bf(1)-ef(1)*bf(3)
-            rnz=ef(1)*bf(2)-ef(2)*bf(1)
+c            rnx=ef(2)*bf(3)-ef(3)*bf(2)
+c            rny=ef(3)*bf(1)-ef(1)*bf(3)
+c            rnz=ef(1)*bf(2)-ef(2)*bf(1)
+            rnx=real(efc(2)*conjg(bfc(3))-efc(3)*conjg(bfc(2)))
+            rny=real(efc(3)*conjg(bfc(1))-efc(1)*conjg(bfc(3)))
+            rnz=real(efc(1)*conjg(bfc(2))-efc(2)*conjg(bfc(1)))
             rn=sqrt(rnx**2+rny**2+rnz**2)
             if (rn.eq.0.0d0) rn=1.0d0
             tup(22)=rnx/rn
@@ -1359,7 +1409,6 @@ C--- GET FOCUSSING
 
               ENDDO   !ifrq
 
-
 C--- APPLY MATRICES OF BEAMLINE
 
               XBEAM=XPH
@@ -1379,7 +1428,7 @@ C--- APPLY MATRICES OF BEAMLINE
                 BEAM(1)=ZBEAM
                 BEAM(2)=TANPHIB
                 BEAM(3)=YBEAM
-         BEAM(4)=TANTHEB
+                BEAM(4)=TANTHEB
                 DO J=1,4
                   DO I=1,4
                     OPTMAT(I,J)=PHELEM(I,J,IELEM)
@@ -1451,23 +1500,23 @@ C--- APPLY MATRICES OF BEAMLINE
                 PHBEAM(ifrq)=PHBEAM(ifrq)+SPEC(ILIOBFR)*DA
               ENDDO   !ifrq
 
-90          CONTINUE
+90            CONTINUE
 
-          ENDIF   !CUTS
+            ENDIF   !CUTS
 
-        ENDDO  !ISOUR=1,NSOURCE
+          ENDDO  !ISOUR=1,NSOURCE
 
-      ENDDO !IOBS=1,NOBSV
+        ENDDO !IOBS=1,NOBSV
 
-      CALL MHROUT(NIDGEO,ICYCLE,' ')
-      CALL hdeletm(NIDGEO)
-      CALL MHROUT(NIDGEO1,ICYCLE,' ')
-      CALL hdeletm(NIDGEO1)
-      CALL MHROUT(NIDGEO2,ICYCLE,' ')
-      CALL hdeletm(NIDGEO2)
+        CALL MHROUT(NIDGEO,ICYCLE,' ')
+        CALL hdeletm(NIDGEO)
+        CALL MHROUT(NIDGEO1,ICYCLE,' ')
+        CALL hdeletm(NIDGEO1)
+        CALL MHROUT(NIDGEO2,ICYCLE,' ')
+        CALL hdeletm(NIDGEO2)
 
-      DO ifrq=1,NFREQ
-        DO ISOUR=1,NSOURCE
+        DO ifrq=1,NFREQ
+          DO ISOUR=1,NSOURCE
             ILIFR=ISOUR+NSOURCE*(ifrq-1)
             IF (WSUM(ILIFR).NE.0.0d0) THEN
               W=1.D0/WSUM(ILIFR)
@@ -1545,7 +1594,6 @@ C--- APPLY MATRICES OF BEAMLINE
      &      ,SNGL(PHGEOSEL(ifrq))
      &      ,SELGEO
         ENDDO
-
 
         WRITE(LUNGFO,*)
         WRITE(LUNGFO,*)

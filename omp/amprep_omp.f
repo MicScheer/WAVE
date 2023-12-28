@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 28/12/2023  13.26.19  by  Michael Scheer
 *CMZ :  4.01/02 12/05/2023  15.12.26  by  Michael Scheer
 *CMZ :  4.01/00 11/02/2023  16.38.29  by  Michael Scheer
 *CMZ :  4.00/17 05/12/2022  10.30.41  by  Michael Scheer
@@ -65,9 +66,15 @@
      &  beth,alphh,betv,alphv,de,disph,dispph,dispv,disppv
 
       integer :: modewave=1,icohere,nelec,noranone,modebunch,npinz,npiny,
-     &  modepin,nper,nepho
+     &  modepin,modesphere,nper,nepho
 
-      modewave=1
+c      if (user(2).ne.0) then
+c        modewave=user(2)
+c        print*,"modewave = USER(2)",modewave
+c      else
+        modewave=1
+c      endif
+
       step=1.0d0/dble(myinum)*1000.0d0
 
       perlen=phrperl*1000.0d0
@@ -79,6 +86,8 @@
       nepho=nfreq
       ephmin=freq(1)
       ephmax=freq(nfreq)
+
+      if (rpinsph.gt.0.0d0) modesphere=1
 
       if (ipin.ne.0) then
         npiny=nobsvy
@@ -165,8 +174,8 @@
       call urad_phase(
      &  mthreads,nelec,noranone,icohere,modebunch,bunchlen,bunchcharge,ihbunch,
      &  perlen,shift,nper,beffv,beffh,
-     &  dmyenergy,dmycur,step,
-     &  pincen*1000.0d0,pw,ph,npiny,npinz,modepin,
+     &  dmyenergy,dmycur,step,nlpoi,
+     &  pincen*1000.0d0,pw,ph,npiny,npinz,modepin,modesphere,
      &  nepho,ephmin,ephmax,banwid,
      &  xbeta,beth,alphh,betv,alphv,de,phremith,phremitv,
      &  disph,dispph,dispv,disppv,

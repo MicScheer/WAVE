@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 20/11/2023  22.07.55  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.10  by  Michael Scheer
 *CMZ :  2.70/12 01/03/2013  16.28.23  by  Michael Scheer
 *CMZ :  2.17/00 29/04/2010  11.46.31  by  Michael Scheer
@@ -89,19 +90,19 @@ C--- CHECKS CONSISTENCE OF OBSERVATION POINTS AND COLLIMATOR
       DLEN=CX2-CX1
 
       IF (DLEN.EQ.0.0) THEN
-              WRITE(LUNGFO,*)
-              WRITE(LUNGFO,*)'*** WARNING SR CHECKOB ***'
-              WRITE(LUNGFO,*)
-              WRITE(LUNGFO,*)'COLLIMATOR HAS ZERO LENGTH, OBSERVER POSITIONS ARE NOT CHECKED, BE CAREFUL !'
-              WRITE(LUNGFO,*)
-              WRITE(LUNGFO,*)
-              WRITE(LUNGFO,*)
-              WRITE(6,*)'*** WARNING SR CHECKOB ***'
-              WRITE(6,*)
-              WRITE(6,*)'COLLIMATOR HAS ZERO LENGTH, OBSERVER POSITIONS ARE NOT CHECKED, BE CAREFUL !'
-              WRITE(6,*)
-              WRITE(6,*)
-            RETURN
+        WRITE(LUNGFO,*)
+        WRITE(LUNGFO,*)'*** WARNING SR CHECKOB ***'
+        WRITE(LUNGFO,*)
+        WRITE(LUNGFO,*)'COLLIMATOR HAS ZERO LENGTH, OBSERVER POSITIONS ARE NOT CHECKED, BE CAREFUL !'
+        WRITE(LUNGFO,*)
+        WRITE(LUNGFO,*)
+        WRITE(LUNGFO,*)
+        WRITE(6,*)'*** WARNING SR CHECKOB ***'
+        WRITE(6,*)
+        WRITE(6,*)'COLLIMATOR HAS ZERO LENGTH, OBSERVER POSITIONS ARE NOT CHECKED, BE CAREFUL !'
+        WRITE(6,*)
+        WRITE(6,*)
+        RETURN
       ENDIF
 
       YSLOPEU=(UP2-DOWN1)/DLEN
@@ -110,50 +111,55 @@ C--- CHECKS CONSISTENCE OF OBSERVATION POINTS AND COLLIMATOR
       ZSLOPER=(RIGHT2-LEFT1)/DLEN
 
       DO IOBSV=1,NOBSV
-          XOB=OBSV(1,IOBSV)
-          YOB=OBSV(2,IOBSV)
-          ZOB=OBSV(3,IOBSV)
-          DIST=XOB-CX2
 
-          IF(
-     &         XOB.LT.CX2
-     &         .OR.
-     &         YOB.GT.UP2+YSLOPEU*DIST
-     &         .OR.
-     &         YOB.LT.DOWN2+YSLOPED*DIST
-     &         .OR.
-     &         ZOB.GT.RIGHT2+ZSLOPER*DIST
-     &         .OR.
-     &         ZOB.LT.LEFT2+ZSLOPEL*DIST
-     &          ) THEN
-              WRITE(6,*)
-              WRITE(6,*)'*** WARNING IN SR CHECKOB ***'
-              WRITE(6,*)
-     &        'OBSERVATION POINTS AND COLLIMATOR INCONSISTENT'
-              WRITE(6,*)'CHECK RESULTS CAREFULLY'
-              WRITE(6,*)
-              WRITE(6,*)'OBSERVATION POINT (X,Y,Z):'
-              WRITE(6,*)XOB,YOB,ZOB
-              WRITE(6,*)
-              WRITE(6,*)'CHECK ALSO DEFINITION OF COLLIMATOR'
-              WRITE(6,*)
-     &'IN NAMELIST COLLIN; MAYBE DEFAULTS NOT USEFUL'
-              WRITE(LUNGFO,*)
-              WRITE(LUNGFO,*)'*** WARNING IN SR CHECKOB ***'
-              WRITE(LUNGFO,*)
-     &        'OBSERVATION POINTS AND COLLIMATOR INCONSISTENT'
-              WRITE(LUNGFO,*)'CHECK RESULTS CAREFULLY'
-              WRITE(LUNGFO,*)
-              WRITE(LUNGFO,*)'OBSERVATION POINT (X,Y,Z):'
-              WRITE(LUNGFO,*)XOB,YOB,ZOB
-              WRITE(LUNGFO,*)'(REMAINING POINTS NOT CHECKED)'
-              WRITE(LUNGFO,*)
-              WRITE(LUNGFO,*)
-              WRITE(LUNGFO,*)'CHECK ALSO DEFINITION OF COLLIMATOR'
-              WRITE(LUNGFO,*)
-     &'IN NAMELIST COLLIN; MAYBE DEFAULTS NOT USEFUL'
-            RETURN
-         ENDIF
+        if (rpinsph.ne.0.0d0) then
+          XOB=OBSV(1,IOBSV)+1.0e-5
+        else
+          XOB=OBSV(1,IOBSV)
+        endif
+        YOB=OBSV(2,IOBSV)
+        ZOB=OBSV(3,IOBSV)
+        DIST=XOB-CX2
+
+        IF(
+     &      XOB.LT.CX2
+     &      .OR.
+     &      YOB.GT.UP2+YSLOPEU*DIST
+     &      .OR.
+     &      YOB.LT.DOWN2+YSLOPED*DIST
+     &      .OR.
+     &      ZOB.GT.RIGHT2+ZSLOPER*DIST
+     &      .OR.
+     &      ZOB.LT.LEFT2+ZSLOPEL*DIST
+     &      ) THEN
+          WRITE(6,*)
+          WRITE(6,*)'*** WARNING IN SR CHECKOB ***'
+          WRITE(6,*)
+     &      'OBSERVATION POINTS AND COLLIMATOR INCONSISTENT'
+          WRITE(6,*)'CHECK RESULTS CAREFULLY'
+          WRITE(6,*)
+          WRITE(6,*)'OBSERVATION POINT (X,Y,Z):'
+          WRITE(6,*)XOB,YOB,ZOB
+          WRITE(6,*)
+          WRITE(6,*)'CHECK ALSO DEFINITION OF COLLIMATOR'
+          WRITE(6,*)
+     &      'IN NAMELIST COLLIN; MAYBE DEFAULTS NOT USEFUL'
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'*** WARNING IN SR CHECKOB ***'
+          WRITE(LUNGFO,*)
+     &      'OBSERVATION POINTS AND COLLIMATOR INCONSISTENT'
+          WRITE(LUNGFO,*)'CHECK RESULTS CAREFULLY'
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'OBSERVATION POINT (X,Y,Z):'
+          WRITE(LUNGFO,*)XOB,YOB,ZOB
+          WRITE(LUNGFO,*)'(REMAINING POINTS NOT CHECKED)'
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'CHECK ALSO DEFINITION OF COLLIMATOR'
+          WRITE(LUNGFO,*)
+     &      'IN NAMELIST COLLIN; MAYBE DEFAULTS NOT USEFUL'
+          RETURN
+        ENDIF
       ENDDO
 
       RETURN

@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 26/11/2023  16.52.38  by  Michael Scheer
 *CMZ :  4.01/03 11/06/2023  11.04.36  by  Michael Scheer
 *CMZ :  4.00/17 28/11/2022  17.48.39  by  Michael Scheer
 *CMZ :  4.00/15 13/03/2022  19.00.20  by  Michael Scheer
@@ -132,6 +133,7 @@ c      common/kobsc/ampzmax,kobs
 
       REAL*8 FSPEC(31)
 
+      double precision rn_cross_beta(3), rn_cross_rn_cross_beta(3)
       double precision h2,ddist,dist0,dist02
      & ,vn,dgamma
 
@@ -152,7 +154,8 @@ c     &  ,H2,H2R2
      &  ,DGAMSUM,BETA,GAMGAM,GAMGAM0,AMPDT
      &  ,xn1,slopein,slope,drn1,drn2,zn1,yn1,wi,
      &  zz,yy,zzp,yyp,zzi,yyi,yypi,zzpi,
-     &  yeleco,zeleco,zpeleco,ypeleco,ef(3),bf(3)
+     &  yeleco,zeleco,zpeleco,ypeleco
+c     &  ,ef(3),bf(3)
 
       DOUBLE PRECISION VX1,VY1,VZ1,BX1,BY1,BZ1
       DOUBLE PRECISION VX2,VY2,VZ2,BX2,BY2,BZ2,AX2D,AY2D,AZ2D
@@ -164,7 +167,7 @@ c     &  ,H2,H2R2
       DOUBLE PRECISION R1,RNX,RNY,RNZ,DOM1,DOM2,BET1N,DUM11,R,BPX,BPY,BPZ
       DOUBLE PRECISION WGANG,OPANG
 
-      DOUBLE PRECISION RARG(5),PHASE
+      DOUBLE PRECISION RARG(5),PHASE,t0ph
 
       DOUBLE PRECISION DROIX,DTPHASE,DXEXI,CENXEXI
       DOUBLE PRECISION STOK1,STOK2,STOK3,STOK4,BET1NO
@@ -200,7 +203,6 @@ c     &  ,H2,H2R2
       DOUBLE PRECISION wth,wta,
      &                H6,H26,A2,A21H6,A3AH26,B,B2,B21H6,B3BH26,DT10
       integer icount,mode,klo,khi,k
-
       data ctup /'t','x','y','z','rx','ry','rz','rt','p','expr','expi','roi'
      &  ,'iob','ie','yob','zob','bet1n','om','dt','by2','isou'
      &  ,'spec','reax','imax','reay','imay','reaz','imaz','dom1',
@@ -212,7 +214,6 @@ c     &  ,H2,H2R2
 c      DATA ZI/(0.0D0,1.0D0)/
 c      DATA ZONE/(1.0D0,0.0D0)/
 c      DATA IWARNBET1N/0/
-
       ypeleco=vyelec/vxelec
       zpeleco=vzelec/vxelec
       zeleco=zelec
@@ -449,8 +450,6 @@ c?6.11.      if (jpin.ne.3.or.jpin.eq.3.and.ielec.eq.1) SPECPOW(jliob)=0.0D0
 C DO NOT USE, RESULTS IN NUMERICAL PROBLEMS     T=-R0*C1
       T=0.0D0 !WICHTIG HIER WEGEN TENDSOU-T WEITER UNTEN
 
-      R0=XOBSV-SOURCEAO(1,1,ISOUR)
-
       IF (ISPECMODE.EQ.1) THEN
         T0=DWT(1)
         T1=T0
@@ -497,9 +496,12 @@ c        XENDSOU=SOURCEEO(1,1,ISOUR)    !FINAL X
       X10=(XENDSOU-X0)/10.1D0
 
       NZAEHL=NLPOIO
-      DT0=TENDSOU/NZAEHL
+c      DT0=TENDSOU/NZAEHL
+      DT0=TENDSOU/dble(NZAEHL-1)
 
       DT=DT0
+      ical=ical+1
+      if (ical.gt.1.and.iobsv.gt.nobsvz/2+1) call util_break
 
       X2=X1
       Y2=Y1
@@ -577,8 +579,20 @@ C DO NOT USE, RESULTS IN NUMERICAL PROBLEMS     T=-R0*C1
       T=-DT
       TS=-DT
 
-      r=sqrt((xobsv-x1)**2+((yobsv-y1)**2+(zobsv-z1)**2))
+c20.11.2023
+c20.11.2023      R0=XOBSV-SOURCEAO(1,1,ISOUR)
+      R0=obsv(1,icbrill)-SOURCEAO(1,1,ISOUR)
+      h2=((yobsv-y1)**2+(zobsv-z1)**2)/(xobsv-x1)**2
+      if (h2.lt.0.01) then
+        r=abs(xobsv-x1)*(1.0d0+(((((-0.0205078125D0*h2+0.02734375D0)*h2
+     &    -0.0390625D0)*h2+0.0625D0)*h2-0.125D0)*h2+0.5D0)*h2)
+      else
+        r=sqrt((xobsv-x1)**2+((yobsv-y1)**2+(zobsv-z1)**2))
+      endif
+c      phase=(obsv(1,icbrill)-x1)*c1
+c20.11.2023
       PHASE=(r-r0)*c1 ! needed for phase of field amplitude
+      t0ph=phase
 
       EXPOM1=ZONE
       DEXPOMPH1=ZONE
@@ -595,7 +609,7 @@ C DO NOT USE, RESULTS IN NUMERICAL PROBLEMS     T=-R0*C1
       powpow=0.0d0
 
 1000  IZAEHL=IZAEHL+1
-
+      !all util_break
       nustep=izaehl
 c      IIZAEHL=IIZAEHL+1 !total step counter
 
@@ -905,6 +919,7 @@ C REAL PART OF INTEGRAND {
       RZ=ZOBSV-Z2
 
       R=SQRT(RX*RX+RY*RY+RZ*RZ)
+
       R1=1.0D0/R
       ZICR1=ZIC*R1
 
@@ -914,7 +929,7 @@ C REAL PART OF INTEGRAND {
 
 C--- THE DISTANCE R IS INTRODUCED HERE EXPLICITLY (S. PROGRAM OF CHAOEN WANG
 
-      BET1N=(1.D0-BX*RNX)-BY*RNY-BZ*RNZ
+      BET1N=(1.0D0-BX*RNX)-BY*RNY-BZ*RNZ
 
 c 20090928{
       br2=by**2+bz**2
@@ -1090,6 +1105,9 @@ C--- LOOP OVER ALL FREQUENCES
           EXPOM=EXPOM2P0(1,kfreq)
         ENDIF  !ifreq2p
 
+        !all util_break
+        !expom=exp(zidom*)
+
         IF (X2.GE.XIANF.AND.X2.LE.XIEND) THEN
 
           IF (ECMAXS.LT.BS) ECMAXS=BS
@@ -1102,11 +1120,18 @@ C--- LOOP OVER ALL FREQUENCES
             daff(icomp)=
      &        RARG(ICOMP)/BET1N/OM*EXPOM*(ZONE-DEXPOMPH)*DEXPbunch/sqnphsp
             affe(icomp,kfrob)=affe(icomp,kfrob)+daff(icomp)
+c            if (iobsv.eq.icbrill.and.kmode.eq.1.and.icomp.eq.3) then
+c              print*,izaehl,t,affe(3,kfrob)*conjg(affe(3,kfrob))
+c            endif
           ENDDO   !ICOMP
 
-          baff(1)=conjg(rny*daff(3)-rnz*daff(2))
-          baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
-          baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+c          baff(1)=conjg(rny*daff(3)-rnz*daff(2))
+c          baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
+c          baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+
+          baff(1)=(rny*daff(3)-rnz*daff(2))
+          baff(2)=(rnz*daff(1)-rnx*daff(3))
+          baff(3)=(rnx*daff(2)-rny*daff(1))
 
           !baff(1)=dcmplx(rny*dreal(daff(3))-rnz*dreal(daff(2)),0.0d0)
           !baff(2)=dcmplx(rnz*dreal(daff(1))-rny*dreal(daff(3)),0.0d0)
@@ -1120,7 +1145,7 @@ C--- LOOP OVER ALL FREQUENCES
           IF (IWFILINT.NE.0) THEN
             IF (MOD(IZAEHL,JWFILINT).EQ.0) THEN
               IF (IWFILINT.LT.0) THEN
-                FILLT(1)=T
+                FILLT(1)=T+DT
                 FILLT(2)=X2
                 FILLT(3)=Y2
                 FILLT(4)=Z2
@@ -1163,11 +1188,20 @@ C--- LOOP OVER ALL FREQUENCES
                 FILLT(33)=bpx
                 FILLT(34)=bpy
                 FILLT(35)=bpz
-                ef(1:3)=real(affe(1:3,kfrob))
-                bf(1:3)=real(affe(4:6,kfrob))
-                rnx=ef(2)*bf(3)-ef(3)*bf(2)
-                rny=ef(3)*bf(1)-ef(1)*bf(3)
-                rnz=ef(1)*bf(2)-ef(2)*bf(1)
+c                ef(1:3)=real(affe(1:3,kfrob))
+c                bf(1:3)=real(affe(4:6,kfrob))
+c                rnx=ef(2)*bf(3)-ef(3)*bf(2)
+c                rny=ef(3)*bf(1)-ef(1)*bf(3)
+c                rnz=ef(1)*bf(2)-ef(2)*bf(1)
+                rnx=real(
+     &            affe(2,kfrob)*conjg(affe(6,kfrob))-
+     &            affe(3,kfrob)*conjg(affe(5,kfrob)))
+                rny=real(
+     &            affe(3,kfrob)*conjg(affe(4,kfrob))-
+     &            affe(1,kfrob)*conjg(affe(6,kfrob)))
+                rnz=real(
+     &            affe(1,kfrob)*conjg(affe(5,kfrob))-
+     &            affe(2,kfrob)*conjg(affe(4,kfrob)))
                 rn=sqrt(rnx**2+rny**2+rnz**2)
                 FILLT(36)=rnx/rn
                 FILLT(37)=rny/rn
@@ -1227,9 +1261,13 @@ C--- LOOP OVER ALL FREQUENCES
               affe(icomp,kfrob)=affe(icomp,kfrob)+daff(icomp)
             ENDDO
 
-            baff(1)=conjg(rny*daff(3)-rnz*daff(2))
-            baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
-            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+c            baff(1)=conjg(rny*daff(3)-rnz*daff(2))
+c            baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
+c            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+
+            baff(1)=(rny*daff(3)-rnz*daff(2))
+            baff(2)=(rnz*daff(1)-rnx*daff(3))
+            baff(3)=(rnx*daff(2)-rny*daff(1))
 
           !baff(1)=dcmplx(rny*dreal(daff(3))-rnz*dreal(daff(2)),0.0d0)
           !baff(2)=dcmplx(rnz*dreal(daff(1))-rny*dreal(daff(3)),0.0d0)
@@ -1243,7 +1281,7 @@ C--- LOOP OVER ALL FREQUENCES
             IF (IWFILINT.NE.0) THEN
               IF (MOD(IZAEHL,JWFILINT).EQ.0) THEN
                 IF (IWFILINT.LT.0) THEN
-                  FILLT(1)=T
+                  FILLT(1)=T+DT
                   FILLT(2)=X2
                   FILLT(3)=Y2
                   FILLT(4)=Z2
@@ -1286,9 +1324,25 @@ C--- LOOP OVER ALL FREQUENCES
                   FILLT(33)=bpx
                   FILLT(34)=bpy
                   FILLT(35)=bpz
-                  FILLT(36)=rnx
-                  FILLT(37)=rny
-                  FILLT(38)=rnz
+c                ef(1:3)=real(affe(1:3,kfrob))
+c                bf(1:3)=real(affe(4:6,kfrob))
+c                rnx=ef(2)*bf(3)-ef(3)*bf(2)
+c                rny=ef(3)*bf(1)-ef(1)*bf(3)
+c                rnz=ef(1)*bf(2)-ef(2)*bf(1)
+                  rnx=real(
+     &              affe(2,kfrob)*conjg(affe(6,kfrob))-
+     &              affe(3,kfrob)*conjg(affe(5,kfrob)))
+                  rny=real(
+     &              affe(3,kfrob)*conjg(affe(4,kfrob))-
+     &              affe(1,kfrob)*conjg(affe(6,kfrob)))
+                  rnz=real(
+     &              affe(1,kfrob)*conjg(affe(5,kfrob))-
+     &              affe(2,kfrob)*conjg(affe(4,kfrob)))
+                  rn=sqrt(rnx**2+rny**2+rnz**2)
+                  FILLT(36)=rnx/rn
+                  FILLT(37)=rny/rn
+                  FILLT(38)=rnz/rn
+
                   CALL hfm(NIDSOURCE,FILLT)
 
                 ELSE IF (ISOUR.EQ.IWFILINT.AND.IOBSV.EQ.1) THEN
@@ -1735,7 +1789,7 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
           if (h2.lt.0.01) then
             ddist=dist0*(h2/2.0d0-h2**2/8.0d0)
           else
-            ddist=dist0*(sqrt(h2)-1.0d0)
+            ddist=dist0*(sqrt(1.0d0+h2)-1.0d0)
           endif
 
           dphase=ddist/freq(kfreq)*wtoe1*1.0d9*twopi1
@@ -2005,9 +2059,9 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
               REAIMA(1:3,2,jobfr)=REAIMA(1:3,2,jobfr)+
      &          DIMAG(AFREQ(1:3,kfrob))/sqnbunch
 
-              REAIMA(8:10,1,jobfr)=REAIMA(8:10,1,jobfr)+
+              REAIMA(6:8,1,jobfr)=REAIMA(6:8,1,jobfr)+
      &          DREAL(AFREQ(4:6,kfrob))/sqnbunch
-              REAIMA(8:10,2,jobfr)=REAIMA(8:10,2,jobfr)+
+              REAIMA(6:8,2,jobfr)=REAIMA(6:8,2,jobfr)+
      &          DIMAG(AFREQ(4:6,kfrob))/sqnbunch
 
             ELSE    !IPOLA
@@ -2025,9 +2079,9 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
               REAIMA(1:3,2,jobfr)=REAIMA(1:3,2,jobfr)+
      &          DIMAG(AFREQ(1:3,kfrob))/sqnbunch
 
-              REAIMA(8:10,1,jobfr)=REAIMA(8:10,1,jobfr)+
+              REAIMA(6:8,1,jobfr)=REAIMA(6:8,1,jobfr)+
      &          DREAL(AFREQ(4:6,kfrob))/sqnbunch
-              REAIMA(8:10,2,jobfr)=REAIMA(8:10,2,jobfr)+
+              REAIMA(6:8,2,jobfr)=REAIMA(6:8,2,jobfr)+
      &          DIMAG(AFREQ(4:6,kfrob))/sqnbunch
 
             ENDIF   !IPOLA
