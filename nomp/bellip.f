@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 06/12/2023  10.37.05  by  Michael Scheer
 *CMZ :  4.01/02 26/04/2023  07.35.28  by  Michael Scheer
 *CMZ :  4.00/15 28/04/2022  09.27.00  by  Michael Scheer
 *CMZ :  4.00/07 09/07/2020  12.37.21  by  Michael Scheer
@@ -31,7 +32,7 @@
 
       use f1k
 
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -104,11 +105,11 @@
 
         if (nharmell.ne.0.and.harmell.ne.0.0d0) then
           if (harmell.eq.-9999.0d0) then
-            if (ifreq2p.eq.1) then
-              harmell=freqlow
-            else
+c            if (ifreq2p.eq.1) then
+c              harmell=freqlow
+c            else
               harmell=(freqlow+freqhig)/2.0d0
-            endif
+c            endif
           endif
           if (harmell.lt.0.0d0) then
             harmell=-wtoe1/harmell
@@ -194,7 +195,8 @@
      &    '     Hori. and. vert. deflection angle [rad]:',
      &    SNGL(parkv/dmygamma),sngl(parkh/dmygamma)
         WRITE(LUNGFO,*)
-     &    '     1. harmonical [nm] and [eV]:',sngl(wlen1),SNGL(EHARM1)
+     &    '     1. harmonical [nm] and [eV], omega [1/s]:',
+     &    sngl(wlen1),SNGL(EHARM1),sngl(eharm1/hbarev1)
         WRITE(LUNGFO,*)
      &    '     critical energy [eV]:',SNGL(ecdipev1*DABS(B0EFF)*DMYENERGY**2)
         WRITE(LUNGFO,*)

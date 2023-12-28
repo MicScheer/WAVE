@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 22/11/2023  17.20.47  by  Michael Scheer
 *CMZ :  4.00/15 12/02/2022  17.08.21  by  Michael Scheer
 *CMZ :  4.00/13 04/12/2021  12.10.40  by  Michael Scheer
 *CMZ :  4.00/01 05/04/2019  15.09.32  by  Michael Scheer
@@ -529,6 +530,11 @@ C150793        NOBSVY=2**N2POWY+1
             obsvrphi(3,iobsv)=zn*rpinsph
           enddo
         endif
+
+        DO iob=1,nobsv
+          if (abs(obsv(2,iob)).lt.1.0d-12) obsv(2,iob)=0.0d0
+          if (abs(obsv(3,iob)).lt.1.0d-12) obsv(3,iob)=0.0d0
+        ENDDO
 
         DO IZ=1,NOBSVZ
           OBSVZ(IZ)=OBSV(3,IZ)

@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 15/11/2023  12.38.14  by  Michael Scheer
 *CMZ :  4.01/03 28/06/2023  13.07.07  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.11  by  Michael Scheer
 *CMZ :  2.66/02 26/10/2009  14.33.39  by  Michael Scheer
@@ -194,7 +195,7 @@ c     &  ,expom
             if (h2.lt.0.01) then
               ddist=dist0*(h2/2.0d0-h2**2/8.0d0)
             else
-              ddist=dist0*(sqrt(h2)-1.0d0)
+              ddist=dist0*(sqrt(1.0d0+h2)-1.0d0)
             endif
 
             dphase=ddist/freq(ifreq)*wtoe1*1.0d9*twopi1
@@ -350,7 +351,7 @@ c            print*,ir,iphi,phiz+dphase,phiz-dphase
               if (h2.lt.0.01) then
                 ddist=dist0*(h2/2.0d0-h2**2/8.0d0)
               else
-                ddist=dist0*(sqrt(h2)-1.0d0)
+                ddist=dist0*(sqrt(1.0d0+h2)-1.0d0)
               endif
 
               dphase=ddist/freq(ifreq)*wtoe1*1.0d9*twopi1
@@ -501,6 +502,8 @@ c power
         deallocate(w3)
         deallocate(w4)
       endif
+
+      call cyltocartb(isour)
 
       return
       end

@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 15/11/2023  12.38.14  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  13.01.26  by  Michael Scheer
 *CMZ :  4.01/02 14/05/2023  12.29.56  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.09.14  by  Michael Scheer
@@ -1389,9 +1390,13 @@ C--- LOOP OVER ALL FREQUENCES
             affe(icomp,ifrob)=affe(icomp,ifrob)+daff(icomp)
           ENDDO   !ICOMP
 
-          baff(1)=conjg(rny*daff(3)-rnz*daff(2))
-          baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
-          baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+c          baff(1)=conjg(rny*daff(3)-rnz*daff(2))
+c          baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
+c          baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+
+          baff(1)=(rny*daff(3)-rnz*daff(2))
+          baff(2)=(rnz*daff(1)-rnx*daff(3))
+          baff(3)=(rnx*daff(2)-rny*daff(1))
 
           affe(4:6,ifrob)=affe(4:6,ifrob)+baff(1:3)/clight1
 
@@ -1502,9 +1507,13 @@ C--- LOOP OVER ALL FREQUENCES
               affe(icomp,ifrob)=affe(icomp,ifrob)+daff(icomp)
             ENDDO
 
-            baff(1)=conjg(rny*daff(3)-rnz*daff(2))
-            baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
-            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+c            baff(1)=conjg(rny*daff(3)-rnz*daff(2))
+c            baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
+c            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+
+            baff(1)=(rny*daff(3)-rnz*daff(2))
+            baff(2)=(rnz*daff(1)-rnx*daff(3))
+            baff(3)=(rnx*daff(2)-rny*daff(1))
 
             affe(4:6,ifrob)=affe(4:6,ifrob)+baff(1:3)/clight1
 
@@ -1924,6 +1933,9 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
               DDMODU=EXP(ZI*PHI)
             ENDIF   !(AMPRAN.NE.0.0D0)
 
+
+            DMODU=DMODU0*DDMODU
+
             BX0=BX0*DMODU0
             BY0=BY0*DMODU0
             BZ0=BZ0*DMODU0
@@ -1932,7 +1944,6 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
             BYc=BY0*CORRR0
             BZc=BZ0*CORRR0
 
-            DMODU=DMODU0*DDMODU
             BXc=BXc*DMODU
             BYc=BYc*DMODU
             BZc=BZc*DMODU
@@ -1946,6 +1957,7 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
             AZ=AZ0*CORRR0
 
             !DMODU=DMODU0*DDMODU
+
             AX=AX*DMODU
             AY=AY*DMODU
             AZ=AZ*DMODU
@@ -2012,7 +2024,7 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
           if (h2.lt.0.01) then
             ddist=dist0*(h2/2.0d0-h2**2/8.0d0)
           else
-            ddist=dist0*(sqrt(h2)-1.0d0)
+            ddist=dist0*(sqrt(1.0d0+h2)-1.0d0)
           endif
 
           dphase=ddist/freq(kfreq)*wtoe1*1.0d9*twopi1

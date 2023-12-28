@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 15/11/2023  18.07.40  by  Michael Scheer
 *CMZ :  4.01/03 10/06/2023  15.52.02  by  Michael Scheer
 *CMZ :  4.01/00 08/01/2023  10.16.47  by  Michael Scheer
 *CMZ :  4.00/17 04/10/2022  08.10.22  by  Michael Scheer
@@ -2033,22 +2034,26 @@ C--- NTUPLE
             FSPEC(10)=ifrq
             IOBFR=IOBSV+NOBSV*(ifrq-1)
 c            IF (ISPECMODE.EQ.3) THEN
+
               FSPEC(11)=reanor*reaIMA(1,1,IOBFR)
               FSPEC(12)=reanor*reaIMA(1,2,IOBFR)
               FSPEC(13)=reanor*reaIMA(2,1,IOBFR)
               FSPEC(14)=reanor*reaIMA(2,2,IOBFR)
               FSPEC(15)=reanor*reaIMA(3,1,IOBFR)
               FSPEC(16)=reanor*reaIMA(3,2,IOBFR)
+
               FSPEC(17)=reanor*reaIMA(4,1,IOBFR)
               FSPEC(18)=reanor*reaIMA(4,2,IOBFR)
               FSPEC(19)=reanor*reaIMA(5,1,IOBFR)
               FSPEC(20)=reanor*reaIMA(5,2,IOBFR)
+
               FSPEC(21)=reanor*reaIMA(6,1,IOBFR)
               FSPEC(22)=reanor*reaIMA(6,2,IOBFR)
               FSPEC(23)=reanor*reaIMA(7,1,IOBFR)
               FSPEC(24)=reanor*reaIMA(7,2,IOBFR)
               FSPEC(25)=reanor*reaIMA(8,1,IOBFR)
               FSPEC(26)=reanor*reaIMA(8,2,IOBFR)
+
               FSPEC(27)=reanor*reaIMA(9,1,IOBFR)
               FSPEC(28)=reanor*reaIMA(9,2,IOBFR)
               FSPEC(29)=reanor*reaIMA(10,1,IOBFR)
@@ -2124,7 +2129,7 @@ c            IF (ISPECMODE.EQ.3) THEN
               if (h2.lt.0.01) then
                 ddist=dist0*(h2/2.0d0-h2**2/8.0d0)
               else
-                ddist=dist0*(sqrt(h2)-1.0d0)
+                ddist=dist0*(sqrt(1.0d0+h2)-1.0d0)
               endif
 
               dphase=ddist/freq(ifrq)*wtoe1*1.0d9*twopi1
@@ -2515,21 +2520,31 @@ C BRILLIANCE
                 FSPEC(8)=IOBSVZ
                 FSPEC(9)=IOBSVY
                 FSPEC(10)=ifrq
+
                 IOBFR=IOBSV+NOBSV*(ifrq-1)
+
                 FSPEC(11)=reanor*reaIMA(4,1,IOBFR)
                 FSPEC(12)=reanor*reaIMA(4,2,IOBFR)
                 FSPEC(13)=reanor*reaIMA(5,1,IOBFR)
                 FSPEC(14)=reanor*reaIMA(5,2,IOBFR)
-                FSPEC(15)=reanor*reaIMA(6,1,IOBFR)
-                FSPEC(16)=reanor*reaIMA(6,2,IOBFR)
-                FSPEC(17)=reanor*reaIMA(7,1,IOBFR)
-                FSPEC(18)=reanor*reaIMA(7,2,IOBFR)
-                FSPEC(19)=reanor*reaIMA(8,1,IOBFR)
-                FSPEC(20)=reanor*reaIMA(8,2,IOBFR)
-                FSPEC(21)=reanor*reaIMA(9,1,IOBFR)
-                FSPEC(22)=reanor*reaIMA(9,2,IOBFR)
-                FSPEC(23)=reanor*reaIMA(10,1,IOBFR)
-                FSPEC(24)=reanor*reaIMA(10,2,IOBFR)
+
+c                FSPEC(15)=reanor*reaIMA(6,1,IOBFR)
+c                FSPEC(16)=reanor*reaIMA(6,2,IOBFR)
+c                FSPEC(17)=reanor*reaIMA(7,1,IOBFR)
+c                FSPEC(18)=reanor*reaIMA(7,2,IOBFR)
+c                FSPEC(19)=reanor*reaIMA(8,1,IOBFR)
+c                FSPEC(20)=reanor*reaIMA(8,2,IOBFR)
+
+                FSPEC(15)=reanor*reaIMA(9,1,IOBFR)
+                FSPEC(16)=reanor*reaIMA(9,2,IOBFR)
+                FSPEC(17)=reanor*reaIMA(10,1,IOBFR)
+                FSPEC(18)=reanor*reaIMA(10,2,IOBFR)
+
+c                FSPEC(21)=reanor*reaIMA(9,1,IOBFR)
+c                FSPEC(22)=reanor*reaIMA(9,2,IOBFR)
+c                FSPEC(23)=reanor*reaIMA(10,1,IOBFR)
+c                FSPEC(24)=reanor*reaIMA(10,2,IOBFR)
+
                 CALL hfm(NIDSPECF,FSPEC)
               ENDDO   !NFREQ
             ENDDO   !IOBSV

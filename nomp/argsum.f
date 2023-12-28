@@ -1,4 +1,4 @@
-*CMZ :          04/07/2023  11.46.29  by  Michael Scheer
+*CMZ :  4.01/04 14/11/2023  11.45.54  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  13.01.26  by  Michael Scheer
 *CMZ :  4.00/14 11/02/2022  10.26.56  by  Michael Scheer
 *CMZ :  3.05/01 08/05/2018  16.08.32  by  Michael Scheer
@@ -139,8 +139,11 @@
       DATA ZI/(0.0D0,1.0D0)/
       DATA ZONE/(1.0D0,0.0D0)/
 
+      save
+
       IF (ICAL.EQ.0) THEN
 
+        print*,"*** Warning in ARGSUM: Ntuple of source not uptodate, use OMP version or ISPECMODE=2"
 c11.2.2022        RSPECNOR=DSQRT(SPECNOR) to be consistent with hfreq and souintana
 
         DO IFREQ=1,NFREQ
@@ -225,9 +228,13 @@ C-- LOOP OVER TIME STEPS (ACTUAL INTEGRATION)
           AFREQ(ICOMP,IFROB)=AFREQ(ICOMP,IFROB)+daff(icomp)
         ENDDO
 
-        baff(1)=conjg(rny*daff(3)-rnz*daff(2))
-        baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
-        baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+c        baff(1)=conjg(rny*daff(3)-rnz*daff(2))
+c        baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
+c        baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+
+        baff(1)=(rny*daff(3)-rnz*daff(2))
+        baff(2)=(rnz*daff(1)-rnx*daff(3))
+        baff(3)=(rnx*daff(2)-rny*daff(1))
 
         afreq(4:6,IFROB)=afreq(4:6,IFROB)+baff(1:3)/clight1
 
@@ -257,9 +264,13 @@ C--- LOOP OVER ALL FREQUENCES
               AFREQ(ICOMP,IFROB)=AFREQ(ICOMP,IFROB)+daff(icomp)
             ENDDO
 
-            baff(1)=conjg(rny*daff(3)-rnz*daff(2))
-            baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
-            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+c            baff(1)=conjg(rny*daff(3)-rnz*daff(2))
+c            baff(2)=conjg(rnz*daff(1)-rnx*daff(3))
+c            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
+
+            baff(1)=(rny*daff(3)-rnz*daff(2))
+            baff(2)=(rnz*daff(1)-rnx*daff(3))
+            baff(3)=(rnx*daff(2)-rny*daff(1))
 
             afreq(4:6,IFROB)=afreq(4:6,IFROB)+baff(1:3)/clight1
 

@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 25/11/2023  13.39.02  by  Michael Scheer
 *CMZ :  4.01/02 09/05/2023  13.15.30  by  Michael Scheer
 *CMZ :  4.00/15 28/04/2022  11.45.17  by  Michael Scheer
 *CMZ :  4.00/13 16/11/2021  17.18.53  by  Michael Scheer
@@ -33,17 +34,25 @@
       byout=0.0d0
       bzout=0.0d0
 
-      call bhalba_omp(phrb0v,phrperl,x+phrshift/2.0d0,y,z,bx,by,bz)
+      if (phrb0v.ne.0.0d0) then
 
-      bxout=bxout+bx
-      byout=byout+by
-      bzout=bzout+bz
+        call bhalba_omp(phrb0v,phrperl,x+phrshift/2.0d0,y,z,bx,by,bz)
 
-      call bhalba_omp(phrb0h,phrperl,x-phrshift/2.0d0,y,z,bx,by,bz)
+        bxout=bxout+bx
+        byout=byout+by
+        bzout=bzout+bz
 
-      bxout=bxout+bx
-      byout=byout+bz
-      bzout=bzout-by
+      endif
+
+      if (phrb0h.ne.0.0d0) then
+
+        call bhalba_omp(phrb0h,phrperl,x-phrshift/2.0d0,y,z,bx,by,bz)
+
+        bxout=bxout+bx
+        byout=byout+bz
+        bzout=bzout-by
+
+      endif
 
       istatus=0
 

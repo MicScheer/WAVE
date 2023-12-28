@@ -1,3 +1,4 @@
+*CMZ :  4.01/04 14/11/2023  13.46.13  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.11  by  Michael Scheer
 *CMZ :  2.70/12 01/03/2013  16.28.24  by  Michael Scheer
 *CMZ :  2.66/03 29/04/2010  11.46.31  by  Michael Scheer
@@ -102,7 +103,7 @@ C    IFOLD.EQ.1: SR UTIL_FOLD_FUNCTION_GAUSS IS USED
 
       DOUBLE PRECISION ZKZ0,YKY0,GZ(NGCOEFP*LIDIMP),GY(NGCOEFP*LIDIMP)
 
-      if (icomp.eq.1) return
+c14.11.2023      if (icomp.eq.1) return
 
       isour=nsource/2+1
 
@@ -133,7 +134,13 @@ C    IFOLD.EQ.1: SR UTIL_FOLD_FUNCTION_GAUSS IS USED
             DO IZ=IZA,IZE
               IMASH=IZ+(IY-1)*NOBSVZ
               IOBFR=imash+NOBSV*(IFREQ-1)
-              reaima(icomp+2,ireim,iobfr)=WOBS2(IZ)
+              if (icomp.eq.2.or.icomp.eq.3) then
+                reaima(icomp+2,ireim,iobfr)=WOBS2(IZ)
+              else if (icomp.eq.1) then
+                reaima(11,ireim,iobfr)=WOBS2(IZ)
+              else if (icomp.gt.5) then
+                reaima(icomp+6,ireim,iobfr)=WOBS2(IZ)
+              endif
             ENDDO
 
           ENDDO   !IY
@@ -145,7 +152,13 @@ C    IFOLD.EQ.1: SR UTIL_FOLD_FUNCTION_GAUSS IS USED
           DO IY=1,NOBSVY
             IMASH=1+(IY-1)*NOBSVZ
             IOBFR=imash+NOBSV*(IFREQ-1)
-            reaima(icomp+2,ireim,iobfr)=reaima(icomp,ireim,iobfr)
+            if (icomp.eq.2.or.icomp.eq.3) then
+              reaima(icomp+2,ireim,iobfr)=reaima(icomp,ireim,iobfr)
+            else if (icomp.eq.1) then
+              reaima(11,ireim,iobfr)=reaima(icomp,ireim,iobfr)
+            else if (icomp.gt.5) then
+              reaima(icomp+6,ireim,iobfr)=reaima(icomp,ireim,iobfr)
+            endif
           ENDDO
 
         ENDIF !(NOBSVZ.GT.1)
@@ -165,7 +178,13 @@ C    IFOLD.EQ.1: SR UTIL_FOLD_FUNCTION_GAUSS IS USED
           DO IY=IYA,IYE
             IMASH=IZ+(IY-1)*NOBSVZ
             IOBFR=imash+NOBSV*(IFREQ-1)
-            reaima(icomp+2,ireim,iobfr)=WOBS2(IY)
+            if (icomp.eq.2.or.icomp.eq.3) then
+              reaima(icomp+2,ireim,iobfr)=WOBS2(IY)
+            else if (icomp.eq.1) then
+              reaima(11,ireim,iobfr)=WOBS2(IY)
+            else if (icomp.gt.5) then
+              reaima(icomp+6,ireim,iobfr)=WOBS2(IY)
+            endif
           ENDDO
 
         ENDDO  !IZ
@@ -203,7 +222,13 @@ C    IFOLD.EQ.1: SR UTIL_FOLD_FUNCTION_GAUSS IS USED
             DO IZ=IZA,IZE
               IMASH=IZ+(IY-1)*NOBSVZ
               IOBFR=imash+NOBSV*(IFREQ-1)
-              reaima(icomp+2,ireim,iobfr)=WOBS2(IZ)
+              if (icomp.eq.2.or.icomp.eq.3) then
+                reaima(icomp+2,ireim,iobfr)=WOBS2(IZ)
+              else if (icomp.eq.1) then
+                reaima(11,ireim,iobfr)=WOBS2(IZ)
+              else if (icomp.gt.5) then
+                reaima(icomp+6,ireim,iobfr)=WOBS2(IZ)
+              endif
             ENDDO
 
           ENDDO   !IY
@@ -215,7 +240,13 @@ C    IFOLD.EQ.1: SR UTIL_FOLD_FUNCTION_GAUSS IS USED
           DO IY=1,NOBSVY
             IMASH=1+(IY-1)*NOBSVZ
             IOBFR=imash+NOBSV*(IFREQ-1)
-            reaima(icomp+2,ireim,iobfr)=reaima(icomp,ireim,iobfr)
+            if (icomp.eq.2.or.icomp.eq.3) then
+              reaima(icomp+2,ireim,iobfr)=reaima(icomp,ireim,iobfr)
+            else if (icomp.eq.1) then
+              reaima(11,ireim,iobfr)=reaima(icomp,ireim,iobfr)
+            else if (icomp.gt.5) then
+              reaima(icomp+6,ireim,iobfr)=reaima(icomp,ireim,iobfr)
+            endif
           ENDDO
 
         ENDIF !(NOBSVZ.GT.1)
@@ -240,7 +271,13 @@ C    IFOLD.EQ.1: SR UTIL_FOLD_FUNCTION_GAUSS IS USED
           DO IY=IYA,IYE
             IMASH=IZ+(IY-1)*NOBSVZ
             IOBFR=imash+NOBSV*(IFREQ-1)
-            reaima(icomp+2,ireim,iobfr)=WOBS2(IY)
+            if (icomp.eq.2.or.icomp.eq.3) then
+              reaima(icomp+2,ireim,iobfr)=WOBS2(IY)
+            else if (icomp.eq.1) then
+              reaima(11,ireim,iobfr)=WOBS2(IY)
+            else if (icomp.gt.5) then
+              reaima(icomp+6,ireim,iobfr)=WOBS2(IY)
+            endif
           ENDDO
 
         ENDDO  !IZ
