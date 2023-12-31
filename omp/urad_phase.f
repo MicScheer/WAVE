@@ -1,11 +1,12 @@
+*CMZ :  4.01/04 28/12/2023  15.30.57  by  Michael Scheer
 *CMZ :  4.01/02 12/05/2023  17.13.05  by  Michael Scheer
 *CMZ :  4.01/00 21/02/2023  16.51.29  by  Michael Scheer
 *-- Author : Michael Scheer
       subroutine urad_phase(
      &  mthreads,nelec,noranone,icohere,modebunch,bunchlen,bunchcharge,ihbunch,
      &  perlen,shift,nper,beffv,beffh,
-     &  ebeam,curr,step,
-     &  pincen,pinw,pinh,npiny,npinz,modepin,
+     &  ebeam,curr,step,nlpoi,
+     &  pincen,pinw,pinh,npiny,npinz,modepin,modesphere,
      &  nepho,ephmin,ephmax,banwid,
      &  xbeta,betah,alphah,betav,alphav,espread,emith,emitv,
      &  disph,dispph,dispv,disppv,
@@ -17,88 +18,10 @@
 
       implicit none
 
-*KEEP,PHYCONparam,T=F77.
-c-----------------------------------------------------------------------
-c     phyconparam.cmn
-c-----------------------------------------------------------------------
-
-      complex*16, parameter :: zone1=(1.0d0,0.0d0), zi1=(0.0d0,1.0d0)
-
-      complex*16, dimension(4,3), parameter ::
-     &  vstokes=reshape([
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0, -0.70710678118654746d0),
-     &  ( 0.0000000000000000d0, -0.70710678118654746d0),
-     &  ( 0.70710678118654746d0, 0.0000000000000000d0),
-     &  (-0.70710678118654746d0,-0.70710678118654746d0),
-     &  ( 0.70710678118654746d0, 0.0000000000000000d0),
-     &  (-0.70710678118654746d0, 0.0000000000000000d0),
-     &  (-0.70710678118654746d0, 0.0000000000000000d0)
-     &  ],[4,3])
-
-c      vstokes(1,1)=( 0.0d0,        0.0d0)      !horizontal polarization
-c      vstokes(1,2)=( 0.0d0,        0.0d0)
-c      vstokes(1,3)=(-sqrt(1./2.),       -sqrt(1./2.))
-c
-c      vstokes(2,1)=( 0.0d0,        0.0d0)      !right handed polarization
-c      vstokes(2,2)=( 0.0d0,       -sqrt(1./2.))
-c      vstokes(2,3)=(+sqrt(1./2.),        0.0d0)
-c
-c      vstokes(3,1)=( 0.0d0,        0.0d0)      !left handed polarization
-c      vstokes(3,2)=( 0.0d0,       -sqrt(1./2.))
-c      vstokes(3,3)=(-sqrt(1./2.),        0.0d0)
-c
-c      vstokes(4,1)=( 0.0d0,        0.0d0)      !45 degree linear polarization
-c      vstokes(4,2)=( sqrt(1./2.),        0.0d0)
-c      vstokes(4,3)=(-sqrt(1./2.),        0.0d0)
-
-      double precision, parameter ::
-     &  HBAREV1=6.58211889D-16
-     &  ,CLIGHT1=2.99792458D8
-     &  ,EMASSKG1=9.10938188D-31
-     &  ,EMASSE1=0.510998902D6
-     &  ,EMASSG1=0.510998902D-3
-     &  ,ECHARGE1=1.602176462D-19
-     &  ,ERAD1=2.8179380D-15
-     &  ,EPS01=8.854187817D-12
-     &  ,PI1=3.141592653589793D0
-     &  ,rmu04pi1=1.0D-7
-     &  ,dnull1=0.0d0
-     &  ,done1=1.0d0
-     & ,HPLANCK1=6.626176D-34
-
-      double precision, parameter ::
-     & GRARAD1=PI1/180.0d0
-     & ,RADGRA1=180.0d0/PI1
-     & ,HBAR1=HBAREV1*ECHARGE1
-     & ,WTOE1=CLIGHT1*HPLANCK1/ECHARGE1*1.0d9
-     & ,CQ1=55.0d0/32.0d0/DSQRT(3.0D0)*HBAR1/EMASSKG1/CLIGHT1
-     & ,CGAM1=4.0d0/3.0d0*PI1*ERAD1/EMASSG1**3
-     & ,POL1CON1=8.0d0/5.0d0/DSQRT(3.0D0)
-     & ,POL2CON1=8.0d0/5.0d0/DSQRT(3.0D0)/2.0d0/PI1/3600.0d0
-     &  *EMASSKG1/HBAR1/ERAD1*EMASSG1**5
-     & ,TWOPI1=2.0D0*PI1
-     & ,HALFPI1=PI1/2.0D0
-     & ,sqrttwopi1=sqrt(twopi1)
-     & ,rmu01=4.0D0*PI1/1.0D7
-     & ,alpha1=echarge1**2/(4.0d0*pi1*eps01*hbar1*clight1)
-     & ,gaussn1=1.0d0/sqrt(twopi1)
-     & ,cK934=ECHARGE1/(2.0d0*PI1*EMASSKG1*CLIGHT1)/100.0d0
-     & ,powcon1=cgam1/2.0d0/pi1*clight1*(clight1/1.0d9)**2*emassg1
-     &  ,gamma1=1.0d0/emassg1
-     &  ,emom1=emasse1*dsqrt((gamma1-1.0d0)*(gamma1+1.0d0))
-     &  ,rho1=emom1/clight1
-     &  ,omegac1=1.5d0*gamma1**3*clight1/rho1
-     &  ,ecdipev1=omegac1*hbar1/echarge1
-     &  ,ecdipkev1=ecdipev1/1000.0d0
-
-c-----------------------------------------------------------------------
-c     end of phyconparam.cmn
-c-----------------------------------------------------------------------
+*KEEP,phyconparam.
+      include 'phyconparam.cmn'
+*KEEP,uservar.
+      include 'uservar.cmn'
 *KEND.
 
       double precision
@@ -106,15 +29,13 @@ c-----------------------------------------------------------------------
      &  pincen(3),pinw,pinh,betah,alphah,betav,alphav,
      &  ephmin,ephmax,beffv,beffh,pherror,espread,emith,emitv,
      &  disph,dispph,dispv,disppv,y,z,dy,dz,ymin,zmin,bunchlen,bunchcharge,
-     &  xbeta
-
-      double precision df
+     &  xbeta,df,xx,yy,zz,r,xn,yn,zn,h2
 
       integer
-     &  npiny,npinz,nper,nepho,mthreads,nelec,icohere,ihbunch,
-     &  modeph,modepin,modebunch,iy,iz,iobsv,noranone,modewave
+     &  npiny,npinz,nper,nepho,mthreads,nelec,icohere,ihbunch,i,nlpoi,
+     &  modeph,modepin,modesphere,modebunch,iy,iz,iobsv,noranone,modewave
 
-      integer i
+      if (modewave.ne.0) call util_zeit_kommentar(6,'Entered urad_phase')
 
       mthreads_u=mthreads
 
@@ -153,6 +74,10 @@ c-----------------------------------------------------------------------
 
       npiny_u=max(1,npiny_u)
       npinz_u=max(1,npinz_u)
+
+      nlpoi_u=nlpoi
+c      nlpoi_u=user(12)*nper_u
+      nlpoi_u=user(12)
 
       if (modepin.eq.0) then
         nobsv_u=npiny_u*npinz_u
@@ -202,6 +127,27 @@ c-----------------------------------------------------------------------
           obsv_u(1,iobsv)=pincen_u(1)
           obsv_u(2,iobsv)=y
           obsv_u(3,iobsv)=z
+          if (modesphere.ne.0) then
+            !all util_break
+            xx=obsv_u(1,iobsv)
+            yy=obsv_u(2,iobsv)
+            zz=obsv_u(3,iobsv)
+c            r=sqrt(xx*xx+yy*yy+zz*zz)
+            h2=(zz**2+yy**2)/xx**2
+            if (h2.lt.0.01) then
+c              r=xx*(1.0d0+h2/2.0d0-h2**2/8.0d0)
+              r=xx*(1.0d0+(((((-0.0205078125D0*h2+0.02734375D0)*h2
+     &      -0.0390625D0)*h2+0.0625D0)*h2-0.125D0)*h2+0.5D0)*h2)
+            else
+              r=xx*(1.0d0+sqrt(1.0d0+h2))
+            endif
+            xn=xx/r
+            yn=yy/r
+            zn=zz/r
+            obsv_u(1,iobsv)=xn*xx
+            obsv_u(2,iobsv)=yn*xx
+            obsv_u(3,iobsv)=zn*xx
+          endif
         enddo
       enddo
 
@@ -231,7 +177,15 @@ c-----------------------------------------------------------------------
       modeph=modeph_u
       pherror_u=pherror
 
-      call urad_amprep(modewave)
+c      call urad_spline(modewave)
+c      stop
+c      if (modewave.eq.2) then
+c        call urad_nnb(modewave)
+c      else if (modewave.eq.3) then
+c        call urad_spline(modewave)
+c      else
+        call urad_amprep(modewave)
+c      endif
 
       stokes_u=stokes_u/1.0d6 ! photons/mm**2
       fbunch_u(4:14,:)=fbunch_u(4:14,:)*1000.0d0 ! mm
@@ -240,5 +194,7 @@ c-----------------------------------------------------------------------
       arad_u=arad_u/1.0d3
 
       obsv_u=obsv_u*1000.0d0
+
+      if (modewave.ne.0) call util_zeit_kommentar(6,'Leaving urad_phase')
 
       end

@@ -1,3 +1,4 @@
+*CMZ :          29/12/2023  14.56.39  by  Michael Scheer
 *CMZ :  4.01/04 28/11/2023  14.20.34  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  10.59.52  by  Michael Scheer
 *CMZ :  4.00/14 07/02/2022  16.17.00  by  Michael Scheer
@@ -35,47 +36,7 @@
 *CMZ :  1.03/06 29/09/98  14.43.55  by  Michael Scheer
 *-- Author :    Michael Scheer   18/09/98
       SUBROUTINE PHASE_omp
-*KEEP,gplhint.
-!******************************************************************************
-!
-!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
-!      Hahn-Meitner-Platz 1
-!      D-14109 Berlin
-!      Germany
-!
-!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
-!
-! -----------------------------------------------------------------------
-!
-!    This program is free software: you can redistribute it and/or modify
-!    it under the terms of the GNU General Public License as published by
-!    the Free Software Foundation, either version 3 of the License, or
-!    (at your option) any later version.
-!
-!    This program is distributed in the hope that it will be useful,
-!    but WITHOUT ANY WARRANTY; without even the implied warranty of
-!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-!    GNU General Public License for more details.
-!
-!    You should have received a copy (wave_gpl.txt) of the GNU General Public
-!    License along with this program.
-!    If not, see <http://www.gnu.org/licenses/>.
-!
-!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
-!    der GNU General Public License, wie von der Free Software Foundation,
-!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
-!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
-!
-!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
-!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
-!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
-!    Siehe die GNU General Public License fuer weitere Details.
-!
-!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
-!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
-!    siehe <http://www.gnu.org/licenses/>.
-!
-!******************************************************************************
+*KEEP,GPLHINT.
 *KEND.
 
 *KEEP,spectf90u.
@@ -432,21 +393,6 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
      &    nobsv*nfreq,CHTAGS)
       endif
 
-      if(user(4).ne.0.0d0) then
-        do iz=1,nobsvz/2
-          do iy=1,nobsvy/2
-            iobs=(iy-1)*nobsvz+iz
-            kobs=((nobsvy-iy+1)-1)*nobsvz+nobsvz-iz+1
-            do ic=1,3
-              dum=(reaima(ic,1,iobs)+reaima(ic,1,kobs))/2.0d0
-              reaima(ic,1,iobs)=dum
-              dum=(reaima(ic,2,iobs)+reaima(ic,2,kobs))/2.0d0
-              reaima(ic,2,kobs)=dum
-            enddo
-          enddo
-        enddo
-      endif
-
       isour=1
       smax=0.0d0
       do ifrq=1,nfreq
@@ -463,8 +409,6 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
       enddo
 
       reanor=sqrt(smax/reanor)
-
-      call util_break
 
       do ifrq=1,nfreq
         DO iobs=1,nobsv
