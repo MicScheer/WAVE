@@ -1,14 +1,16 @@
 # +PATCH,//WAVE/SHELL
 # +DECK,set_wave_environment,T=SHELL.
 
-if test -z $WAVE; then
-  #echo
-  #echo Environment variable WAVE is not defined. setting it to:
+echo
+if test $SHELL = /bin/bash; then
+  cd ${BASH_ARGV[0]%/*}
+else
   cd ${0%/*}
-  export WAVE=${PWD%/*}
-  #echo $WAVE
-  #echo
 fi
+
+cd ..
+export WAVE=${PWD}
+echo Environment WAVE set to: $WAVE
 
 if test -d $WAVE; then
 
@@ -20,10 +22,20 @@ if test -d $WAVE; then
 
   alias wplot='cd $WAVE/stage; ipython3 -i $WAVE/python/waveplot.py'
 
-  alias wave='$WAVE/stage/wave'
-  alias undumag='$WAVE/stage/undumag'
-  alias waves='cd $WAVE/stage; ipython3 -i $WAVE/python/waves.py'
-  alias waveshop='cd $WAVE/stage; ipython3 -i $WAVE/python/waveshop.py'
+  unalias r 2>/dev/null
+
+  export UNDUMAG=$WAVE/undumag
+  echo
+  echo Environment variable UNDUMAG set to: $UNDUMAG
+  echo
+  alias wave='. $WAVE/stage/wave'
+  alias undumag='. $WAVE/stage/undumag'
+  alias waves='cd $WAVE/stage; bash $WAVE/shell/title.sh; ipython3 -i $WAVE/python/waves.py'
+  alias wave
+  alias undumag
+  alias waves
+  alias wplot
+  echo
 
   cd $WAVE/stage
 
