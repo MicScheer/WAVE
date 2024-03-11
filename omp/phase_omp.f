@@ -1,4 +1,4 @@
-*CMZ :          29/12/2023  14.56.39  by  Michael Scheer
+*CMZ :          11/03/2024  18.40.00  by  Michael Scheer
 *CMZ :  4.01/04 28/11/2023  14.20.34  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  10.59.52  by  Michael Scheer
 *CMZ :  4.00/14 07/02/2022  16.17.00  by  Michael Scheer
@@ -36,7 +36,7 @@
 *CMZ :  1.03/06 29/09/98  14.43.55  by  Michael Scheer
 *-- Author :    Michael Scheer   18/09/98
       SUBROUTINE PHASE_omp
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 *KEND.
 
 *KEEP,spectf90u.
@@ -639,13 +639,13 @@ c                stop
      &              *PHSHIFT(IOBS)
 
                   ampli(4,iphz,iphy,ifrq)=ampli(4,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(6,1,IOBFR),-reaima(6,2,IOBFR))
+     &              DCMPLX(reaima(6,1,IOBFR),reaima(6,2,IOBFR))
      &              *PHSHIFT(IOBS)
                   ampli(5,iphz,iphy,ifrq)=ampli(5,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(7,1,IOBFR),-reaima(7,2,IOBFR))
+     &              DCMPLX(reaima(7,1,IOBFR),reaima(7,2,IOBFR))
      &              *PHSHIFT(IOBS)
                   ampli(6,iphz,iphy,ifrq)=ampli(6,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(8,1,IOBFR),-reaima(8,2,IOBFR))
+     &              DCMPLX(reaima(8,1,IOBFR),reaima(8,2,IOBFR))
      &              *PHSHIFT(IOBS)
 
                 ELSE
@@ -661,13 +661,13 @@ c                stop
      &              *PHSHIFT(IOBS)
 
                   ampli(4,iphz,iphy,ifrq)=ampli(4,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(6,1,IOBFR),+REAIMA(6,2,IOBFR))
+     &              DCMPLX(reaima(6,1,IOBFR),-REAIMA(6,2,IOBFR))
      &              *PHSHIFT(IOBS)
                   ampli(5,iphz,iphy,ifrq)=ampli(5,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(7,1,IOBFR),+reaima(7,2,IOBFR))
+     &              DCMPLX(reaima(7,1,IOBFR),-reaima(7,2,IOBFR))
      &              *PHSHIFT(IOBS)
                   ampli(6,iphz,iphy,ifrq)=ampli(6,iphz,iphy,ifrq)+
-     &              DCMPLX(reaima(8,1,IOBFR),+reaima(8,2,IOBFR))
+     &              DCMPLX(reaima(8,1,IOBFR),-reaima(8,2,IOBFR))
      &              *PHSHIFT(IOBS)
 
                 ENDIF !(DX.GE.0)
