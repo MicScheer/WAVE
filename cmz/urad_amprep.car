@@ -1,3 +1,6 @@
++PATCH,URADPHASE.
+*CMZ :  4.01/00 15/01/2023  16.23.59  by  Michael Scheer
++DECK,urad_amprep.
 *CMZ :          26/04/2024  20.53.24  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  07.41.13  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  13.39.24  by  Michael Scheer
@@ -15,118 +18,8 @@
 
       implicit none
 
-*KEEP,PHYCONparam,T=F77.
-c-----------------------------------------------------------------------
-c     phyconparam.cmn
-c-----------------------------------------------------------------------
-
-      complex*16, parameter :: zone1=(1.0d0,0.0d0), zi1=(0.0d0,1.0d0)
-
-      complex*16, dimension(4,3), parameter ::
-     &  vstokes=reshape([
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0, -0.70710678118654746d0),
-     &  ( 0.0000000000000000d0, -0.70710678118654746d0),
-     &  ( 0.70710678118654746d0, 0.0000000000000000d0),
-     &  (-0.70710678118654746d0,-0.70710678118654746d0),
-     &  ( 0.70710678118654746d0, 0.0000000000000000d0),
-     &  (-0.70710678118654746d0, 0.0000000000000000d0),
-     &  (-0.70710678118654746d0, 0.0000000000000000d0)
-     &  ],[4,3])
-
-c      vstokes(1,1)=( 0.0d0,        0.0d0)      !horizontal polarization
-c      vstokes(1,2)=( 0.0d0,        0.0d0)
-c      vstokes(1,3)=(-sqrt(1./2.),       -sqrt(1./2.))
-c
-c      vstokes(2,1)=( 0.0d0,        0.0d0)      !right handed polarization
-c      vstokes(2,2)=( 0.0d0,       -sqrt(1./2.))
-c      vstokes(2,3)=(+sqrt(1./2.),        0.0d0)
-c
-c      vstokes(3,1)=( 0.0d0,        0.0d0)      !left handed polarization
-c      vstokes(3,2)=( 0.0d0,       -sqrt(1./2.))
-c      vstokes(3,3)=(-sqrt(1./2.),        0.0d0)
-c
-c      vstokes(4,1)=( 0.0d0,        0.0d0)      !45 degree linear polarization
-c      vstokes(4,2)=( sqrt(1./2.),        0.0d0)
-c      vstokes(4,3)=(-sqrt(1./2.),        0.0d0)
-
-      double precision, parameter ::
-     &  HBAREV1=6.58211889D-16
-     &  ,CLIGHT1=2.99792458D8
-     &  ,EMASSKG1=9.10938188D-31
-     &  ,EMASSE1=0.510998902D6
-     &  ,EMASSG1=0.510998902D-3
-     &  ,ECHARGE1=1.602176462D-19
-     &  ,ERAD1=2.8179380D-15
-     &  ,EPS01=8.854187817D-12
-     &  ,PI1=3.141592653589793D0
-     &  ,rmu04pi1=1.0D-7
-     &  ,dnull1=0.0d0
-     &  ,done1=1.0d0
-     & ,HPLANCK1=6.626176D-34
-
-      double precision, parameter ::
-     & GRARAD1=PI1/180.0d0
-     & ,RADGRA1=180.0d0/PI1
-     & ,HBAR1=HBAREV1*ECHARGE1
-     & ,WTOE1=CLIGHT1*HPLANCK1/ECHARGE1*1.0d9
-     & ,CQ1=55.0d0/32.0d0/DSQRT(3.0D0)*HBAR1/EMASSKG1/CLIGHT1
-     & ,CGAM1=4.0d0/3.0d0*PI1*ERAD1/EMASSG1**3
-     & ,POL1CON1=8.0d0/5.0d0/DSQRT(3.0D0)
-     & ,POL2CON1=8.0d0/5.0d0/DSQRT(3.0D0)/2.0d0/PI1/3600.0d0
-     &  *EMASSKG1/HBAR1/ERAD1*EMASSG1**5
-     & ,TWOPI1=2.0D0*PI1
-     & ,HALFPI1=PI1/2.0D0
-     & ,sqrttwopi1=sqrt(twopi1)
-     & ,rmu01=4.0D0*PI1/1.0D7
-     & ,alpha1=echarge1**2/(4.0d0*pi1*eps01*hbar1*clight1)
-     & ,gaussn1=1.0d0/sqrt(twopi1)
-     & ,cK934=ECHARGE1/(2.0d0*PI1*EMASSKG1*CLIGHT1)/100.0d0
-     & ,powcon1=cgam1/2.0d0/pi1*clight1*(clight1/1.0d9)**2*emassg1
-     &  ,gamma1=1.0d0/emassg1
-     &  ,emom1=emasse1*dsqrt((gamma1-1.0d0)*(gamma1+1.0d0))
-     &  ,rho1=emom1/clight1
-     &  ,omegac1=1.5d0*gamma1**3*clight1/rho1
-     &  ,ecdipev1=omegac1*hbar1/echarge1
-     &  ,ecdipkev1=ecdipev1/1000.0d0
-
-c-----------------------------------------------------------------------
-c     end of phyconparam.cmn
-c-----------------------------------------------------------------------
-*KEEP,TRACK.
-      INTEGER NCO,MCO,IBYONLY,ITRACK
-
-      DOUBLE PRECISION PHIX,PHIMX,PHIMN
-     &  ,XMX,XMN,YMX,YMN,ZMX,ZMN
-     &  ,BXMX,BXMN,BYMX,BYMN,BZMX,BZMN
-     &  ,XMXAE,XMNAE,YMXAE,YMNAE,ZMXAE,ZMNAE
-     &  ,BXMXAE,BXMNAE,BYMXAE,BYMNAE,BZMXAE,BZMNAE
-     &  ,BINT0,PINT,tint
-     &  ,BINT1X,BINT1Y,BINT1Z,BINT2X,BINT2Y,BINT2Z,BINT3Y,BINT3YA
-     &  ,DTIM0,DS0
-     &  ,B2INTY
-     &  ,WTRA2I,TTRA2I,HTRA2I,WTRA2IC,
-     &  XTRACK,YTRACK,ZTRACK,
-     &  VXTRACK,VYTRACK,VZTRACK
-
-      COMMON/MINMAXC/
-     &  PHIX,PHIMX,PHIMN,XMX,XMN,YMX,YMN,ZMX,ZMN
-     &  ,BXMX,BXMN,BYMX,BYMN,BZMX,BZMN
-     &  ,XMXAE,XMNAE,YMXAE,YMNAE,ZMXAE,ZMNAE
-     &  ,BXMXAE,BXMNAE,BYMXAE,BYMNAE,BZMXAE,BZMNAE
-     &  ,BINT0,PINT,tint
-     &  ,BINT1X,BINT1Y,BINT1Z,BINT2X,BINT2Y,BINT2Z,BINT3Y,BINT3YA
-     &  ,DTIM0,DS0
-     &  ,WTRA2I,TTRA2I,HTRA2I,WTRA2IC
-     &  ,B2INTY
-     &  ,XTRACK,YTRACK,ZTRACK
-     &  ,VXTRACK,VYTRACK,VZTRACK
-     &  ,NCO,MCO,IBYONLY,ITRACK
-*KEND.
++seq,phyconparam.
++seq,track.
 cc+seq,uservar.
 
       complex*16 :: cde,czero=(0.0d0,0.0d0)
@@ -238,6 +131,34 @@ c      endif
 
       nepho=nepho_u
 
++self,if=obu.
+      nlbu=0
+      if (ihbunch.ne.0) then
+        lbunch=nelec_u/iabs(ihbunch)
+        nlbu=lbunch*nepho_u
+        if (ihbunch.lt.0) then
+          nlbu=nlbu*nobsv
+        endif
+        allocate(fbunch(41,nlbu,mthreads_u),stat=ierr)
+        if (ierr.ne.0) then
+          lbunch=0
+          print*,""
+          print*,"*** Warning in urad_amprep: Could not allocate buffer for beam Ntuple ***"
+          print*,"*** Maybe increase IHBUNCH ***"
+          print*,""
+          return
+        endif
+        fbunch=0.0d0
+        allocate(lnbunch(mthreads_u), stat=ierr)
+        if (ierr.ne.0) then
+          print*,""
+          print*,"*** Warning in urad_amprep: Could not allocate buffer for nlbunch ***"
+          print*,""
+          return
+        endif
+        lnbunch=0
+      endif
++self.
       if (modepin_u.ne.0) then
         allocate(fieldbunch(7,npinzo_u,npinyo_u,nepho_u),stat=ierr)
         if (ierr.ne.0) then
@@ -880,8 +801,15 @@ c              print*,jhbunch,ith,ilo,jbun,isub,ibu
               fillb(39)=dimag(amp(5))
               fillb(40)=dreal(amp(6))
               fillb(41)=dimag(amp(6))
++self,if=obu.
+              if (lbunch.ne.0) then
+                lnbunch(ith)=lnbunch(ith)+1
+                fbunch(:,lnbunch(ith),ith)=fillb(:)
+              endif
++self,if=-obu.
               lbunch=lbunch+1
               fbunch_u(:,lbunch)=fillb(:)
++self.
             endif !fill
 
           endif !jhbunch
@@ -897,6 +825,25 @@ c              print*,jhbunch,ith,ilo,jbun,isub,ibu
         pow_u(:)=pow_u(:)+pow(:,ith)
         arad_u(:,:)=arad_u(:,:)+arad(:,:,ith)
       enddo
++self,if=p.
+      allocate(aradbuff(6,nepho_u*nobsv))
+      aradbuff=arad_u
+      !all util_break
+      do iz=1,nobsvz/2
+        do iy=1,nobsvy
+          do kfreq=1,nepho
+            iobm=nobsvz*(iy-1)+iz
+            iobp=nobsvz*(iy-1)+(nobsvz-iz+1)
+            iobfrm=iobm+nobsv*(kfreq-1)
+            iobfrp=iobp+nobsv*(kfreq-1)
+            arad_u(:,iobfrm)=aradbuff(:,iobfrp)
+c            arad_u(:,iobfrm)=(aradbuff(:,iobm)+aradbuff(:,iobp))/2.0d0
+c            arad_u(:,iobfrp)=(aradbuff(:,iobm)+aradbuff(:,iobp))/2.0d0
+          enddo
+        enddo
+      enddo
+      deallocate(aradbuff)
++self.
       pow_u=pow_u/sqnbunch
 
       if (icohere_u.eq.0) then
