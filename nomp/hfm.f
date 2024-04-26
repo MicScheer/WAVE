@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 20/04/2024  09.48.41  by  Michael Scheer
 *CMZ :  4.00/15 14/03/2022  10.05.01  by  Michael Scheer
 *CMZ :  4.00/14 10/02/2022  17.40.28  by  Michael Scheer
 *CMZ :  4.00/13 16/12/2021  12.18.27  by  Michael Scheer
@@ -73,6 +74,11 @@
       character(7) cname,cname2
       character c
 
+      if (icluster.eq.0.or.icluster.eq.9999) then
+        call mh_filln(nid,buffd)
+        return
+      endif
+
       if (icluster.lt.0) then
         if (nid.eq.3601) then
           write(nscr3601,*)buffd(1:36)
@@ -85,13 +91,21 @@
         else if (nid.eq.4700) then
           write(nscr4700,*)buffd(1:12)
         else if (nid.eq.30) then
-          write(nscr30,*)buffd(1:28)
+          write(nscr30,*)buffd(1:41)
         else if (nid.eq.7777) then
           write(nscr7777,*)buffd(1:14)
         endif
+      else if ( ! they are filled in wpampntup
+     &    nid.ne.3601.and.
+     &    nid.ne.3600.and.
+     &    nid.ne.3700.and.
+     &    nid.ne.4600.and.
+     &    nid.ne.4700.and.
+     &    nid.ne.30.and.
+     &    nid.ne.7777) then
+        call mh_filln(nid,buffd)
+        return
       endif
-      call mh_filln(nid,buffd)
-      return
 
       if (iroottrees.ge.0) then
       endif

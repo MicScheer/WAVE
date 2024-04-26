@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 26/04/2024  14.26.24  by  Michael Scheer
 *CMZ :  4.01/03 29/06/2023  11.47.09  by  Michael Scheer
 *CMZ :  4.00/15 27/04/2022  08.35.33  by  Michael Scheer
 *CMZ :  4.00/05 29/11/2019  13.11.04  by  Michael Scheer
@@ -792,9 +793,9 @@ c phasespace ellipse: gammah*z**2+2*alphah*z*zp+betah*zp**2=eps0h
 
                   CALL RNORML(XRAN,5,rr)
 
-                  if (espread.gt.0.0d0.and.iefold.eq.0) then
-                    egamma=egamma*(1.0d0+espread*xran(1))
-                  endif
+c26.4.2024                  if (espread.gt.0.0d0.and.iefold.eq.0) then
+c                    egamma=egamma*(1.0d0+espread*xran(1))
+c                  endif
 
                   if (ifold.eq.0) then
 

@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 19/04/2024  12.22.35  by  Michael Scheer
 *CMZ :  4.01/04 14/11/2023  13.46.13  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.11  by  Michael Scheer
 *CMZ :  2.70/12 01/03/2013  16.28.24  by  Michael Scheer
@@ -101,7 +102,7 @@ C    IFOLD.EQ.1: SR UTIL_FOLD_FUNCTION_GAUSS IS USED
       INTEGER IZA,IZE,IYA,IYE,IFREQ,IY,IZ,IMASH
      &       ,NF,NFOLD,IFAIL,IGZY,icomp,ireim,isour
 
-      DOUBLE PRECISION ZKZ0,YKY0,GZ(NGCOEFP*LIDIMP),GY(NGCOEFP*LIDIMP)
+      DOUBLE PRECISION ZKZ0,YKY0,GZ(NGCOEFP*LIDIMP),GY(NGCOEFP*LIDIMP),rea(nobsv)
 
 c14.11.2023      if (icomp.eq.1) return
 
@@ -134,13 +135,14 @@ c14.11.2023      if (icomp.eq.1) return
             DO IZ=IZA,IZE
               IMASH=IZ+(IY-1)*NOBSVZ
               IOBFR=imash+NOBSV*(IFREQ-1)
-              if (icomp.eq.2.or.icomp.eq.3) then
-                reaima(icomp+2,ireim,iobfr)=WOBS2(IZ)
-              else if (icomp.eq.1) then
-                reaima(11,ireim,iobfr)=WOBS2(IZ)
-              else if (icomp.gt.5) then
-                reaima(icomp+6,ireim,iobfr)=WOBS2(IZ)
-              endif
+              rea(iobfr)=wobs2(iz)
+c              if (icomp.eq.2.or.icomp.eq.3) then
+c                reaima(icomp+2,ireim,iobfr)=WOBS2(IZ)
+c              else if (icomp.eq.1) then
+c                reaima(11,ireim,iobfr)=WOBS2(IZ)
+c              else if (icomp.gt.5) then
+c                reaima(icomp+6,ireim,iobfr)=WOBS2(IZ)
+c              endif
             ENDDO
 
           ENDDO   !IY
@@ -152,13 +154,14 @@ c14.11.2023      if (icomp.eq.1) return
           DO IY=1,NOBSVY
             IMASH=1+(IY-1)*NOBSVZ
             IOBFR=imash+NOBSV*(IFREQ-1)
-            if (icomp.eq.2.or.icomp.eq.3) then
-              reaima(icomp+2,ireim,iobfr)=reaima(icomp,ireim,iobfr)
-            else if (icomp.eq.1) then
-              reaima(11,ireim,iobfr)=reaima(icomp,ireim,iobfr)
-            else if (icomp.gt.5) then
-              reaima(icomp+6,ireim,iobfr)=reaima(icomp,ireim,iobfr)
-            endif
+              rea(iobfr)=reaima(icomp,ireim,iobfr)
+c            if (icomp.eq.2.or.icomp.eq.3) then
+c              reaima(icomp+2,ireim,iobfr)=reaima(icomp,ireim,iobfr)
+c            else if (icomp.eq.1) then
+c              reaima(11,ireim,iobfr)=reaima(icomp,ireim,iobfr)
+c            else if (icomp.gt.5) then
+c              reaima(icomp+6,ireim,iobfr)=reaima(icomp,ireim,iobfr)
+c            endif
           ENDDO
 
         ENDIF !(NOBSVZ.GT.1)
@@ -168,7 +171,8 @@ c14.11.2023      if (icomp.eq.1) return
           DO IY=1,NOBSVY
             IMASH=IZ+(IY-1)*NOBSVZ
             IOBFR=imash+NOBSV*(IFREQ-1)
-            wobs1(iy)=reaima(icomp,ireim,iobfr)
+c            wobs1(iy)=reaima(icomp,ireim,iobfr)
+            wobs1(iy)=rea(iobfr)
           ENDDO   !IY
 
             CALL UTIL_FOLD_FUNCTION_GAUSS(
@@ -222,13 +226,14 @@ c14.11.2023      if (icomp.eq.1) return
             DO IZ=IZA,IZE
               IMASH=IZ+(IY-1)*NOBSVZ
               IOBFR=imash+NOBSV*(IFREQ-1)
-              if (icomp.eq.2.or.icomp.eq.3) then
-                reaima(icomp+2,ireim,iobfr)=WOBS2(IZ)
-              else if (icomp.eq.1) then
-                reaima(11,ireim,iobfr)=WOBS2(IZ)
-              else if (icomp.gt.5) then
-                reaima(icomp+6,ireim,iobfr)=WOBS2(IZ)
-              endif
+              rea(iobfr)=WOBS2(IZ)
+c              if (icomp.eq.2.or.icomp.eq.3) then
+c                reaima(icomp+2,ireim,iobfr)=WOBS2(IZ)
+c              else if (icomp.eq.1) then
+c                reaima(11,ireim,iobfr)=WOBS2(IZ)
+c              else if (icomp.gt.5) then
+c                reaima(icomp+6,ireim,iobfr)=WOBS2(IZ)
+c              endif
             ENDDO
 
           ENDDO   !IY
@@ -259,7 +264,8 @@ c14.11.2023      if (icomp.eq.1) return
           DO IY=1,NOBSVY
             IMASH=IZ+(IY-1)*NOBSVZ
             IOBFR=imash+NOBSV*(IFREQ-1)
-            wobs1(iy)=reaima(icomp,ireim,iobfr)
+c            wobs1(iy)=reaima(icomp,ireim,iobfr)
+            wobs1(iy)=rea(iobfr)
           ENDDO   !IY
 
           CALL UTIL_FOLD_FOURIER(OBSVY,WOBS1,NOBSVY,NFOLD

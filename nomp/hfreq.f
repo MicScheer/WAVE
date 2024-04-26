@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 11/03/2024  13.30.35  by  Michael Scheer
 *CMZ :  4.01/04 15/11/2023  18.07.40  by  Michael Scheer
 *CMZ :  4.01/03 10/06/2023  15.52.02  by  Michael Scheer
 *CMZ :  4.01/00 08/01/2023  10.16.47  by  Michael Scheer
@@ -170,15 +171,17 @@ C--- HISTOGRAMS FOR SPECTRA OF SINGLE OBSERVATION POINTS OR PINHOLE
       INTEGER ID,IOBSV,ifrq,ISOUR,IOBSVY,IOBSVZ,NDIMPH,IOBSVR,IOBSVPHI
       INTEGER ICYCLE,MFREQ,I,ISTAT,I47,jsource
 
-      REAL*4 FLOW,FHIG,DF
-      DOUBLE PRECISION WEIGHT,smax,reanor,
+      COMPLEX*16 e(3),b(3)
+      DOUBLE PRECISION WEIGHT,smax,reanor,rn(3),
      &  dist,dist0,ddist,h2,censoux,censouy,censouz,dphase,wlen,waves
+
+      REAL*4 FLOW,FHIG,DF
 
       CHARACTER(80) TIT
       CHARACTER(4) CHTAGS(5)
       CHARACTER(5) CHTAGSF(36)
       CHARACTER(5) CHTAGSFd(36)
-      CHARACTER(4) CHSPEC(31)
+      CHARACTER(4) CHSPEC(34)
       CHARACTER(4) CHSPECRPHI(33)
       CHARACTER(4) CHPOW(8)
       CHARACTER(4) CHPOWF(9)
@@ -191,7 +194,7 @@ C--- HISTOGRAMS FOR SPECTRA OF SINGLE OBSERVATION POINTS OR PINHOLE
 
       INTEGER ND
 
-      REAL*8 FSTUPLE(100),FSPEC(33)
+      REAL*8 FSTUPLE(100),FSPEC(34)
       real*8 , dimension(:), allocatable :: phfill
 
       data chtags/'x','y','z','ener','spec'/
@@ -219,8 +222,8 @@ C--- HISTOGRAMS FOR SPECTRA OF SINGLE OBSERVATION POINTS OR PINHOLE
       data chspec/'isou','iobs','x','y','z','ener','spec'
      &  ,'iz','iy','iene',
      &  're_x','im_x','re_y','im_y','re_z','im_z','rf_y','if_y','rf_z','if_z',
-     &  'rs_x','is_x','rs_y','is_y','rs_z','is_z','rsfy','isfy','rsfz','isfz',
-     &  'phi0'
+     &  'rb_x','ib_x','rb_y','ib_y','rb_z','ib_z','rbfy','ibfy','rbfz','ibfz',
+     &  'phi0','nx','ny','nz'
      &  /
       data chspecrphi/'isou','iobs','x','y','z','r','phi','ener','spec'
      &  ,'ir','iphi','iene',
@@ -1961,7 +1964,7 @@ C--- NTUPLE
         call hdeletm(idspec-1)
         call hdeletm(idspec-2)
 
-        CALL hbookm(NIDSPEC,'ARRAYS SPECT, REAIMA',31
+        CALL hbookm(NIDSPEC,'ARRAYS SPECT, REAIMA',34
      &    ,'//SPEC',nobsv*nfreq*nsource,CHSPEC)
         if (mpinr.ne.0) then
           CALL hbookm(NIDSPECRPHI,'ARRAYS SPECT AND SPECPOW, REAIMARPHI',33
@@ -1969,7 +1972,7 @@ C--- NTUPLE
         endif
       ELSE !I47
 
-          CALL hbookm(NIDSPEC,'ARRAYS SPECT, REAIMA',31
+          CALL hbookm(NIDSPEC,'ARRAYS SPECT, REAIMA',34
      &    ,'//WAVE',nobsv*nfreq*nsource,CHSPEC)
         if (mpinr.ne.0) then
           CALL hbookm(NIDSPECRPHI,'ARRAYS SPECT, REAIMARPHI',33
@@ -2047,6 +2050,10 @@ c            IF (ISPECMODE.EQ.3) THEN
               FSPEC(19)=reanor*reaIMA(5,1,IOBFR)
               FSPEC(20)=reanor*reaIMA(5,2,IOBFR)
 
+              e(1)=dcmplx(fspec(11),fspec(12))
+              e(2)=dcmplx(fspec(13),fspec(14))
+              e(3)=dcmplx(fspec(15),fspec(16))
+
               FSPEC(21)=reanor*reaIMA(6,1,IOBFR)
               FSPEC(22)=reanor*reaIMA(6,2,IOBFR)
               FSPEC(23)=reanor*reaIMA(7,1,IOBFR)
@@ -2054,10 +2061,21 @@ c            IF (ISPECMODE.EQ.3) THEN
               FSPEC(25)=reanor*reaIMA(8,1,IOBFR)
               FSPEC(26)=reanor*reaIMA(8,2,IOBFR)
 
+              b(1)=dcmplx(fspec(21),fspec(22))
+              b(2)=dcmplx(fspec(23),fspec(24))
+              b(3)=dcmplx(fspec(25),fspec(26))
+
               FSPEC(27)=reanor*reaIMA(9,1,IOBFR)
               FSPEC(28)=reanor*reaIMA(9,2,IOBFR)
               FSPEC(29)=reanor*reaIMA(10,1,IOBFR)
               FSPEC(30)=reanor*reaIMA(10,2,IOBFR)
+
+              rn(1)=real(e(2)*conjg(b(3))-e(3)*conjg(b(2)))
+              rn(2)=real(e(3)*conjg(b(1))-e(1)*conjg(b(3)))
+              rn(3)=real(e(1)*conjg(b(2))-e(2)*conjg(b(1)))
+
+              rn=rn/norm2(rn)
+              fspec(32:34)=rn(1:3)
 
               dist=sqrt(
      &          ((obsv(3,iobsv)-censouz)**2+

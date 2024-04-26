@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 21/04/2024  11.34.30  by  Michael Scheer
 *CMZ :  4.01/04 15/11/2023  12.38.14  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  13.01.26  by  Michael Scheer
 *CMZ :  4.01/02 14/05/2023  12.29.56  by  Michael Scheer
@@ -225,7 +226,7 @@ C---- RESULTS ARE STORE IN AFREQ AND SPECPOW
       REAL*8 FSPEC(31)
 
       double precision h2,ddist,dist0,dist02
-     & ,vn,dgamma
+     & ,vn,dgamma,fnor,sqnor
 
       COMPLEX*16 ZIOM,ZI,ZIDOM,ZONE,ZICR1,ZIC,daff(3),baff(3)
       COMPLEX*16 EXPOM1,EXPOM,DEXPOMPH1,DEXPOMPH,DDEXPOMPH,DEXPOM,EXPOMV2
@@ -373,7 +374,11 @@ c and dmycurr. The field is normalized such, that flux dens = ABS(field)**2
           sqnphsp=sqrt(bunchcharge/echarge1)
      &      *neinbunch
      &      /(bunchcharge/echarge1)
-          bunnor=1.0d0/nbunch
+          if (jpin.ne.3) then
+            bunnor=1.0d0/nbunch
+          else
+            bunnor=1.0d0
+          endif
         else
           sqnbunch=nbunch
           sqnphsp=sqrt(dble(neinbunch))
@@ -581,9 +586,10 @@ c Transfermatrices
       endif !isour
 
       if (jpin.eq.0.or.
-     &    (inside.ne.-3.or.ielec.eq.1).and.icluster.lt.0.and.iwinstance.eq.1
-     &    .or.
-     &    (inside.ne.-3.or.ielec.eq.1).and.icluster.ge.0) then
+c20.4.2024     &    (inside.ne.-3.or.ielec.eq.1).and.icluster.lt.0.and.iwinstance.eq.1
+c20.4.2024     &    .or.
+c20.4.2024     &    (inside.ne.-3.or.ielec.eq.1).and.icluster.ge.0) then
+     &  (inside.ne.-3.or.ielec.eq.1)) then
         xobsv=obsv(1,iobsv)
         yobsv=obsv(2,iobsv)
         zobsv=obsv(3,iobsv)
@@ -604,6 +610,11 @@ c Transfermatrices
           zobsv=pincen(3)+zobsv
         endif
       endif
+
+c      if (jpin.ne.3.and.jpin.ne.0) then
+c        if (mpiny.eq.1) yobsv=pincen(2)
+c        if (mpinz.eq.1) zobsv=pincen(3)
+c      endif
 
       IF (jpin.ne.3.and.ielec.eq.1.and.IOBSV.EQ.jobunch
      &    .or.jpin.eq.3.and.ielec.eq.1) THEN
@@ -2102,7 +2113,14 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
         endif !ipin.eq.3
 
         if (ihbunch.ne.0) then
-          if (mod(ielec,ihbunch).eq.0.and.iobsv.eq.icbrill) then
+c          if (mod(ielec,ihbunch).eq.0.and.iobsv.eq.icbrill) then
+          if (mod(ielec,ihbunch).eq.0) then
+            if (jpin.ne.3) then
+              fnor=specnor*bunnor*nelec
+            else
+              fnor=specnor*bunnor
+            endif
+            sqnor=sqrt(fnor)
             fillb(1)=ibun
             fillb(2)=isub
             fillb(3)=ielec
@@ -2124,12 +2142,21 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
             fillb(19)=zobsv
             fillb(20)=kfreq
             fillb(21)=freq(kfreq)
-            speck=
-     &        DREAL(
-     &        affe(1,IFROB)*CONJG(affe(1,IFROB))
-     &        +affe(2,IFROB)*CONJG(affe(2,IFROB))
-     &        +affe(3,IFROB)*CONJG(affe(3,IFROB))
-     &        )*specnor*bunnor
+            if (jpin.eq.3) then
+              speck=
+     &          DREAL(
+     &          affe(1,IFROB)*CONJG(affe(1,IFROB))
+     &          +affe(2,IFROB)*CONJG(affe(2,IFROB))
+     &          +affe(3,IFROB)*CONJG(affe(3,IFROB))
+     &          )*specnor*bunnor/nelec
+            else
+              speck=
+     &          DREAL(
+     &          affe(1,IFROB)*CONJG(affe(1,IFROB))
+     &          +affe(2,IFROB)*CONJG(affe(2,IFROB))
+     &          +affe(3,IFROB)*CONJG(affe(3,IFROB))
+     &          )*specnor*bunnor
+            endif
             fillb(22)=speck*nelec
 
             if (istokes.ne.0) then
@@ -2169,22 +2196,36 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
      &          APOLR*CONJG(APOLR)-
      &          APOLL*CONJG(APOLL)
 
-              fillb(23)=stok1*specnor*bunnor*nelec
-              fillb(24)=stok2*specnor*bunnor*nelec
-              fillb(25)=stok3*specnor*bunnor*nelec
-              fillb(26)=stok4*specnor*bunnor*nelec
+              fillb(23)=stok1*fnor
+              fillb(24)=stok2*fnor
+              fillb(25)=stok3*fnor
+              fillb(26)=stok4*fnor
+
             else
               fillb(23)=fillb(22)
               fillb(24:26)=0.0d0
             endif !istokes
 
-            if (ielec.ne.1) then
-              fillb(27)=powpow*pownor*nelec
+            if (jpin.ne.3) then
+                fillb(27)=powpow*pownor*nelec
             else
-              fillb(27)=powpow*pownor*nelec
+                fillb(27)=powpow*pownor
             endif
             fillb(28)=isour
             fillb(29)=t2
+
+            fillb(30)=dreal(affe(1,ifrob))*sqnor
+            fillb(31)=dimag(affe(1,ifrob))*sqnor
+            fillb(32)=dreal(affe(2,ifrob))*sqnor
+            fillb(33)=dimag(affe(2,ifrob))*sqnor
+            fillb(34)=dreal(affe(3,ifrob))*sqnor
+            fillb(35)=dimag(affe(3,ifrob))*sqnor
+            fillb(36)=dreal(affe(4,ifrob))*sqnor
+            fillb(37)=dimag(affe(4,ifrob))*sqnor
+            fillb(38)=dreal(affe(5,ifrob))*sqnor
+            fillb(39)=dimag(affe(5,ifrob))*sqnor
+            fillb(40)=dreal(affe(6,ifrob))*sqnor
+            fillb(41)=dimag(affe(6,ifrob))*sqnor
 
             call hfm(nidbunch,fillb)
           endif

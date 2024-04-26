@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
 *CMZ :  4.01/04 27/12/2023  16.20.07  by  Michael Scheer
 *CMZ :  4.01/03 29/06/2023  10.07.32  by  Michael Scheer
 *CMZ :  4.01/03 15/05/2023  16.38.53  by  Michael Scheer
@@ -242,7 +243,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -731,9 +732,9 @@ C--- OPEN OUTPUT-FILE
       icluster=iclusterold
 
       if (ibunch.ne.0) then
-        if (iundulator.ne.2) then
-          mthreads=0
-        endif
+c        if (iundulator.ne.2) then
+c          mthreads=0
+c        endif
         if (nbunch.le.0) nbunch=1
         if (neinbunch.le.0) neinbunch=1
       endif
@@ -1259,7 +1260,201 @@ c            endif
 
         xinter=-9999.0d0
 
-      endif
+      endif !iundulator.eq.2
+
+      if (iundulator.ne.2.and.kampli.ne.0) then
+
+        kampli=nint(perellip)
+        xcenell=0.0d0
+
+        park=parkell
+
+        if (nharmell.ne.0.and.harmell.ne.0.0d0) then
+          if (harmell.eq.-9999.0d0) then
+              harmell=(freqlow+freqhig)/2.0d0
+          endif
+          if (harmell.lt.0.0d0) then
+            harmell=-wtoe1/harmell
+          endif
+          WLEN1=wtoe1/abs(harmell/nharmell)
+          park=2.0d0*(wlen1/(xlellip*1.0D9/2.0d0/DMYGAMMA**2)-1.0d0)
+          if (park.lt.0.0d0) then
+            write(6,*)
+     &        '*** Error in GFINIT:'
+            write(6,*)
+     &        'Inconsistent values of NHARMELL, HARMELL, and XLELLIP'
+            write(6,*)' '
+            write(lungfo,*)
+     &        '*** Error in GFINIT:'
+            write(lungfo,*)
+     &        'Inconsistent values of NHARMELL, HARMELL, and XELLIP'
+            write(lungfo,*)' '
+            stop
+          endif
+          park=sqrt(park)
+          parkell=park
+        endif
+
+        IF (parkell.NE.0.0) THEN
+          B0EFF=parkell/(echarge1*XLELLIP/(2.*PI1*EMASSKG1*CLIGHT1))
+          if (b0elliph.eq.0.0d0.and.b0ellipv.ne.0d0) then
+            b0ellipv=b0ellipv/abs(b0ellipv)*b0eff
+          else if (b0ellipv.eq.0.0d0.and.b0elliph.ne.0d0) then
+            b0elliph=b0elliph/abs(b0elliph)*b0eff
+          else
+            rhv=b0elliph/b0ellipv
+            b0elliph=b0eff/sqrt(1.0d0+1.0d0/rhv**2)*b0elliph/abs(b0elliph)
+            b0ellipv=b0elliph/rhv
+          endif
+        endif
+
+        if (phrb0h.eq.9999.0d0) phrb0h=B0ELLIPh
+        if (phrb0v.eq.9999.0d0) phrb0v=B0ELLIPV
+        if (phrperl.eq.9999.0d0) phrperl=xlellip
+        if (phrshift.eq.9999.0d0) phrshift=ellshft*phrperl
+
+        kellip=1
+
+        if (xstart.eq.9999.0d0.and.xinter.eq.-9999.0d0
+     &      .and.xstop.eq.9999.0d0) then
+          xstop=phrperl/2.0d0
+        endif
+        ieneloss=0
+        !imagspln=0
+
+        gamma=dmygamma
+
+        DTIM=1.0D0/(CLIGHT1*dmybetap*MYINUM)   !TIME INTERVALLS FOR TRACKING
+        BSHIFT=0.5D0          !DONT WORRY
+
+        DS0=CLIGHT1*DTIM
+        GAMMA=DMYGAMMA
+        ENERGV=GAMMA*EMASSE1
+        GMOM=EMASSG1*DSQRT((GAMMA-1.0d0)*(GAMMA+1.0d0))
+        EMOM=EMASSE1*DSQRT((GAMMA-1.0d0)*(GAMMA+1.0d0))
+        DBRHO=ICHARGE*EMOM/CLIGHT1
+        BETA=DSQRT((1.0D0-1.0D0/GAMMA)*(1.0D0+1.0D0/GAMMA))
+        DMYBETA=BETA
+        V0=CLIGHT1*BETA
+
+        VN=1.0D0/DSQRT(VXIN**2+VYIN**2+VZIN**2)
+        VXIN=VXIN*VN*v0
+        VYIN=VYIN*VN*v0
+        VZIN=VZIN*VN*v0
+
+        TAUPOL01G=POL2CON1*UMFANG*RDIPOL**2/1.**5
+
+        ecdipev1=3.0d0/2.0d0*hbarev1*(clight1/emasse1)**2/emasse1*1.0d18
+
+        gamma1=1.0d0/emassg1
+        emom1=emasse1*dsqrt((gamma1-1.0d0)*(gamma1+1.0d0))
+        rho1=emom1/clight1
+        omegac=1.5d0*gamma1**3*clight1/rho1
+
+        CROTD=DCOSD(XROTD)
+        SROTD=DSIND(XROTD)
+
+        IF (XINTER.NE.XSTART.AND.XINTER.NE.-9999.) THEN
+
+          YSTARTO=YSTART
+          ZSTARTO=ZSTART
+
+          VXINO=VXIN
+          VYINO=VYIN
+          VZINO=VZIN
+
+          BETX0=VXIN*BETA
+          BETY0=VYIN*BETA
+          BETZ0=VZIN*BETA
+
+          X0=XSTART
+          Y0=YSTART
+          Z0=ZSTART
+
+          VX0=VXIN
+          VY0=VYIN
+          VZ0=VZIN
+
+          IF (XINTER.GT.XSTART) THEN
+
+            BYDUM=B0SCGLOB
+            B0SCGLOB=-B0SCGLOB
+            btaperv=-btaperv
+            btaperh=-btaperh
+
+            CALL TRACKSHORT(ISNORDER,XINTER,Y0,Z0,-VX0,-VY0,-VZ0,
+     &        XSTART,0.0D0,0.0D0,-1.0D0,0.0D0,0.0D0,
+     &        XF0,YF0,ZF0,dtshort,VXF0,VYF0,VZF0,DTIM,BSHIFT,GAMMA,BMOVECUT,
+     &        IUSTEP,IENELOSS,GAMMAL)
+
+            WRITE(LUNGFO,*)
+            WRITE(LUNGFO,*)'     Result of back-tracking due to XINTER:'
+            WRITE(LUNGFO,*)
+            WRITE(LUNGFO,*)'     x:',XF0
+            WRITE(LUNGFO,*)'     y:',YF0
+            WRITE(LUNGFO,*)'     z:',ZF0
+            WRITE(LUNGFO,*)'     vx:',-VXF0
+            WRITE(LUNGFO,*)'     vy:',-VYF0
+            WRITE(LUNGFO,*)'     vz:',-VZF0
+            WRITE(LUNGFO,*)'     yp:',VYF0/VXF0
+            WRITE(LUNGFO,*)'     zp:',VZF0/VXF0
+            WRITE(LUNGFO,*)
+
+            B0SCGLOB=BYDUM
+            btaperv=-btaperv
+            btaperh=-btaperh
+            XSTART=XF0
+            YSTART=YF0
+            ZSTART=ZF0
+            VXIN=-VXF0
+            VYIN=-VYF0
+            VZIN=-VZF0
+
+            GAMMA=GAMMA-GAMMAL !We gain energy here, and gammal is negative!
+            DMYGAMMA=GAMMA
+            DMYENERGY=GAMMA*EMASSG1
+
+            ENERGV=GAMMA*EMASSE1
+            GMOM=EMASSG1*DSQRT((gamma-1.0d0)*(gamma+1.0d0))
+            EMOM=EMASSE1*DSQRT((gamma-1.0d0)*(gamma+1.0d0))
+            DBRHO=ICHARGE*EMOM/CLIGHT1
+            BETA=DSQRT((1.0D0-1.0D0/GAMMA)*(1.0D0+1.0D0/GAMMA))
+            DMYBETA=BETA
+            V0=CLIGHT1*BETA
+
+          ELSE   !XINTER.GT.XSTART
+
+            CALL TRACKSHORT(ISNORDER,XINTER,Y0,Z0,VX0,VY0,VZ0,
+     &        XSTART,0.0D0,0.0D0,1.0D0,0.0D0,0.0D0,
+     &        XF0,YF0,ZF0,dtshort,VXF0,VYF0,VZF0,DTIM,BSHIFT,GAMMA,BMOVECUT,
+     &        IUSTEP,IENELOSS,GAMMAL)
+
+            XSTART=XF0
+            YSTART=YF0
+            ZSTART=ZF0
+            VXIN=VXF0
+            VYIN=VYF0
+            VZIN=VZF0
+
+            GAMMA=GAMMA+GAMMAL !We lose energy here!
+            DMYGAMMA=GAMMA
+            DMYENERGY=GAMMA*EMASSG1
+
+            ENERGV=GAMMA*EMASSE1
+            GMOM=EMASSG1*DSQRT((gamma-1.0d0)*(gamma+1.0d0))
+            EMOM=EMASSE1*DSQRT((gamma-1.0d0)*(gamma+1.0d0))
+            DBRHO=ICHARGE*EMOM/CLIGHT1
+            BETA=DSQRT((1.0D0-1.0D0/GAMMA)*(1.0D0+1.0D0/GAMMA))
+            DMYBETA=BETA
+            V0=CLIGHT1*BETA
+
+          ENDIF  !XINTER.GT.XSTART
+
+        ENDIF !(XINTER.NE.-9999.)
+
+        xinter=-9999.0d0
+
+      endif !kampli
 
       IF (IUNDULATOR.NE.0) THEN
 
@@ -2285,13 +2480,13 @@ C--- WRITE CONTROL FLAGS
       WRITE(LUNGFO,*)'     ICLUSTER:            ',ICLUSTER
       WRITE(LUNGFO,*)
 
-      if (iundulator.ne.2.and.ibunch.ne.0.and.mthreads.ne.0.and.icluster.eq.0) then
-        write(6,*)""
-        write(6,*)"*** Warning in gfinit: IBUNCH and MTHREAD not zero ***"
-        write(6,*)"*** This is not yet implemented, be careful, better set MTHREADS=0 ***"
-        write(6,*)"*** Or consider IUNDULATOR=2 ***"
-        write(6,*)""
-      endif
+c      if (iundulator.ne.2.and.ibunch.ne.0.and.mthreads.ne.0.and.icluster.eq.0) then
+c        write(6,*)""
+c        write(6,*)"*** Warning in gfinit: IBUNCH and MTHREAD not zero ***"
+c        write(6,*)"*** This is not yet implemented, be careful, better set MTHREADS=0 ***"
+c        write(6,*)"*** Or consider IUNDULATOR=2 ***"
+c        write(6,*)""
+c      endif
 
       if (ipin.ne.3.and.ipin.ne.0) then
         call omp_ini(lungfo,mthreads,1)
@@ -4622,22 +4817,28 @@ C--- CALCULATE 3D POLYNOMIAL-COEFFICIENTS OF B-FIELD AND EXIT
 
       if (iemit.ne.0.or.ibunch.ne.0) imagspln=0
 
-      if (phrxbeta.eq.-9999.0d0) xbetfun=xstart
+c      if (phrxbeta.eq.-9999.0d0) xbetfun=xstart
 
-      if (abs(phrxbeta).eq.9999.0d0) then
+      if (phrxbeta.eq.9999.0d0) then
         phrxbeta=xstart
+      else if (phrxbeta.eq.-9999.0d0) then
+        phrxbeta=xbetfun
       endif
 
       if (phrbunlen.eq.9999.0d0) then
         phrbunlen=bunchlen
       endif
+
       if (phrbunlen.eq.-9999.0d0) then
         phrbunlen=ampbunchlen
       endif
 
       if (phrbetah.eq.9999.0d0) then
         phrbetah=betah
+      else if (phrbetah.eq.-9999.0d0) then
+        phrbetah=bsigz(1)/bsigzp(1)
       endif
+
       if (phralphah.eq.9999.0d0) then
         phralphah=-betaph/2.0d0
       endif
@@ -4647,12 +4848,15 @@ C--- CALCULATE 3D POLYNOMIAL-COEFFICIENTS OF B-FIELD AND EXIT
       endif
 
       if (phrdispph.eq.9999.0d0) then
-        phrdisph=ddisp0
+        phrdispph=ddisp0
       endif
 
       if (phrbetav.eq.9999.0d0) then
         phrbetav=betav
+      else if (phrbetav.eq.-9999.0d0) then
+        phrbetav=bsigy(1)/bsigyp(1)
       endif
+
       if (phralphav.eq.9999.0d0) then
         phralphav=-betapv/2.0d0
       endif

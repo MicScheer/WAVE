@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 19/04/2024  15.05.35  by  Michael Scheer
 *CMZ :  4.01/04 26/11/2023  16.52.38  by  Michael Scheer
 *CMZ :  4.01/03 11/06/2023  11.04.36  by  Michael Scheer
 *CMZ :  4.00/17 28/11/2022  17.48.39  by  Michael Scheer
@@ -14,7 +15,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE souintana_omp(ISOUR,IOBSV,INSIDE)
 
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -186,7 +187,7 @@ c     &  ,ef(3),bf(3)
      &  ,rq,cpsi,alpha,spsi,rm,betafun,psi
      &  ,alpha0(2),beta0(2)
 
-      real*8 fillb(29)
+      real*8 fillb(41)
       real rnrn(2)
       INTEGER IINSIDE,JINSIDE,INSIDE,iw2(2),ifail
       INTEGER ISOUR,isourold,IOBSV,kfreq,JFREQ,IZAEHL,NZAEHL,I,ICAL,ICOMP
@@ -1946,6 +1947,19 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
           fillb(27)=powpow*pownor*nelec
           fillb(28)=isour
           fillb(29)=t2
+
+          fillb(30)=dreal(affe(1,kfrob))
+          fillb(31)=dimag(affe(1,kfrob))
+          fillb(32)=dreal(affe(2,kfrob))
+          fillb(33)=dimag(affe(2,kfrob))
+          fillb(34)=dreal(affe(3,kfrob))
+          fillb(35)=dimag(affe(3,kfrob))
+          fillb(36)=dreal(affe(4,kfrob))
+          fillb(37)=dimag(affe(4,kfrob))
+          fillb(38)=dreal(affe(5,kfrob))
+          fillb(39)=dimag(affe(5,kfrob))
+          fillb(40)=dreal(affe(6,kfrob))
+          fillb(41)=dimag(affe(6,kfrob))
 
           call hfm(nidbunch,fillb)
         endif

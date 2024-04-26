@@ -283,29 +283,32 @@ def wave_update():
       libm = WI + 'lib/libuser_modules.a'
       scomp = Scomp_omp
     #endif
+    #reakpoint()
 
+    klib = 0
     try:
       Tlib = os.stat(lib).st_mtime_ns
-      if Tlib > Texe: kmain = 1
+      if Tlib > Texe: klib = 1
     except:
-      pass
+      klib = 1
     #endtry
+
+    klibm = 0
     try:
       Tlib = os.stat(libm).st_mtime_ns
-      if Tlib > Texe: kmain = 1
+      if Tlib > Texe: klibm = 1
     except:
-      pass
+      klibm = 1
     #endtry
 
     scompmod = "cd " + dd + "/mod && " + scomp
     scomp = "cd " + dd + " && " + scomp
-
     for f in modfor: # Compile modules
 
       ff = f[0]
       t = f[1]
 
-      if t < Texe: continue
+      if t < Texe and klibm == 0: continue
 
       if Iverbose > 0: print(ff)
 
@@ -328,7 +331,6 @@ def wave_update():
       Flines.close()
 
       if Iverbose > 0: print("\nModule:",m)
-
       scom = scompmod + "-o " + fo + " " + ff
       if Iverbose > 0: print("\n",scom,"\n")
       if Idry == 0: os.system(scom)
@@ -346,7 +348,7 @@ def wave_update():
         f = ft[0]
         t = ft[1]
 
-        if t < Texe: continue
+        if t < Texe and klibm == 0: continue
 
         Flines = open(ds+f,'r')
         if Idebug > 1: print("\n",ds+f)
@@ -428,7 +430,7 @@ def wave_update():
       #if f == 'genfun.cmn': debug()
       t = os.stat(ds+f).st_mtime_ns
 
-      if t < Texe: continue
+      if t < Texe and klib == 0: continue
 
       fcmn = f.split("/")[-1]
 
@@ -478,7 +480,7 @@ def wave_update():
 #      print(f)
       t = os.stat(ds+f).st_mtime_ns
 
-      if t < Texe: continue
+      if t < Texe and klib == 0: continue
 
       fo = f[:-1] + "o"
 

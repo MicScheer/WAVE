@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 20/04/2024  09.47.23  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.12.04  by  Michael Scheer
 *CMZ :  4.00/15 14/03/2022  09.02.26  by  Michael Scheer
 *CMZ :  4.00/04 05/08/2019  15.46.18  by  Michael Scheer
@@ -126,7 +127,7 @@
       real*8 count,fillb(100) !NIDBUNCH
 
       integer ifreq,iobsv,jcode,jfreq,jobsv,lastch,ifrmx,iobmx,njobs,ijob,
-     &  ifirstch,isour,jliobfr,islash,i,iexist,lun99,lun98
+     &  ifirstch,isour,jliobfr,islash,i,iexist,lun99,lun98,iclo
 
       character(2048) chfile
       character(256) cstat,cjobnum
@@ -134,7 +135,11 @@
 
       equivalence (cslash,islash)
 
+      iclo=icluster
+
       if (icluster.gt.0) then
+
+        icluster=9999
 
         call util_string_trim(trim(chwavedir),ifirstch,lastch)
 
@@ -263,16 +268,18 @@
 
               open(newunit=lun99,file=chfile)
               do i=1,nbunch*neinbunch/nwgood
-                do ifreq=1,nfreq
-                  read(lun99,*,end=991) fillb(1:28)
-                  if (ifreq.eq.1) count=count+1.0d0
-                  if (nbunch.eq.1) then
-                    fillb(2)=count
-                  else
-                    fillb(1)=count
-                  endif
-                  fillb(3)=count
-                  call hfm(nidbunch,fillb)
+                do iobsv=1,nobsv
+                  do ifreq=1,nfreq
+                    read(lun99,*,end=991) fillb(1:41)
+                    if (iobsv.eq.1.and.ifreq.eq.1) count=count+1.0d0
+                    if (nbunch.eq.1) then
+                      fillb(2)=count
+                    else
+                      fillb(1)=count
+                    endif
+                    fillb(3)=count
+                    call hfm(nidbunch,fillb)
+                  enddo
                 enddo
               enddo
 991           close(lun99)
@@ -285,6 +292,7 @@
 
       endif !icluster
 
+      icluster=iclo
       return
 
 99    write(lungfo,*)
