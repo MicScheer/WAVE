@@ -199,6 +199,7 @@ def wave_update():
       lib = WI + 'lib/libmshcern_debug.a'
       libm = WI + 'lib/libmshcern_modules_debug.a'
       scomp = Scomp_nowarn
+      #breakpoint()
     elif ddd == 'mshplt':
       lib = WI + 'lib/libmshplt_debug.a'
       libm = WI + 'lib/libmshplt_modules.a'
@@ -220,17 +221,20 @@ def wave_update():
       scomp = Scomp_omp
     #endif
 
+    klib = 0
     try:
       Tlib = os.stat(lib).st_mtime_ns
-      if Tlib > Texe: kmain = 1
+      if Tlib > Texe: klib = 1
     except:
-      pass
+      klib = 1
     #endtry
+
+    klibm = 0
     try:
       Tlib = os.stat(libm).st_mtime_ns
-      if Tlib > Texe: kmain = 1
+      if Tlib > Texe: klibm = 1
     except:
-      pass
+      klibm = 1
     #endtry
 
     scompmod = "cd " + dd + "/mod && " + scomp
@@ -241,7 +245,7 @@ def wave_update():
       ff = f[0]
       t = f[1]
 
-      if t < Texe: continue
+      if t < Texe and klibm == 0: continue
 
       if Iverbose > 0: print(ff)
 
@@ -282,7 +286,7 @@ def wave_update():
         f = ft[0]
         t = ft[1]
 
-        if t < Texe: continue
+        if t < Texe and klibm == 0: continue
 
         Flines = open(ds+f,'r')
         while True:
@@ -360,7 +364,7 @@ def wave_update():
       f = ft[0]
       t = os.stat(ds+f).st_mtime_ns
 
-      if t < Texe: continue
+      if t < Texe and klib == 0: continue
 
       fcmn = f.split("/")[-1]
 
@@ -396,7 +400,7 @@ def wave_update():
       f = ft[0]
       t = os.stat(ds+f).st_mtime_ns
 
-      if t < Texe: continue
+      if t < Texe and klib == 0: continue
 
       fo = f[:-1] + "o"
 

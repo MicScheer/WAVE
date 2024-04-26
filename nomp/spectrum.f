@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 26/04/2024  10.52.02  by  Michael Scheer
 *CMZ :  4.01/04 20/11/2023  18.32.01  by  Michael Scheer
 *CMZ :  4.01/03 01/07/2023  10.08.32  by  Michael Scheer
 *CMZ :  4.01/02 14/05/2023  13.25.57  by  Michael Scheer
@@ -1303,7 +1304,7 @@ c          CALL UTIL_WAIT_1
               ALLOCATE(WSOU(3,5,NDWSOU))
               nsadd=1
             endif
-            if (iundulator.ne.2) then
+            if (iundulator.ne.2.and.kampli.eq.0) then
               if (iomp.eq.0.or.(ipin.eq.0.and.mthreads.eq.0)) then
                 CALL SOUINTALL(ISOUR)
               else
@@ -1423,11 +1424,13 @@ C SOURCEA IS RECALCULATED IN SR TRACKS
 
           pow_u=pow_u*1.0d6
           stokes_u=stokes_u*1.0d6
+          if(ihbunch.ne.0) then
+            fbunch_u(4:14,:)=fbunch_u(4:14,:)/1000.0d0
+            fbunch_u(17:19,:)=fbunch_u(17:19,:)/1000.0d0
+            fbunch_u(22:26,:)=fbunch_u(22:26,:)*1.0d3
+            fbunch_u(30:41,:)=fbunch_u(30:41,:)*1.0d3
+          endif
 
-          fbunch_u(4:14,:)=fbunch_u(4:14,:)/1000.0d0
-          fbunch_u(17:19,:)=fbunch_u(17:19,:)/1000.0d0
-          fbunch_u(22:26,:)=fbunch_u(22:26,:)*1.0d3
-          fbunch_u(30:41,:)=fbunch_u(30:41,:)*1.0d3
           arad_u=arad_u*1000.0d0
 
           specpow=pow_u
@@ -1445,11 +1448,19 @@ C SOURCEA IS RECALCULATED IN SR TRACKS
           enddo
 
           if (ibunch.ne.0) then
-            do i=1,nbunch*neinbunch*nfreq
-              if (fbunch_u(21,i).ne.0.0d0) then
-                call hfm(nidbunch,fbunch_u(:,i))
-              endif
-            enddo
+            if (ihbunch.gt.0) then
+              do i=1,nbunch*neinbunch*nfreq
+                if (fbunch_u(21,i).ne.0.0d0) then
+                  call hfm(nidbunch,fbunch_u(:,i))
+                endif
+              enddo
+            else if (ihbunch.lt.0) then
+              do i=1,nbunch*neinbunch*nfreq*nobsv
+                if (fbunch_u(21,i).ne.0.0d0) then
+                  call hfm(nidbunch,fbunch_u(:,i))
+                endif
+              enddo
+            endif
           endif
         endif
 

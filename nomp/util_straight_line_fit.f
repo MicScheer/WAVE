@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 14/03/2024  09.52.21  by  Michael Scheer
 *CMZ :  2.69/00 26/10/2012  09.35.15  by  Michael Scheer
 *-- Author :    Michael Scheer   25/10/2012
       subroutine util_straight_line_fit(n,x,y,e,a,b,chi2,erra,errb,istat)
@@ -48,7 +49,7 @@ c Fit a and b, such that f = a*x+b and Sum(i,((a*xi+b-yi-fi)/ei)**2)=min
 c See also grafit.kumac
 
 c The uncertainties erra and errb of the fitted parameters a (slope) and b
-c (offset) agree to the fits of MINUIT, expept when the error e(i) are zero.
+c (offset) agree to the fits of MINUIT, except when the error e(i) are zero.
 c Then the errors are such, that chi2/ndf is scaled to unity
 
       integer istat,n,i

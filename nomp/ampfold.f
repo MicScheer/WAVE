@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 19/04/2024  10.29.48  by  Michael Scheer
 *CMZ :  4.01/04 14/11/2023  13.37.28  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.11  by  Michael Scheer
 *CMZ :  2.70/12 01/03/2013  16.28.24  by  Michael Scheer
@@ -122,14 +123,31 @@ c14.11,2023      DO icomp=2,3
 
         DO icomp=i1,i2
           DO ireim=1,2
+            DO IFREQ=1,NFREQ
+C--- PERFORM FOLDING
+              CALL AFOLINT(icomp,ireim,IFREQ)
+            ENDDO !IFREQ
+          ENDDO !ireim
+        ENDDO !icomp
+
+      enddo !ieb=1,2
+
+      do ieb=1,2
+
+        if (ieb.eq.1) then
+          i1=1
+          i2=3
+        else
+          i1=6
+          i2=8
+        endif
+
+        DO icomp=i1,i2
+          DO ireim=1,2
 
             DO IFREQ=1,NFREQ
 
-C--- PERFORM FOLDING
-
-              CALL AFOLINT(icomp,ireim,IFREQ)
-
-C--- DELETE INTENSITY IN EDGES
+c DELETE INTENSITY IN EDGES
 
               DO IY=1,NOBSVY
                 DO IZ=1,NOBSVZ

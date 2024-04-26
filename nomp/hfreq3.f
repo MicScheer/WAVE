@@ -1,3 +1,4 @@
+*CMZ :  4.01/05 18/04/2024  13.59.40  by  Michael Scheer
 *CMZ :  4.00/15 07/04/2022  07.14.03  by  Michael Scheer
 *CMZ :  4.00/14 30/12/2021  15.41.22  by  Michael Scheer
 *CMZ :  4.00/13 07/12/2021  18.47.10  by  Michael Scheer
@@ -92,7 +93,7 @@
 *KEND.
 
       integer ifreq,id,icycle,mfreq
-      real df,flow,fhig
+      real df,flow,fhig,ff
       real*8 fstuple(5)
 
       if (ipin.ne.3) return
@@ -105,6 +106,11 @@
           DF=freqhig-freqlow
           FLOW=freqlow-DF/2.
           FHIG=freqlow+DF/2.
+      else if (ifreq2p.eq.-1) then
+        DF=freqhig-freqlow
+        ff=(freqlow+freqhig)/2.
+        FLOW=ff-DF/2.
+        FHIG=ff+DF/2.
       endif
 
       if (flow.lt.0.) then
