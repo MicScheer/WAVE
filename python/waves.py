@@ -197,7 +197,7 @@ def set_console_title(console='Python'):
   MarkerSize, MarkerType, MarkerColor, \
   Markersize, Markertype, Markercolor, \
   Fillstyle, FillStyle, \
-  Textcolor, WaveFilePrefix, \
+  Textcolor, WaveFilePrefix,WaveDump, \
   LineStyle, LineWidth, LineColor, \
   Linestyle, Linewidth, Linecolor, \
   Author, \
@@ -216,7 +216,7 @@ def set_console_title(console='Python'):
   ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
@@ -263,13 +263,13 @@ c--   workingspace: aa(n),bb(n),cc(n),c(n),cn(n)
   """
   n = len(x)
 
-  ypp =  zeros_like(x)
+  ypp =  np.zeros_like(x)
 
-  aa = zeros_like(x)
-  bb = zeros_like(x)
-  cc = zeros_like(x)
-  c  = zeros_like(x)
-  cn = zeros_like(x)
+  aa = np.zeros_like(x)
+  bb = np.zeros_like(x)
+  cc = np.zeros_like(x)
+  c  = np.zeros_like(x)
+  cn = np.zeros_like(x)
 
   if n < 5:
     ifail=-1
@@ -600,7 +600,7 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   MarkerSize, MarkerType, MarkerColor, \
   Markersize, Markertype, Markercolor, \
   Fillstyle, FillStyle, \
-  Textcolor, WaveFilePrefix, \
+  Textcolor, WaveFilePrefix,WaveDump, \
   LineStyle, LineWidth, LineColor, \
   Linestyle, Linewidth, Linecolor, \
   Author, \
@@ -619,7 +619,7 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
 
 #+PATCH,//WAVES/PYTHON
@@ -652,12 +652,12 @@ C--   workingspace: aa(n),bb(n),cc(n),c(n)
   """
   n = len(x)
 
-  y2 = zeros_like(x)
+  y2 = np.zeros_like(x)
 
-  aa = zeros_like(x)
-  bb = zeros_like(x)
-  cc = zeros_like(x)
-  c  = zeros_like(x)
+  aa = np.zeros_like(x)
+  bb = np.zeros_like(x)
+  cc = np.zeros_like(x)
+  c  = np.zeros_like(x)
 
   ifail = 0
 
@@ -1200,7 +1200,7 @@ Kplots, Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Legend, CanButId, CanBu
 Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Icmap, \
 MarkerSize, MarkerType, MarkerColor, \
 Markersize, Markertype, Markercolor, \
-Fillstyle, FillStyle, WaveFilePrefix, \
+Fillstyle, FillStyle, WaveFilePrefix,WaveDump, \
 Mode3d,Mode3D, Mode2d,Mode2D, \
 Textcolor,Linestyle, Linewidth, Linecolor, Author, \
 Histcolor, Histedgecolor, HistEdgeColor, Histbarwidth, Kdate, Kstat, Kfit, \
@@ -1216,7 +1216,7 @@ StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d,\
 AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles, Dummy,\
 ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax, ZoomZmin,ZoomZmax,Tdate, TdateOv, Trun, TrunOv, \
 LogX, LogY, LogZ, NxbBinMax, Khdeleted,WisLinux, Waveplot, \
-Mrun, Mcomment, Mdate, ROFx, ROFy, Hull2D,Hull3D, Kgrid,KyAxis,KxAxis,KzAxis,Kbox, \
+Mrun, Mcomment, Mdate, ROFx, ROFy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid,KyAxis,KxAxis,KzAxis,Kbox, \
 FillColor,Ishow
 
 
@@ -1530,6 +1530,8 @@ CanButId = 0
 
 Hull2D = []
 Hull3D = []
+Hull3DList = []
+THull3D = type(Hull3D)
 Ishow = 1
 
 #+PATCH,//WAVES/PYTHON

@@ -7,7 +7,7 @@ c Converts CSV-files, where each variable is followed by datas until LF.
       implicit none
 
 c      include 'phyconnew.cmn'
-*KEEP,PHYCONNEW.
+*KEEP,phyconnew.
       DOUBLE PRECISION ::
      &  HBAREV1=6.58211889D-16
      &, CLIGHT1=2.99792458D8
@@ -17,7 +17,7 @@ c      include 'phyconnew.cmn'
      &, ECHARGE1=1.602176462D-19
      &, ERAD1=2.8179380D-15
      &, EPS01=8.854187817D-12
-     &, HPLANCK1=6.626176D-34
+     &, HPLANCK1=6.62606876D-34
      &, PI1=3.141592653589793D0
      &, rmu04pi1=1.0D-7
      &, HBAR1=1.0545715955643569D-034
