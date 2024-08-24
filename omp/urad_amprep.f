@@ -1,4 +1,4 @@
-*CMZ :          26/04/2024  20.53.24  by  Michael Scheer
+*CMZ :          11/05/2024  14.12.53  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  07.41.13  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  13.39.24  by  Michael Scheer
 *CMZ :  4.01/02 14/05/2023  11.47.49  by  Michael Scheer
@@ -15,117 +15,10 @@
 
       implicit none
 
-*KEEP,PHYCONparam,T=F77.
-c-----------------------------------------------------------------------
-c     phyconparam.cmn
-c-----------------------------------------------------------------------
-
-      complex*16, parameter :: zone1=(1.0d0,0.0d0), zi1=(0.0d0,1.0d0)
-
-      complex*16, dimension(4,3), parameter ::
-     &  vstokes=reshape([
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
-     &  ( 0.0000000000000000d0, -0.70710678118654746d0),
-     &  ( 0.0000000000000000d0, -0.70710678118654746d0),
-     &  ( 0.70710678118654746d0, 0.0000000000000000d0),
-     &  (-0.70710678118654746d0,-0.70710678118654746d0),
-     &  ( 0.70710678118654746d0, 0.0000000000000000d0),
-     &  (-0.70710678118654746d0, 0.0000000000000000d0),
-     &  (-0.70710678118654746d0, 0.0000000000000000d0)
-     &  ],[4,3])
-
-c      vstokes(1,1)=( 0.0d0,        0.0d0)      !horizontal polarization
-c      vstokes(1,2)=( 0.0d0,        0.0d0)
-c      vstokes(1,3)=(-sqrt(1./2.),       -sqrt(1./2.))
-c
-c      vstokes(2,1)=( 0.0d0,        0.0d0)      !right handed polarization
-c      vstokes(2,2)=( 0.0d0,       -sqrt(1./2.))
-c      vstokes(2,3)=(+sqrt(1./2.),        0.0d0)
-c
-c      vstokes(3,1)=( 0.0d0,        0.0d0)      !left handed polarization
-c      vstokes(3,2)=( 0.0d0,       -sqrt(1./2.))
-c      vstokes(3,3)=(-sqrt(1./2.),        0.0d0)
-c
-c      vstokes(4,1)=( 0.0d0,        0.0d0)      !45 degree linear polarization
-c      vstokes(4,2)=( sqrt(1./2.),        0.0d0)
-c      vstokes(4,3)=(-sqrt(1./2.),        0.0d0)
-
-      double precision, parameter ::
-     &  HBAREV1=6.58211889D-16
-     &  ,CLIGHT1=2.99792458D8
-     &  ,EMASSKG1=9.10938188D-31
-     &  ,EMASSE1=0.510998902D6
-     &  ,EMASSG1=0.510998902D-3
-     &  ,ECHARGE1=1.602176462D-19
-     &  ,ERAD1=2.8179380D-15
-     &  ,EPS01=8.854187817D-12
-     &  ,PI1=3.141592653589793D0
-     &  ,rmu04pi1=1.0D-7
-     &  ,dnull1=0.0d0
-     &  ,done1=1.0d0
-     & ,HPLANCK1=6.626176D-34
-
-      double precision, parameter ::
-     & GRARAD1=PI1/180.0d0
-     & ,RADGRA1=180.0d0/PI1
-     & ,HBAR1=HBAREV1*ECHARGE1
-     & ,WTOE1=CLIGHT1*HPLANCK1/ECHARGE1*1.0d9
-     & ,CQ1=55.0d0/32.0d0/DSQRT(3.0D0)*HBAR1/EMASSKG1/CLIGHT1
-     & ,CGAM1=4.0d0/3.0d0*PI1*ERAD1/EMASSG1**3
-     & ,POL1CON1=8.0d0/5.0d0/DSQRT(3.0D0)
-     & ,POL2CON1=8.0d0/5.0d0/DSQRT(3.0D0)/2.0d0/PI1/3600.0d0
-     &  *EMASSKG1/HBAR1/ERAD1*EMASSG1**5
-     & ,TWOPI1=2.0D0*PI1
-     & ,HALFPI1=PI1/2.0D0
-     & ,sqrttwopi1=sqrt(twopi1)
-     & ,rmu01=4.0D0*PI1/1.0D7
-     & ,alpha1=echarge1**2/(4.0d0*pi1*eps01*hbar1*clight1)
-     & ,gaussn1=1.0d0/sqrt(twopi1)
-     & ,cK934=ECHARGE1/(2.0d0*PI1*EMASSKG1*CLIGHT1)/100.0d0
-     & ,powcon1=cgam1/2.0d0/pi1*clight1*(clight1/1.0d9)**2*emassg1
-     &  ,gamma1=1.0d0/emassg1
-     &  ,emom1=emasse1*dsqrt((gamma1-1.0d0)*(gamma1+1.0d0))
-     &  ,rho1=emom1/clight1
-     &  ,omegac1=1.5d0*gamma1**3*clight1/rho1
-     &  ,ecdipev1=omegac1*hbar1/echarge1
-     &  ,ecdipkev1=ecdipev1/1000.0d0
-
-c-----------------------------------------------------------------------
-c     end of phyconparam.cmn
-c-----------------------------------------------------------------------
-*KEEP,TRACK.
-      INTEGER NCO,MCO,IBYONLY,ITRACK
-
-      DOUBLE PRECISION PHIX,PHIMX,PHIMN
-     &  ,XMX,XMN,YMX,YMN,ZMX,ZMN
-     &  ,BXMX,BXMN,BYMX,BYMN,BZMX,BZMN
-     &  ,XMXAE,XMNAE,YMXAE,YMNAE,ZMXAE,ZMNAE
-     &  ,BXMXAE,BXMNAE,BYMXAE,BYMNAE,BZMXAE,BZMNAE
-     &  ,BINT0,PINT,tint
-     &  ,BINT1X,BINT1Y,BINT1Z,BINT2X,BINT2Y,BINT2Z,BINT3Y,BINT3YA
-     &  ,DTIM0,DS0
-     &  ,B2INTY
-     &  ,WTRA2I,TTRA2I,HTRA2I,WTRA2IC,
-     &  XTRACK,YTRACK,ZTRACK,
-     &  VXTRACK,VYTRACK,VZTRACK
-
-      COMMON/MINMAXC/
-     &  PHIX,PHIMX,PHIMN,XMX,XMN,YMX,YMN,ZMX,ZMN
-     &  ,BXMX,BXMN,BYMX,BYMN,BZMX,BZMN
-     &  ,XMXAE,XMNAE,YMXAE,YMNAE,ZMXAE,ZMNAE
-     &  ,BXMXAE,BXMNAE,BYMXAE,BYMNAE,BZMXAE,BZMNAE
-     &  ,BINT0,PINT,tint
-     &  ,BINT1X,BINT1Y,BINT1Z,BINT2X,BINT2Y,BINT2Z,BINT3Y,BINT3YA
-     &  ,DTIM0,DS0
-     &  ,WTRA2I,TTRA2I,HTRA2I,WTRA2IC
-     &  ,B2INTY
-     &  ,XTRACK,YTRACK,ZTRACK
-     &  ,VXTRACK,VYTRACK,VZTRACK
-     &  ,NCO,MCO,IBYONLY,ITRACK
+*KEEP,phyconparam.
+      include 'phyconparam.cmn'
+*KEEP,track.
+      include 'track.cmn'
 *KEND.
 cc+seq,uservar.
 
@@ -151,17 +44,19 @@ cc+seq,uservar.
      &  vyi,vz0,vz2,vzf0,vzi,wlen1,x0,x2,xf0,xi,xlell,y0,y2,yf0,yi,ypi,yy,yyp,
      &  z0,z2,zf0,zi,zpi,zz,zzp,fillb(41),stok1,stok2,stok3,stok4,speknor,
      &  sqnbunch,sqnphsp,specnor,sbnor,rpin,r00(3),xph0,
-     &  r(3),r0(3),pw,ph,phsum,pkerr,pherror,ppin,parke,pc(3),pcbrill(3),om1,
+     &  r(3),r0(3),pw,ph,phsum,pkerr,ppin,parke,pc(3),pcbrill(3),om1,
      &  park,pr,hbarev,obs(3),om,fhigh,flow,gamma,eix,eiy,eiz,emassg,
      &  efx,efy,efz,eharm1,ecdipev,ebeam,dtpho,dt,dtelec,dd0,debeam,
      &  drn0(3),drn00(3),ds,dr0(3),dr00(3),drn(3),dpp,dph,dist,dist0,dobs(3),
      &  bunnor,clight,bunchx,beta,beff,spow,
      &  zp0,yp0,rph,anor,fsum,
-     &  xkellip,zampell,yampell,parkv,parkh,zpampell,ypampell,emom,dzpin,dypin,zmin,ymin
+     &  xkellip,zampell,yampell,parkv,parkh,zpampell,ypampell,emom,dzpin,dypin,zmin,ymin,phgsh
 
       double complex, dimension (:), allocatable ::
      &  uampex,uampey,uampez,uampbx,uampby,uampbz
       double precision, dimension (:,:), allocatable :: utraxyz,ustokes
+
+      double complex :: rea(3),expsh
 
       integer :: kfreq,iobsv,i,np2,nelec,mbunch,meinbunch,ibu,jbun,
      &  kran=6,icbrill,ilo,kobsv,i1,i2,n,
@@ -413,7 +308,7 @@ c      dtim0=ds/beta
 
       lmodeph=modeph_u
 
-      if (pherror.ne.0.0d0.and.(lmodeph.lt.0.or.lmodeph.gt.2)) then
+      if (pherror_u.ne.0.0d0.and.(lmodeph.lt.0.or.lmodeph.gt.2)) then
         write(6,*) ""
         write(6,*) "*** Error in urad_amprep: MODEPH must be 0,1, or 2 ***"
         write(6,*) "*** Program aborted ***"
@@ -421,9 +316,9 @@ c      dtim0=ds/beta
 
       if (lmodeph.eq.0.and.eharm1.ne.0.0d0) then
         om1=eharm1/hbarev
-        pherr=sngl(pherrc*pherror/360.0d0*twopi1/om1)
+        pherr=sngl(pherrc*pherror_u/360.0d0*twopi1/om1)
       else if (lmodeph.eq.1) then
-        pherr=sngl(pherr*pherror)
+        pherr=sngl(pherr*pherror_u)
       else if (lmodeph.eq.2) then
         pherr(nper_u)=0.0
         phsum=0.0d0
@@ -483,10 +378,14 @@ c      dtim0=ds/beta
         if (abs(obsv_u(3,iobsv)).lt.1.0d-9) obsv_u(3,iobsv)=0.0d0
       enddo
       pcbrill=obsv_u(:,icbrill)
+      phgsh=phgshift_u
+
+      rea=(0.0d0,0.0d0)
+      expsh=(1.0d0,0.0d0)
 
 !$OMP PARALLEL NUM_THREADS(mthreads) DEFAULT(PRIVATE)
 !$OMP& FIRSTPRIVATE(nepho,nobsvz,nobsvy,nobsv,nelec,frq,nper_u,np2,perlen_u,clight,hbarev,
-!$OMP& flow,fhigh,czero,cone,
+!$OMP& flow,fhigh,czero,cone,rea,expsh,
 !$OMP& x0,y0,z0,xf0,yf0,zf0,vx0,vy0,vz0,vxf0,vyf0,vzf0,gamma_u,sbnor,speknor,
 !$OMP& efx,efy,efz,ds,ndimu,curr_u,xlell,parke,amp,amp0,
 !$OMP& uampex,uampey,uampez,uampbx,uampby,uampbz,
@@ -497,7 +396,7 @@ c      dtim0=ds/beta
 !$OMP& pran,pranall,eall,fillb,r0,dr0,iamppin,iamppincirc,pc,phase0,pr,banwid_u,
 !$OMP& pw,ph,idebug,pcbrill,wsstokes,vn,bunchlen_u,modebunch_u,icohere_u)
 !$OMP& SHARED(mthreads,stokes,pherr,lbunch,lnbunch,modepin_u,fieldbunch,npinzo_u,nobsvo,dzpin,dypin,
-!$OMP& fbunch_u,jcharge,jeneloss,jvelofield,iemit,noranone,arad,pow,zmin,ymin)
+!$OMP& fbunch_u,jcharge,jeneloss,jvelofield,iemit,noranone,arad,pow,zmin,ymin,phgsh)
 
       jbun=1
       isub=0
@@ -761,6 +660,30 @@ c25.4.2024     &          (1.0d0+parke**2/2.0d0)/2.0d0/gamma**2+
                   fillb(8)=ypi
                   fillb(9)=zpi
                 else if (i.eq.nper_u) then
+
+                  if (abs(phgsh).eq.9999.0d0) then
+                    rea=amp(1:3)
+                    expsh=rea(3)/abs(rea(3))
+                    if (phgsh.eq.-9999.0d0) expsh=expsh*cdexp(dcmplx(0.0d0,-pi1/2.0d0))
+                    amp=amp/expsh
+                  else if (phgsh.ne.0.0d0) then
+                    expsh=cdexp(dcmplx(0.0d0,phgsh))*1.0d3
+                    amp=amp/expsh
+                  endif
+
+                  if (phgsh.eq.9999.0d0) then
+                    rea=amp(1:3)
+                    expsh=rea(3)/abs(rea(3))
+                    amp=amp/expsh
+                  else if (phgsh.eq.-9999.0d0) then
+                    rea=amp(1:3)
+                    expsh=rea(3)/abs(rea(3))*cdexp(dcmplx(0.0d0,-pi1/2.0d0))
+                    amp=amp/expsh
+                  else if (phgsh.ne.0.0d0) then
+                    expsh=cdexp(dcmplx(0.0d0,phgsh))*1.0d3
+                    amp=amp/expsh
+                  endif
+
                   fillb(10:12)=r
                   fillb(13)=ypi
                   fillb(14)=zpi
