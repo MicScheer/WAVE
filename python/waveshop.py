@@ -685,7 +685,6 @@ def set_console_title(console='Python'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -1088,7 +1087,6 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -1599,6 +1597,14 @@ except:
 #endtry
 #from pyhull.convex_hull import ConvexHull
 #from pyhull import qconvex, qdelaunay, qvoronoi
+
+if platform.system() == 'Windows':
+    import msh_tex_windows
+    from msh_tex_windows import *
+else:
+    import msh_tex_linux
+    from msh_tex_linux import *
+#endif
 
 
 global \
@@ -4184,7 +4190,6 @@ def hdump(hist='?',filh='hdump.dat'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -4272,7 +4277,6 @@ def hprint(hist='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -4349,7 +4353,6 @@ def hfun(hist='?',fun='x', nx=101, xmin=-0.5, xmax=100.5):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -4460,7 +4463,6 @@ def h1header_update(hist='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -4630,7 +4632,6 @@ def h1reset(h):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -4709,7 +4710,6 @@ def hdelete(h='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -4794,7 +4794,6 @@ def hmin(h='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -4877,7 +4876,6 @@ def hmax(h='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -4947,7 +4945,6 @@ def printplopt():
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 
   if type(Klegend) == int or type(Klegend) == bool:
     iledg = Klegend
@@ -5022,7 +5019,6 @@ def plotoptions(plopt=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 
   Iplotopt = 0
 
@@ -5218,7 +5214,6 @@ def mhb_mkdir(chdir='!'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -5323,7 +5318,6 @@ def mhb_ldir():
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -5398,7 +5392,6 @@ def mhb_pwd(isilent=0,iretval=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -5468,7 +5461,6 @@ def mhb_cd(cdir='!'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -5588,7 +5580,6 @@ def zoom(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30,zmin=1.2345e30,zmax=1.2345e30)
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
 
-
   yn, yx = Ax.get_ylim()
   if ymin == -1.2345e30: ymn=yn
   else: ymn = ymin
@@ -5665,7 +5656,6 @@ def zoom3d(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30,zmin=1.2345e30,zmax=1.2345e3
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 
   Ax = plt.gca()
 
@@ -5755,7 +5745,6 @@ def pplot(pname="WavePlot.pdf",w=0,h=0):
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
 
-
   Fig = plt.gcf()
   wo,ho = getplotsize()
 
@@ -5823,7 +5812,6 @@ def h1pack(idh='?', data=None):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -5905,7 +5893,6 @@ def hcopn(idh='?', nt='', varlis='x:y:ey', ntit='!',kweedzero=1):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -6042,7 +6029,6 @@ def nrandom(nt='?',varlis='', n=100, modu='u', iplot=0, modus='new'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -6146,7 +6132,6 @@ def nhull2d(nt='?',varlis='',select='', iplot=1, iretval=1):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -6356,7 +6341,6 @@ def vhull2d(vx,vy,varlis='',iplot=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -6661,7 +6645,6 @@ def nhull3dbad(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,color='!'
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -7078,7 +7061,6 @@ def nappend(nt='?', nt2=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -7166,7 +7148,6 @@ def nfill(nt='?', data=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -7293,7 +7274,6 @@ def npeaksabs(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretva
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -7421,7 +7401,6 @@ def hpeaks(h='?', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -7500,7 +7479,6 @@ def npeaks(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -7623,7 +7601,6 @@ def nstat(nt='?',var='',select='', iretval=1, isilent=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -7810,7 +7787,6 @@ def nmax(nt='?',var='',select='',iretval=1):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -7921,7 +7897,6 @@ def nmin(nt='?',var='',select='', iretval=1):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -8032,7 +8007,6 @@ def nminmax(nt='?',var='',select='',iretval=1):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -8361,7 +8335,6 @@ def nrenvars(nt,varlis):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -8450,7 +8423,6 @@ def nparse(nt,varlis):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -8640,7 +8612,6 @@ def set_linecolor(lcol='r'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -8708,7 +8679,6 @@ def h2fill(idh='?', x=1.e30, y=1.e30, w=1.):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -8926,7 +8896,6 @@ def h1fill(idh=-1, x=1.e30, wei=1.):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -9086,7 +9055,6 @@ def hbook2(idh=-1, tit='Histogram2D',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -9261,7 +9229,6 @@ def h2reset(idh):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -9400,7 +9367,6 @@ def hbook1(idh=-1, tit='Histogram1D', nx=10, xmin=0., xmax=1., overwrite=False):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -9532,7 +9498,6 @@ def nscan(nt='?',varlis='',select='',isilent=0,ifirst=0,ilast=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -9663,7 +9628,6 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -9858,8 +9822,8 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
 
       if igauss:
         tex = "A = " + '{:.4g}'.format(par[0]) + " +/- " + '{:.4g}'.format(sig[0]) + \
-        "\n$\mu$ = " + '{:.4g}'.format(par[1])  + " +/- " + '{:.4g}'.format(sig[1]) + \
-        "\n$\sigma$ = " + '{:.4g}'.format(par[2])  + " +/- " + '{:.4g}'.format(sig[2]) + "\n"
+        "\ntexmu = " + '{:.4g}'.format(par[1])  + " +/- " + '{:.4g}'.format(sig[1]) + \
+        "\ntexsigma = " + '{:.4g}'.format(par[2])  + " +/- " + '{:.4g}'.format(sig[2]) + "\n"
       else:
         tex = ""
         ip = 0
@@ -9869,8 +9833,8 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
         #endfor
       #endif
 
-      tex += "$\chi^2/Ndf$" + " = " + '{:.4g}'.format(chi2ndf) + "\n"
-      tex += "$\chi^2 prob$" + " = " + '{:.4g}'.format(FitChi2Prob) + "\n"
+      tex += Tex_chi2ndf + " = " + '{:.4g}'.format(chi2ndf) + "\n"
+      tex += Tex_chi2prob + " = " + '{:.4g}'.format(FitChi2Prob) + "\n"
       text(Xstat,Ystat,tex,halign='left')
 
     #endif Kstat
@@ -9959,7 +9923,6 @@ def nintern(nt='?',varlis='',select='',xint='!'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -10077,7 +10040,6 @@ def ninter(nt='?',varlis='',select='',xint='!'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -10249,7 +10211,6 @@ def nspline(nt='?',varlis='',select='',xspl='!',periodic=False):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -10383,7 +10344,6 @@ def nsolve(nt='?',varlis='',select='',val=0.0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -10507,7 +10467,6 @@ def ndump(nt='',varlis='',select='',fout='ndump.dat', sep=' ',floatform='%.5e',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -10666,7 +10625,6 @@ def nreset(nt='?', varlis=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -10776,7 +10734,6 @@ def ndelete(nt='?',isilent=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -10873,7 +10830,6 @@ def ncre(ntname='', nttit='', varlis='', ioverwrite=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -11024,7 +10980,6 @@ def GetIndexH2(idh='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -11126,7 +11081,6 @@ def GetIndexN(nt='?', isilent=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -11246,7 +11200,6 @@ def GetIndexNct(idh='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -11330,7 +11283,6 @@ def GetIndexH1(idh='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -11435,7 +11387,6 @@ def GetIndex(idh='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -11537,7 +11488,6 @@ def h1opt(idh):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -11665,7 +11615,6 @@ def voptpar(vx,vy):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -11781,7 +11730,6 @@ def h1print(idh='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -11861,7 +11809,6 @@ def H1Info(idh='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -11963,7 +11910,6 @@ def H2Info(idh='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -12086,7 +12032,6 @@ def hstat2d(idh='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -12160,7 +12105,6 @@ def H1List():
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -12326,7 +12270,6 @@ def nentry(nt='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -12408,7 +12351,6 @@ def ninfo(nt='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -12510,7 +12452,6 @@ def nlist():
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -12580,7 +12521,6 @@ def NctList():
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -12649,7 +12589,6 @@ def ncolumns(fname='ntuple.dat', skiphead=-1, sep=' '):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -12755,7 +12694,6 @@ def ncolumnsguess(fname='ntuple.dat'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -12872,7 +12810,6 @@ silent=0, comment='*', sep=' ',iguessncols=1, iplot=1):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -12959,7 +12896,6 @@ silent=0, comment='*', sep=' ', iguessncols=1, iplot=1):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -13043,7 +12979,6 @@ comment='*', sep=' '):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -13203,7 +13138,6 @@ comment='*', sep=' ',iguessncols=1, ioverwrite=1):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -13368,7 +13302,6 @@ def nproj2(nt='?', xy='', weight=1., select='',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -13728,7 +13661,6 @@ def nproj2n(nt='?', xy='', weight=1., select='',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -14070,7 +14002,6 @@ def nproj1(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -14379,7 +14310,6 @@ def nproj1n(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -14697,7 +14627,6 @@ def hstat1d(idh='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -14744,7 +14673,6 @@ def hstat1d(idh='?'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 
   global Debug, Ical
 
@@ -14857,7 +14785,6 @@ def vstat(x='?',y=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -14904,7 +14831,6 @@ def vstat(x='?',y=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 
   #nreakpoint()
 
@@ -15008,7 +14934,6 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -15055,7 +14980,6 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 
   global Debug, Ical
 
@@ -15439,7 +15363,6 @@ def hplot(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', block
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -15517,7 +15440,6 @@ def hplave(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', bloc
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -15734,7 +15656,6 @@ def window(title='', geom="!", block=False, projection = '2d',
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
 
-
   global Tfig, Tax2d, Tax3d, IsameGlobal, ScreenWidth, ScreenHeight, Tdate, \
   Figman, Wmaster
 
@@ -15876,7 +15797,6 @@ def win2(title='Win_2', geom="!", block=False, projection = '2d', getconsole=Tru
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
   if geom == '!': geom = Figgeom2
   window(title=title, geom=geom, block=block, projection =projection, getconsole=getconsole, visible=visible)
   shpl()
@@ -15918,7 +15838,6 @@ def winr(title='Win_r', geom="!", block=False, projection = '2d', getconsole=Tru
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
   if Nwins < 1: read_window_geometry(fname='ntupplot.cfg')
   if geom == '!':
     if FiggeomR: geom = FiggeomR
@@ -15964,7 +15883,6 @@ def winl(title='Win_l', geom="!", block=False, projection = '2d', getconsole=Tru
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
   if Nwins < 1: read_window_geometry(fname='ntupplot.cfg')
   if geom == '!': geom = FiggeomL
   window(title=title, geom=geom, block=block, projection =projection, getconsole=getconsole, visible=visible)
@@ -16020,7 +15938,6 @@ def showplot(visible=True):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -16197,7 +16114,6 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -16624,7 +16540,6 @@ def zone(nx=1, ny=1, kzone=1, isame='', projection='2d', visible=True):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 # +PATCH,//WAVES/PYTHON
 # +KEEP,statusglobind,T=PYTHON.
   global Istatus, WarningText, ErrorText, Gdebug
@@ -16806,7 +16721,6 @@ def window_close(win=-1):
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
 
-
   if Nwins == 1:
     Nwins = 0
     Nfigs = 0
@@ -16885,7 +16799,6 @@ def window_clear(win=-1):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
   global Tfig, Tdate, Figman
 
   if win == -1:
@@ -16973,7 +16886,6 @@ def set_title(title='Title',tfs=-9.,titx=-9.,tity=-9):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -17049,7 +16961,6 @@ def set_x_title(xtit='xTit',pos=0.5):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -17116,7 +17027,6 @@ def set_y_title(ytit='yTit', pos=0.5):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -17183,7 +17093,6 @@ def set_z_title(ztit='zTit',pos=0.5):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -17252,7 +17161,6 @@ def set_titles(gtit='',pltit='Title',xtit='xTit', ytit='yTit', ztit=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -17323,7 +17231,6 @@ def set_global_title(gtit='', fontsize='!'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -17403,7 +17310,6 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -17552,7 +17458,6 @@ def null3d(xmin=-10., xmax=10., ymin=-10., ymax=10., zmin=-10., zmax=10.,elev=30
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
 
-
   global Tfig, Tax3d
 
   if Nwins <= 0: window(projection='3d')
@@ -17606,7 +17511,6 @@ def null(xmin=-10., xmax=10., ymin=-10., ymax=10.):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 
   global Tfig,Tax2d
   #nreakpoint()
@@ -17797,7 +17701,6 @@ def run_on_figure(x=0.03,y=0.95,fontsize='!',ishow=1, iforce=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
   global Krun,Kruns
 
   if ROFx: x = ROFx
@@ -17922,7 +17825,6 @@ def date_on_figure(x=0.04,y=0.02,fontsize='!',ishow=1):
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
 
-
   global Kdate
 
   if Kdate == None or Kdate == False: return
@@ -18023,7 +17925,6 @@ def optnrun(krun=False):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
   Krun = krun
   run_on_figure()
 #enddef optnrun()
@@ -18064,7 +17965,6 @@ def optrun(krun=True):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
   Krun = krun
   run_on_figure()
 #enddef optrun()
@@ -18105,7 +18005,6 @@ def optndate(kdate=False):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
   Kdate = kdate
   date_on_figure()
 #enddef optndate()
@@ -18146,7 +18045,6 @@ def optdate(kdate=True):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
   Kdate = kdate
   date_on_figure()
 #enddef optdate()
@@ -18197,7 +18095,6 @@ def set_author(author=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
   if author != '': Author = author
 #enddef set_author(author='')
 
@@ -18251,7 +18148,6 @@ def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0, overwrite=True):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -18366,7 +18262,6 @@ def hcopy2d(idh,idnew,tit='',scalex=1.,scaley=1., scalez=1., reset=0, overwrite=
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -18915,7 +18810,6 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -19471,7 +19365,6 @@ def vprint(v):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -19538,7 +19431,6 @@ def vprintxy(x,y):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -19617,7 +19509,6 @@ def vplxy(x='!',y='!',plopt='',label='',color='!',fillcolor='none'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -19865,7 +19756,6 @@ def vplxyey(x,y,ey='',plopt='o',label='',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -19946,7 +19836,6 @@ def vplxyerr(x,y,ey='',ex='',plopt='o',label='',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -20029,7 +19918,6 @@ def vinter(x,y,xint='!'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -20137,7 +20025,6 @@ def vintern(x,y,xint='!'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -20311,7 +20198,6 @@ def vspline_index(x,y,nspl=1001, periodic=False, ypp1=0.0, yppn=0.0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -20431,7 +20317,6 @@ def vspline(x,y,xspl='!', periodic=False, ypp1=0.0, yppn=0.0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -20603,7 +20488,6 @@ def vspline_old(x,y,xspl='!', periodic=False):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -20820,7 +20704,6 @@ def nupdate_header(nt,reindex=1):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -20977,7 +20860,6 @@ def vsolve(x,y,val=0.0,xmin=-1.0e30,xmax=1.0e30):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -21103,7 +20985,6 @@ def vsolvelin(x,y,val=0.0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -21173,7 +21054,6 @@ def voptspl(x,y):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -21278,7 +21158,6 @@ def ncopn(nt,ncnam,varlis='',select='',ioverwrite=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -21385,7 +21264,6 @@ def ncopv(nt,varlis,select=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -21516,7 +21394,6 @@ def nclone(nt,ncnam,nctit='',ioverwrite=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -22429,7 +22306,6 @@ def getzone(projection=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -22584,7 +22460,6 @@ def set_console_title(console='Python'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -22657,7 +22532,6 @@ def get_console(console=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -22736,7 +22610,6 @@ def getax(visible=True):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -22809,7 +22682,6 @@ def vplbxy(x,y,u,v,scale=-9999.0,plopt='',tit='',xtit='',ytit='',ztit='',label='
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -22909,7 +22781,6 @@ def vplbxyz(x,y,z,u,v,w,scale,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -22990,7 +22861,6 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -23138,7 +23008,6 @@ def vplxyzt(x,y,z,t,plopt='',tit='',xtit='',ytit='',ztit='', label='',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -23212,7 +23081,6 @@ def textbox(text,x=0.05, y=0.95, tcolor=None, bgcolor='white', alpha=0.9,
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
   props = dict(facecolor=bgcolor, alpha=alpha)
   if type(Ax) == Tax3d:
     Ax.text2D(x,y,text,transform=Ax.transAxes,
@@ -23295,7 +23163,6 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -23622,7 +23489,6 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -23684,8 +23550,8 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
 
       if igauss:
         tex = "A = " + '{:.4g}'.format(par[0]) + " +/- " + '{:.4g}'.format(sig[0]) + \
-        "\n$\mu$ = " + '{:.4g}'.format(par[1])  + " +/- "  + '{:.4g}'.format(sig[1]) + \
-        "\n$\sigma$ = " + '{:.4g}'.format(par[2])  + " +/- " + '{:.4g}'.format(sig[2]) + "\n"
+        "\ntexmu = " + '{:.4g}'.format(par[1])  + " +/- "  + '{:.4g}'.format(sig[1]) + \
+        "\ntexsigma = " + '{:.4g}'.format(par[2])  + " +/- " + '{:.4g}'.format(sig[2]) + "\n"
       else:
         tex = ""
         ip = 0
@@ -23695,8 +23561,8 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
         #endfor
       #endif
 
-      tex += "$\chi^2/Ndf$" + " = " + '{:.4g}'.format(chi2ndf) + "\n"
-      tex += "$\chi^2 prob$" + " = " + '{:.4g}'.format(FitChi2Prob) + "\n"
+      tex += Tex_chi2ndf + " = " + '{:.4g}'.format(chi2ndf) + "\n"
+      tex += Tex_chi2prob + " = " + '{:.4g}'.format(FitChi2Prob) + "\n"
       text(Xfit,Yfit,tex,halign='left')
 
     #endif Kstat
@@ -23771,7 +23637,6 @@ def vfit(fitfun, x, y, ey = '', absolute_sigma='default', parstart=None,
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -23981,7 +23846,6 @@ def vfitexp(x,y, ey = '', absolute_sigma='default', parstart=None,
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -24055,7 +23919,6 @@ def vfitexp2(x,y, ey = '', absolute_sigma='default', parstart=None,
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -24135,7 +23998,6 @@ def vfitgauss(x,y, ey = '', absolute_sigma='default',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -24207,7 +24069,6 @@ def vfitcosh(x,y, ey = '', absolute_sigma='default',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -24279,7 +24140,6 @@ def vfitcos(x,y, ey = '', absolute_sigma='default',
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -24348,7 +24208,6 @@ def hget(idh=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -24426,7 +24285,6 @@ def nget(idn=''):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -25738,7 +25596,6 @@ def plotoptions_unklar(plopt=''):
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
 
-
   Iplotopt = 0
 
   if type(plopt) != str: return
@@ -26773,9 +26630,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
       #endif
     #endif
 
@@ -26797,9 +26654,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("s0f",plopt,Tit,xTit,yTit)
@@ -26819,9 +26676,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("s0e",plopt,Tit,xTit,yTit)
@@ -26842,9 +26699,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("s0ef",plopt,Tit,xTit,yTit)
@@ -26937,9 +26794,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("m0",plopt,Tit,xTit,yTit)
@@ -26959,9 +26816,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("m0f",plopt,Tit,xTit,yTit)
@@ -26981,9 +26838,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("m0e",plopt,Tit,xTit,yTit)
@@ -27004,9 +26861,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("m0ef",plopt,Tit,xTit,yTit)
@@ -27066,7 +26923,7 @@ def nyz(xmin=1., xmax=-1., plopt='line'):
 
   if Nmax - Nmin < 0.001:
     scaley = 1.e6
-    uny = '[$\mu$m]'
+    uny = '[texmum]'
   #endif
 
   nminmax('n10','z','',0)
@@ -27075,7 +26932,7 @@ def nyz(xmin=1., xmax=-1., plopt='line'):
 
   if Nmax - Nmin < 0.001:
     scalez = 1.e6
-    unz = '[$\mu$m]'
+    unz = '[texmum]'
   #endif
 
   if scalez < scaley:
@@ -27367,14 +27224,14 @@ def nz(xmin=1., xmax=-1., plopt='line',unitz='auto'):
     unz = "[mm]"
   elif unitz == 'mum':
     scalez = 1.0e6
-    unz = '[$\mu$m]'
+    unz = '[texmum]'
   else:
     nminmax('n10','z',sel,0)
     scalez = 1.0e3
     unz = "[mm]"
     if Nmax - Nmin < 0.001:
       scalez = 1.e6
-      unz = '[$\mu$m]'
+      unz = '[texmum]'
   #endif scalez == auto.
 
   nplot('n10','x:z',select=sel,plopt=plopt,legend='z',scaley=scalez)
@@ -27427,7 +27284,7 @@ def nzs(xmin=1., xmax=-1., plopt='default'):
   uny = "[mm]"
   if Nmax - Nmin < 0.001:
     scaley = 1.e6
-    uny = '[$\mu$m]'
+    uny = '[texmum]'
   #endif
 
   nminmax('n10','z','',0)
@@ -27435,7 +27292,7 @@ def nzs(xmin=1., xmax=-1., plopt='default'):
   unz = "[mm]"
   if Nmax - Nmin < 0.001:
     scalez = 1.e6
-    unz = '[$\mu$m]'
+    unz = '[texmum]'
   #endif
 
   if scalez < scaley:
@@ -27662,7 +27519,7 @@ def ntrack(xmin=1., xmax=-1., plopt='line'):
 
   if Nmax - Nmin < 0.001:
     scaley = 1.e6
-    uny = '[$\mu$m]'
+    uny = '[texmum]'
   #endif Nmax - Nmin < 0.001
 
   nminmax('n10','z',sel,0)
@@ -27671,7 +27528,7 @@ def ntrack(xmin=1., xmax=-1., plopt='line'):
 
   if Nmax - Nmin < 0.001:
     scalez = 1.e6
-    unz = '[$\mu$m]'
+    unz = '[texmum]'
   #endif Nmax - Nmin < 0.001
 
   nplot('n10','x:z:y',select=sel,plopt=plopt,scaley=scalez,scalez=scaley)
@@ -27724,7 +27581,7 @@ def ntracks(xmin=1., xmax=-1., plopt='default'):
   nplot('n11','x:z:y',select=sel,plopt=plopt,scaley=1.e6,scalez=1.e6)
   Lastwin = window_get_title()
 
-  txyz("Sources","long. coord. x [m]","hori. coord. z [$\mu$m]","vert. coord. y [$\mu$m]")
+  txyz("Sources","long. coord. x [m]","hori. coord. z [texmum]","vert. coord. y [texmum]")
 
   kcurr = Kcurr; Kcurr = 0
   wave_title('default')
@@ -27766,14 +27623,14 @@ def ny(xmin=1., xmax=-1., plopt='line', unity='auto'):
     uny = "[mm]"
   elif unity == 'mum':
     scaley = 1.0e6
-    uny = '[$\mu$m]'
+    uny = '[texmum]'
   else:
     nminmax('n10','y',sel,0)
     scaley = 1.0e3
     uny = "[mm]"
     if Nmax - Nmin < 0.001:
       scaley = 1.e6
-      uny = '[$\mu$m]'
+      uny = '[texmum]'
   #endif scaley == auto.
 
   nplot('n10','x:y',select=sel,plopt=plopt,legend='y',scaley=scaley)
@@ -27824,7 +27681,7 @@ def nys(xmin=1., xmax=-1., plopt='default'):
   nplot('n11','x:y',select=sel,plopt=plopt,legend='y',scaley=1.e6)
   Lastwin = window_get_title()
 
-  txyz('Sources','long. coord. x[m]','vert. displacement y[$\mu$m]')
+  txyz('Sources','long. coord. x[m]','vert. displacement y[texmum]')
 
   kcurr = Kcurr; Kcurr = 0
   wave_title('default')
@@ -27882,7 +27739,6 @@ def wave_title(gtit='Run_and_Code', fontsize=-9):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -27929,7 +27785,6 @@ def wave_title(gtit='Run_and_Code', fontsize=-9):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 
   global Wdirs, Wfiles, Wfile, Wcode, Wrun \
   ,Webea ,Wcurr ,Wipin ,Wcir ,Wpiny ,Wpinx ,Wpinz ,Wpinw ,Wpinh ,Wpinr \
@@ -28046,7 +27901,6 @@ def wave_input_parameters():
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -28174,7 +28028,6 @@ def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='yes'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -28436,9 +28289,9 @@ def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='yes'):
 
   if yTit == "!":
     if Kcurr == 0:
-      yTitBrill = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      yTitBrill = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      yTitBrill = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$'
+      yTitBrill = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$'
     #endif
   #endif
 
@@ -28447,9 +28300,9 @@ def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='yes'):
   if ipola==-1 and ibril==-1 and yTit=="!":
     tit = 'Flux-density distribution'
     if Kcurr == 0:
-      yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
   #endif ipola==-1 and ibril==-1 and yTit=="!"
 
@@ -28900,7 +28753,6 @@ def nspec(key='f', select='', plopt='surf', idh='Hspec'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -29026,7 +28878,6 @@ def hflux(key='f', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='yes'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -29275,9 +29126,9 @@ def hflux(key='f', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='yes'):
   if ipola==-1 and yTit=="!":
     tit = '\nFlux'
     if Kcurr == 0:
-      yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW'
+      yTit = TeX_gamma + '/s/' + str(bw) + ' %BW'
   #endif ipola==-1 and and yTit=="!"
 
   x = Wselx; y = Wsely*1000.; z=Wselz*1000.
@@ -29661,7 +29512,6 @@ def create_hpin(overwrite=True):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -29767,7 +29617,6 @@ def create_hspec(overwrite=True):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -29847,7 +29696,6 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -29969,9 +29817,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(idx37,'z','spec',select,1000.,1.e-6,0,'HpinH')
     tit = 'Hori. cut of flux-dens. dist.'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
   elif key == 'FF' or key == 'FDF':
     idx37 = GetIndexN('n3701')
@@ -29991,9 +29839,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n37,'z','spec','',1000.,1.e-6,0,'HpinH')
     tit = 'Hori. cut of flux-dens. dist.\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
   elif key == 'AYR' or key == 'EYR':
     idx37 = GetIndexN('n3700')
@@ -30395,9 +30243,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s0','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S0'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1':
     idx4700 = GetIndexN('n4700')
@@ -30416,9 +30264,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s1','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S1'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2':
     idx4700 = GetIndexN('n4700')
@@ -30437,9 +30285,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s2','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3':
     idx4700 = GetIndexN('n4700')
@@ -30458,9 +30306,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s3','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S3'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0F':
     idx4701 = GetIndexN('n4701')
@@ -30479,9 +30327,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s0','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S0\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1F':
     idx4701 = GetIndexN('n4701')
@@ -30500,9 +30348,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s1','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S1\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2F':
     idx4701 = GetIndexN('n4701')
@@ -30521,9 +30369,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s2','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3F':
     idx4701 = GetIndexN('n4701')
@@ -30542,9 +30390,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s3','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S3\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0E':
     idx4702 = GetIndexN('n4702')
@@ -30563,9 +30411,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s0','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S0 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1E':
     idx4702 = GetIndexN('n4702')
@@ -30584,9 +30432,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s1','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S1 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2E':
     idx4702 = GetIndexN('n4702')
@@ -30605,9 +30453,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s2','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3E':
     idx4702 = GetIndexN('n4702')
@@ -30626,9 +30474,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s3','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S3 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0EF':
     idx4703 = GetIndexN('n4703')
@@ -30647,9 +30495,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s0','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S0\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1EF':
     idx4703 = GetIndexN('n4703')
@@ -30668,9 +30516,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s1','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S1\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2EF':
     idx4703 = GetIndexN('n4703')
@@ -30689,9 +30537,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s2','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3EF':
     idx4703 = GetIndexN('n4703')
@@ -30710,9 +30558,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s3','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S3\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Stokes
 
 #{Merit
@@ -30733,9 +30581,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1':
     idx4700 = GetIndexN('n4700')
@@ -30754,9 +30602,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P1**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2':
     idx4700 = GetIndexN('n4700')
@@ -30775,9 +30623,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P2**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3':
     idx4700 = GetIndexN('n4700')
@@ -30796,9 +30644,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P3**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0F':
     idx4701 = GetIndexN('n4701')
@@ -30817,9 +30665,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1F':
     idx4701 = GetIndexN('n4701')
@@ -30838,9 +30686,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P1**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2F':
     idx4701 = GetIndexN('n4701')
@@ -30859,9 +30707,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P2**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3F':
     idx4701 = GetIndexN('n4701')
@@ -30880,9 +30728,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P3**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0E':
     idx4702 = GetIndexN('n4702')
@@ -30901,9 +30749,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1E':
     idx4702 = GetIndexN('n4702')
@@ -30922,9 +30770,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P1**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2E':
     idx4702 = GetIndexN('n4702')
@@ -30943,9 +30791,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P2**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3E':
     idx4702 = GetIndexN('n4702')
@@ -30964,9 +30812,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P3**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0EF':
     idx4703 = GetIndexN('n4703')
@@ -30985,9 +30833,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1EF':
     idx4703 = GetIndexN('n4703')
@@ -31006,9 +30854,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P1**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2EF':
     idx4703 = GetIndexN('n4703')
@@ -31027,9 +30875,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P2**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3EF':
     idx4703 = GetIndexN('n4703')
@@ -31048,9 +30896,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit of S0*P3**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Merit
 #{Power
   elif key == 'POW':
@@ -31212,7 +31060,6 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -31329,9 +31176,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(idx37,'y','spec',select,1000.,1.e-6,0,'HpinV')
     tit = 'Vert. cut of flux-dens. dist.'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'AYR' or key == 'EYR':
     idx37 = GetIndexN('n3700')
@@ -31439,9 +31286,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n37,'y','spec','',1000.,1.e-6,0,'HpinV')
     tit = 'Vert. cut of flux-dens. dist.\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
 #{Polarization
   elif key == 'P0EF':
@@ -31752,9 +31599,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1':
     idx4700 = GetIndexN('n4700')
@@ -31773,9 +31620,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2':
     idx4700 = GetIndexN('n4700')
@@ -31794,9 +31641,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3':
     idx4700 = GetIndexN('n4700')
@@ -31815,9 +31662,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0F':
     idx4701 = GetIndexN('n4701')
@@ -31836,9 +31683,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1F':
     idx4701 = GetIndexN('n4701')
@@ -31857,9 +31704,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2F':
     idx4701 = GetIndexN('n4701')
@@ -31878,9 +31725,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3F':
     idx4701 = GetIndexN('n4701')
@@ -31899,9 +31746,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0E':
     idx4702 = GetIndexN('n4702')
@@ -31920,9 +31767,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1E':
     idx4702 = GetIndexN('n4702')
@@ -31941,9 +31788,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2E':
     idx4702 = GetIndexN('n4702')
@@ -31962,9 +31809,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3E':
     idx4702 = GetIndexN('n4702')
@@ -31983,9 +31830,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0EF':
     idx4703 = GetIndexN('n4703')
@@ -32004,9 +31851,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1EF':
     idx4703 = GetIndexN('n4703')
@@ -32025,9 +31872,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2EF':
     idx4703 = GetIndexN('n4703')
@@ -32046,9 +31893,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3EF':
     idx4703 = GetIndexN('n4703')
@@ -32067,9 +31914,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Stokes
 
 #{Merit
@@ -32090,9 +31937,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1':
     idx4700 = GetIndexN('n4700')
@@ -32111,9 +31958,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2':
     idx4700 = GetIndexN('n4700')
@@ -32132,9 +31979,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3':
     idx4700 = GetIndexN('n4700')
@@ -32153,9 +32000,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P3**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0F':
     idx4701 = GetIndexN('n4701')
@@ -32174,9 +32021,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1F':
     idx4701 = GetIndexN('n4701')
@@ -32195,9 +32042,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2F':
     idx4701 = GetIndexN('n4701')
@@ -32216,9 +32063,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3F':
     idx4701 = GetIndexN('n4701')
@@ -32237,9 +32084,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P3**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0E':
     idx4702 = GetIndexN('n4702')
@@ -32258,9 +32105,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1E':
     idx4702 = GetIndexN('n4702')
@@ -32279,9 +32126,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2E':
     idx4702 = GetIndexN('n4702')
@@ -32300,9 +32147,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3E':
     idx4702 = GetIndexN('n4702')
@@ -32321,9 +32168,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P3**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0EF':
     idx4703 = GetIndexN('n4703')
@@ -32342,9 +32189,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1EF':
     idx4703 = GetIndexN('n4703')
@@ -32363,9 +32210,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2EF':
     idx4703 = GetIndexN('n4703')
@@ -32384,9 +32231,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3EF':
     idx4703 = GetIndexN('n4703')
@@ -32405,9 +32252,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit of S0*P3**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Merit
 
 #{Power
@@ -32562,7 +32409,6 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -32654,9 +32500,9 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
     istat = nproj1(n6000,'z','spec',selcut + select,1000.,1.e-6,0,'HpinPhH')
     tit = 'Hori. cut of flux-dens. dist.'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 
   elif key == 'AYR' or key == 'EYR':
@@ -32724,9 +32570,9 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
     istat = nproj1("n6000",'z','specf',selcut + select,1000.,1.e-6,0,'HpinPhH')
     tit = 'Hori. cut of flux-dens. dist.\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 
   else:
@@ -32825,7 +32671,6 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -32916,9 +32761,9 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
     istat = nproj1(n6000,'y','spec',selcut + select,1000.,1.e-6,0,'HpinPhV')
     tit = 'Vert. cut of flux-dens. dist.'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 
   elif key == 'AYR' or key == 'EYR':
@@ -32986,9 +32831,9 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
     istat = nproj1("n6000",'y','specf',selcut + select,1000.,1.e-6,0,'HpinPhV')
     tit = 'Vert. cut of flux-dens. dist.\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 
   else:
@@ -33088,7 +32933,6 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -33201,9 +33045,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(idx37,'z:y','spec',select,1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Flux-density distribution'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
   elif key == 'FF' or key == 'FDF':
     idx37 = GetIndexN('n3701')
     n37 = Ntup[idx37]
@@ -33221,9 +33065,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n37,'z:y','spec','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Flux-density distribution\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'AZR' or key == 'EZR':
     if select == '':
@@ -33609,9 +33453,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s0','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S0'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1':
     idx4700 = GetIndexN('n4700')
@@ -33630,9 +33474,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s1','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S1'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2':
     idx4700 = GetIndexN('n4700')
@@ -33651,9 +33495,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3':
     idx4700 = GetIndexN('n4700')
@@ -33672,9 +33516,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s3','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S3'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0F':
     idx4701 = GetIndexN('n4701')
@@ -33693,9 +33537,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s0','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S0\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1F':
     idx4701 = GetIndexN('n4701')
@@ -33714,9 +33558,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s1','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S1\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2F':
     idx4701 = GetIndexN('n4701')
@@ -33735,9 +33579,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3F':
     idx4701 = GetIndexN('n4701')
@@ -33756,9 +33600,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s3','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S3\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0E':
     idx4702 = GetIndexN('n4702')
@@ -33777,9 +33621,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s0','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S0 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif Kcurr == 0
 
   elif key == 'S1E':
@@ -33799,9 +33643,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s1','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S1 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
   elif key == 'S2E':
     idx4702 = GetIndexN('n4702')
@@ -33820,9 +33664,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3E':
     idx4702 = GetIndexN('n4702')
@@ -33841,9 +33685,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s3','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S3 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0EF':
     idx4703 = GetIndexN('n4703')
@@ -33865,9 +33709,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
 
     tit = 'Density distribution of S0\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1EF':
     idx4703 = GetIndexN('n4703')
@@ -33886,9 +33730,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s1','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S1\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2EF':
     idx4703 = GetIndexN('n4703')
@@ -33907,9 +33751,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3EF':
     idx4703 = GetIndexN('n4703')
@@ -33928,9 +33772,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s3','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S3\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Stokes
 
 #{Merit
@@ -33951,9 +33795,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1':
     idx4700 = GetIndexN('n4700')
@@ -33972,9 +33816,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s0*(s1/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P1**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2':
     idx4700 = GetIndexN('n4700')
@@ -33993,9 +33837,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s0*(s2/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P2**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3':
     idx4700 = GetIndexN('n4700')
@@ -34014,9 +33858,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s0*(s3/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P3**2'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0F':
     idx4701 = GetIndexN('n4701')
@@ -34035,9 +33879,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1F':
     idx4701 = GetIndexN('n4701')
@@ -34056,9 +33900,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s0*(s1/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P1**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2F':
     idx4701 = GetIndexN('n4701')
@@ -34077,9 +33921,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s0*(s2/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P2**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3F':
     idx4701 = GetIndexN('n4701')
@@ -34098,9 +33942,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s0*(s3/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P3**2\nwith emittance'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0E':
     idx4702 = GetIndexN('n4702')
@@ -34119,9 +33963,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1E':
     idx4702 = GetIndexN('n4702')
@@ -34140,9 +33984,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s0*(s1/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P1**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2E':
     idx4702 = GetIndexN('n4702')
@@ -34161,9 +34005,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s0*(s2/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P2**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3E':
     idx4702 = GetIndexN('n4702')
@@ -34182,9 +34026,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s0*(s3/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P3**2 with e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0EF':
     idx4703 = GetIndexN('n4703')
@@ -34203,9 +34047,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1EF':
     idx4703 = GetIndexN('n4703')
@@ -34224,9 +34068,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s0*(s1/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P1**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2EF':
     idx4703 = GetIndexN('n4703')
@@ -34245,9 +34089,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s0*(s2/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P2**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3EF':
     idx4703 = GetIndexN('n4703')
@@ -34266,9 +34110,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s0*(s3/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit of S0*P3**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Merit
 
   else:
@@ -34381,7 +34225,6 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -34641,7 +34484,6 @@ def ndistpowh(key='pow', select='', plopt='2d', idh='HpinH'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -34733,7 +34575,6 @@ def ndistpowvint(key='power', select='', plopt='2d', idh='HpinH'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -34882,7 +34723,6 @@ def ndistpowv(key='pow', select='', plopt='2d', idh='HpinV'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -34969,7 +34809,6 @@ def ndistpow(key='pow', select='', plopt='3d', idh='Hpin'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -35302,7 +35141,7 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     kstat = getstat()
     #optstat(0)
     scalee=1.
-    if xTit == '!': xTit = "$E_{\gamma}$ [eV]"
+    if xTit == '!': xTit = TeX_egammaev
     if select == '!':
       select = "abs(" + str(x) + "-xobs)<1.e-9"
     if plopt == '!': plopt = plopt='prof'
@@ -35320,9 +35159,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
       #endif
     #endif
 
@@ -35334,7 +35173,7 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     #optstat(0)
     sstok = str(istokefdf)
     scalee=1.
-    if xTit == '!': xTit = "$E_{\gamma}$ [eV]"
+    if xTit == '!': xTit = TeX_egammaev
     if select == '!':
       select = "abs(" + str(x) + "-xobs)<1.e-9 and abs(" +\
       str(y) + "-yobs)<1.e-6 and abs(" + str(z) +"-zobs)<1.e-6"
@@ -35346,16 +35185,16 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     if Tit == '!': Tit = "Incoh. mean flux-density of S" + sstok +"\nat x={:.3g}m, y={:.3g}mm, z={:.3g}mm".format(x,y,z)
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     hplot1d(hist,plopt,Tit,xTit,yTit)
     #optstat(kstat)
 
   elif istokefd >= 0:
     sstok = str(istokefd)
     scalee=1.
-    if xTit == '!': xTit = "$E_{\gamma}$ [eV]"
+    if xTit == '!': xTit = TeX_egammaev
     if select == '!':
       select = "ne==1 and abs(" + str(x) + "-xobs)<1.e-9 and abs(" +\
       str(y) + "-yobs)<1.e-6 and abs(" + str(z) +"-zobs)<1.e-6"
@@ -35367,14 +35206,14 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     if Tit == '!': Tit = "Single electron flux-density of S" + sstok +"\nat x={:.3g}m, y={:.3g}mm, z={:.3g}mm".format(x,y,z)
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     hplot1d(hist,plopt,Tit,xTit,yTit)
 
   elif key == "fd":
     scalee=1.
-    if xTit == '!': xTit = "$E_{\gamma}$ [eV]"
+    if xTit == '!': xTit = TeX_egammaev
     if select == '!':
       select = "ne==1 and abs(" + str(x) + "-xobs)<1.e-9 and abs(" +\
       str(y) + "-yobs)<1.e-6 and abs(" + str(z) +"-zobs)<1.e-6"
@@ -35385,9 +35224,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     if Tit == '!': Tit = "Single electron flux-density\nat x={:.3g}m, y={:.3g}mm, z={:.3g}mm".format(x,y,z)
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     hplot1d('HbunFd1',plopt,Tit,xTit,yTit)
 
   elif key == "zizpi":
@@ -35395,7 +35234,7 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     nplot('n30',"zi:zpi",select,weights,plopt,legend,1.e3,1.e6)
     if Tit == '!': Tit = "Phasespace at x={:.3g}m".format(xi)
     if xTit == '!': xTit = "z [mm]"
-    if yTit == '!': yTit = "z' [$\mu$rad]"
+    if yTit == '!': yTit = "z' [texmurad]"
     if not isame: txyz(Tit,xTit,yTit)
 
   elif key == "ei":
@@ -35437,7 +35276,7 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
 
     if xmx - xmn < 0.001:
       scalex = 1.e6
-      if xTit == '!': xTit = "x [$\mu$m]"
+      if xTit == '!': xTit = "x [texmum]"
     elif xmx - xmn < 1.:
       scalex = 1.e3
       if xTit == '!': xTit = "x [mm]"
@@ -35458,15 +35297,15 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     nplot('n30',"yi:ypi",select,weights,plopt,legend,1.e3,1.e6)
     if Tit == '!': Tit = "Phasespace at x={:.3g}m".format(xi)
     if xTit == '!': xTit = "y [mm]"
-    if yTit == '!': yTit = "y' [$\mu$rad]"
+    if yTit == '!': yTit = "y' [texmurad]"
     if not isame: txyz(Tit,xTit,yTit)
 
   elif key == "zpiypi":
 
     nplot('n30',"zpi:ypi",select,weights,plopt,legend,1.e6,1.e6)
     if Tit == '!': Tit = "Phasespace at x={:.3g}m".format(xi)
-    if xTit == '!': xTit = "z' [$\mu$rad]"
-    if yTit == '!': yTit = "y' [$\mu$rad]"
+    if xTit == '!': xTit = "z' [texmurad]"
+    if yTit == '!': yTit = "y' [texmurad]"
     if not isame: txyz(Tit,xTit,yTit)
 
   elif key == "ziyi":
@@ -35482,7 +35321,7 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     nplot('n30',"ze:zpe",select,weights,plopt,legend,1.e3,1.e6)
     if Tit == '!': Tit = "Phasespace at x={:.3g}m".format(xe)
     if xTit == '!': xTit = "z [mm]"
-    if yTit == '!': yTit = "z' [$\mu$rad]"
+    if yTit == '!': yTit = "z' [texmurad]"
     if not isame: txyz(Tit,xTit,yTit)
 
   elif key == "yeype":
@@ -35490,15 +35329,15 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     nplot('n30',"ye:ype",select,weights,plopt,legend,1.e3,1.e6)
     if Tit == '!': Tit = "Phasespace at x={:.3g}m".format(xe)
     if xTit == '!': xTit = "y [mm]"
-    if yTit == '!': yTit = "y' [$\mu$rad]"
+    if yTit == '!': yTit = "y' [texmurad]"
     if not isame: txyz(Tit,xTit,yTit)
 
   elif key == "zpeype":
 
     nplot('n30',"zpe:ype",select,weights,plopt,legend,1.e6,1.e6)
     if Tit == '!': Tit = "Phasespace at x={:.3g}m".format(xe)
-    if xTit == '!': xTit = "z' [$\mu$rad]"
-    if yTit == '!': yTit = "y' [$\mu$rad]"
+    if xTit == '!': xTit = "z' [texmurad]"
+    if yTit == '!': yTit = "y' [texmurad]"
     if not isame: txyz(Tit,xTit,yTit)
 
   elif key == "zeye":
@@ -35552,7 +35391,7 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     kstat = getstat()
     #optstat(0)
     scalee=1.
-    if xTit == '!': xTit = "$E_{\gamma}$ [eV]"
+    if xTit == '!': xTit = TeX_egammaev
     if plopt == '!': plopt = plopt='prof'
     hist = 'HbunF'
     hcopy1d('h48000',hist,scalex=scalee,reset=1)
@@ -35569,9 +35408,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW'
       #endif
     #endif
 
@@ -35583,7 +35422,7 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     #optstat(0)
     sstok = str(istokef)
     scalee=1.
-    if xTit == '!': xTit = "$E_{\gamma}$ [eV]"
+    if xTit == '!': xTit = TeX_egammaev
     if select == '!': select = ""
     if plopt == '!': plopt = plopt='prof'
     hist = "HbunS" + sstok + "F"
@@ -35596,9 +35435,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
         Tit = "Incoh. flux of S" + sstok + " through pinhole ({:.3g}mm x {:.3g}mm)\nat x={:.3g}m, y={:.3g}mm, z={:.3g}mm".format(pinw,pinh,pinx,piny,pinz)
     if yTit == "!":
       if Kcurr == 0:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW'
+        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW'
     hplot1d(hist,plopt,Tit,xTit,yTit)
     #optstat(kstat)
 
@@ -35608,16 +35447,16 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
       #select = "iene == " + str(Wiesel)
       select = "ener == " + str(Wesel)
       sun = "eV"; eg = Wesel
-      if Tit == '!': Tit = "Incoh. mean flux-density\nat x={:.3g}m ".format(x) + "for E$_{\gamma}$=" + str(eg) + sun
+      if Tit == '!': Tit = "Incoh. mean flux-density\nat x={:.3g}m ".format(x) + TeXforegammaeq + str(eg) + sun
     else:
       if Tit == '!': Tit = "Incoh. mean flux-density\nat x={:.3g}m".format(x) + " for " + select
     xTit = "z [mm]"
     yTit = "y [mm]"
     if zTit == "!":
       if Kcurr == 0:
-        zTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        zTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     hcopy2d('h11000','HDist',Tit,scalex,scaley,reset=1,overwrite=True)
     nproj2('n30','zobs:yobs','spec',select,scalex,scaley,1.e-6,idh='HDist')
     hplot2d('HDist',tit=Tit,xtit=xTit,ytit=yTit,ztit=zTit)
@@ -35645,7 +35484,7 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
       #select = "iene == " + str(Wiesel)
       select = "ener == " + str(Wesel)
       sun = "eV"; eg = Wesel
-      if Tit == '!': Tit = "Incoh. mean flux-density\nat x={:.3g}m ".format(x) + "for E$_{\gamma}$=" + str(eg) + sun
+      if Tit == '!': Tit = "Incoh. mean flux-density\nat x={:.3g}m ".format(x) + TeXforegammaeq + str(eg) + sun
     else:
       if Tit == '!': Tit = "Incoh. mean flux-density\nat x={:.3g}m".format(x) + " for " + select
     scalex=1000.; scaley=1000.
@@ -35653,9 +35492,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     yTit = "y [mm]"
     if zTit == "!":
       if Kcurr == 0:
-        zTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        zTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     nplot('n30','zobs:yobs',select,'spec',select,
           scalex=scalex,scaley=scaley,scalez=1.e-6)
     if not isame: txyz(Tit,xTit,yTit,zTit)
@@ -35667,16 +35506,16 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
       #select = "iene == " + str(Wiesel)
       select = "ener == " + str(Wesel)
       sun = "eV"; eg = Wesel
-      if Tit == '!': Tit = "Incoh. S" + str(idiststo) + "\nat x={:.3g}m ".format(x) + "for E$_{\gamma}$=" + str(eg) + sun
+      if Tit == '!': Tit = "Incoh. S" + str(idiststo) + "\nat x={:.3g}m ".format(x) + TeXforegammaeq + str(eg) + sun
     else:
       if Tit == '!': Tit = "Incoh. S" + str(idiststo) + "\nat x={:.3g}m".format(x) + " for " + select
     xTit = "z [mm]"
     yTit = "y [mm]"
     if zTit == "!":
       if Kcurr == 0:
-        zTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        zTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     hcopy2d('h11000','HDist',Tit,scalex,scaley,reset=1,overwrite=True)
     stok = "s" + str(idiststo)
     nproj2('n30','zobs:yobs',stok,select,scalex,scaley,1.e-6,idh='HDist')
@@ -35688,16 +35527,16 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
       #select = "iene == " + str(Wiesel)
       select = "ener == " + str(Wesel)
       sun = "eV"; eg = Wesel
-      if Tit == '!': Tit = "Incoh. S" + str(idiststo-5) + "\nat x={:.3g}m ".format(x) + "for E$_{\gamma}$=" + str(eg) + sun
+      if Tit == '!': Tit = "Incoh. S" + str(idiststo-5) + "\nat x={:.3g}m ".format(x) + TeXforegammaeq + str(eg) + sun
     else:
       if Tit == '!': Tit = "Incoh. S" + str(idiststo-5) + "\nat x={:.3g}m".format(x) + " for " + select
     xTit = "z [mm]"
     yTit = "y [mm]"
     if zTit == "!":
       if Kcurr == 0:
-        zTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        zTit = 'N$_{\gamma}$' + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     stok = "s" + str(idiststo-5)
     nplot('n30','zobs:yobs',select,stok,select,
           scalex=scalex,scaley=scaley,scalez=1.e-6)
@@ -35790,7 +35629,6 @@ def tobs1():
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -35872,7 +35710,6 @@ def tpinhole():
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -36109,7 +35946,7 @@ def WaveOverview():
 
         zone(4,2,2,'s')
         Markersize = 1.
-        nbeam('zizpi',xTit='Position [mm]', yTit='slope [$\mu$rad]')
+        nbeam('zizpi',xTit='Position [mm]', yTit='slope [texmurad]')
         smgreen()
         nbeam('yiypi',plopt='same')
         smred()
@@ -36133,7 +35970,7 @@ def WaveOverview():
         Ttit = "Flux-density\nat x={:,.2f}m, y={:,.1f}mm, z={:,.1f}mm".format(x,y,z)
         hplot1d(h148)
         xTit = 'Photon energy [eV]'
-        yTit = 'N$_{\gamma}$' + '/s/' + str(Wbw*100.) + ' %BW'
+        yTit = TeX_gamma + '/s/' + str(Wbw*100.) + ' %BW'
         txyz(Ttit,xTit,yTit)
 
         zone(4,2,7,'s')
@@ -36149,7 +35986,7 @@ def WaveOverview():
         zone(3,2,4,'s')
         ntrack()
         zone(3,2,2,'s')
-        nbeam('zizpi',xTit='Position [mm]', yTit='slope [$\mu$rad]')
+        nbeam('zizpi',xTit='Position [mm]', yTit='slope [texmurad]')
         smgreen()
         nbeam('yiypi',plopt='same')
         smred()
@@ -36173,7 +36010,7 @@ def WaveOverview():
       zone(3,2,2,'s')
       mo = Markersize
       Markersize = 1.
-      nbeam('zizpi',xTit='Position [mm]', yTit='slope [$\mu$rad]')
+      nbeam('zizpi',xTit='Position [mm]', yTit='slope [texmurad]')
       smgreen()
       nbeam('yiypi',plopt='same')
       smred()
@@ -36289,7 +36126,6 @@ def WfileOpen():
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -36978,7 +36814,6 @@ def Mmenu_gray(fgcol='gray'):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow
-
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
