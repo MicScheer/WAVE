@@ -1,3 +1,4 @@
+*CMZ :          30/09/2024  14.57.39  by  Michael Scheer
 *CMZ :  4.01/05 19/04/2024  12.22.35  by  Michael Scheer
 *CMZ :  4.01/04 14/11/2023  13.46.13  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.11  by  Michael Scheer
@@ -18,47 +19,7 @@
 *CMZ : 00.00/00 28/04/94  16.12.22  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE AFOLINT(icomp,ireim,IFREQ)
-*KEEP,gplhint.
-!******************************************************************************
-!
-!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
-!      Hahn-Meitner-Platz 1
-!      D-14109 Berlin
-!      Germany
-!
-!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
-!
-! -----------------------------------------------------------------------
-!
-!    This program is free software: you can redistribute it and/or modify
-!    it under the terms of the GNU General Public License as published by
-!    the Free Software Foundation, either version 3 of the License, or
-!    (at your option) any later version.
-!
-!    This program is distributed in the hope that it will be useful,
-!    but WITHOUT ANY WARRANTY; without even the implied warranty of
-!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-!    GNU General Public License for more details.
-!
-!    You should have received a copy (wave_gpl.txt) of the GNU General Public
-!    License along with this program.
-!    If not, see <http://www.gnu.org/licenses/>.
-!
-!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
-!    der GNU General Public License, wie von der Free Software Foundation,
-!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
-!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
-!
-!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
-!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
-!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
-!    Siehe die GNU General Public License fuer weitere Details.
-!
-!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
-!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
-!    siehe <http://www.gnu.org/licenses/>.
-!
-!******************************************************************************
+*KEEP,GPLHINT.
 *KEND.
 
 *KEEP,spectf90u.
@@ -73,7 +34,7 @@
       include 'wfoldf90u.cmn'
 *KEND.
 
-C--- FOLD FIELDAMPLITUDE DENSITY IN PINHOLE
+C--- FOLD FIELD AMPLITUDE DENSITY IN PINHOLE
 
 C    IFOLD.EQ.-2: not available
 C    IFOLD.EQ.-1: SR UTIL_FOLD_FOURIER IS USED
@@ -102,7 +63,7 @@ C    IFOLD.EQ.1: SR UTIL_FOLD_FUNCTION_GAUSS IS USED
       INTEGER IZA,IZE,IYA,IYE,IFREQ,IY,IZ,IMASH
      &       ,NF,NFOLD,IFAIL,IGZY,icomp,ireim,isour
 
-      DOUBLE PRECISION ZKZ0,YKY0,GZ(NGCOEFP*LIDIMP),GY(NGCOEFP*LIDIMP),rea(nobsv)
+      DOUBLE PRECISION ZKZ0,YKY0,GZ(NGCOEFP*LIDIMP),GY(NGCOEFP*LIDIMP),rea(nobsv*nfreq)
 
 c14.11.2023      if (icomp.eq.1) return
 
