@@ -37,6 +37,25 @@ from PIL import Image
 
 from copy import *
 ###################################################
+# +PATCH,//WAVES/PYTHON
+# +KEEP,statusglobal,T=PYTHON.
+global Istatus, WarningText, ErrorText, Gdebug, Platform, System, Uname
+
+Istatus = 0
+WarningText = ''
+ErrorText = ''
+
+Platform = platform.platform().upper()
+System = platform.system().upper()
+
+if System != 'WINDOWS':
+    os.system('uname > .uname')
+    fun = open('.uname','r')
+    Uname = fun.readline().strip()
+    System = Uname[0:5].upper()
+#if System != 'WINDOWS':
+
+Gdebug = 0
 
 global Wdirs, Wfiles, Wfile, Wcode, Wrun \
 ,Webea ,Wcurr ,Wipin ,Wcir ,Wpiny ,Wpinx ,Wpinz ,Wpinw ,Wpinh ,Wpinr \
@@ -50,6 +69,7 @@ Kcode, Kebeam, Kcurr \
 ,Wesel,Wener,Wfd,Wiesel, Vfd, IsameCanvas, TextIn, LastPlot, Lastwin \
 ,FiggeoEph, Ioverview,WclipE,Kpreload
 global IzCut,IyCut
+#global Sepp
 
 Kpreload = True
 
@@ -527,25 +547,6 @@ Nwavein,kWaveinRead, KWAVES,MMitem,Nmitem,Kmitem,Imenu,Ipmenu,\
 Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
 VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
 I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus
-# +PATCH,//WAVES/PYTHON
-# +KEEP,statusglobal,T=PYTHON.
-global Istatus, WarningText, ErrorText, Gdebug, Platform, System, Uname
-
-Istatus = 0
-WarningText = ''
-ErrorText = ''
-
-Platform = platform.platform().upper()
-System = platform.system().upper()
-
-if System != 'WINDOWS':
-    os.system('uname > .uname')
-    fun = open('.uname','r')
-    Uname = fun.readline().strip()
-    System = Uname[0:5].upper()
-#if System != 'WINDOWS':
-
-Gdebug = 0
 
 
 # +PATCH,//WAVES/PYTHON
@@ -13513,15 +13514,21 @@ def nproj2(nt='?', xy='', weight=1., select='',
   h = pd.DataFrame([x,y,hz,hz2,hn]).T
   h.columns=['x','y','z','z2','n']
 
-  h.z[np.isnan(h.z)] = 0.0
-  h.z2[np.isnan(h.z2)] = 0.0
-  h.n[np.isnan(h.n)] = 0.0
+#  h.z[np.isnan(h.z)] = 0.0
+#  h.z2[np.isnan(h.z2)] = 0.0
+#  h.n[np.isnan(h.n)] = 0.0
+  h['z'] = weednan(h['z'])
+  h['z2'] = weednan(h['z2'])
+  h['n'] = weednan(h['n'])
+
 
   h['ave'] = h.z/h.n
-  h.ave[np.isnan(h.ave)] = 0.0
+  #h.ave[np.isnan(h.ave)] = 0.0
+  h['ave'] = weednan(h['ave'])
 
   h['ez'] = (h.z2/h.n-h.ave**2)**0.5
-  h.ez[np.isnan(h.ez)] = 0.0
+  #h.ez[np.isnan(h.ez)] = 0.0
+  h['ez'] = weednan(h['ez'])
 
   head2 = H2head[idx]
 
@@ -26510,6 +26517,7 @@ def mhb_to_pylist(fmh = 'WAVE.mhb', Debug = 0):
 
   mhb_cd(Wdirs[-1])
 
+
   return 0
 
 #enddef mhb_to_pylist
@@ -27975,6 +27983,7 @@ def wave_input_parameters():
     IyCut = int(np.mod(Wicbr,Wnoby))
     IzCut = int(np.mod(Wicbr,Wnobz))
   #endif
+
 
 #enddef wave_input_parameters()
 
@@ -29967,7 +29976,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     #endif select != ''
     n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'z','s1/s0','',1000.,1.,0,'HpinH')
-    tit = 'Polarization P1\with emittance and e-spread'
+    tit = 'Polarization P1 with emittance and e-spread'
     ztit = 'Degree of polarizaton'
 
   elif key == 'P2EF':
@@ -29985,7 +29994,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     #endif select != ''
     n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'z','s2/s0','',1000.,1.,0,'HpinH')
-    tit = 'Polarization P2\with emittance and e-spread'
+    tit = 'Polarization P2 with emittance and e-spread'
     ztit = 'Degree of polarizaton'
 
   elif key == 'P3EF':
@@ -30003,7 +30012,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     #endif select != ''
     n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'z','s3/s0','',1000.,1.,0,'HpinH')
-    tit = 'Polarization P3\with emittance and e-spread'
+    tit = 'Polarization P3 with emittance and e-spread'
     ztit = 'Degree of polarizaton'
 
   elif key == 'P0E':
@@ -31324,7 +31333,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     #endif select != ''
     n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s1/s0','',1000.,1.,0,'HpinV')
-    tit = 'Polarization P1\with emittance and e-spread'
+    tit = 'Polarization P1 with emittance and e-spread'
     ztit = 'Degree of polarizaton'
 
   elif key == 'P2EF':
@@ -31342,7 +31351,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     #endif select != ''
     n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s2/s0','',1000.,1.,0,'HpinV')
-    tit = 'Polarization P2\with emittance and e-spread'
+    tit = 'Polarization P2 with emittance and e-spread'
     ztit = 'Degree of polarizaton'
 
   elif key == 'P3EF':
@@ -31360,7 +31369,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     #endif select != ''
     n4703=n4703.query(selcut + select)
     istat = nproj1(n4703,'y','s3/s0','',1000.,1.,0,'HpinV')
-    tit = 'Polarization P3\with emittance and e-spread'
+    tit = 'Polarization P3 with emittance and e-spread'
     ztit = 'Degree of polarizaton'
 
   elif key == 'P0E':
@@ -33178,7 +33187,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     #endif select != ''
     n4703=n4703.query(select)
     istat = nproj2(n4703,'z:y','s1/s0','',1000.,1000.,1.,0,0,'Hpin')
-    tit = 'Polarization P1\with emittance and e-spread'
+    tit = 'Polarization P1 with emittance and e-spread'
     ztit = 'Degree of polarizaton'
 
   elif key == 'P2EF':
@@ -33196,7 +33205,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     #endif select != ''
     n4703=n4703.query(select)
     istat = nproj2(n4703,'z:y','s2/s0','',1000.,1000.,1.,0,0,'Hpin')
-    tit = 'Polarization P2\with emittance and e-spread'
+    tit = 'Polarization P2 with emittance and e-spread'
     ztit = 'Degree of polarizaton'
 
   elif key == 'P3EF':
@@ -33214,7 +33223,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     #endif select != ''
     n4703=n4703.query(select)
     istat = nproj2(n4703,'z:y','s3/s0','',1000.,1000.,1.,0,0,'Hpin')
-    tit = 'Polarization P3\with emittance and e-spread'
+    tit = 'Polarization P3 with emittance and e-spread'
     ztit = 'Degree of polarizaton'
 
   elif key == 'P0E':
@@ -35818,6 +35827,8 @@ def WaveOverview():
 
   global TdateOv, TrunOv, Fig, Markersize, LogY, Kpdf, Kdump, Figman
 
+  idebug = 0
+
   KdumpOld = Kdump
   Kdump = False
   KpdfOld = Kpdf
@@ -35840,6 +35851,12 @@ def WaveOverview():
 
 #  leftmarold = getleftmargin()
 #  setleftmargin(0.075)
+
+  if idebug:
+    print("Wibun:",Wibun)
+    print("Wispe:",Wispe)
+    print("Wipin:",Wipin)
+  #endif
 
   if Wibun == 0:
 
@@ -36312,7 +36329,7 @@ def _closewine():
 
   sph = Eph.get()
 
-  if re.search('\.',sph):
+  if re.search('.',sph):
     e = float(sph)
     esel(e)
   else:
@@ -36586,7 +36603,7 @@ def _btextin(ev,textent,text):
 
   if len(etex) == 2:
     if etex[0].lower().strip() == 'egam':
-      if re.search('\.',etex[1]):
+      if re.search('.',etex[1]):
         e = float(etex[1])
         esel(e)
       else:
@@ -39210,12 +39227,12 @@ def readwavein():
           varval = varval.lower()
           hline[4] = 'v'
           hline[5] = 'I'
-          if re.search('\(',varval):
+          if re.search('\\' + '(',varval):
             hline[5] = 'CMPLX'
             if re.search('D',varval):
               hline[5] = 'DCMPLX'
               hline[5] = re.sub('d','e',hline[4])
-          elif re.search('\.',varval):
+          elif re.search('\\' + '.',varval):
             hline[5] = 'R'
             if re.search('D',varval):
               hline[5] = 'D'
@@ -42833,7 +42850,13 @@ pwd = os.getcwd()
 global WisLinux
 WisLinux = 0
 
-if System.upper() == 'LINUX' or System.upper() == 'MINGW': WisLinux = 1
+#global Sepp
+if System.upper() == 'LINUX' or System.upper() == 'MINGW':
+  WisLinux = 1
+  Sepp = '/'
+else:
+  Sepp = '\\'
+#endif
 
 try:
   WAVEPATH = os.environ['WAVE']
@@ -42845,13 +42868,13 @@ except:
 if os.path.isdir(WAVEPATH + "/waves"):
   WAVESPATH = WAVEPATH + "/waves"
   sys.path.append(WAVESPATH + "/python")
-elif os.path.isdir(WAVEPATH + "\waves"):
-  WAVESPATH = WAVEPATH + "\waves"
-  sys.path.append(WAVESPATH + "\python")
+elif os.path.isdir(WAVEPATH + Sepp + "waves"):
+  WAVESPATH = WAVEPATH + Sepp + "waves"
+  sys.path.append(WAVESPATH + Sepp + 'python')
 elif os.path.isdir(WAVEPATH + "/python"):
   sys.path.append(WAVEPATH + "/python")
-elif os.path.isdir(WAVEPATH + "\python"):
-  sys.path.append(WAVEPATH + "\python")
+elif os.path.isdir(WAVEPATH + Sepp + 'python'):
+  sys.path.append(WAVEPATH + Sepp + 'python')
 #endif os.path.isdir(WAVEPATH + "/waves")
 
 istat = -1
@@ -42897,7 +42920,7 @@ if istat != 0:
     except:
       print("\n\n *** Reading", pwd + "\\WAVE.mhb failed ***")
     #endtry
-#endif WisLinux
+  #endif WisLinux
 
 #endif istat != 0
 
@@ -43003,7 +43026,7 @@ def hbetahana():
   optstat(False)
   hplot1d("h3110")
   optstat(kstat)
-  txyz('Horizontal Beta-Function (analytically)','s [m]','$\beta \,[m]$')
+  txyz('Horizontal Beta-Function (analytically)','s [m]',Tex_beta + ' ' + TeX_blank + '[m]$')
 #enddef hbetahana()
 
 def hbetahpara():
@@ -43018,7 +43041,7 @@ def hbetahpara():
   optstat(False)
   hplot1d("h3120")
   optstat(kstat)
-  txyz('Horizontal Beta-Function (parabolic ansatz)','s [m]','$\beta \,[m]$')
+  txyz('Horizontal Beta-Function (parabolic ansatz)','s [m]',Tex_beta + ' ' + TeX_blank + '[m]$')
 #enddef hbetahpara()
 
 def hbetav():
@@ -43033,7 +43056,7 @@ def hbetav():
   optstat(False)
   hplot1d("h3200")
   optstat(kstat)
-  txyz('Vertical Beta-Function','s [m]','$\beta \,[m]$')
+  txyz('Vertical Beta-Function','s [m]',Tex_beta + ' ' + TeX_blank + '[m]$')
 #enddef hbetav()
 
 def hbetah():
@@ -43048,7 +43071,7 @@ def hbetah():
   optstat(False)
   hplot1d("h3100")
   optstat(kstat)
-  txyz('Horizontal Beta-Function','s [m]','$\beta \, [m]$')
+  txyz('Horizontal Beta-Function','s [m]',Tex_beta + ' ' + TeX_blank + ' [m]$')
 #enddef hbetah()
 
 def hchromhsr3():
@@ -43123,7 +43146,7 @@ def hdisp():
   optstat(False)
   kstat=Kstat
   optstat(False)
-  hplot1d("h3450",Tit='Horizontal Dispersion',xTit='s [m]',yTit='$\eta\,[m]$')
+  hplot1d("h3450",Tit='Horizontal Dispersion',xTit='s [m]',yTit=Tex_eta + ' [m]$')
   optstat(kstat)
 
 #enddef hdisp()
@@ -43140,7 +43163,7 @@ def hbetahp():
   optstat(False)
   hplot1d("h3100")
   optstat(kstat)
-  txyz('Derivative of Horizontal Beta-Function','s [m]','$\beta$')
+  txyz('Derivative of Horizontal Beta-Function','s [m]',Tex_beta + '$')
 #enddef hbetahp()
 
 def hbeta():
@@ -43160,12 +43183,12 @@ def hbeta():
   hv = hget("h3200")
 
   setlinecolor('r')
-  hplot(hh,legend=r'$\beta_h$')
+  hplot(hh,legend=r + Tex_beta + '_h$')
   setlinecolor('b')
-  hplot(hv,'same',legend=r'$\beta_v$')
+  hplot(hv,'same',legend=r + Tex_beta + '_v$')
 
   legend()
-  txyz('Beta-Functions','s [m]',r"$\beta \,[m]$")
+  txyz('Beta-Functions','s [m]',r + Tex_beta + ' ' + Tex_blank + '[m]$')
 
   setlinecolor(lc)
   optstat(kstat)
@@ -43188,12 +43211,12 @@ def hbetap():
   hv = hget("h3400")
 
   setlinecolor('r')
-  hplot(hh,legend=r"$\beta_h'$")
+  hplot(hh,legend=r + Tex_beta + "_h'$")
   setlinecolor('b')
-  hplot(hv,'same',legend=r"$\beta_v'$")
+  hplot(hv,'same',legend=r + Tex_beta + "_v'$")
 
   legend()
-  txyz('Derivatives of Beta-Functions','s [m]',r"$\beta' \,[m]$")
+  txyz('Derivatives of Beta-Functions','s [m]',r + Tex_beta + ' ' + Tex_blank + '[m]$')
 
   setlinecolor(lc)
   optstat(kstat)
@@ -43861,16 +43884,6 @@ ntupini()
 NMmenu += 1
 Mmenu.add_cascade(label='Ntuples and histograms',  menu=Nplot)
 
-Wnfrq = 0
-Wispe = 0
-Wibun = 0
-Wisto = 0
-Wbeta = 0
-Wibri = 0
-Wifol = 0
-Wiefo = 0
-Wipin = 0
-
 Mmenu_gray()
 
 bFmenu = Button(toolbar,text='Files',font=Myfont,
@@ -43896,7 +43909,13 @@ bExit.pack(side=LEFT)
 
 pwd = os.getcwd()
 
-if System.upper() == 'LINUX' or System.upper() == 'MINGW': WisLinux = 1
+#global Sepp
+if System.upper() == 'LINUX' or System.upper() == 'MINGW':
+  WisLinux = 1
+  Sepp = '/'
+else:
+  Sepp = '\\'
+#endif
 
 try:
   WAVEPATH = os.environ['WAVE']
@@ -43915,14 +43934,14 @@ if os.path.isdir(WAVEPATH + "/waves"):
   WAVESPATH = WAVEPATH + "/waves"
   sys.path.append(WAVESPATH + "/python")
   WisLinux = 1
-elif os.path.isdir(WAVEPATH + "\waves"):
-  WAVESPATH = WAVEPATH + "\waves"
-  sys.path.append(WAVESPATH + "\python")
+elif os.path.isdir(WAVEPATH + Sepp + "waves"):
+  WAVESPATH = WAVEPATH + Sepp + "waves"
+  sys.path.append(WAVESPATH + Sepp + 'python')
 elif os.path.isdir(WAVEPATH + "/python"):
   sys.path.append(WAVEPATH + "/python")
   WisLinux = 1
-elif os.path.isdir(WAVEPATH + "\python"):
-  sys.path.append(WAVEPATH + "\python")
+elif os.path.isdir(WAVEPATH + Sepp + 'python'):
+  sys.path.append(WAVEPATH + Sepp + 'python')
 #endif os.path.isdir(WAVEPATH + "/waves")
 
 global MyWavesFont
