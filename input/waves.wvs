@@ -3,16 +3,8 @@ ipython3 -i ../python/waveplot.py
 $EDITOR wave.out
 $EDITOR
 0.1 0.085 0.85 0.75 arial 13
-1. 1. 1.
-0. 0. 0.
-1. 0. 0.
-0. 1. 0.
-0. 0. 1.
-1. 1. 0.
-1. 0. 1.
-0. 1. 1.
 *===================================================================
-* Version: 1.32/14
+* Version: 1.32/15
 *===================================================================
 *
 *  Trouble: Error in combination with mycommg.kumac: Reason:
@@ -78,7 +70,19 @@ The user title is a comment, that is written to most output files of WAVE
 to identify and comment the program run. In addition there is a run number
 to identify the run. So, it's not always necessary to change the comment.
 $ENDHELP
+
 *************************************************************************
+$MENU
+        COMMENT
+        WAVE
+        $TITLE
+        COMMENT
+                $TEXT
+                        User title
+                $VARIABLE
+                        CODE
+*************************************************************************
+
 $MENU
         BEAM
         WAVE
@@ -2357,17 +2361,13 @@ $SELECT
                 undulator mode 1 for single electron (full)
         $MAPPING
                 UNDUM
-                9
+                7
 		IUNDU2
                 0
                 IUNDULATOR
                 1
                 IWIGGLER
                 0
-	        IMAGSPNM
-                1
-	        IMAGSPLN
-                -9999
                 IEXPERT
                 0
                 IEMIT
@@ -2405,7 +2405,7 @@ $SELECT
                 undulator mode 2 (fast)
         $MAPPING
                 UNDUFM
-		31
+		29
 		IUNDU2
 		1
 		KBFELD
@@ -2460,10 +2460,6 @@ $SELECT
 		    2
 		  IWIGGLER
 		    0
-		  IMAGSPNM
-		    1
-		  IMAGSPLN
-		    -9999
 		  IEXPERT
 		    0
 		  IEMIT
@@ -2475,15 +2471,11 @@ $SELECT
                 wiggler mode 1
         $MAPPING
                 WIGMOD1
-                7
+                5
                 IWIGGLER
                 1
                 IUNDULATOR
                 0
-	        IMAGSPNM
-                1
-	        IMAGSPLN
-                -9999
                 IEXPERT
                 0
                 IEMIT
@@ -2494,15 +2486,11 @@ $SELECT
                 wiggler mode 2
         $MAPPING
                 WIGMOD2
-                7
+                5
                 IWIGGLER
                 2
                 IUNDULATOR
                 0
-	        IMAGSPNM
-                1
-	        IMAGSPLN
-                -9999
                 IEXPERT
                 0
                 IEMIT
@@ -2550,10 +2538,10 @@ Check the appropriate menu.
 $ENDHELP
 *************************************************************************
 ********************************************************************
-$MENUVETO
-        ISPECM
-        0
-        SPECMODES
+*$MENUVETO
+*        ISPECM
+*        0
+*        SPECMODES
 *************************************************************************
 $MENU
         INTSPEC
@@ -4457,10 +4445,6 @@ $MENUALLVETO
 $VETO
         IUNDULATOR
         1
-        IMAGSPNM
-$VETO
-        IUNDULATOR
-        1
         ISPECMODE
 $VETO
         IUNDULATOR
@@ -4478,10 +4462,6 @@ $VETO
         IUNDULATOR
         1
         IGENFUN
-$VETO
-        IWIGGLER
-        1
-        IMAGSPNM
 $VETO
         IWIGGLER
         1
