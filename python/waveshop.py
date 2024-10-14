@@ -1,5 +1,5 @@
 global WavesMode
-WavesMode = 'WPLOT'
+WavesMode = 'WSHOP'
 
 #!/usr/bin/env python
 
@@ -187,7 +187,7 @@ ROFx = 0.03
 ROFy = 0.95
 
 fcfg = ''
-if WavesMode == 'WAVES' or WavesMode == 'WPLOT': fcfg = 'waveplot.cfg'
+if WavesMode == 'WAVES' or WavesMode == 'WPLOT' or WavesMode == 'WSHOP': fcfg = 'waveplot.cfg'
 elif WavesMode == 'UNDUMAG': fcfg = 'undugui.cfg'
 else:
   if fexist('waveplot.cfg'):
@@ -15507,7 +15507,7 @@ def read_window_geometry(fname='ntupplot.cfg'):
 
   global WavesMode
 
-  if WavesMode == 'WAVES' or WavesMode == 'WPLOT': fname = 'waveplot.cfg'
+  if WavesMode == 'WAVES' or WavesMode == 'WPLOT' or WavesMode == 'WSHOP': fname = 'waveplot.cfg'
   elif WavesMode == 'UNDUMAG': fname = 'undugui.cfg'
   elif WavesMode == 'BRILL': fname = 'brill.cfg'
   else:
@@ -36620,7 +36620,7 @@ def _btextin(ev,textent,text):
 #enddef _btextin(ev,textent,text)
 
 def waveplotgpl():
-  global Krun,Kruns
+  global Krun,Kruns,WavesMode
 
   krun = Krun
   Krun = False
@@ -36629,12 +36629,16 @@ def waveplotgpl():
   optxaxis(False); optyaxis(False); optbox(False)
 
   text = ""
-  text += "Welcome to Wave-Plot\n\n"
+  if WavesMode == 'WSHOP':
+    text += "Welcome to WAVE Shop\n\n"
+  else:
+    text += "Welcome to WAVE Plot\n\n"
+  #endif
   text += "by Michael Scheer \n Helmholtz-Zentrum Berlin\n\n"
   textndc(0.5,0.8,text,fontsize=15,color='magenta')
 
   text = ""
-  text += "Copyright 2021 Helmholtz-Zentrum Berlin (HZB)"
+  text += "Copyright 2024 Helmholtz-Zentrum Berlin (HZB)"
   text += "\n      Hahn-Meitner-Platz 1"
   text += "\n      D-14109 Berlin"
   text += "\n      Germany"
@@ -39758,7 +39762,7 @@ def pmenu(kmenu):
     depth = get_menu_depth(Imenu)
 
     if not PMenuGeo[Imenu]:
-      if WavesMode == 'WPLOT':
+      if WavesMode == 'WPLOT' or WavesMode == 'WSHOP':
         geodum = get_geo_all()
         dw = CanW / 10 * (depth - 1)
         wp = '+' + str(int(WinX+CanW/5+dw)) + '+' + str(WinY)
@@ -39766,7 +39770,7 @@ def pmenu(kmenu):
         wp = WinPos
       #endif
     else:
-      if WavesMode == 'WPLOT':
+      if WavesMode == 'WPLOT' or WavesMode == 'WSHOP':
         geodum = get_geo_all()
         dw = CanW / 10 * (depth - 1)
         wp = '+' + str(int(WinX+CanW/5+dw)) + '+' + str(WinY)
@@ -41647,8 +41651,6 @@ def readwvs():
 
           menu[1] = name
           menu[4] = key
-
-          #print(menu)
           Wmenu.append(menu)
           MenuVeto.append([-1,'0',0,0,'class'])
           MenuAllVeto.append([0])
@@ -42700,7 +42702,6 @@ def readwvs():
   Fmap.close()
 
   print("--- waves.wvs read ---")
-
   #exit("waves.wvs gelesen!")
 
 #  for m in range(Nmenu):
@@ -42939,7 +42940,7 @@ AtitFontSize = AtitFontSize
 
 read_window_geometry('waveplot.cfg')
 
-window('WavePlot',getconsole=False)
+window('WAVE Shop',getconsole=False)
 
 waveplotgpl()
 
@@ -45288,8 +45289,15 @@ def _setup_menu(menu):
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
   ScreenW,ScreeH,WinX,WinY,CanW,CanH
+
   W0 = Wmenu[0]
   mshow = 0
+
+  if menu == 'WAVE':
+    pmenu(0)
+    return
+  #endif
+
   for i in range(10,len(W0)-1):
     m = W0[i]
     mp = W0[i+1]
@@ -45313,6 +45321,7 @@ Toolbar = WGmain.canvas.toolbar
 WPLmaster = Toolbar.master
 MenuBar = Menu(WPLmaster)
 
+MenuBar.add_command(label='  Comment  ',command = lambda menu='COMMENT': _setup_menu(menu))
 MenuBar.add_command(label='  Beam  ',command = lambda menu='BEAM': _setup_menu(menu))
 MenuBar.add_command(label='  Track  ',command = lambda menu='TRACKING': _setup_menu(menu))
 MenuBar.add_command(label='  Sel. Mag.  ',command = lambda menu='MAGSEL': _setup_menu(menu))
