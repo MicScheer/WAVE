@@ -1282,7 +1282,7 @@ ROFx = 0.03
 ROFy = 0.95
 
 fcfg = ''
-if WavesMode == 'WAVES' or WavesMode == 'WPLOT': fcfg = 'waveplot.cfg'
+if WavesMode == 'WAVES' or WavesMode == 'WPLOT' or WavesMode == 'WSHOP': fcfg = 'waveplot.cfg'
 elif WavesMode == 'UNDUMAG': fcfg = 'undugui.cfg'
 else:
   if fexist('waveplot.cfg'):
@@ -13511,15 +13511,21 @@ def nproj2(nt='?', xy='', weight=1., select='',
   h = pd.DataFrame([x,y,hz,hz2,hn]).T
   h.columns=['x','y','z','z2','n']
 
-  h.z[np.isnan(h.z)] = 0.0
-  h.z2[np.isnan(h.z2)] = 0.0
-  h.n[np.isnan(h.n)] = 0.0
+#  h.z[np.isnan(h.z)] = 0.0
+#  h.z2[np.isnan(h.z2)] = 0.0
+#  h.n[np.isnan(h.n)] = 0.0
+  h['z'] = weednan(h['z'])
+  h['z2'] = weednan(h['z2'])
+  h['n'] = weednan(h['n'])
+
 
   h['ave'] = h.z/h.n
-  h.ave[np.isnan(h.ave)] = 0.0
+  #h.ave[np.isnan(h.ave)] = 0.0
+  h['ave'] = weednan(h['ave'])
 
   h['ez'] = (h.z2/h.n-h.ave**2)**0.5
-  h.ez[np.isnan(h.ez)] = 0.0
+  #h.ez[np.isnan(h.ez)] = 0.0
+  h['ez'] = weednan(h['ez'])
 
   head2 = H2head[idx]
 
@@ -15498,7 +15504,7 @@ def read_window_geometry(fname='ntupplot.cfg'):
 
   global WavesMode
 
-  if WavesMode == 'WAVES' or WavesMode == 'WPLOT': fname = 'waveplot.cfg'
+  if WavesMode == 'WAVES' or WavesMode == 'WPLOT' or WavesMode == 'WSHOP': fname = 'waveplot.cfg'
   elif WavesMode == 'UNDUMAG': fname = 'undugui.cfg'
   elif WavesMode == 'BRILL': fname = 'brill.cfg'
   else:
