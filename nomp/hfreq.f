@@ -1,3 +1,4 @@
+*CMZ :          04/05/2024  15.41.44  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  13.30.35  by  Michael Scheer
 *CMZ :  4.01/04 15/11/2023  18.07.40  by  Michael Scheer
 *CMZ :  4.01/03 10/06/2023  15.52.02  by  Michael Scheer
@@ -80,47 +81,7 @@
 *CMZ : 00.00/00 28/04/94  16.12.39  by  Michael Scheer
 *-- Author :  Michael Scheer
       SUBROUTINE HFREQ
-*KEEP,gplhint.
-!******************************************************************************
-!
-!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
-!      Hahn-Meitner-Platz 1
-!      D-14109 Berlin
-!      Germany
-!
-!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
-!
-! -----------------------------------------------------------------------
-!
-!    This program is free software: you can redistribute it and/or modify
-!    it under the terms of the GNU General Public License as published by
-!    the Free Software Foundation, either version 3 of the License, or
-!    (at your option) any later version.
-!
-!    This program is distributed in the hope that it will be useful,
-!    but WITHOUT ANY WARRANTY; without even the implied warranty of
-!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-!    GNU General Public License for more details.
-!
-!    You should have received a copy (wave_gpl.txt) of the GNU General Public
-!    License along with this program.
-!    If not, see <http://www.gnu.org/licenses/>.
-!
-!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
-!    der GNU General Public License, wie von der Free Software Foundation,
-!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
-!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
-!
-!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
-!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
-!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
-!    Siehe die GNU General Public License fuer weitere Details.
-!
-!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
-!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
-!    siehe <http://www.gnu.org/licenses/>.
-!
-!******************************************************************************
+*KEEP,GPLHINT.
 *KEND.
 
 *KEEP,spectf90u.
@@ -2030,6 +1991,8 @@ C--- NTUPLE
             FSPEC(3)=OBSV(1,IOBSV)
             FSPEC(4)=OBSV(2,IOBSV)
             FSPEC(5)=OBSV(3,IOBSV)
+            if (abs(fspec(4)).lt.1.0d-15) fspec(4)=0.0d0
+            if (abs(fspec(5)).lt.1.0d-15) fspec(5)=0.0d0
             FSPEC(6)=FREQ(ifrq)
             FSPEC(7)=SPEC(ISOUR+NSOURCE*(IOBSV-1+NOBSV*(ifrq-1)))
             FSPEC(8)=IOBSVZ
@@ -2233,6 +2196,8 @@ C BRILLIANCE
             FSPEC(1)=OBSV(1,IOBSV)
             FSPEC(2)=OBSV(2,IOBSV)
             FSPEC(3)=OBSV(3,IOBSV)
+            if (abs(fspec(2)).lt.1.0d-15) fspec(2)=0.0d0
+            if (abs(fspec(3)).lt.1.0d-15) fspec(3)=0.0d0
             FSPEC(4)=SPECI(ISOUR+NSOURCE*(IOBSV-1))
             FSPEC(5)=IOBSVZ
             FSPEC(6)=IOBSVY
@@ -2251,6 +2216,7 @@ C BRILLIANCE
 
             FSPEC(1)=OBSV(1,IOBSVZ)
             FSPEC(2)=OBSV(3,IOBSVZ)
+            if (abs(fspec(2)).lt.1.0d-15) fspec(2)=0.0d0
             FSPEC(3)=SPECIV(ISOUR+NSOURCE*(IOBSVZ-1))
             FSPEC(4)=IOBSVZ
             FSPEC(5)=ISOUR
@@ -2279,6 +2245,8 @@ C BRILLIANCE
               FSPEC(1)=OBSV(1,IOBSV)
               FSPEC(2)=OBSV(2,IOBSV)
               FSPEC(3)=OBSV(3,IOBSV)
+              if (abs(fspec(2)).lt.1.0d-15) fspec(2)=0.0d0
+              if (abs(fspec(3)).lt.1.0d-15) fspec(3)=0.0d0
               FSPEC(4)=SPECIF(ISOUR+NSOURCE*(IOBSV-1))
               FSPEC(5)=IOBSVZ
               FSPEC(6)=IOBSVY
@@ -2310,6 +2278,8 @@ C BRILLIANCE
           FSPEC(1)=OBSV(1,IOBSV)
           FSPEC(2)=OBSV(2,IOBSV)
           FSPEC(3)=OBSV(3,IOBSV)
+          if (abs(fspec(2)).lt.1.0d-15) fspec(2)=0.0d0
+          if (abs(fspec(3)).lt.1.0d-15) fspec(3)=0.0d0
           FSPEC(4)=SPECPOW(ISOUR+NSOURCE*(IOBSV-1))
           if (ifold.ne.0) then
             FSPEC(5)=SPECPOWf(ISOUR+NSOURCE*(IOBSV-1))
@@ -2333,6 +2303,7 @@ C BRILLIANCE
 
           FSPEC(1)=OBSV(1,IOBSVZ)
           FSPEC(2)=OBSV(3,IOBSVZ)
+          if (abs(fspec(3)).lt.1.0d-15) fspec(3)=0.0d0
           FSPEC(3)=SPECPOWV(ISOUR+NSOURCE*(IOBSVZ-1))
           FSPEC(4)=IOBSVZ
           FSPEC(5)=ISOUR
@@ -2351,6 +2322,8 @@ C BRILLIANCE
             FSTUPLE(1)=OBSV(1,IOBSV)
             FSTUPLE(2)=OBSV(2,IOBSV)
             FSTUPLE(3)=OBSV(3,IOBSV)
+            if (abs(fspec(2)).lt.1.0d-15) fspec(2)=0.0d0
+            if (abs(fspec(3)).lt.1.0d-15) fspec(3)=0.0d0
             FSTUPLE(4)=FREQ(ifrq)
             FSTUPLE(5)=SPECTOT(IOBSV+NOBSV*(ifrq-1))
             CALL hfm(ND,FSTUPLE)
@@ -2533,6 +2506,8 @@ C BRILLIANCE
                 FSPEC(3)=OBSV(1,IOBSV)
                 FSPEC(4)=OBSV(2,IOBSV)
                 FSPEC(5)=OBSV(3,IOBSV)
+                if (abs(fspec(4)).lt.1.0d-15) fspec(4)=0.0d0
+                if (abs(fspec(5)).lt.1.0d-15) fspec(5)=0.0d0
                 FSPEC(6)=FREQ(ifrq)
                 FSPEC(7)=SPECF(ISOUR+NSOURCE*(IOBSV-1+NOBSV*(ifrq-1)))
                 FSPEC(8)=IOBSVZ
@@ -2662,6 +2637,8 @@ c                FSPEC(24)=reanor*reaIMA(10,2,IOBFR)
             FSPEC(2)=OBSV(1,IOBSV)
             FSPEC(3)=OBSV(2,IOBSV)
             FSPEC(4)=OBSV(3,IOBSV)
+            if (abs(fspec(3)).lt.1.0d-15) fspec(3)=0.0d0
+            if (abs(fspec(4)).lt.1.0d-15) fspec(4)=0.0d0
             FSPEC(5)=FREQ(ifrq)
             IOBFR=IOBSV+NOBSV*(ifrq-1)
             FSPEC(6)=STOKES(1,IOBFR)
@@ -2773,6 +2750,8 @@ c                FSPEC(24)=reanor*reaIMA(10,2,IOBFR)
               FSPEC(2)=OBSV(1,IOBSV)
               FSPEC(3)=OBSV(2,IOBSV)
               FSPEC(4)=OBSV(3,IOBSV)
+              if (abs(fspec(3)).lt.1.0d-15) fspec(3)=0.0d0
+              if (abs(fspec(4)).lt.1.0d-15) fspec(4)=0.0d0
               FSPEC(5)=FREQ(ifrq)
               IOBFR=IOBSV+NOBSV*(ifrq-1)
               FSPEC(6)=STOKESF(1,IOBFR)
@@ -2884,6 +2863,8 @@ c                FSPEC(24)=reanor*reaIMA(10,2,IOBFR)
               FSPEC(2)=OBSV(1,IOBSV)
               FSPEC(3)=OBSV(2,IOBSV)
               FSPEC(4)=OBSV(3,IOBSV)
+              if (abs(fspec(3)).lt.1.0d-15) fspec(3)=0.0d0
+              if (abs(fspec(4)).lt.1.0d-15) fspec(4)=0.0d0
               FSPEC(5)=FREQ(ifrq)
               IOBFR=IOBSV+NOBSV*(ifrq-1)
               FSPEC(6)=STOKESE(1,IOBFR)
@@ -2995,6 +2976,8 @@ c                FSPEC(24)=reanor*reaIMA(10,2,IOBFR)
               FSPEC(2)=OBSV(1,IOBSV)
               FSPEC(3)=OBSV(2,IOBSV)
               FSPEC(4)=OBSV(3,IOBSV)
+              if (abs(fspec(3)).lt.1.0d-15) fspec(3)=0.0d0
+              if (abs(fspec(4)).lt.1.0d-15) fspec(4)=0.0d0
               FSPEC(5)=FREQ(ifrq)
               IOBFR=IOBSV+NOBSV*(ifrq-1)
               FSPEC(6)=STOKESEF(1,IOBFR)

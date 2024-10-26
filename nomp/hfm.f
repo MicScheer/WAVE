@@ -1,3 +1,4 @@
+*CMZ :          02/05/2024  12.38.37  by  Michael Scheer
 *CMZ :  4.01/05 20/04/2024  09.48.41  by  Michael Scheer
 *CMZ :  4.00/15 14/03/2022  10.05.01  by  Michael Scheer
 *CMZ :  4.00/14 10/02/2022  17.40.28  by  Michael Scheer
@@ -14,46 +15,6 @@
       use mhbook_mod
 
 *KEEP,gplhint.
-!******************************************************************************
-!
-!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
-!      Hahn-Meitner-Platz 1
-!      D-14109 Berlin
-!      Germany
-!
-!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
-!
-! -----------------------------------------------------------------------
-!
-!    This program is free software: you can redistribute it and/or modify
-!    it under the terms of the GNU General Public License as published by
-!    the Free Software Foundation, either version 3 of the License, or
-!    (at your option) any later version.
-!
-!    This program is distributed in the hope that it will be useful,
-!    but WITHOUT ANY WARRANTY; without even the implied warranty of
-!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-!    GNU General Public License for more details.
-!
-!    You should have received a copy (wave_gpl.txt) of the GNU General Public
-!    License along with this program.
-!    If not, see <http://www.gnu.org/licenses/>.
-!
-!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
-!    der GNU General Public License, wie von der Free Software Foundation,
-!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
-!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
-!
-!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
-!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
-!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
-!    Siehe die GNU General Public License fuer weitere Details.
-!
-!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
-!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
-!    siehe <http://www.gnu.org/licenses/>.
-!
-!******************************************************************************
 *KEND.
 
       implicit none
@@ -85,7 +46,7 @@
         else if (nid.eq.3600) then
           write(nscr3600,*)buffd(1:2)
         else if (nid.eq.3700) then
-          write(nscr3700,*)buffd(1:21)
+          write(nscr3700,*)buffd(1:34)
         else if (nid.eq.4600) then
           write(nscr4600,*)buffd(1:5)
         else if (nid.eq.4700) then

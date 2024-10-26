@@ -1,3 +1,4 @@
+*CMZ :          20/08/2024  17.20.56  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  18.40.00  by  Michael Scheer
 *CMZ :  4.01/04 28/11/2023  14.20.34  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  10.59.52  by  Michael Scheer
@@ -37,46 +38,6 @@
 *-- Author :    Michael Scheer   18/09/98
       SUBROUTINE PHASE_omp
 *KEEP,gplhint.
-!******************************************************************************
-!
-!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
-!      Hahn-Meitner-Platz 1
-!      D-14109 Berlin
-!      Germany
-!
-!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
-!
-! -----------------------------------------------------------------------
-!
-!    This program is free software: you can redistribute it and/or modify
-!    it under the terms of the GNU General Public License as published by
-!    the Free Software Foundation, either version 3 of the License, or
-!    (at your option) any later version.
-!
-!    This program is distributed in the hope that it will be useful,
-!    but WITHOUT ANY WARRANTY; without even the implied warranty of
-!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-!    GNU General Public License for more details.
-!
-!    You should have received a copy (wave_gpl.txt) of the GNU General Public
-!    License along with this program.
-!    If not, see <http://www.gnu.org/licenses/>.
-!
-!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
-!    der GNU General Public License, wie von der Free Software Foundation,
-!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
-!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
-!
-!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
-!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
-!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
-!    Siehe die GNU General Public License fuer weitere Details.
-!
-!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
-!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
-!    siehe <http://www.gnu.org/licenses/>.
-!
-!******************************************************************************
 *KEND.
 
 *KEEP,spectf90u.
@@ -99,8 +60,7 @@
       use omp_lib
       use wobsvmod
 
-* ROUTINE TO PROPAGATE COMPLEXE AMPLITUDE FROM PINHOLE BACK TO
-* LOCATION OF EFFECTIVE SOURCE AT (PHCENX,PHCENY,PHCENZ)
+* ROUTINE TO PROPAGATE COMPLEXE AMPLITUDE FROM PINHOLE BACK TO (PHCENX,PHCENY,PHCENZ)
 
 
       IMPLICIT NONE
@@ -150,7 +110,7 @@
       INTEGER NIDGEO1,ISTAT,NIDGEO2,NBEAM_P,J,IELEM,NSIZE_P
       INTEGER IOBSY,IOBSZ,K,ix,is,mthreadso
 
-      complex*16 efc(3),bfc(3)
+      complex*16 efc(3),bfc(3),expsh,rea(3)
 
       integer
      &  mphasey_omp,mphasez_omp,nphasey_omp,nphasez_omp,iphfold_omp,
@@ -277,13 +237,14 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
       endif
 
       wlen=wtoe1/freqlow/1.0d9
+
       if (iundulator.ne.2) then
         sigrp=sqrt(wlen/(sourceeo(1,1,1)-sourceao(1,1,1)))
       else
         sigrp=sqrt(wlen/(dble(kampli)*phrperl))
       endif
       sigr=wlen/twopi1/sigrp
-      call util_break
+      !call util_break
       if (phwid.eq.-9999.0d0) then
         phwid=10.0d0*sqrt(sigr**2+
      &    ((phcenx-sourcen(1,1,1))*sigrp)**2)
@@ -433,6 +394,40 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
      &    nobsv*nfreq,CHTAGS)
       endif
 
+      if (user(1).eq.1.0d0) then
+        rea(1:2)=(0.0d0,0.0d0)
+        rea(3)=dcmplx(reaima(3,1,icbrill),reaima(3,2,icbrill))
+        reaima=0.0d0
+        reaima(3,1,icbrill)=dreal(rea(3))
+        reaima(3,2,icbrill)=dimag(rea(3))
+      endif
+
+      if (abs(phgshift).eq.9999.0d0) then
+        do ifrq=1,nfreq
+          iobfr=icbrill+nobsv*(ifrq-1)
+          rea(1:2)=(0.0d0,0.0d0)
+          rea(3)=dcmplx(reaima(3,1,iobfr),reaima(3,2,iobfr))
+          expsh=rea(3)/abs(rea(3))
+          if (phgshift.eq.-9999.0d0) expsh=expsh*cdexp(dcmplx(0.0d0,-pi1/2.0d0))
+          DO iobs=1,nobsv
+            iobfr=iobs+nobsv*(ifrq-1)
+            rea=dcmplx(reaima(1:3,1,iobfr),reaima(1:3,2,iobfr))/expsh
+            reaima(1:3,1,iobfr)=dreal(rea)
+            reaima(1:3,2,iobfr)=dimag(rea)
+          enddo
+        enddo
+      else if (phgshift.ne.0.0d0) then
+        expsh=cdexp(dcmplx(0.0d0,phgshift))
+        do ifrq=1,nfreq
+          DO iobs=1,nobsv
+            iobfr=iobs+nobsv*(ifrq-1)
+            rea=dcmplx(reaima(1:3,1,iobfr),reaima(1:3,2,iobfr))/expsh
+            reaima(1:3,1,iobfr)=dreal(rea)
+            reaima(1:3,2,iobfr)=dimag(rea)
+          enddo
+        enddo
+      endif
+
       isour=1
       smax=0.0d0
       do ifrq=1,nfreq
@@ -459,6 +454,8 @@ c          if (idebug.ne.0.and.iphy.eq.nobsvy/2+1.and.ifrq.eq.2) then
 c            write(99,*)iundulator,iphz,obsv(3,iobs),reaima(3,1,iobfr)*reanor
 c          endif
           TUP(1:3)=obsv(1:3,iobs)
+          if(abs(tup(2)).lt.1.0d-15) tup(2)=0.0d0
+          if(abs(tup(3)).lt.1.0d-15) tup(3)=0.0d0
           TUP(4)=FREQ(ifrq)
           TUP(5)=ifrq
           TUP(6)=IPHY
@@ -603,20 +600,12 @@ c          rnz=ef(1)*bf(2)-ef(2)*bf(1)
 
 C     TO MAKE SURE THAT TAYLOR-EXPANSION IS VALID
 
-            IF (DZY2.GT.0.01D0*DX2) THEN
-              WRITE(LUNGFO,*)'*** ERROR IN PHASE_OMP: DZY2.GT.0.01D0*DX2  ***'
-              WRITE(LUNGFO,*)'CHECK INPUT FILE AND INCREASE PINCEN(1)'
-              WRITE(LUNGFO,*)'*** PROGRAM WAVE ABORTED ***'
-              WRITE(6,*)'*** ERROR IN PHASE_OMP: PHCENX=PINCEN(1)  ***'
-              WRITE(6,*)'CHECK INPUT FILE AND INCREASE PINCEN(1)'
-              WRITE(6,*)'*** PROGRAM WAVE ABORTED ***'
-              STOP
-            ENDIF
+            IF (DZY2.le.0.01D0*DX2) THEN
 
-            EPS(1)=DZY2/DX2
-            DO IEPS=2,6
-              EPS(IEPS)=EPS(IEPS-1)*EPS(1)
-            ENDDO !IEPS
+              EPS(1)=DZY2/DX2
+              DO IEPS=2,6
+                EPS(IEPS)=EPS(IEPS-1)*EPS(1)
+              ENDDO !IEPS
 
 c      TAYLOR-EXPANSION DONE WITH REDUCE
 c     IN "WTAY1.RED";
@@ -631,12 +620,24 @@ c     DR;
 c     SHUT "RED.FOR";
 C ans is actually reduce by 1.0 to avoid large overall phase
 
-            ans=-0.0205078125D0*eps(6)+0.02734375D0*eps(5)
-     &        -0.0390625D0*eps(4)+
-     &        0.0625D0*eps(3)-0.125D0*eps(2)+0.5D0*eps(1)
+              ans=-0.0205078125D0*eps(6)+0.02734375D0*eps(5)
+     &          -0.0390625D0*eps(4)+
+     &          0.0625D0*eps(3)-0.125D0*eps(2)+0.5D0*eps(1)
 
-            DR=DABS(DX*(ANS+1.D0))
-            DRRED=-DABS(DX*ANS)
+              DR=DABS(DX*(ANS+1.D0))
+              DRRED=-DABS(DX*ANS)
+
+            else
+c              WRITE(LUNGFO,*)'*** ERROR IN PHASE_OMP: DZY2.GT.0.01D0*DX2  ***'
+c              WRITE(LUNGFO,*)'CHECK INPUT FILE AND INCREASE PINCEN(1)'
+c              WRITE(LUNGFO,*)'*** PROGRAM WAVE ABORTED ***'
+c              WRITE(6,*)'*** ERROR IN PHASE_OMP: PHCENX=PINCEN(1)  ***'
+c              WRITE(6,*)'CHECK INPUT FILE AND INCREASE PINCEN(1)'
+c              WRITE(6,*)'*** PROGRAM WAVE ABORTED ***'
+c              STOP
+              dr=sqrt(1.0d0+dzy2/dx2)*abs(dx)
+              drred=-dabs(dr-abs(dx))
+            ENDIF
 
             IF (DR.NE.0.0d0) THEN
               EXPOM(IOBS)=CDEXP(DCMPLX(0.0d0,DRRED*OMC))/DR
@@ -1025,6 +1026,8 @@ c     &            phws1,phws2,phws3,phws4)
             TUP(1)=XPH
             TUP(2)=YPHw(iphy)
             TUP(3)=ZPHw(iphz)
+            if(abs(tup(2)).lt.1.0d-15) tup(2)=0.0d0
+            if(abs(tup(3)).lt.1.0d-15) tup(3)=0.0d0
             TUP(4)=FREQ_omp(ifrq)
             TUP(5)=ifrq
             TUP(6)=IPHY
@@ -1318,6 +1321,8 @@ C--- GET FOCUSSING
               TGEO(1)=XPH
               TGEO(2)=YPH
               TGEO(3)=ZPH
+              if(abs(tgeo(2)).lt.1.0d-15) tgeo(2)=0.0d0
+              if(abs(tgeo(3)).lt.1.0d-15) tgeo(3)=0.0d0
               TGEO(4)=-TANTHE
               TGEO(5)=-TANPHI
               TGEO(6)=FREQ(ifrq)
@@ -1326,6 +1331,8 @@ C--- GET FOCUSSING
               TGEO(9)=XSOUR
               TGEO(10)=YSOUR
               TGEO(11)=ZSOUR
+              if(abs(tgeo(10)).lt.1.0d-15) tgeo(10)=0.0d0
+              if(abs(tgeo(11)).lt.1.0d-15) tgeo(11)=0.0d0
               ILIOBFR=ISOUR+NSOURCE*(IOBS-1+NOBSV*(ifrq-1))
               TGEO(12)=SPEC(ILIOBFR)
      &          *DR2SOUR/DR2PH
@@ -1361,6 +1368,8 @@ C--- GET FOCUSSING
                 TGEO(1)=XPH
                 TGEO(2)=YPH
                 TGEO(3)=ZPH
+                if(abs(tgeo(2)).lt.1.0d-15) tgeo(2)=0.0d0
+                if(abs(tgeo(3)).lt.1.0d-15) tgeo(3)=0.0d0
                 TGEO(4)=-TANTHE
                 TGEO(5)=-TANPHI
                 TGEO(6)=FREQ(ifrq)
@@ -1369,6 +1378,8 @@ C--- GET FOCUSSING
                 TGEO(9)=XSOUR
                 TGEO(10)=YSOUR
                 TGEO(11)=ZSOUR
+                if(abs(tgeo(10)).lt.1.0d-15) tgeo(10)=0.0d0
+                if(abs(tgeo(11)).lt.1.0d-15) tgeo(11)=0.0d0
                 ILIOBFR=ISOUR+NSOURCE*(IOBS-1+NOBSV*(ifrq-1))
                 TGEO(12)=SPEC(ILIOBFR)
      &            *DR2SOUR/DR2PH
@@ -1466,6 +1477,8 @@ C--- APPLY MATRICES OF BEAMLINE
                 TBEAM(1)=XBEAM
                 TBEAM(2)=YBEAM
                 TBEAM(3)=ZBEAM
+                if(abs(tgeo(2)).lt.1.0d-15) tgeo(2)=0.0d0
+                if(abs(tgeo(3)).lt.1.0d-15) tgeo(3)=0.0d0
                 TBEAM(4)=TANTHEB
                 TBEAM(5)=TANPHIB
                 TBEAM(6)=FREQ(ifrq)
@@ -1474,6 +1487,8 @@ C--- APPLY MATRICES OF BEAMLINE
                 TBEAM(9)=XSOUR
                 TBEAM(10)=YSOUR
                 TBEAM(11)=ZSOUR
+                if(abs(tgeo(10)).lt.1.0d-15) tgeo(10)=0.0d0
+                if(abs(tgeo(11)).lt.1.0d-15) tgeo(11)=0.0d0
                 ILIOBFR=ISOUR+NSOURCE*(IOBS-1+NOBSV*(ifrq-1))
                 TBEAM(12)=SPEC(ILIOBFR)*DR2SOUR/DR2PH*FOCUS
                 TBEAM(13)=XOBS

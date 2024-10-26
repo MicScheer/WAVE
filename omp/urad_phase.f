@@ -1,3 +1,5 @@
+*CMZ :          13/08/2024  10.11.51  by  Michael Scheer
+*CMZ :  4.01/05 26/04/2024  10.49.56  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  15.30.57  by  Michael Scheer
 *CMZ :  4.01/02 12/05/2023  17.13.05  by  Michael Scheer
 *CMZ :  4.01/00 21/02/2023  16.51.29  by  Michael Scheer
@@ -10,7 +12,7 @@
      &  nepho,ephmin,ephmax,banwid,
      &  xbeta,betah,alphah,betav,alphav,espread,emith,emitv,
      &  disph,dispph,dispv,disppv,
-     &  modeph,pherror,modewave
+     &  modeph,pherror,phgshift,modewave
      &  )
 
       use omp_lib
@@ -20,22 +22,25 @@
 
 *KEEP,phyconparam.
       include 'phyconparam.cmn'
-*KEEP,uservar.
-      include 'uservar.cmn'
 *KEND.
+c+seq,uservar.
+
+      double complex :: rea(3),expsh
 
       double precision
      &  perlen,shift,ebeam,curr,step,banwid,
      &  pincen(3),pinw,pinh,betah,alphah,betav,alphav,
-     &  ephmin,ephmax,beffv,beffh,pherror,espread,emith,emitv,
+     &  ephmin,ephmax,beffv,beffh,pherror,phgshift,espread,emith,emitv,
      &  disph,dispph,dispv,disppv,y,z,dy,dz,ymin,zmin,bunchlen,bunchcharge,
      &  xbeta,df,xx,yy,zz,r,xn,yn,zn,h2
 
       integer
      &  npiny,npinz,nper,nepho,mthreads,nelec,icohere,ihbunch,i,nlpoi,
-     &  modeph,modepin,modesphere,modebunch,iy,iz,iobsv,noranone,modewave
+     &  modeph,modepin,modesphere,modebunch,iy,iz,iobsv,noranone,modewave,
+     &  icbrill,iobs,iobfr,ifrq
 
-      if (modewave.ne.0) call util_zeit_kommentar(6,'Entered urad_phase')
+c      if (modewave.ne.0) call util_zeit_kommentar(6,'Entered urad_phase')
+      call util_zeit_kommentar_delta(6,'Entered urad_phase',1)
 
       mthreads_u=mthreads
 
@@ -76,10 +81,8 @@
       npinz_u=max(1,npinz_u)
 
       nlpoi_u=nlpoi
-c      nlpoi_u=user(12)*nper_u
-      nlpoi_u=user(12)
 
-      if (modepin.eq.0) then
+      if (modepin.ne.1) then
         nobsv_u=npiny_u*npinz_u
       else
         npinz_u=1
@@ -90,13 +93,19 @@ c      nlpoi_u=user(12)*nper_u
       allocate(epho_u(nepho),obsv_u(3,nobsv_u),
      &  arad_u(6,nobsv_u*nepho_u),
      &  specpow_u(nobsv_u),
-     &  fbunch_u(41,nelec_u/max(1,ihbunch_u)*nepho_u),
      &  stokes_u(4,nobsv_u*nepho_u),pow_u(nobsv_u)
      &  )
 
+      if (ihbunch_u.gt.0) then
+        allocate(fbunch_u(41,nelec_u/ihbunch_u*nepho_u))
+        fbunch_u=0.0d0
+      else if (ihbunch_u.lt.0) then
+        allocate(fbunch_u(41,nobsv_u*nelec_u/(-ihbunch_u)*nepho_u))
+        fbunch_u=0.0d0
+      endif
+
       stokes_u=0.0d0
       specpow_u=0.0d0
-      fbunch_u=0.0d0
       arad_u=(0.0d0,0.0d0)
       pow_u=0.0d0
 
@@ -176,6 +185,7 @@ c              r=xx*(1.0d0+h2/2.0d0-h2**2/8.0d0)
 
       modeph=modeph_u
       pherror_u=pherror
+      phgshift_u=phgshift
 
 c      call urad_spline(modewave)
 c      stop
@@ -184,17 +194,39 @@ c        call urad_nnb(modewave)
 c      else if (modewave.eq.3) then
 c        call urad_spline(modewave)
 c      else
-        call urad_amprep(modewave)
+      call urad_amprep(modewave)
 c      endif
 
       stokes_u=stokes_u/1.0d6 ! photons/mm**2
-      fbunch_u(4:14,:)=fbunch_u(4:14,:)*1000.0d0 ! mm
-      fbunch_u(17:19,:)=fbunch_u(17:19,:)*1000.0d0 ! mm
-      fbunch_u(22:26,:)=fbunch_u(22:26,:)/1.0d6 ! 1/mm**2
-      arad_u=arad_u/1.0d3
+      if (ihbunch.ne.0) then
+        fbunch_u(4:14,:)=fbunch_u(4:14,:)*1000.0d0 ! mm
+        fbunch_u(17:19,:)=fbunch_u(17:19,:)*1000.0d0 ! mm
+        fbunch_u(22:26,:)=fbunch_u(22:26,:)/1.0d6 ! 1/mm**2
+      endif
+
+      icbrill=nobsv_u/2+1
+      if (abs(phgshift).eq.9999.0d0) then
+        do ifrq=1,nepho
+          iobfr=icbrill+nobsv_u*(ifrq-1)
+          rea(1:2)=(0.0d0,0.0d0)
+          rea(3)=arad_u(3,iobfr)
+          expsh=rea(3)/abs(rea(3))*1.0d3
+          if (phgshift.eq.-9999.0d0) expsh=expsh*cdexp(dcmplx(0.0d0,-pi1/2.0d0))
+          DO iobs=1,nobsv_u
+            iobfr=iobs+nobsv_u*(ifrq-1)
+            arad_u(1:6,iobfr)=arad_u(1:6,iobfr)/expsh
+          enddo
+        enddo
+      else if (phgshift.ne.0.0d0) then
+        expsh=cdexp(dcmplx(0.0d0,phgshift))*1.0d3
+        arad_u=arad_u/expsh
+      else
+        arad_u=arad_u/1.0d3
+      endif
 
       obsv_u=obsv_u*1000.0d0
 
-      if (modewave.ne.0) call util_zeit_kommentar(6,'Leaving urad_phase')
+c      if (modewave.ne.0) call util_zeit_kommentar(6,'Leaving urad_phase')
+      call util_zeit_kommentar_delta(6,'Leaving urad_phase',0)
 
       end

@@ -1,4 +1,5 @@
-*CMZ :          30/12/2023  16.09.34  by  Michael Scheer
+*CMZ :          27/04/2024  09.45.56  by  Michael Scheer
+*CMZ :  4.01/05 14/04/2024  07.40.31  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  15.35.56  by  Michael Scheer
 *CMZ :  4.01/02 12/05/2023  09.04.01  by  Michael Scheer
 *CMZ :  4.01/00 22/02/2023  15.28.31  by  Michael Scheer
@@ -33,7 +34,7 @@ c Author: Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
 
 c NO WARRANTY
 
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 *KEND.
 
 c This subroutine calculates the trajectory and the synchrotron radiation
@@ -205,15 +206,13 @@ c variables to zero and to treat them as saved''
      &  r0,efxn,efyn,efzn
 
       integer ieneloss,istatus,icharge,nphener,ivelofield,
-     &  nthstep,izaehl,nstep,ndim,kstep,lstep,kfreq,isto,ifail,ith,
+     &  nthstep,izaehl,nstep,ndim,kstep,lstep,kfreq,isto,ifail,idum,ith,
      &  modewave
 
-      integer :: idebug=0
+      integer :: idebug=0,izlimit
 
 c      integer,save :: ical=0
-*KEEP,uservar.
-      include 'uservar.cmn'
-*KEND.
+c+seq,uservar.
 
       data bshift/0.5d0/
       data clight/2.99792458d8/
@@ -226,7 +225,7 @@ c      integer,save :: ical=0
       data zone/(1.0d0,0.0d0)/
 
       dph=0.0d0
-      ith=ith
+      idum=ith
 c      ical=ical+1
 
       if (nphener.gt.0) phener(1)=phelow
@@ -374,10 +373,15 @@ c      PHASE=(r-r0)*c1
 c--- Loop der Trajektorie
 
       izaehl=0
+      izlimit=(xf-xelec)/ds*2
 1000  continue
       !all util_break
       izaehl=izaehl+1
-c      print*,ith,izaehl,x2
+      if (izaehl.gt.izlimit) then
+        print*,"*** Warning in urad_e_b_field: Limits of steps exceeded ***"
+        istatus=-4
+        return
+      endif
       if (x2.ne.x2) then
         istatus=-99
         return

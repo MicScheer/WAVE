@@ -179,10 +179,10 @@ def set_console_title(console='Python'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -203,7 +203,7 @@ def set_console_title(console='Python'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -217,13 +217,13 @@ def set_console_title(console='Python'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -581,10 +581,10 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -605,7 +605,7 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -619,13 +619,13 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -1089,6 +1089,7 @@ Kcode, Kebeam, Kcurr \
 ,Wesel,Wener,Wfd,Wiesel, Vfd, IsameCanvas, TextIn, LastPlot, Lastwin \
 ,FiggeoEph, Ioverview,WclipE,Kpreload
 global IzCut,IyCut
+#global Sepp
 
 Kpreload = True
 
@@ -1116,10 +1117,10 @@ IsameCanvas = 0
 global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
 Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
 H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+Nmin, Nmax, Nmean, Nrms, Nsum, Nxopt, Nyopt, Nlook, \
 Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
 H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 
 Tdf = type(pd.DataFrame())
 
@@ -1181,6 +1182,8 @@ NiLast = -1
 Nlines = 0
 Ncolon = 0
 
+TnpFloat64 = type(np.exp(0.0))
+Tnpcmpl128 = type(np.exp(complex(0.0,0.0)))
 
 #+PATCH,//WAVES/PYTHON
 #+KEEP,plotglobal,T=PYTHON.
@@ -1203,7 +1206,7 @@ Mode3d,Mode3D, Mode2d,Mode2D, \
 Textcolor,Linestyle, Linewidth, Linecolor, Author, \
 Histcolor, Histedgecolor, HistEdgeColor, Histbarwidth, Kdate, Kstat, Kfit, \
 Icont3d, Iboxes, Inoempty, Iclosed, Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
-YTitle, Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
+YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
 LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
 Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Surfcolors, Cmaps, Colors, Linestyles, Markertypes, \
 LexpX,LexpY,LexpRot,LexpPow, Xstat, XStat, XFit, YFit, Xfit, Yfit, Ystat, YStat, \
@@ -1275,7 +1278,7 @@ ROFx = 0.03
 ROFy = 0.95
 
 fcfg = ''
-if WavesMode == 'WAVES' or WavesMode == 'WPLOT': fcfg = 'waveplot.cfg'
+if WavesMode == 'WAVES' or WavesMode == 'WPLOT' or WavesMode == 'WSHOP': fcfg = 'waveplot.cfg'
 elif WavesMode == 'UNDUMAG': fcfg = 'undugui.cfg'
 else:
   if fexist('waveplot.cfg'):
@@ -1419,6 +1422,15 @@ NXtick3d = 9
 Xtitle = 0.5
 Ytitle = 1.03
 YTitle = 1.03
+YGtitle = 1.03
+Ygtitle = 1.03
+
+x_of_xlab = 0.5
+y_of_xlab = -0.15
+
+x_of_ylab = 0.5
+y_of_ylab = 1.75
+
 Itight = 0
 Zones = []
 Nxzone = 0
@@ -1614,13 +1626,18 @@ Gdebug = 0
 
 #begin of waves
 
-global WAVEPATH, WAVESPATH
+global WAVEPATH, WAVESPATH,Sepp
 
 pwd = os.getcwd()
 
 global WisLinux
 
-if System.upper() == 'LINUX' or System.upper() == 'MINGW': WisLinux = 1
+if System.upper() == 'LINUX' or System.upper() == 'MINGW':
+  WisLinux = 1
+  Sepp = '/'
+else:
+  Sepp = '\\'
+#endif
 
 try:
   WAVEPATH = os.environ['WAVE']
@@ -1641,14 +1658,14 @@ if os.path.isdir(WAVEPATH + "/waves"):
   WAVESPATH = WAVEPATH + "/waves"
   sys.path.append(WAVESPATH + "/python")
   WisLinux = 1
-elif os.path.isdir(WAVEPATH + "\waves"):
-  WAVESPATH = WAVEPATH + "\waves"
-  sys.path.append(WAVESPATH + "\python")
+elif os.path.isdir(WAVEPATH + Sepp + "waves"):
+  WAVESPATH = WAVEPATH + Sepp + "waves"
+  sys.path.append(WAVESPATH + Sepp + 'python')
 elif os.path.isdir(WAVEPATH + "/python"):
   sys.path.append(WAVEPATH + "/python")
   WisLinux = 1
-elif os.path.isdir(WAVEPATH + "\python"):
-  sys.path.append(WAVEPATH + "\python")
+elif os.path.isdir(WAVEPATH + Sepp + 'python'):
+  sys.path.append(WAVEPATH + Sepp + 'python')
 #endif os.path.isdir(WAVEPATH + "/waves")
 
 
@@ -1801,12 +1818,12 @@ def readwavein():
           varval = varval.lower()
           hline[4] = 'v'
           hline[5] = 'I'
-          if re.search('\(',varval):
+          if re.search('\\' + '(',varval):
             hline[5] = 'CMPLX'
             if re.search('D',varval):
               hline[5] = 'DCMPLX'
               hline[5] = re.sub('d','e',hline[4])
-          elif re.search('\.',varval):
+          elif re.search('\\' + '.',varval):
             hline[5] = 'R'
             if re.search('D',varval):
               hline[5] = 'D'
@@ -2332,7 +2349,7 @@ def pmenu(kmenu):
     depth = get_menu_depth(Imenu)
 
     if not PMenuGeo[Imenu]:
-      if WavesMode == 'WPLOT':
+      if WavesMode == 'WPLOT' or WavesMode == 'WSHOP':
         geodum = get_geo_all()
         dw = CanW / 10 * (depth - 1)
         wp = '+' + str(int(WinX+CanW/5+dw)) + '+' + str(WinY)
@@ -2340,7 +2357,7 @@ def pmenu(kmenu):
         wp = WinPos
       #endif
     else:
-      if WavesMode == 'WPLOT':
+      if WavesMode == 'WPLOT' or WavesMode == 'WSHOP':
         geodum = get_geo_all()
         dw = CanW / 10 * (depth - 1)
         wp = '+' + str(int(WinX+CanW/5+dw)) + '+' + str(WinY)
@@ -3882,8 +3899,6 @@ def readwvs():
 
           menu[1] = name
           menu[4] = key
-
-          #print(menu)
           Wmenu.append(menu)
           MenuVeto.append([-1,'0',0,0,'class'])
           MenuAllVeto.append([0])
@@ -4935,7 +4950,6 @@ def readwvs():
   Fmap.close()
 
   print("--- waves.wvs read ---")
-
   #exit("waves.wvs gelesen!")
 
 #  for m in range(Nmenu):
