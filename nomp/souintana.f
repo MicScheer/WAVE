@@ -1,3 +1,4 @@
+*CMZ :          11/05/2024  13.54.34  by  Michael Scheer
 *CMZ :  4.01/05 21/04/2024  11.34.30  by  Michael Scheer
 *CMZ :  4.01/04 15/11/2023  12.38.14  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  13.01.26  by  Michael Scheer
@@ -109,46 +110,6 @@
       SUBROUTINE SOUINTANA(ISOUR,IOBSV,INSIDE)
 
 *KEEP,gplhint.
-!******************************************************************************
-!
-!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
-!      Hahn-Meitner-Platz 1
-!      D-14109 Berlin
-!      Germany
-!
-!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
-!
-! -----------------------------------------------------------------------
-!
-!    This program is free software: you can redistribute it and/or modify
-!    it under the terms of the GNU General Public License as published by
-!    the Free Software Foundation, either version 3 of the License, or
-!    (at your option) any later version.
-!
-!    This program is distributed in the hope that it will be useful,
-!    but WITHOUT ANY WARRANTY; without even the implied warranty of
-!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-!    GNU General Public License for more details.
-!
-!    You should have received a copy (wave_gpl.txt) of the GNU General Public
-!    License along with this program.
-!    If not, see <http://www.gnu.org/licenses/>.
-!
-!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
-!    der GNU General Public License, wie von der Free Software Foundation,
-!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
-!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
-!
-!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
-!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
-!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
-!    Siehe die GNU General Public License fuer weitere Details.
-!
-!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
-!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
-!    siehe <http://www.gnu.org/licenses/>.
-!
-!******************************************************************************
 *KEEP,trackf90u.
       include 'trackf90u.cmn'
 *KEEP,workf90u.
@@ -680,7 +641,8 @@ c?6.11.      if (jpin.ne.3.or.jpin.eq.3.and.ielec.eq.1) SPECPOW(ILIOB)=0.0D0
 C DO NOT USE, RESULTS IN NUMERICAL PROBLEMS     T=-R0*C1
       T=0.0D0 !WICHTIG HIER WEGEN TENDSOU-T WEITER UNTEN
 
-      R0=XOBSV-soura(1,1)
+c11.5.2024      R0=XOBSV-soura(1,1)
+      R0=OBSV(1,icbrill)-soura(1,1)
 
       IF (ISPECMODE.EQ.1) THEN
         T0=DWT(1)
@@ -861,7 +823,16 @@ C DO NOT USE, RESULTS IN NUMERICAL PROBLEMS     T=-R0*C1
       T=-DT
       TS=-DT
 
-      r=sqrt((xobsv-x1)**2+((yobsv-y1)**2+(zobsv-z1)**2))
+c11.5.2024      r=sqrt((xobsv-x1)**2+((yobsv-y1)**2+(zobsv-z1)**2))
+
+      h2=((yobsv-y1)**2+(zobsv-z1)**2)/(xobsv-x1)**2
+      if (h2.lt.0.01) then
+        r=abs(xobsv-x1)*(1.0d0+(((((-0.0205078125D0*h2+0.02734375D0)*h2
+     &    -0.0390625D0)*h2+0.0625D0)*h2-0.125D0)*h2+0.5D0)*h2)
+      else
+        r=sqrt((xobsv-x1)**2+((yobsv-y1)**2+(zobsv-z1)**2))
+      endif
+
       PHASE=(r-r0)*c1 ! needed for phase of field amplitude
 
       EXPOM1=ZONE

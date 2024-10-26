@@ -1,3 +1,4 @@
+*CMZ :          11/05/2024  10.21.49  by  Michael Scheer
 *CMZ :  4.01/05 19/04/2024  15.05.35  by  Michael Scheer
 *CMZ :  4.01/04 26/11/2023  16.52.38  by  Michael Scheer
 *CMZ :  4.01/03 11/06/2023  11.04.36  by  Michael Scheer
@@ -15,47 +16,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE souintana_omp(ISOUR,IOBSV,INSIDE)
 
-*KEEP,GPLHINT.
-!******************************************************************************
-!
-!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
-!      Hahn-Meitner-Platz 1
-!      D-14109 Berlin
-!      Germany
-!
-!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
-!
-! -----------------------------------------------------------------------
-!
-!    This program is free software: you can redistribute it and/or modify
-!    it under the terms of the GNU General Public License as published by
-!    the Free Software Foundation, either version 3 of the License, or
-!    (at your option) any later version.
-!
-!    This program is distributed in the hope that it will be useful,
-!    but WITHOUT ANY WARRANTY; without even the implied warranty of
-!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-!    GNU General Public License for more details.
-!
-!    You should have received a copy (wave_gpl.txt) of the GNU General Public
-!    License along with this program.
-!    If not, see <http://www.gnu.org/licenses/>.
-!
-!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
-!    der GNU General Public License, wie von der Free Software Foundation,
-!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
-!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
-!
-!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
-!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
-!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
-!    Siehe die GNU General Public License fuer weitere Details.
-!
-!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
-!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
-!    siehe <http://www.gnu.org/licenses/>.
-!
-!******************************************************************************
+*KEEP,gplhint.
 *KEEP,trackf90u.
       include 'trackf90u.cmn'
 *KEEP,workf90u.
@@ -168,8 +129,7 @@ c     &  ,ef(3),bf(3)
       DOUBLE PRECISION R1,RNX,RNY,RNZ,DOM1,DOM2,BET1N,DUM11,R,BPX,BPY,BPZ
       DOUBLE PRECISION WGANG,OPANG
 
-      DOUBLE PRECISION RARG(5),PHASE,t0ph
-
+      DOUBLE PRECISION RARG(5),PHASE
       DOUBLE PRECISION DROIX,DTPHASE,DXEXI,CENXEXI
       DOUBLE PRECISION STOK1,STOK2,STOK3,STOK4,BET1NO
       double precision br2,rnr2,br4,rnr4,b3
@@ -502,7 +462,7 @@ c      DT0=TENDSOU/NZAEHL
 
       DT=DT0
       ical=ical+1
-      if (ical.gt.1.and.iobsv.gt.nobsvz/2+1) call util_break
+      !if (ical.gt.1.and.iobsv.gt.nobsvz/2+1) call util_break
 
       X2=X1
       Y2=Y1
@@ -593,8 +553,6 @@ c20.11.2023      R0=XOBSV-SOURCEAO(1,1,ISOUR)
 c      phase=(obsv(1,icbrill)-x1)*c1
 c20.11.2023
       PHASE=(r-r0)*c1 ! needed for phase of field amplitude
-      t0ph=phase
-
       EXPOM1=ZONE
       DEXPOMPH1=ZONE
 
@@ -1162,6 +1120,8 @@ c          baff(3)=conjg(rnx*daff(2)-rny*daff(1))
                 FILLT(14)=kfreq
                 FILLT(15)=YOBSV
                 FILLT(16)=ZOBSV
+                if (abs(fillt(15)).lt.1.0d-15) fillt(15)=0.0d0
+                if (abs(fillt(16)).lt.1.0d-15) fillt(16)=0.0d0
                 FILLT(17)=BET1N
                 FILLT(18)=OM
                 FILLT(19)=DT
@@ -1298,6 +1258,8 @@ c            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
                   FILLT(14)=kfreq
                   FILLT(15)=YOBSV
                   FILLT(16)=ZOBSV
+                  if (abs(fillt(15)).lt.1.0d-15) fillt(15)=0.0d0
+                  if (abs(fillt(16)).lt.1.0d-15) fillt(16)=0.0d0
                   FILLT(17)=BET1N
                   FILLT(18)=OM
                   FILLT(19)=DT
@@ -1741,6 +1703,8 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
           FSPEC(3)=xobsv
           FSPEC(4)=yobsv
           FSPEC(5)=zobsv
+          if (abs(fspec(4)).lt.1.0d-15) fspec(4)=0.0d0
+          if (abs(fspec(5)).lt.1.0d-15) fspec(5)=0.0d0
           FSPEC(6)=FREQ(kfreq)
           FSPEC(7)=
      &      (
@@ -1802,6 +1766,8 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
           FSPEC(1)=xobsv
           FSPEC(2)=yobsv
           FSPEC(3)=zobsv
+          if (abs(fspec(2)).lt.1.0d-15) fspec(2)=0.0d0
+          if (abs(fspec(3)).lt.1.0d-15) fspec(3)=0.0d0
           FSPEC(4)=powpow*pownor
           FSPEC(5)=0.0d0
           FSPEC(6)=1.0d0
@@ -1852,6 +1818,8 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
             FSPEC(2)=xobsv
             FSPEC(3)=yobsv
             FSPEC(4)=zobsv
+            if (abs(fspec(3)).lt.1.0d-15) fspec(3)=0.0d0
+            if (abs(fspec(4)).lt.1.0d-15) fspec(4)=0.0d0
             FSPEC(5)=FREQ(kfreq)
             FSPEC(6)=STOK1*specnor*bunnor
             FSPEC(7)=STOK2*specnor*bunnor
@@ -1887,6 +1855,8 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
             fillb(17)=xobsv
             fillb(18)=yobsv
             fillb(19)=zobsv
+            if (abs(fillb(18)).lt.1.0d-15) fillb(18)=0.0d0
+            if (abs(fillb(19)).lt.1.0d-15) fillb(19)=0.0d0
             fillb(20)=kfreq
             fillb(21)=freq(kfreq)
             speck=

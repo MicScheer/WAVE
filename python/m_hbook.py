@@ -137,10 +137,10 @@ def set_console_title(console='Python'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -161,7 +161,7 @@ def set_console_title(console='Python'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -175,13 +175,13 @@ def set_console_title(console='Python'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -539,10 +539,10 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -563,7 +563,7 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -577,13 +577,13 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -1043,11 +1043,12 @@ def util_solve(a,x):
 
 global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
 VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-VxyzX,VxyzY,VxyzZ
+VxyzX,VxyzY,VxyzZ,VxyzE
 
 VxyzX=None
 VxyzY=None
 VxyzZ=None
+VxyzE=None
 
 VsplX=None
 VsplY=None
@@ -1092,10 +1093,10 @@ Gdebug = 0
 global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
 Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
 H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+Nmin, Nmax, Nmean, Nrms, Nsum, Nxopt, Nyopt, Nlook, \
 Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
 H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 
 Tdf = type(pd.DataFrame())
 
@@ -1157,6 +1158,8 @@ NiLast = -1
 Nlines = 0
 Ncolon = 0
 
+TnpFloat64 = type(np.exp(0.0))
+Tnpcmpl128 = type(np.exp(complex(0.0,0.0)))
 #+seq,plotglobal.
 #+PATCH,//WAVES/PYTHON
 #+KEEP,nxyzglobal,T=PYTHON.
@@ -1210,7 +1213,7 @@ Mode3d,Mode3D, Mode2d,Mode2D, \
 Textcolor,Linestyle, Linewidth, Linecolor, Author, \
 Histcolor, Histedgecolor, HistEdgeColor, Histbarwidth, Kdate, Kstat, Kfit, \
 Icont3d, Iboxes, Inoempty, Iclosed, Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
-YTitle, Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
+YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
 LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
 Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Surfcolors, Cmaps, Colors, Linestyles, Markertypes, \
 LexpX,LexpY,LexpRot,LexpPow, Xstat, XStat, XFit, YFit, Xfit, Yfit, Ystat, YStat, \
@@ -1426,6 +1429,15 @@ NXtick3d = 9
 Xtitle = 0.5
 Ytitle = 1.03
 YTitle = 1.03
+YGtitle = 1.03
+Ygtitle = 1.03
+
+x_of_xlab = 0.5
+y_of_xlab = -0.15
+
+x_of_ylab = 0.5
+y_of_ylab = 1.75
+
 Itight = 0
 Zones = []
 Nxzone = 0
@@ -1612,6 +1624,11 @@ grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
 radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
 ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max
 
+global complex_0,complex_i
+
+complex_0=(1+0j)
+complex_i=(0+1j)
+
 hbarev1=6.58211889e-16
 clight1=2.99792458e8
 emasskg1=9.10938188e-31
@@ -1687,6 +1704,19 @@ def debug(kmenu=None,kitem=None):
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem,SMitem[kmenu])
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem)
 #enddef debug(kmenu,kitem)
+#reakpoint()
+global Sepp, Backslash
+
+if System.upper() == 'LINUX' or System.upper() == 'MINGW':
+  Sepp = '/'
+  Sepp = '\\'
+else:
+  Sepp = '\\'
+#endif
+
+Backslash = '\\'
+
+from numpy import *
 
 global Narg,Argv
 Narg = len(sys.argv)
@@ -2515,14 +2545,16 @@ def acosd(x): return acos(x)/np.pi*180.
 def atand(x): return atan(x)/np.pi*180.
 def cotd(phi): return cot(phi/180.*np.pi)
 
-def set_y_title(y='!'):
-  global YTitle, Ytitle, Nxzone, Nyzone
+def set_y_gtitle(y='!'):
+  global YGTitle, Ygtitle
   if y == '!':
-    y = YTitle
-  if Nyzone > 1:
-    y += (Nyzone-1)*0.05
-  Ytitle = y
+    y = YGTitle
+#  if Nyzone > 1:
+#    y += (Nyzone-1)*0.05
+  Ygtitle = y
+
 def get_y_title():
+  print("get_y_title is obsolete!")
   return Ytitle
 
 def set_x_fit(x='!'):
@@ -4149,10 +4181,10 @@ def hdump(hist='?',filh='hdump.dat'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -4173,7 +4205,7 @@ def hdump(hist='?',filh='hdump.dat'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -4187,13 +4219,13 @@ def hdump(hist='?',filh='hdump.dat'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4236,10 +4268,10 @@ def hprint(hist='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -4260,7 +4292,7 @@ def hprint(hist='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -4274,13 +4306,13 @@ def hprint(hist='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4312,10 +4344,10 @@ def hfun(hist='?',fun='x', nx=101, xmin=-0.5, xmax=100.5):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -4336,7 +4368,7 @@ def hfun(hist='?',fun='x', nx=101, xmin=-0.5, xmax=100.5):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -4350,13 +4382,13 @@ def hfun(hist='?',fun='x', nx=101, xmin=-0.5, xmax=100.5):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4422,10 +4454,10 @@ def h1header_update(hist='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -4446,7 +4478,7 @@ def h1header_update(hist='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -4460,13 +4492,13 @@ def h1header_update(hist='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4591,10 +4623,10 @@ def h1reset(h):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -4615,7 +4647,7 @@ def h1reset(h):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -4629,13 +4661,13 @@ def h1reset(h):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4669,10 +4701,10 @@ def hdelete(h='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -4693,7 +4725,7 @@ def hdelete(h='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -4707,13 +4739,13 @@ def hdelete(h='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4753,10 +4785,10 @@ def hmin(h='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -4777,7 +4809,7 @@ def hmin(h='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -4791,13 +4823,13 @@ def hmin(h='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4835,10 +4867,10 @@ def hmax(h='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -4859,7 +4891,7 @@ def hmax(h='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -4873,13 +4905,13 @@ def hmax(h='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -4928,7 +4960,7 @@ def printplopt():
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -4942,7 +4974,7 @@ def printplopt():
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   if type(Klegend) == int or type(Klegend) == bool:
     iledg = Klegend
@@ -5002,7 +5034,7 @@ def plotoptions(plopt=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -5016,7 +5048,7 @@ def plotoptions(plopt=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   Iplotopt = 0
 
@@ -5173,10 +5205,10 @@ def mhb_mkdir(chdir='!'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5197,7 +5229,7 @@ def mhb_mkdir(chdir='!'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -5211,13 +5243,13 @@ def mhb_mkdir(chdir='!'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -5277,10 +5309,10 @@ def mhb_ldir():
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5301,7 +5333,7 @@ def mhb_ldir():
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -5315,13 +5347,13 @@ def mhb_ldir():
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -5351,10 +5383,10 @@ def mhb_pwd(isilent=0,iretval=0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5375,7 +5407,7 @@ def mhb_pwd(isilent=0,iretval=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -5389,13 +5421,13 @@ def mhb_pwd(isilent=0,iretval=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -5420,10 +5452,10 @@ def mhb_cd(cdir='!'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5444,7 +5476,7 @@ def mhb_cd(cdir='!'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -5458,13 +5490,13 @@ def mhb_cd(cdir='!'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -5562,7 +5594,7 @@ def zoom(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30,zmin=1.2345e30,zmax=1.2345e30)
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -5576,7 +5608,7 @@ def zoom(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30,zmin=1.2345e30,zmax=1.2345e30)
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   yn, yx = Ax.get_ylim()
   if ymin == -1.2345e30: ymn=yn
@@ -5639,7 +5671,7 @@ def zoom3d(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30,zmin=1.2345e30,zmax=1.2345e3
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -5653,7 +5685,7 @@ def zoom3d(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30,zmin=1.2345e30,zmax=1.2345e3
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   Ax = plt.gca()
 
@@ -5727,7 +5759,7 @@ def pplot(pname="WavePlot.pdf",w=0,h=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -5741,7 +5773,7 @@ def pplot(pname="WavePlot.pdf",w=0,h=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   Fig = plt.gcf()
   wo,ho = getplotsize()
@@ -5771,10 +5803,10 @@ def h1pack(idh='?', data=None):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5795,7 +5827,7 @@ def h1pack(idh='?', data=None):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -5809,13 +5841,13 @@ def h1pack(idh='?', data=None):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -5852,10 +5884,10 @@ def hcopn(idh='?', nt='', varlis='x:y:ey', ntit='!',kweedzero=1):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5876,7 +5908,7 @@ def hcopn(idh='?', nt='', varlis='x:y:ey', ntit='!',kweedzero=1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -5890,13 +5922,13 @@ def hcopn(idh='?', nt='', varlis='x:y:ey', ntit='!',kweedzero=1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -5988,10 +6020,10 @@ def nrandom(nt='?',varlis='', n=100, modu='u', iplot=0, modus='new'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6012,7 +6044,7 @@ def nrandom(nt='?',varlis='', n=100, modu='u', iplot=0, modus='new'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -6026,13 +6058,13 @@ def nrandom(nt='?',varlis='', n=100, modu='u', iplot=0, modus='new'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -6091,10 +6123,10 @@ def nhull2d(nt='?',varlis='',select='', iplot=1, iretval=1):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6115,7 +6147,7 @@ def nhull2d(nt='?',varlis='',select='', iplot=1, iretval=1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -6129,13 +6161,13 @@ def nhull2d(nt='?',varlis='',select='', iplot=1, iretval=1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -6300,10 +6332,10 @@ def vhull2d(vx,vy,varlis='',iplot=0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6324,7 +6356,7 @@ def vhull2d(vx,vy,varlis='',iplot=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -6338,13 +6370,13 @@ def vhull2d(vx,vy,varlis='',iplot=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -6604,10 +6636,10 @@ def nhull3dbad(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,color='!'
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6628,7 +6660,7 @@ def nhull3dbad(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,color='!'
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -6642,13 +6674,13 @@ def nhull3dbad(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,color='!'
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7020,10 +7052,10 @@ def nappend(nt='?', nt2=''):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7044,7 +7076,7 @@ def nappend(nt='?', nt2=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -7058,13 +7090,13 @@ def nappend(nt='?', nt2=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7107,10 +7139,10 @@ def nfill(nt='?', data=''):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7131,7 +7163,7 @@ def nfill(nt='?', data=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -7145,13 +7177,13 @@ def nfill(nt='?', data=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7233,10 +7265,10 @@ def npeaksabs(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretva
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7257,7 +7289,7 @@ def npeaksabs(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretva
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -7271,13 +7303,13 @@ def npeaksabs(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretva
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7360,10 +7392,10 @@ def hpeaks(h='?', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7384,7 +7416,7 @@ def hpeaks(h='?', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -7398,13 +7430,13 @@ def hpeaks(h='?', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7438,10 +7470,10 @@ def npeaks(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7462,7 +7494,7 @@ def npeaks(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -7476,13 +7508,13 @@ def npeaks(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7560,10 +7592,10 @@ def nstat(nt='?',var='',select='', iretval=1, isilent=0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7584,7 +7616,7 @@ def nstat(nt='?',var='',select='', iretval=1, isilent=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -7598,13 +7630,13 @@ def nstat(nt='?',var='',select='', iretval=1, isilent=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7736,7 +7768,7 @@ def nmean(nt='?',var='',select='', iretval=1, isilent=0):
     else: return
 #enddef nmean
 
-def nmax(nt='?',var='',select='',iretval=1):
+def nsum(nt='?',var='',select='', iretval=1, isilent=0):
 #+seq,mshimportsind.
 # +PATCH,//WAVES/PYTHON
 # +KEEP,statusglobind,T=PYTHON.
@@ -7746,10 +7778,10 @@ def nmax(nt='?',var='',select='',iretval=1):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7770,7 +7802,7 @@ def nmax(nt='?',var='',select='',iretval=1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -7784,13 +7816,120 @@ def nmax(nt='?',var='',select='',iretval=1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
+
+#+KEEP,nxyzglobind,T=PYTHON.
+#*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
+  global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
+
+
+  if type(nt) == str and nt == '?':
+    print("\nUsage: nstat(Ntup,var='', select='', ireval=0, isilent=0")
+    return
+  #endif type(nt) == str and nt == '?'
+
+  if type(var) == str:
+    if not len(var):
+      print("*** Error in nstat: No columns specified in var ***")
+      return
+    #endif not len(var):
+    var = nlistcolon(var)
+  #endif type(var) == str
+
+  if Ncolon > 1:
+    print("*** Error in nstat(...): Variable must contain one or two terms, i.e. no or one colon ***")
+    return -1
+  #endif Ncolon > 0:
+
+  if type(nt) == Tdf:
+    N = nt
+  elif type(nt) == str:
+    ind = GetIndexN(nt)
+    if ind == -1:
+      return -1
+  elif type(nt) == int and nt < 0:
+    pass
+  else:
+    return -2
+  #endif nt >= 0:
+
+  if len(select):
+    N = N.query(select)
+    Nsel = N
+  #endif len(select)
+
+  nt=N
+
+  svarx = nparse(nt,var[0])
+  scom = 'global Nsum; Nsum = ' + svarx + '.sum()'
+  exec(scom)
+
+  if isilent==0: print(Nsum)
+  if iretval: return Nsum
+  else: return
+#enddef nsum
+
+def nmax(nt='?',var='',select='',iretval=1):
+#+seq,mshimportsind.
+# +PATCH,//WAVES/PYTHON
+# +KEEP,statusglobind,T=PYTHON.
+  global Istatus, WarningText, ErrorText, Gdebug
+
+  # Histograms and Ntuples
+  global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
+  Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
+  H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
+  Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
+  H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+#+KEEP,plotglobind,T=PYTHON.
+#*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
+  global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
+  Fig1,Ax1,Fig6,Ax6,Fig2,Ax2,Fig7,Ax7,Fig3,Ax3,Fig8,Ax8, Figgeoms, \
+  Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
+  Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
+  FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
+  Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
+  Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
+  MarkerSize, MarkerType, MarkerColor, \
+  Markersize, Markertype, Markercolor, \
+  Fillstyle, FillStyle, \
+  Textcolor, WaveFilePrefix,WaveDump, \
+  LineStyle, LineWidth, LineColor, \
+  Linestyle, Linewidth, Linecolor, \
+  Author, \
+  Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
+  LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
+  Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
+  Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
+  LexpX,LexpY,LexpRot,LexpPow,\
+  GtitFontSize,Titfontsize,Atitfontsize,Axislabelsize,Textfontsize,Datefontsize,\
+  Statfontsize, Axislabeldist, Axislabeldist3d, Axisdist, Axisdist3d, \
+  XFit, YFit, Xfit, Yfit,Ystat, YStat, \
+  GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
+  StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
+  AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
+  Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
+  LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow,Sepp,Backslash
+#+PATCH,//WAVES/PYTHON
+#+KEEP,vecglobind,T=PYTHON.
+
+  global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
+  VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7856,10 +7995,10 @@ def nmin(nt='?',var='',select='', iretval=1):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7880,7 +8019,7 @@ def nmin(nt='?',var='',select='', iretval=1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -7894,13 +8033,13 @@ def nmin(nt='?',var='',select='', iretval=1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -7966,10 +8105,10 @@ def nminmax(nt='?',var='',select='',iretval=1):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7990,7 +8129,7 @@ def nminmax(nt='?',var='',select='',iretval=1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -8004,13 +8143,13 @@ def nminmax(nt='?',var='',select='',iretval=1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -8294,10 +8433,10 @@ def nrenvars(nt,varlis):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8318,7 +8457,7 @@ def nrenvars(nt,varlis):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -8332,13 +8471,13 @@ def nrenvars(nt,varlis):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -8382,10 +8521,10 @@ def nparse(nt,varlis):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8406,7 +8545,7 @@ def nparse(nt,varlis):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -8420,19 +8559,20 @@ def nparse(nt,varlis):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
+  global complex_0,complex_i
   global Gdebug
   #Gdebug = 1
 
@@ -8571,10 +8711,10 @@ def set_linecolor(lcol='r'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8595,7 +8735,7 @@ def set_linecolor(lcol='r'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -8609,13 +8749,13 @@ def set_linecolor(lcol='r'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -8638,10 +8778,10 @@ def h2fill(idh='?', x=1.e30, y=1.e30, w=1.):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8662,7 +8802,7 @@ def h2fill(idh='?', x=1.e30, y=1.e30, w=1.):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -8676,13 +8816,13 @@ def h2fill(idh='?', x=1.e30, y=1.e30, w=1.):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -8855,10 +8995,10 @@ def h1fill(idh=-1, x=1.e30, wei=1.):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8879,7 +9019,7 @@ def h1fill(idh=-1, x=1.e30, wei=1.):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -8893,13 +9033,13 @@ def h1fill(idh=-1, x=1.e30, wei=1.):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9014,10 +9154,10 @@ def hbook2(idh=-1, tit='Histogram2D',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -9038,7 +9178,7 @@ def hbook2(idh=-1, tit='Histogram2D',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -9052,13 +9192,13 @@ def hbook2(idh=-1, tit='Histogram2D',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9188,10 +9328,10 @@ def h2reset(idh):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -9212,7 +9352,7 @@ def h2reset(idh):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -9226,13 +9366,13 @@ def h2reset(idh):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9326,10 +9466,10 @@ def hbook1(idh=-1, tit='Histogram1D', nx=10, xmin=0., xmax=1., overwrite=False):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -9350,7 +9490,7 @@ def hbook1(idh=-1, tit='Histogram1D', nx=10, xmin=0., xmax=1., overwrite=False):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -9364,13 +9504,13 @@ def hbook1(idh=-1, tit='Histogram1D', nx=10, xmin=0., xmax=1., overwrite=False):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9457,10 +9597,10 @@ def nscan(nt='?',varlis='',select='',isilent=0,ifirst=0,ilast=0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -9481,7 +9621,7 @@ def nscan(nt='?',varlis='',select='',isilent=0,ifirst=0,ilast=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -9495,13 +9635,13 @@ def nscan(nt='?',varlis='',select='',isilent=0,ifirst=0,ilast=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9547,6 +9687,8 @@ def nscan(nt='?',varlis='',select='',isilent=0,ifirst=0,ilast=0):
 
   sv = nparse(nt,varlis[Ncolon])
   svar += nparse(nt,varlis[Ncolon])
+#  svar = re.sub("nt.complex_i","(0+1j)",svar)
+#  Quit(svar)
   scom = "global N; N = pd.DataFrame([" + svar + "]).T"
   exec(scom)
 
@@ -9587,10 +9729,10 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -9611,7 +9753,7 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -9625,13 +9767,13 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9641,10 +9783,10 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 
   #global N,Ney,Nfit #,FitFit, FitPar #,Nfitint ,Nfitxy
 
@@ -9882,10 +10024,10 @@ def nintern(nt='?',varlis='',select='',xint='!'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -9906,7 +10048,7 @@ def nintern(nt='?',varlis='',select='',xint='!'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -9920,13 +10062,13 @@ def nintern(nt='?',varlis='',select='',xint='!'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -9999,10 +10141,10 @@ def ninter(nt='?',varlis='',select='',xint='!'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10023,7 +10165,7 @@ def ninter(nt='?',varlis='',select='',xint='!'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -10037,13 +10179,13 @@ def ninter(nt='?',varlis='',select='',xint='!'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10170,10 +10312,10 @@ def nspline(nt='?',varlis='',select='',xspl='!',periodic=False):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10194,7 +10336,7 @@ def nspline(nt='?',varlis='',select='',xspl='!',periodic=False):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -10208,13 +10350,13 @@ def nspline(nt='?',varlis='',select='',xspl='!',periodic=False):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10303,10 +10445,10 @@ def nsolve(nt='?',varlis='',select='',val=0.0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10327,7 +10469,7 @@ def nsolve(nt='?',varlis='',select='',val=0.0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -10341,13 +10483,13 @@ def nsolve(nt='?',varlis='',select='',val=0.0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10426,10 +10568,10 @@ def ndump(nt='',varlis='',select='',fout='ndump.dat', sep=' ',floatform='%.5e',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10450,7 +10592,7 @@ def ndump(nt='',varlis='',select='',fout='ndump.dat', sep=' ',floatform='%.5e',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -10464,13 +10606,13 @@ def ndump(nt='',varlis='',select='',fout='ndump.dat', sep=' ',floatform='%.5e',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10584,10 +10726,10 @@ def nreset(nt='?', varlis=''):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10608,7 +10750,7 @@ def nreset(nt='?', varlis=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -10622,13 +10764,13 @@ def nreset(nt='?', varlis=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10693,10 +10835,10 @@ def ndelete(nt='?',isilent=0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10717,7 +10859,7 @@ def ndelete(nt='?',isilent=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -10731,13 +10873,13 @@ def ndelete(nt='?',isilent=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10789,10 +10931,10 @@ def ncre(ntname='', nttit='', varlis='', ioverwrite=0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10813,7 +10955,7 @@ def ncre(ntname='', nttit='', varlis='', ioverwrite=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -10827,13 +10969,13 @@ def ncre(ntname='', nttit='', varlis='', ioverwrite=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -10939,10 +11081,10 @@ def GetIndexH2(idh='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10963,7 +11105,7 @@ def GetIndexH2(idh='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -10977,13 +11119,13 @@ def GetIndexH2(idh='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11040,10 +11182,10 @@ def GetIndexN(nt='?', isilent=0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11064,7 +11206,7 @@ def GetIndexN(nt='?', isilent=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -11078,13 +11220,13 @@ def GetIndexN(nt='?', isilent=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11159,10 +11301,10 @@ def GetIndexNct(idh='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11183,7 +11325,7 @@ def GetIndexNct(idh='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -11197,13 +11339,13 @@ def GetIndexNct(idh='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11242,10 +11384,10 @@ def GetIndexH1(idh='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11266,7 +11408,7 @@ def GetIndexH1(idh='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -11280,13 +11422,13 @@ def GetIndexH1(idh='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11346,10 +11488,10 @@ def GetIndex(idh='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11370,7 +11512,7 @@ def GetIndex(idh='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -11384,13 +11526,13 @@ def GetIndex(idh='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11447,10 +11589,10 @@ def h1opt(idh):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11471,7 +11613,7 @@ def h1opt(idh):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -11485,13 +11627,13 @@ def h1opt(idh):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11574,10 +11716,10 @@ def voptpar(vx,vy):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11598,7 +11740,7 @@ def voptpar(vx,vy):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -11612,13 +11754,13 @@ def voptpar(vx,vy):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11689,10 +11831,10 @@ def h1print(idh='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11713,7 +11855,7 @@ def h1print(idh='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -11727,13 +11869,13 @@ def h1print(idh='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11768,10 +11910,10 @@ def H1Info(idh='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11792,7 +11934,7 @@ def H1Info(idh='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -11806,13 +11948,13 @@ def H1Info(idh='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11869,10 +12011,10 @@ def H2Info(idh='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11893,7 +12035,7 @@ def H2Info(idh='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -11907,13 +12049,13 @@ def H2Info(idh='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -11991,10 +12133,10 @@ def hstat2d(idh='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12015,7 +12157,7 @@ def hstat2d(idh='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -12029,13 +12171,13 @@ def hstat2d(idh='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12064,10 +12206,10 @@ def H1List():
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12088,7 +12230,7 @@ def H1List():
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -12102,13 +12244,13 @@ def H1List():
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12128,10 +12270,10 @@ def H2List():
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
   print("\n Index in H2, ID, Title  Nxbins Xmin Xmax, Nybins Ymin, Ymax, ContMin, ContMax, Status")
   print("--------------------------------------------------------------")
 
@@ -12179,19 +12321,27 @@ def hstat(idh):
 
 #enddef hstat(idh)
 
-def hrms(idh):
+def hrms(idh,iretval=1,isilent=0):
+
   #reakpoint()
   idx = GetIndexH1(idh)
 
   if idx != -1:
       res = hstat1d(idh)
-      print(res[3])
-      return res[3]
+      if not isilent: print(res[3])
+      if iretval: return res[3]
+      return
   #endif
 
   idx = GetIndexH2(idh)
   if idx != -1:
-      print('Not yet!! Use hstat() instead.')
+      res = hstat2d(idh)
+      if not isilent:
+        print("rmsx: ",res[1])
+        print("rmsy: ",res[3])
+      #endif
+      if iretval: return res[1],res[3]
+      return
   #endif
 
   print("*** Non-exixsting histogram ***")
@@ -12229,10 +12379,10 @@ def nentry(nt='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12253,7 +12403,7 @@ def nentry(nt='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -12267,13 +12417,13 @@ def nentry(nt='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12310,10 +12460,10 @@ def ninfo(nt='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12334,7 +12484,7 @@ def ninfo(nt='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -12348,13 +12498,13 @@ def ninfo(nt='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12411,10 +12561,10 @@ def nlist():
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12435,7 +12585,7 @@ def nlist():
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -12449,13 +12599,13 @@ def nlist():
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12480,10 +12630,10 @@ def NctList():
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12504,7 +12654,7 @@ def NctList():
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -12518,13 +12668,13 @@ def NctList():
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12548,10 +12698,10 @@ def ncolumns(fname='ntuple.dat', skiphead=-1, sep=' '):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12572,7 +12722,7 @@ def ncolumns(fname='ntuple.dat', skiphead=-1, sep=' '):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -12586,13 +12736,13 @@ def ncolumns(fname='ntuple.dat', skiphead=-1, sep=' '):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12653,10 +12803,10 @@ def ncolumnsguess(fname='ntuple.dat'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12677,7 +12827,7 @@ def ncolumnsguess(fname='ntuple.dat'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -12691,13 +12841,13 @@ def ncolumnsguess(fname='ntuple.dat'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12769,10 +12919,10 @@ silent=0, comment='*', sep=' ',iguessncols=1, iplot=1):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12793,7 +12943,7 @@ silent=0, comment='*', sep=' ',iguessncols=1, iplot=1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -12807,13 +12957,13 @@ silent=0, comment='*', sep=' ',iguessncols=1, iplot=1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12855,10 +13005,10 @@ silent=0, comment='*', sep=' ', iguessncols=1, iplot=1):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12879,7 +13029,7 @@ silent=0, comment='*', sep=' ', iguessncols=1, iplot=1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -12893,13 +13043,13 @@ silent=0, comment='*', sep=' ', iguessncols=1, iplot=1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -12938,10 +13088,10 @@ comment='*', sep=' '):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12962,7 +13112,7 @@ comment='*', sep=' '):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -12976,13 +13126,13 @@ comment='*', sep=' '):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -13042,8 +13192,9 @@ comment='*', sep=' '):
   #endif
 
   try:
+    #reakpoint()
     if sep == ' ' or sep == '':
-      nt = pd.read_csv(fname,header=header, delim_whitespace=True, skiprows=skiphead, comment='*', skipfooter=skipfoot)
+      nt = pd.read_csv(fname,header=header, sep=Backslash+'s+', skiprows=skiphead, comment='*', skipfooter=skipfoot)
     else:
       nt = pd.read_csv(fname,header=header, sep=sep, skiprows=skiphead, comment='*', skipfooter=skipfoot)
     #endif
@@ -13097,10 +13248,10 @@ comment='*', sep=' ',iguessncols=1, ioverwrite=1):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13121,7 +13272,7 @@ comment='*', sep=' ',iguessncols=1, ioverwrite=1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -13135,13 +13286,13 @@ comment='*', sep=' ',iguessncols=1, ioverwrite=1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -13261,10 +13412,10 @@ def nproj2(nt='?', xy='', weight=1., select='',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13285,7 +13436,7 @@ def nproj2(nt='?', xy='', weight=1., select='',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -13299,13 +13450,13 @@ def nproj2(nt='?', xy='', weight=1., select='',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -13626,10 +13777,10 @@ def nproj2n(nt='?', xy='', weight=1., select='',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13650,7 +13801,7 @@ def nproj2n(nt='?', xy='', weight=1., select='',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -13664,13 +13815,13 @@ def nproj2n(nt='?', xy='', weight=1., select='',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -13967,10 +14118,10 @@ def nproj1(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13991,7 +14142,7 @@ def nproj1(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -14005,13 +14156,13 @@ def nproj1(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -14275,10 +14426,10 @@ def nproj1n(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -14299,7 +14450,7 @@ def nproj1n(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -14313,13 +14464,13 @@ def nproj1n(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -14592,10 +14743,10 @@ def hstat1d(idh='?'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -14616,7 +14767,7 @@ def hstat1d(idh='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -14630,13 +14781,13 @@ def hstat1d(idh='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -14662,7 +14813,7 @@ def hstat1d(idh='?'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -14676,7 +14827,7 @@ def hstat1d(idh='?'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   global Debug, Ical
 
@@ -14750,10 +14901,10 @@ def vstat(x='?',y=''):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -14774,7 +14925,7 @@ def vstat(x='?',y=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -14788,13 +14939,13 @@ def vstat(x='?',y=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -14820,7 +14971,7 @@ def vstat(x='?',y=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -14834,7 +14985,7 @@ def vstat(x='?',y=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   #nreakpoint()
 
@@ -14899,10 +15050,10 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -14923,7 +15074,7 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -14937,13 +15088,13 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -14969,7 +15120,7 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -14983,7 +15134,7 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   global Debug, Ical
 
@@ -15146,6 +15297,10 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
 
     iplot=1
 
+    VxyzX = deepcopy(x)
+    VxyzY = deepcopy(yave)
+    VxyzE = deepcopy(stdy)
+
     if Kdump:
       Ndump += 1
       fout = WaveFilePrefix + str(Ndump) + ".dat"
@@ -15174,6 +15329,10 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
     else:
         vplxy(xpl,ypl,'L')
 
+    VxyzX = deepcopy(x)
+    VxyzY = deepcopy(yave)
+    VxyzE = deepcopy(stdyprof)
+
     if Kdump:
       Ndump += 1
       fout = WaveFilePrefix + str(Ndump) + ".dat"
@@ -15186,6 +15345,10 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
 
   elif plopt == 'h' or Ihist:
     plt.bar(x,y,width=barwidth,color=Histcolor,edgecolor=Histedgecolor, fill=Ifill1d)
+
+    VxyzX = deepcopy(x)
+    VxyzY = deepcopy(y)
+
     if Kdump:
       Ndump += 1
       fout = WaveFilePrefix + str(Ndump) + ".dat"
@@ -15197,6 +15360,11 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   elif plopt == 'he' or Ihist and Ierr:
     plt.bar(x,y,yerr=ey,width=barwidth,color=Histcolor,edgecolor=Histedgecolor)
     iplot=1
+
+    VxyzX = deepcopy(x)
+    VxyzY = deepcopy(y)
+    VxyzE = deepcopy(ey)
+
     if Kdump:
       Ndump += 1
       fout = WaveFilePrefix + str(Ndump) + ".dat"
@@ -15207,6 +15375,10 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   elif Iline and Imarker:
     plt.plot(x,y,c=Linecolor,ls=Linestyle,lw=Linewidth,marker=Markertype,fillstyle=Fillstyle, mfc=Markercolor, mec=Markercolor, ms=Markersize, mew=1)
     iplot=1
+
+    VxyzX = deepcopy(x)
+    VxyzY = deepcopy(y)
+
     if Kdump:
       Ndump += 1
       fout = WaveFilePrefix + str(Ndump) + ".dat"
@@ -15222,6 +15394,10 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
     if Kdump:
       Ndump += 1
       fout = WaveFilePrefix + str(Ndump) + ".dat"
+
+      VxyzX = deepcopy(splx)
+      VxyzY = deepcopy(sply)
+
       vwritexy(splx,yspl,fout)
       print("\nData written to ",fout)
       WaveDump = fout
@@ -15231,6 +15407,10 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   elif Imarker:
     plt.plot(x,y,ls='',marker=Markertype,fillstyle=Fillstyle, mfc=Markercolor, mec=Markercolor, ms=Markersize, mew=1)
     iplot=1
+
+    VxyzX = deepcopy(x)
+    VxyzY = deepcopy(y)
+
     if Kdump:
       Ndump += 1
       fout = WaveFilePrefix + str(Ndump) + ".dat"
@@ -15241,6 +15421,10 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   elif Iline:
     plt.plot(x,y,c=Linecolor,ls=Linestyle,lw=Linewidth)
     iplot=1
+
+    VxyzX = deepcopy(x)
+    VxyzY = deepcopy(y)
+
     if Kdump:
       Ndump += 1
       fout = WaveFilePrefix + str(Ndump) + ".dat"
@@ -15251,6 +15435,10 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   elif Imarker:
     plt.plot(x,y,ls='',marker=Markertype,fillstyle=Fillstyle, mfc=Markercolor, mec=Markercolor, ms=Markersize, mew=1)
     iplot=1
+
+    VxyzX = deepcopy(x)
+    VxyzY = deepcopy(y)
+
     if Kdump:
       Ndump += 1
       fout = WaveFilePrefix + str(Ndump) + ".dat"
@@ -15328,10 +15516,10 @@ def hplot(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', block
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -15352,7 +15540,7 @@ def hplot(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', block
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -15366,13 +15554,13 @@ def hplot(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', block
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -15405,10 +15593,10 @@ def hplave(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', bloc
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -15429,7 +15617,7 @@ def hplave(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', bloc
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -15443,13 +15631,13 @@ def hplave(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', bloc
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -15644,7 +15832,7 @@ def window(title='', geom="!", block=False, projection = '2d',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -15658,7 +15846,7 @@ def window(title='', geom="!", block=False, projection = '2d',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   global Tfig, Tax2d, Tax3d, IsameGlobal, ScreenWidth, ScreenHeight, Tdate, \
   Figman, Wmaster
@@ -15786,7 +15974,7 @@ def win2(title='Win_2', geom="!", block=False, projection = '2d', getconsole=Tru
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -15800,7 +15988,7 @@ def win2(title='Win_2', geom="!", block=False, projection = '2d', getconsole=Tru
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
   if geom == '!': geom = Figgeom2
   window(title=title, geom=geom, block=block, projection =projection, getconsole=getconsole, visible=visible)
   shpl()
@@ -15827,7 +16015,7 @@ def winr(title='Win_r', geom="!", block=False, projection = '2d', getconsole=Tru
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -15841,7 +16029,7 @@ def winr(title='Win_r', geom="!", block=False, projection = '2d', getconsole=Tru
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
   if Nwins < 1: read_window_geometry(fname='ntupplot.cfg')
   if geom == '!':
     if FiggeomR: geom = FiggeomR
@@ -15872,7 +16060,7 @@ def winl(title='Win_l', geom="!", block=False, projection = '2d', getconsole=Tru
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -15886,7 +16074,7 @@ def winl(title='Win_l', geom="!", block=False, projection = '2d', getconsole=Tru
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
   if Nwins < 1: read_window_geometry(fname='ntupplot.cfg')
   if geom == '!': geom = FiggeomL
   window(title=title, geom=geom, block=block, projection =projection, getconsole=getconsole, visible=visible)
@@ -15903,10 +16091,10 @@ def showplot(visible=True):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -15927,7 +16115,7 @@ def showplot(visible=True):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -15941,13 +16129,13 @@ def showplot(visible=True):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -16079,10 +16267,10 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -16103,7 +16291,7 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -16117,13 +16305,13 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -16140,8 +16328,6 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
   if idx == -1:
     print('*** Error in hplot2d: Non-existing histogram ',idh)
     return -1
-#  elif H2hh[38]:
-#    print('*** Warning in hplot2d: Histogram has been marked as deleted ',idh)
   #endif idx == -1:
 
   if Kecho:
@@ -16194,7 +16380,6 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
   set_plot_params_3d()
 
   if not plopt: plopt = Mode3d
-  #print("*** plopt:",plopt)
   plotoptions(plopt)
 
   if Ihist:
@@ -16529,7 +16714,7 @@ def zone(nx=1, ny=1, kzone=1, isame='', projection='2d', visible=True):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -16543,13 +16728,18 @@ def zone(nx=1, ny=1, kzone=1, isame='', projection='2d', visible=True):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 # +PATCH,//WAVES/PYTHON
 # +KEEP,statusglobind,T=PYTHON.
   global Istatus, WarningText, ErrorText, Gdebug
 
 
   global Tax2d, Tax3d, Debug
+
+  if ny == 1: set_y_of_xlab(-0.1)
+  if ny == 2: set_y_of_xlab(-0.2)
+  if ny == 3: set_y_of_xlab(-0.25)
+
   if Nwins <= 0:
 
     Nfigs = len(plt.get_fignums())
@@ -16709,7 +16899,7 @@ def window_close(win=-1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -16723,7 +16913,7 @@ def window_close(win=-1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   if Nwins == 1:
     Nwins = 0
@@ -16788,7 +16978,7 @@ def window_clear(win=-1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -16802,7 +16992,7 @@ def window_clear(win=-1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
   global Tfig, Tdate, Figman
 
   if win == -1:
@@ -16851,10 +17041,10 @@ def set_title(title='Title',tfs=-9.,titx=-9.,tity=-9):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -16875,7 +17065,7 @@ def set_title(title='Title',tfs=-9.,titx=-9.,tity=-9):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -16889,13 +17079,13 @@ def set_title(title='Title',tfs=-9.,titx=-9.,tity=-9):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -16908,7 +17098,7 @@ def set_title(title='Title',tfs=-9.,titx=-9.,tity=-9):
       if type(TextFontSize) == str: tfs = 'small'
       else: tfs = TextFontSize*0.75
   if titx == -9.: titx = Xtitle
-  if tity == -9.: tity = Ytitle
+  if tity == -9.: tity = Ygtitle
 
   Ptit = title
   Ax.set_title(title,fontsize=tfs,x=titx,y=tity)
@@ -16926,10 +17116,10 @@ def set_x_title(xtit='xTit',pos=0.5):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -16950,7 +17140,7 @@ def set_x_title(xtit='xTit',pos=0.5):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -16964,13 +17154,13 @@ def set_x_title(xtit='xTit',pos=0.5):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -16982,72 +17172,6 @@ def set_x_title(xtit='xTit',pos=0.5):
 #def set_x_title(title='xTit')
 def get_x_title(): return Xtit
 
-def set_y_title(ytit='yTit', pos=0.5):
-#+seq,mshimportsind.
-# +PATCH,//WAVES/PYTHON
-# +KEEP,statusglobind,T=PYTHON.
-  global Istatus, WarningText, ErrorText, Gdebug
-
-  # Histograms and Ntuples
-  global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
-  Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
-  H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
-  Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
-  H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
-#+KEEP,plotglobind,T=PYTHON.
-#*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
-  global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
-  Fig1,Ax1,Fig6,Ax6,Fig2,Ax2,Fig7,Ax7,Fig3,Ax3,Fig8,Ax8, Figgeoms, \
-  Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
-  Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
-  FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
-  Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
-  Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
-  Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
-  MarkerSize, MarkerType, MarkerColor, \
-  Markersize, Markertype, Markercolor, \
-  Fillstyle, FillStyle, \
-  Textcolor, WaveFilePrefix,WaveDump, \
-  LineStyle, LineWidth, LineColor, \
-  Linestyle, Linewidth, Linecolor, \
-  Author, \
-  Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
-  LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
-  Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
-  Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
-  LexpX,LexpY,LexpRot,LexpPow,\
-  GtitFontSize,Titfontsize,Atitfontsize,Axislabelsize,Textfontsize,Datefontsize,\
-  Statfontsize, Axislabeldist, Axislabeldist3d, Axisdist, Axisdist3d, \
-  XFit, YFit, Xfit, Yfit,Ystat, YStat, \
-  GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
-  StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
-  AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
-  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
-  Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
-  LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
-  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
-#+PATCH,//WAVES/PYTHON
-#+KEEP,vecglobind,T=PYTHON.
-
-  global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
-  VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
-
-#+KEEP,nxyzglobind,T=PYTHON.
-#*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
-  global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
-
-  Ytit = ytit
-  Ax.set_ylabel(ytit,y=pos)
-  shpl()
-#def set_y_title(title='yTit')
-def get_y_title(): return Ytit
-
 def set_z_title(ztit='zTit',pos=0.5):
 #+seq,mshimportsind.
 # +PATCH,//WAVES/PYTHON
@@ -17058,10 +17182,10 @@ def set_z_title(ztit='zTit',pos=0.5):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -17082,7 +17206,7 @@ def set_z_title(ztit='zTit',pos=0.5):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -17096,13 +17220,13 @@ def set_z_title(ztit='zTit',pos=0.5):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -17126,10 +17250,10 @@ def set_titles(gtit='',pltit='Title',xtit='xTit', ytit='yTit', ztit=''):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -17150,7 +17274,7 @@ def set_titles(gtit='',pltit='Title',xtit='xTit', ytit='yTit', ztit=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -17164,13 +17288,13 @@ def set_titles(gtit='',pltit='Title',xtit='xTit', ytit='yTit', ztit=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -17196,10 +17320,10 @@ def set_global_title(gtit='', fontsize='!'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -17220,7 +17344,7 @@ def set_global_title(gtit='', fontsize='!'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -17234,13 +17358,13 @@ def set_global_title(gtit='', fontsize='!'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -17275,10 +17399,10 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -17299,7 +17423,7 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -17313,13 +17437,13 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -17363,20 +17487,29 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
 
   #if pltit != '': Ax.set_title(pltit,x=titx,y=tity)
   #if xtit != '': Ax.set_xlabel(xtit)
-  #if ytit != '': Ax.set_ylabel(ytit)
 
   if hasattr(Ax,'zaxis') and ztit != '':
+    is3d = 1
     plt.rcParams['axes.labelpad'] = Axistitledist3d
     plt.rcParams['axes.labelsize'] = Atitfontsize3d
   else:
+    is3d = 0
     plt.rcParams['axes.labelpad'] = Axistitledist
     plt.rcParams['axes.labelsize'] = Atitfontsize
   #endif hasattr(Ax,'zaxis') and ztit != ''
 
-  if pltit != '': Ax.set_title(pltit,fontsize=tfs,x=titx,y=tity)
+  if pltit != '': Ax.set_title(pltit,fontsize=tfs,x=titx,y=Ygtitle)
 
-  if xtit != '': Ax.set_xlabel(xtit,fontsize=xyzfs)
-  if ytit != '': Ax.set_ylabel(ytit,fontsize=xyzfs)
+  if xtit != '':
+    if is3d:
+      Ax.set_xlabel(xtit,fontsize=xyzfs)
+    else:
+      # y_of_xlab not working... Ax.set_xlabel(xtit,fontsize=xyzfs,x=x_of_xlab,y=y_of_xlab)
+      text(x_of_xlab,y_of_xlab,xtit,fontsize=xyzfs)
+    #endif
+  #endif
+
+  if ytit != '': Ax.set_ylabel(ytit,fontsize=xyzfs,x=x_of_ylab,y=y_of_ylab)
 
   txexp = Ax.xaxis.get_offset_text()
   txexp.set_size(Axislabelsize)
@@ -17446,7 +17579,7 @@ def null3d(xmin=-10., xmax=10., ymin=-10., ymax=10., zmin=-10., zmax=10.,elev=30
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -17460,7 +17593,7 @@ def null3d(xmin=-10., xmax=10., ymin=-10., ymax=10., zmin=-10., zmax=10.,elev=30
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   global Tfig, Tax3d
 
@@ -17500,7 +17633,7 @@ def null(xmin=-10., xmax=10., ymin=-10., ymax=10.):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -17514,7 +17647,7 @@ def null(xmin=-10., xmax=10., ymin=-10., ymax=10.):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   global Tfig,Tax2d
   #nreakpoint()
@@ -17610,7 +17743,7 @@ def text3d(x,y,z,text,fontsize='!', ishow=1, fontname='', fontfamily='',color='b
 
   if ishow: showplot()
 
-#enddef text(x,y,text,fontsize=12, ishow=1)
+#enddef text3d(x,y,text,fontsize=12, ishow=1)
 
 def text(x,y,text,fontsize='!', ishow=1, fontname='', fontfamily='',color='black',
          halign='center', valign='center',angle=0.):
@@ -17690,7 +17823,7 @@ def run_on_figure(x=0.03,y=0.95,fontsize='!',ishow=1, iforce=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -17704,7 +17837,7 @@ def run_on_figure(x=0.03,y=0.95,fontsize='!',ishow=1, iforce=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
   global Krun,Kruns
 
   if ROFx: x = ROFx
@@ -17813,7 +17946,7 @@ def date_on_figure(x=0.04,y=0.02,fontsize='!',ishow=1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -17827,7 +17960,7 @@ def date_on_figure(x=0.04,y=0.02,fontsize='!',ishow=1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   global Kdate
 
@@ -17914,7 +18047,7 @@ def optnrun(krun=False):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -17928,7 +18061,7 @@ def optnrun(krun=False):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
   Krun = krun
   run_on_figure()
 #enddef optnrun()
@@ -17954,7 +18087,7 @@ def optrun(krun=True):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -17968,7 +18101,7 @@ def optrun(krun=True):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
   Krun = krun
   run_on_figure()
 #enddef optrun()
@@ -17994,7 +18127,7 @@ def optndate(kdate=False):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -18008,7 +18141,7 @@ def optndate(kdate=False):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
   Kdate = kdate
   date_on_figure()
 #enddef optndate()
@@ -18034,7 +18167,7 @@ def optdate(kdate=True):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -18048,7 +18181,7 @@ def optdate(kdate=True):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
   Kdate = kdate
   date_on_figure()
 #enddef optdate()
@@ -18084,7 +18217,7 @@ def set_author(author=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -18098,7 +18231,7 @@ def set_author(author=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
   if author != '': Author = author
 #enddef set_author(author='')
 
@@ -18113,10 +18246,10 @@ def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0, overwrite=True):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -18137,7 +18270,7 @@ def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0, overwrite=True):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -18151,13 +18284,13 @@ def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0, overwrite=True):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -18227,10 +18360,10 @@ def hcopy2d(idh,idnew,tit='',scalex=1.,scaley=1., scalez=1., reset=0, overwrite=
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -18251,7 +18384,7 @@ def hcopy2d(idh,idnew,tit='',scalex=1.,scaley=1., scalez=1., reset=0, overwrite=
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -18265,13 +18398,13 @@ def hcopy2d(idh,idnew,tit='',scalex=1.,scaley=1., scalez=1., reset=0, overwrite=
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -18775,10 +18908,10 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -18799,7 +18932,7 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -18813,13 +18946,13 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19330,10 +19463,10 @@ def vprint(v):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -19354,7 +19487,7 @@ def vprint(v):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -19368,13 +19501,13 @@ def vprint(v):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19396,10 +19529,10 @@ def vprintxy(x,y):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -19420,7 +19553,7 @@ def vprintxy(x,y):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -19434,13 +19567,13 @@ def vprintxy(x,y):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19474,10 +19607,10 @@ def vplxy(x='!',y='!',plopt='',label='',color='!',fillcolor='none'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -19498,7 +19631,7 @@ def vplxy(x='!',y='!',plopt='',label='',color='!',fillcolor='none'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -19512,13 +19645,13 @@ def vplxy(x='!',y='!',plopt='',label='',color='!',fillcolor='none'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19529,7 +19662,7 @@ def vplxy(x='!',y='!',plopt='',label='',color='!',fillcolor='none'):
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 
   if type(x) == str and x == '!':
@@ -19721,10 +19854,10 @@ def vplxyey(x,y,ey='',plopt='o',label='',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -19745,7 +19878,7 @@ def vplxyey(x,y,ey='',plopt='o',label='',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -19759,13 +19892,13 @@ def vplxyey(x,y,ey='',plopt='o',label='',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19801,10 +19934,10 @@ def vplxyerr(x,y,ey='',ex='',plopt='o',label='',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -19825,7 +19958,7 @@ def vplxyerr(x,y,ey='',ex='',plopt='o',label='',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -19839,13 +19972,13 @@ def vplxyerr(x,y,ey='',ex='',plopt='o',label='',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19883,10 +20016,10 @@ def vinter(x,y,xint='!'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -19907,7 +20040,7 @@ def vinter(x,y,xint='!'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -19921,13 +20054,13 @@ def vinter(x,y,xint='!'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -19990,10 +20123,10 @@ def vintern(x,y,xint='!'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -20014,7 +20147,7 @@ def vintern(x,y,xint='!'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -20028,13 +20161,13 @@ def vintern(x,y,xint='!'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20045,7 +20178,7 @@ def vintern(x,y,xint='!'):
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 
   n = len(x)
@@ -20163,10 +20296,10 @@ def vspline_index(x,y,nspl=1001, periodic=False, ypp1=0.0, yppn=0.0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -20187,7 +20320,7 @@ def vspline_index(x,y,nspl=1001, periodic=False, ypp1=0.0, yppn=0.0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -20201,13 +20334,13 @@ def vspline_index(x,y,nspl=1001, periodic=False, ypp1=0.0, yppn=0.0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20218,7 +20351,7 @@ def vspline_index(x,y,nspl=1001, periodic=False, ypp1=0.0, yppn=0.0):
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 
   if type(nspl) != int:
@@ -20282,10 +20415,10 @@ def vspline(x,y,xspl='!', periodic=False, ypp1=0.0, yppn=0.0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -20306,7 +20439,7 @@ def vspline(x,y,xspl='!', periodic=False, ypp1=0.0, yppn=0.0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -20320,13 +20453,13 @@ def vspline(x,y,xspl='!', periodic=False, ypp1=0.0, yppn=0.0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20337,7 +20470,7 @@ def vspline(x,y,xspl='!', periodic=False, ypp1=0.0, yppn=0.0):
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 
   if SplineMode.lower() != 'new': return vspline_old(x,y,xspl,periodic)
@@ -20453,10 +20586,10 @@ def vspline_old(x,y,xspl='!', periodic=False):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -20477,7 +20610,7 @@ def vspline_old(x,y,xspl='!', periodic=False):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -20491,13 +20624,13 @@ def vspline_old(x,y,xspl='!', periodic=False):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20508,7 +20641,7 @@ def vspline_old(x,y,xspl='!', periodic=False):
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 
   import numpy as np
@@ -20669,10 +20802,10 @@ def nupdate_header(nt,reindex=1):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -20693,7 +20826,7 @@ def nupdate_header(nt,reindex=1):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -20707,13 +20840,13 @@ def nupdate_header(nt,reindex=1):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20825,10 +20958,10 @@ def vsolve(x,y,val=0.0,xmin=-1.0e30,xmax=1.0e30):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -20849,7 +20982,7 @@ def vsolve(x,y,val=0.0,xmin=-1.0e30,xmax=1.0e30):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -20863,13 +20996,13 @@ def vsolve(x,y,val=0.0,xmin=-1.0e30,xmax=1.0e30):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -20950,10 +21083,10 @@ def vsolvelin(x,y,val=0.0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -20974,7 +21107,7 @@ def vsolvelin(x,y,val=0.0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -20988,13 +21121,13 @@ def vsolvelin(x,y,val=0.0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -21019,10 +21152,10 @@ def voptspl(x,y):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -21043,7 +21176,7 @@ def voptspl(x,y):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -21057,13 +21190,13 @@ def voptspl(x,y):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -21123,10 +21256,10 @@ def ncopn(nt,ncnam,varlis='',select='',ioverwrite=0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -21147,7 +21280,7 @@ def ncopn(nt,ncnam,varlis='',select='',ioverwrite=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -21161,13 +21294,13 @@ def ncopn(nt,ncnam,varlis='',select='',ioverwrite=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -21229,10 +21362,10 @@ def ncopv(nt,varlis,select=''):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -21253,7 +21386,7 @@ def ncopv(nt,varlis,select=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -21267,13 +21400,13 @@ def ncopv(nt,varlis,select=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -21347,7 +21480,7 @@ def ncopv(nt,varlis,select=''):
   elif n == 8: return N[v[0]], N[v[1]],N[v[2]], N[v[3]],N[v[4]], \
   N[v[5]],N[v[6]], N[v[7]]
 
-#def ncopv()
+#enddef ncopv()
 
 def nclone(nt,ncnam,nctit='',ioverwrite=0):
 #+seq,mshimportsind.
@@ -21359,10 +21492,10 @@ def nclone(nt,ncnam,nctit='',ioverwrite=0):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -21383,7 +21516,7 @@ def nclone(nt,ncnam,nctit='',ioverwrite=0):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -21397,13 +21530,13 @@ def nclone(nt,ncnam,nctit='',ioverwrite=0):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -21548,7 +21681,7 @@ def vreadx(fname='ndump.dat',header=None, skiphead=0, skipfoot=0, comment='*', s
 
   if type(fname) == str:
     if sep == ' ' or sep == '':
-      nt = pd.read_csv(fname,header=header, delim_whitespace=True, skiprows=skiphead, comment='*', skipfooter=skipfoot)
+      nt = pd.read_csv(fname,header=header, sep=Backslash+'s+', skiprows=skiphead, comment='*', skipfooter=skipfoot)
     else:
       nt = pd.read_csv(fname,header=header, sep=sep, skiprows=skiphead, comment='*', skipfooter=skipfoot)
   else:
@@ -21566,7 +21699,7 @@ def vreadxy(fname='ndump.dat',header=None, skiphead=0, skipfoot=0, comment='*', 
   reset_status()
 
   if sep == ' ' or sep == '':
-    nt = pd.read_csv(fname,header=header, delim_whitespace=True, skiprows=skiphead, comment='*', skipfooter=skipfoot)
+    nt = pd.read_csv(fname,header=header, sep=Backslash+'s+', skiprows=skiphead, comment='*', skipfooter=skipfoot)
   else:
     nt = pd.read_csv(fname,header=header, sep=sep, skiprows=skiphead, comment='*', skipfooter=skipfoot)
 
@@ -22271,10 +22404,10 @@ def getzone(projection=''):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22295,7 +22428,7 @@ def getzone(projection=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -22309,13 +22442,13 @@ def getzone(projection=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22425,10 +22558,10 @@ def set_console_title(console='Python'):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22449,7 +22582,7 @@ def set_console_title(console='Python'):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -22463,13 +22596,13 @@ def set_console_title(console='Python'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22497,10 +22630,10 @@ def get_console(console=''):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22521,7 +22654,7 @@ def get_console(console=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -22535,13 +22668,13 @@ def get_console(console=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22575,10 +22708,10 @@ def getax(visible=True):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22599,7 +22732,7 @@ def getax(visible=True):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -22613,13 +22746,13 @@ def getax(visible=True):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22647,10 +22780,10 @@ def vplbxy(x,y,u,v,scale=-9999.0,plopt='',tit='',xtit='',ytit='',ztit='',label='
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22671,7 +22804,7 @@ def vplbxy(x,y,u,v,scale=-9999.0,plopt='',tit='',xtit='',ytit='',ztit='',label='
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -22685,13 +22818,13 @@ def vplbxy(x,y,u,v,scale=-9999.0,plopt='',tit='',xtit='',ytit='',ztit='',label='
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22746,10 +22879,10 @@ def vplbxyz(x,y,z,u,v,w,scale,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22770,7 +22903,7 @@ def vplbxyz(x,y,z,u,v,w,scale,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -22784,13 +22917,13 @@ def vplbxyz(x,y,z,u,v,w,scale,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22826,10 +22959,10 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22850,7 +22983,7 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -22864,13 +22997,13 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -22973,10 +23106,10 @@ def vplxyzt(x,y,z,t,plopt='',tit='',xtit='',ytit='',ztit='', label='',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22997,7 +23130,7 @@ def vplxyzt(x,y,z,t,plopt='',tit='',xtit='',ytit='',ztit='', label='',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -23011,13 +23144,13 @@ def vplxyzt(x,y,z,t,plopt='',tit='',xtit='',ytit='',ztit='', label='',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -23070,7 +23203,7 @@ def textbox(text,x=0.05, y=0.95, tcolor=None, bgcolor='white', alpha=0.9,
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -23084,7 +23217,7 @@ def textbox(text,x=0.05, y=0.95, tcolor=None, bgcolor='white', alpha=0.9,
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
   props = dict(facecolor=bgcolor, alpha=alpha)
   if type(Ax) == Tax3d:
     Ax.text2D(x,y,text,transform=Ax.transAxes,
@@ -23128,10 +23261,10 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -23152,7 +23285,7 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -23166,13 +23299,13 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -23300,6 +23433,8 @@ def b_to_K(bv='?',lam=None,bh=0.0):
   ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
   g1const,h2const
 
+  global complex_0,complex_i
+
   #Bh, Bv in Tesla, lam in mm
   if type(bv) == str:
     print("\nUsage: b_to_K(Bv/T, lamba/mm [, Bh=0.0]")
@@ -23325,6 +23460,8 @@ def K_to_b(K='?',lam=None):
   ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
   g1const,h2const
 
+  global complex_0,complex_i
+
   #B in Tesla, lam in mm
   if type(K) == str:
     print("\nUsage: K_to_b(K, lamba/mm B,h=0.0)")
@@ -23345,6 +23482,8 @@ def K_to_harm(K='?',lam=None,ebeam=None):
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
   ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
   g1const,h2const
+
+  global complex_0,complex_i
 
   if type(K) == str:
     print("\nUsage: K_to_harm(K, lamba/mm, Ebeam/GeV")
@@ -23369,6 +23508,8 @@ def b_to_harm(b='?',lam=None,ebeam=None):
   ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
   g1const,h2const
 
+  global complex_0,complex_i
+
   if type(b) == str:
     print("\nUsage: b_to_harm(B/T, lamba/mm, Ebeam/GeV")
     return
@@ -23383,6 +23524,8 @@ def harm_to_K(ebeam='?',lam=None,nharm=None,harm=None):
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
   ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
   g1const,h2const
+
+  global complex_0,complex_i
 
 
   if type(ebeam) == str:
@@ -23454,10 +23597,10 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -23478,7 +23621,7 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -23492,13 +23635,13 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -23508,10 +23651,10 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 
 #  global Kold, Kstat, Mode2d, Nfitxy, Kplots, Kzone,
 
@@ -23602,10 +23745,10 @@ def vfit(fitfun, x, y, ey = '', absolute_sigma='default', parstart=None,
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -23626,7 +23769,7 @@ def vfit(fitfun, x, y, ey = '', absolute_sigma='default', parstart=None,
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -23640,13 +23783,13 @@ def vfit(fitfun, x, y, ey = '', absolute_sigma='default', parstart=None,
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -23656,10 +23799,10 @@ def vfit(fitfun, x, y, ey = '', absolute_sigma='default', parstart=None,
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 
   from scipy.optimize import curve_fit
 
@@ -23811,10 +23954,10 @@ def vfitexp(x,y, ey = '', absolute_sigma='default', parstart=None,
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -23835,7 +23978,7 @@ def vfitexp(x,y, ey = '', absolute_sigma='default', parstart=None,
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -23849,13 +23992,13 @@ def vfitexp(x,y, ey = '', absolute_sigma='default', parstart=None,
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -23884,10 +24027,10 @@ def vfitexp2(x,y, ey = '', absolute_sigma='default', parstart=None,
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -23908,7 +24051,7 @@ def vfitexp2(x,y, ey = '', absolute_sigma='default', parstart=None,
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -23922,13 +24065,13 @@ def vfitexp2(x,y, ey = '', absolute_sigma='default', parstart=None,
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -23963,10 +24106,10 @@ def vfitgauss(x,y, ey = '', absolute_sigma='default',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -23987,7 +24130,7 @@ def vfitgauss(x,y, ey = '', absolute_sigma='default',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -24001,13 +24144,13 @@ def vfitgauss(x,y, ey = '', absolute_sigma='default',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -24034,10 +24177,10 @@ def vfitcosh(x,y, ey = '', absolute_sigma='default',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -24058,7 +24201,7 @@ def vfitcosh(x,y, ey = '', absolute_sigma='default',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -24072,13 +24215,13 @@ def vfitcosh(x,y, ey = '', absolute_sigma='default',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -24105,10 +24248,10 @@ def vfitcos(x,y, ey = '', absolute_sigma='default',
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -24129,7 +24272,7 @@ def vfitcos(x,y, ey = '', absolute_sigma='default',
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -24143,13 +24286,13 @@ def vfitcos(x,y, ey = '', absolute_sigma='default',
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -24173,10 +24316,10 @@ def hget(idh=''):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -24197,7 +24340,7 @@ def hget(idh=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -24211,13 +24354,13 @@ def hget(idh=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -24250,10 +24393,10 @@ def nget(idn=''):
   global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
   Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
   H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
-  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -24274,7 +24417,7 @@ def nget(idn=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -24288,13 +24431,13 @@ def nget(idn=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
   global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
   VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
-  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
 
 #+KEEP,nxyzglobind,T=PYTHON.
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
@@ -25146,13 +25289,101 @@ def g5(x): return '{:.5g}'.format(x)
 def g4(x): return '{:.4g}'.format(x)
 def g3(x): return '{:.3g}'.format(x)
 
+def set_x_of_xlab(pos=0.5):
+  global x_of_xlab
+  x_of_xlab = pos
+
+def set_y_of_xlab(pos=-0.1):
+  global y_of_xlab,Nyzone
+  if pos == 9999.:
+    pos == -0.1 - (Nyzone-1)*0.1
+  #endif
+  y_of_xlab = pos
+#enddef set_y_of_xlab(pos=-0.1)
+
+def set_x_of_ylab(pos=0.5):
+  global x_of_ylab
+  x_of_ylab = pos
+
+def set_y_of_ylab(pos=0.5):
+  global y_of_ylab
+  y_of_ylab = pos
+
+def set_y_title_abs(ytit='yTit', pos=0.5):
+#+seq,mshimportsind.
+# +PATCH,//WAVES/PYTHON
+# +KEEP,statusglobind,T=PYTHON.
+  global Istatus, WarningText, ErrorText, Gdebug
+
+  # Histograms and Ntuples
+  global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
+  Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
+  H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
+  Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
+  H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+#+KEEP,plotglobind,T=PYTHON.
+#*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
+  global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
+  Fig1,Ax1,Fig6,Ax6,Fig2,Ax2,Fig7,Ax7,Fig3,Ax3,Fig8,Ax8, Figgeoms, \
+  Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
+  Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
+  FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
+  Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
+  Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
+  MarkerSize, MarkerType, MarkerColor, \
+  Markersize, Markertype, Markercolor, \
+  Fillstyle, FillStyle, \
+  Textcolor, WaveFilePrefix,WaveDump, \
+  LineStyle, LineWidth, LineColor, \
+  Linestyle, Linewidth, Linecolor, \
+  Author, \
+  Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
+  LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
+  Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
+  Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
+  LexpX,LexpY,LexpRot,LexpPow,\
+  GtitFontSize,Titfontsize,Atitfontsize,Axislabelsize,Textfontsize,Datefontsize,\
+  Statfontsize, Axislabeldist, Axislabeldist3d, Axisdist, Axisdist3d, \
+  XFit, YFit, Xfit, Yfit,Ystat, YStat, \
+  GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
+  StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
+  AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
+  Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
+  LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow,Sepp,Backslash
+#+PATCH,//WAVES/PYTHON
+#+KEEP,vecglobind,T=PYTHON.
+
+  global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
+  VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
+
+#+KEEP,nxyzglobind,T=PYTHON.
+#*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
+  global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
+
+  Ytit = ytit
+  Ax.set_ylabel(ytit,y=pos)
+  shpl()
+#def set_y_title(title='yTit')
+
+def get_y_title(): return Ytit
+
 def set_y_title(y='!'):
   global YTitle, Ytitle, Nxzone, Nyzone
   if y == '!':
     y = YTitle
-  if Nyzone > 1:
-    y += (Nyzone-1)*0.05
+#  if Nyzone > 1:
+#    y += (Nyzone-1)*0.05
   Ytitle = y
+
 def get_y_title():
   return Ytitle
 
@@ -25265,6 +25496,7 @@ def getktitles(): global Ktitles; return Ktitles
 
 def set_plot_params():
   global Debug
+  global YTitle,Ytitle,YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab,Ygtitle
   _setcolormap()
   _sethistcolor()
   _setaxislabelsize()
@@ -25275,7 +25507,8 @@ def set_plot_params():
   set_x_stat()
   set_y_fit()
   set_y_stat()
-  set_y_title()
+#  set_y_title(Ytitle)
+  set_y_gtitle(Ygtitle)
   _setmode2d()
   _setmode3d()
   _setcolorbarpad()
@@ -25584,7 +25817,7 @@ def plotoptions_unklar(plopt=''):
   Author, \
   Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
   LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
-  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
   Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
   Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
   LexpX,LexpY,LexpRot,LexpPow,\
@@ -25598,7 +25831,7 @@ def plotoptions_unklar(plopt=''):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow
+  FillColor,WisLinux,Ishow,Sepp,Backslash
 
   Iplotopt = 0
 
@@ -25926,6 +26159,60 @@ def dipole(ebeam,b,curr,isilent=0,iretval=0):
     return flux,fluxden
 #enddef dipole(ebeam,b,curr,egamma,isilent=0,iretval=0)
 
+def vshiftphase(vreal,vimag,ishift=-9999,shift=9999.):
+
+  global TnpFloat64,Tnpcmpl128
+
+  n = len(vreal)
+
+  vr = deepcopy(vreal)
+  vr.reset_index()
+
+  vi = deepcopy(vimag)
+  vi.reset_index()
+
+  vc = deepcopy(vr)
+  vcn = deepcopy(vr)
+  vrn = deepcopy(vr)
+  vin = deepcopy(vr)
+
+  if shift == 9999.:
+    if ishift < 0: ishift = int(n/2 + 1) - 1
+    vc00 = complex(vr[ishift],vi[ishift])
+  else:
+    if type(shift) == TnpFloat64 or type(shift) == float:
+      vc00 = exp(complex(0.0,shift))
+    else:
+      vc00 = shift
+    #endif
+  #endif
+
+  vc00a = abs(vc00)
+
+  for i in range(n):
+    vcn[i] = complex(vr[i],vi[i])/vc00
+    vc[i] = vcn[i]*vc00a
+    vr[i] = real(vc[i])
+    vi[i] = imag(vc[i])
+    vrn[i] = real(vcn[i])
+    vin[i] = imag(vcn[i])
+  #endfor
+
+  return vr,vi,vrn,vin,vc00
+#enddef vshiftphase()
+
 # End of sequence m_hbook
 ########################################################
 
+def getVxyzX():
+  global VxyzX
+  return VxyzX
+def getVxyzY():
+  global VxyzY
+  return VxyzY
+def getVxyzZ():
+  global VxyzZ
+  return VxyzZ
+def getVxyzE():
+  global VxyzE
+  return VxyzE
