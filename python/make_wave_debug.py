@@ -312,37 +312,37 @@ def wave_update():
 
     if ddd == 'mhbook':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libmhbook.a'
-      libm = WI + 'lib' + Sepp + 'libmhbook_modules.a'
+      lib = WI + 'lib' + Sepp + 'libmhbook_debug.a'
+      libm = WI + 'lib' + Sepp + 'libmhbook_modules_debug.a'
     elif ddd == 'mshcern':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libmshcern.a'
-      libm = WI + 'lib' + Sepp + 'libmshcern_modules.a'
+      lib = WI + 'lib' + Sepp + 'libmshcern_debug.a'
+      libm = WI + 'lib' + Sepp + 'libmshcern_modules_debug.a'
       scomp = Scomp_nowarn
     elif ddd == 'mshplt':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libmshplt.a'
-      libm = WI + 'lib' + Sepp + 'libmshplt_modules.a'
+      lib = WI + 'lib' + Sepp + 'libmshplt_debug.a'
+      libm = WI + 'lib' + Sepp + 'libmshplt_modules_debug.a'
     elif ddd == 'nomp':
       #reakpoint()
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libwave.a'
-      libm = WI + 'lib' + Sepp + 'libwave_modules.a'
+      lib = WI + 'lib' + Sepp + 'libwave_debug.a'
+      libm = WI + 'lib' + Sepp + 'libwave_modules_debug.a'
       scomp = Scomp_all
     elif ddd == 'omp':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libwave_omp.a'
-      libm = WI + 'lib' + Sepp + 'libwave_omp_modules.a'
+      lib = WI + 'lib' + Sepp + 'libwave_omp_debug.a'
+      libm = WI + 'lib' + Sepp + 'libwave_omp_modules_debug.a'
       scomp = Scomp_omp
     elif ddd == 'urad':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'liburad.a'
-      libm = WI + 'lib' + Sepp + 'liburad_modules.a'
+      lib = WI + 'lib' + Sepp + 'liburad_debug.a'
+      libm = WI + 'lib' + Sepp + 'liburad_modules_debug.a'
       scomp = Scomp_all  # uradcfft does boundary tricks
     elif ddd == 'user':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libuser.a'
-      libm = WI + 'lib' + Sepp + 'libuser_modules.a'
+      lib = WI + 'lib' + Sepp + 'libuser_debug.a'
+      libm = WI + 'lib' + Sepp + 'libuser_modules_debug.a'
       scomp = Scomp_omp
     #endif
     #reakpoint()
@@ -533,12 +533,13 @@ def wave_update():
           key = sl[0].lower()
           #if fft[0] == 'erzfun.f': print(sl)
           if key== 'include':
+            #reakpoint()
 #            if fft[0] == 'erzfun.f': debug('include')
             if sl[1].lower() == "'" + fcmn + "'" or sl[1].lower() == '"' + fcmn + '"':
               #scom = 'touch ' + ds+fft[0]
               #if Iverbose > 0: print("\n",scom,"\n")
               #if Idry == 0: os.system(scom)
-              scom = touch(ds+f)
+              scom = touch(ds+fft[0])
               break
             #endif
           #endif
@@ -665,18 +666,18 @@ def wave_compile():
   ' -finit-local-zero' + \
   ' -funroll-loops' + \
   ' -o ..' + Sepp + 'bin' + Sepp + 'wave_debug.exe wave_main.f' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libuser.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libuser_modules.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmhbook.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmhbook_modules.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmshcern.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave_modules.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_modules.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp.a'
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libuser_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libuser_modules_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmhbook_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmhbook_modules_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshcern_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_modules_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_modules_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_debug.a'
   #endif
 
   if Idry: print(scom,"\n")
