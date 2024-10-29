@@ -1,5 +1,5 @@
  !
- ! VERSION 4.01/02
+ ! VERSION 4.01/06
  !
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
@@ -42,7 +42,7 @@
             ! NLPOI = 0
             ! WGWINFC = 45.
             ! ISPECDIP = 0
-          ! ISTOKES = 1
+            ! ISTOKES = 1
             ! IFOLD = 0
             ! IEFOLD = 0
             ! IPIN = 3, IF IPIN.NE.0 AND NEINBUNCH = 1
@@ -86,7 +86,7 @@
             ! IPIN = 3, IF IPIN.NE.0 AND NEINBUNCH = 1
             ! BMOVECUT = 1.E-6
             ! IHTRACKM = 0
-          ! NBUNCH or NEINBUNCH must be 1
+            ! NBUNCH or NEINBUNCH must be 1
 
       IWIGGLER=0  ! WIGGLER MODE:
             !----------------------------------------------
@@ -143,7 +143,7 @@
             ! fixed parameters
             ! (essentially in namelist COLLIN):
             ! *** ISPECDIP = -2
-            ! WGWINFC = 10.
+            ! WGWINFC = 1.
             ! CX1,CY1,CZ1,HIG1,WID1 = 9999.
             ! (i.e. automaticly calculated)
             ! CX2,CY2,CZ2,HIG2,WID2 = 9999.
@@ -183,8 +183,7 @@
 
       XSTART=9999. ! initial x of the trajectory [m]
                    ! 9999. means default is used if possible
-            ! i.e. entrance of the device
-            ! -9999. XSTART is set to -XSTOP
+		   ! i.e. entrance of the device
       XINTER=-9999.  ! if XINTER not -9999. and not missing tracking starts
                      ! at XINTER. The particle is tracked forward or
               ! backward to XSTART.
@@ -386,13 +385,13 @@
 
           IMGSQF=0   ! Fourier transformation used for dipole fields
                      ! makes dipole fields MAXWELL conform. Only file
-              ! FILEF is used, better consider magnet models like
-              ! DIF
+		     ! FILEF is used, better consider magnet models like
+		     ! DIF
 
-      KHALBA=0 ! insertion device described by HALBACH's formulas
-               ! parameter namelist HALBACH
-               ! magnetic field routine BHALBA
-               ! KHALBA.lt.0 means zero field outside device
+      KHALBA=0    ! insertion device described by HALBACH's formulas
+                  ! parameter namelist HALBACH
+		  ! magnetic field routine BHALBA
+		  ! KHALBA.lt.0 means zero field outside device
 
       KHALBASY=0  ! simple WLS or undulator/wiggler model
                   ! parameter namelist HALBASY
@@ -873,36 +872,37 @@
 
           ISIGUSR=1  ! if flag is set sigmas for folding are taken from
                      ! namelist WFOLDN, otherwise calculated from emittance
-              ! and beta functions BETAH, BETAHP, BETAV, BETAPV
-              ! in namelist DEPOLA (be careful, if distributions are
-              ! not Gaussians)
+                     ! and beta functions BETAH, BETAHP, BETAV, BETAPV
+                     ! in namelist DEPOLA (be careful, if distributions are
+                     ! not Gaussians)
 
         IBUNCH=0     ! Take bunch structure into account.
                      ! IBUNCH = 1: First electron is also randomized
-              ! IBUNCH = -1: First electron is not randomized,
-              ! be careful with biases.
-              ! See namelist BUNCHN
+                     ! IBUNCH = -1: First electron is not randomized,
+                     ! be careful with biases.
+                     ! See namelist BUNCHN
 
         IPHASE=0     ! calculate complex amplitude in pinhole and
                      ! transform back to source plan and get
-              ! phase space distribution from geometrical
-              ! optic (namelist PHASEN)
-                     ! Ntuples are written to FILEPH
-              ! (only for PAW due to limitations of file size)
+                     ! phase space distribution from geometrical
+                     ! optic (namelist PHASEN)
                      ! IPHASE.LT.0 means spline-integration used
-              ! ABS(IPHASE.GT.1) means additional application of
-              ! geometrical optic
+                     ! ABS(IPHASE.GT.1) means additional application of
+                     ! geometrical optic
 
         IDOSE=0      ! To calculate absorbed energy dose
                      !IDOSE > 0: F(X)=AA*X**BB interpolation of coef.
-              !IDOSE < 0: linear interpolation of coef.
-
+                     !IDOSE < 0: linear interpolation of coef.
+	
+	IPHOTON=0       ! Write file WAVE.PHOTON for program PHOTON
+	ECPHOTON=2.5575e3 ! Critical energy of dipole for program PHOTON [eV]
+	
         IF1DIM=0     ! spectrum calculation and folding only in vertical direction
 
         IPOLA=0      ! if flag is set the flux is calculated from component
                      ! of complex amplitude parallel to complex vector VPOLA
-              ! STOKES-Vectors are not affected!!
-              ! (NAMELIST SPECTN)
+                     ! STOKES-Vectors are not affected!!
+                     ! (NAMELIST SPECTN)
 
         IEFOLD=1     ! =1: fold spectrum with Gaussian to take energy spread
                      ! of electrons into account (namelist WFOLDN)
@@ -933,33 +933,33 @@
                      ! file FILESTO
 
         KAMPLI=0     ! Modern version of option IAMPLI to simulate undulator
-                   ! of KAMPLI periods by simple phase shifting.
-
-              ! Namelists PHASEREPN, BUNCHN
-              ! From BUNCHN only NBUNCH, IHBUNCH, IUBUNCH are available
-              ! IHBUNCH is adjusted to the number of threads
-              ! (MTHREADS.NE.0).
-              ! Only the field options KELLIP in combination with
-              ! PHSHIFT are available for MTHREADS.NE.0
+                     ! of KAMPLI periods by simple phase shifting.
+		
+		     ! Namelists PHASEREPN, BUNCHN
+		     ! From BUNCHN only NBUNCH, IHBUNCH, IUBUNCH are available
+		     ! IHBUNCH is adjusted to the number of threads
+		     ! (MTHREADS.NE.0).
+		     ! Only the field options KELLIP in combination with
+		     ! PHSHIFT are available for MTHREADS.NE.0
 
         IAMPLI=0   ! IAMPLI>0:
                    ! reads or writes amplitudes of integration
-            ! to file FILEAMPLI (array REAIMA).
-            ! Treatment of data is done in SR ADDAMPLI and
-            ! controlled by namelist AMPLIN
-            ! IAMPLI<0:
-            ! sums up IAMPLI times the calculated
-            ! amplitude such that:
-            ! Asum=|A1|*(exp(i*phi1) + |A2|*exp(i*2*phi2)+...)
-            ! where the amplitudes and phases are corrected for
-            ! depth of field effects.
-            ! To take random phase errros into account, use
-            ! variables AMPRAN and IAMPSEED in namelist
-            ! AMPLIN. AMPRAN referes here the length of the
-            ! repeated amplitude, AMPFREQ is adjusted to 1. harm.
-            ! AMPSHIFT(1) is applied in addition.
-            ! Check contribution of endpoles!!!
-            ! To ignore end poles use variables XIANF and XIEND.
+		   ! to file FILEAMPLI (array REAIMA).
+		   ! Treatment of data is done in SR ADDAMPLI and
+		   ! controlled by namelist AMPLIN
+		   ! IAMPLI<0:
+		   ! sums up IAMPLI times the calculated
+		   ! amplitude such that:
+		   ! Asum=|A1|*(exp(i*phi1) + |A2|*exp(i*2*phi2)+...)
+		   ! where the amplitudes and phases are corrected for
+		   ! depth of field effects.
+		   ! To take random phase errros into account, use
+		   ! variables AMPRAN and IAMPSEED in namelist
+		   ! AMPLIN. AMPRAN referes here the length of the
+		   ! repeated amplitude, AMPFREQ is adjusted to 1. harm.
+		   ! AMPSHIFT(1) is applied in addition.
+		   ! Check contribution of endpoles!!!
+		   ! To ignore end poles use variables XIANF and XIEND.
 
            IAMPJIT=0    ! Jitter on phase is calculated by tracking the device
                         ! period by period (IAMPLI.LT.0)
@@ -1606,8 +1606,7 @@
                  ! OVERWRITES PARKELL!
 
       HARMELL=1000.  ! photon energy of considered harmonic [eV]
-                     !-9999.: HARMELL=(FREQLOW+FREQHIG)/2 or
-                     ! or = FREQLOW for single photon energy
+                     !-9999.: HARMELL=(FREQLOW+FREQHIG)/2
                      !other negative values: HARMELL denotes wavelength [nm]
 
       XCENELL=0.0 ! longitudinal position of undulator center [m]
@@ -2496,13 +2495,12 @@
                         ! IPBRILL
                         ! -9999: IOBUNCH is taken, where flux-density is highest
 
-      IHBUNCH=1       ! to get N-tuple of beam IHBUNCHth electrons
-                      ! for KAMPLI > 0, only first thread is considered
-               ! if AMPREP_OMP is called
-
-      IWBUNCH=0       ! write distribution of iwbunch electrons to file
-                      ! wave_phasespace_bunch.dat (LUN=22)
-                      ! (gamma,xbunch,x,y,z,dpy/p,dpz/p)
+      IHBUNCH=1         ! to get N-tuple of beam IHBUNCHth electrons
+                        ! IhBunch<0: All observation points are recorded
+			
+      IWBUNCH=0         ! write distribution of iwbunch electrons to file
+                        ! wave_phasespace_bunch.dat (LUN=22)
+                        ! (gamma,xbunch,x,y,z,dpy/p,dpz/p)
 
       $END
 
@@ -2648,22 +2646,25 @@
                    !i.e. center and width are scaled to get higher
                    !harmonics
                    !<0: FREQLOW, FREQHIG, and NINTFREQ are scaled
+		
       IFILTER=0    !absorbing filter is applied to spectrum
                    !absorption coefficients on file FILEABS
-            !IFILTER = 1: F(X)=AA*X**BB interpolation of coef.
-            !IFILTER > 1: linear interpolation of coef.
-                        !IFILTER < 0 means files of list FILEAM are merged
-            !IFILTER = -1: F(X)=AA*X**BB interpolation of coef.
-            !IFILTER < -1: linear interpolation of coef.
-                        !by SR ABSCOEF_MERGE and written to file FILEAMO
-      IFILMUL=0  !IFILMUL = N:  N absorbing filters are applied to
-                 !spectrum. Filter thicknesses and filenames
-                 !of coefficient files are read from FILEAM
-      IEFFI=0    !detector efficiency filter is applied to spectrum
-                 !factors are read from file FILEFF
-            !IEFFI > 0: spline interpolation of yield function
-            !IEFFI = -1: F(X)=AA*X**BB interpolation
-            !IEFFI < -1: linear interpolation
+                   !IFILTER = 1: F(X)=AA*X**BB interpolation of coef.
+                   !IFILTER > 1: linear interpolation of coef.
+                   !IFILTER < 0 means files of list FILEAM are merged
+                   !IFILTER = -1: F(X)=AA*X**BB interpolation of coef.
+                   !IFILTER < -1: linear interpolation of coef.
+                   !by SR ABSCOEF_MERGE and written to file FILEAMO
+		
+      IFILMUL=0    !IFILMUL = N:  N absorbing filters are applied to
+                   !spectrum. Filter thicknesses and filenames
+                   !of coefficient files are read from FILEAM
+		
+      IEFFI=0      !detector efficiency filter is applied to spectrum
+                   !factors are read from file FILEFF
+                   !IEFFI > 0: spline interpolation of yield function
+                   !IEFFI = -1: F(X)=AA*X**BB interpolation
+                   !IEFFI < -1: linear interpolation
 
       IHFIL=0     !Ntuples of absorption coefficients
 
@@ -3437,37 +3438,34 @@
 
  $PHASEREPN
 
-      NOEMITPH=0       ! Emittance is ignored
-      NOESPREADPH=0    ! E-spread is ignored
+      NOEMITPH=0        ! Emittance is ignored
+      NOESPREADPH=0     ! E-spread is ignored
 
       PHRPERL=9999.0d0  ! period-length  [m]
-                       ! 9999: Value of namelist ELLIPN is taken
+                        ! 9999: Value of namelist ELLIPN is taken
       PHRB0H=9999.0d0   ! horizontal field amplitude [T]
-                       ! 9999: Value of namelist ELLIPN is taken
+                        ! 9999: Value of namelist ELLIPN is taken
       PHRB0V=9999.0d0   ! vertical field amplitude [T]
-                       ! 9999: Value of namelist ELLIPN is taken
+                        ! 9999: Value of namelist ELLIPN is taken
       PHRSHIFT=9999.0D0 ! Shift for elliptical undulator (fraction of the period-length)
-                       ! 9999: Value of namelist ELLIPN is taken
+                        ! 9999: Value of namelist ELLIPN is taken
       PHRXBETA=-9999.   ! X where the beta-function are given
                         ! 9999.: XSTART
                         ! -9999: XBETFUN of namelist DEPOLA
-      PHRBETAH=-9999.   ! Hori. beta-function [m]
+      PHRBETAH=9999.   ! Hori. beta-function [m]
                         ! 9999: BETAH of namelist DEPOLA
                         ! -9999: Calcuted from sigmas of namelist WFOLDN
-      PHRALPHAH=-9999.  ! Hori. alpha [m]
+      PHRALPHAH=9999.  ! Hori. alpha [m]
                         ! 9999: from BETAPH of namelist DEPOLA
-                        ! -9999: 0.0
-      PHRBETAV=-9999.   ! Vert. beta-function [m]
+      PHRBETAV=9999.   ! Vert. beta-function [m]
                         ! 9999: BETAV of namelist DEPOLA
                         ! -9999: Calcuted from sigmas of namelist WFOLDN
-      PHRALPHAV=-9999.  ! Vert. alpha [m]
+      PHRALPHAV=9999.  ! Vert. alpha [m]
                         ! 9999: from BETAPV of namelist DEPOLA
-      PHRDISPH=-9999.   ! Hori. dispersion [m]
+      PHRDISPH=9999.   ! Hori. dispersion [m]
                         ! 9999: DISP0 of namelist DEPOLA
-                        ! -9999: 0.0
-      PHRDISPPH=-9999.  ! Hori. alpha [m]
+      PHRDISPPH=9999.  ! Hori. alpha [m]
                         ! 9999: DDISP0 of namelist DEPOLA
-                        ! -9999: 0.0
       PHRDISPV=0.0      ! Vert. dispersion [m]
       PHRDISPPV=0.0     ! Vert. alpha [m]
 
@@ -3489,8 +3487,8 @@
 
       MODEPH=0          ! Mode of phase error
                         ! 0: PHRERROR is RMS of phase error
-                 ! 1: PHRERROR applies to K-parameter
-                 ! 2: PHRERROR applies to K-parameter by -B +B +B -B scheme
+			! 1: PHRERROR applies to K-parameter
+			! 2: PHRERROR applies to K-parameter by -B +B +B -B scheme
 
       PHRERROR=0.0D0    ! RMS of phase error of first harmonic [deg.]
 
@@ -3810,7 +3808,7 @@
    IBEAMEFOLD=0
    IAMPREPP=0
    MPINRT=0
-   IBUNCHT=0
+   IBUNCHT=1
    R9999=9999.
    IPINHV=0
    IPINWV=0

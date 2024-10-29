@@ -538,7 +538,7 @@ def wave_update():
               #scom = 'touch ' + ds+fft[0]
               #if Iverbose > 0: print("\n",scom,"\n")
               #if Idry == 0: os.system(scom)
-              scom = touch(ds+f)
+              scom = touch(ds+fft[0])
               break
             #endif
           #endif

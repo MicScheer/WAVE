@@ -1,4 +1,4 @@
-*CMZ :          10/10/2024  14.35.56  by  Michael Scheer
+*CMZ :          29/10/2024  09.56.46  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
 *CMZ :  4.01/04 27/12/2023  16.20.07  by  Michael Scheer
 *CMZ :  4.01/03 29/06/2023  10.07.32  by  Michael Scheer
@@ -244,7 +244,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 *KEEP,spectf90u.
       include 'spectf90u.cmn'
 *KEEP,sourcef90u.
@@ -1629,7 +1629,7 @@ c          NLPOI=-9999
         IRFILL0=0
 C         IWFILL0=1
         NLPOI=-9999
-        WGWINFC=10.
+        WGWINFC=1.
         CX1=9999.
         CY1=9999.
         CZ1=9999.
