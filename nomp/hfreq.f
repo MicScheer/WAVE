@@ -1,4 +1,4 @@
-*CMZ :          04/05/2024  15.41.44  by  Michael Scheer
+*CMZ :          29/10/2024  16.01.45  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  13.30.35  by  Michael Scheer
 *CMZ :  4.01/04 15/11/2023  18.07.40  by  Michael Scheer
 *CMZ :  4.01/03 10/06/2023  15.52.02  by  Michael Scheer
@@ -2261,7 +2261,7 @@ C BRILLIANCE
 
       ENDIF !ISPECINT
 
-      CALL hbookm(NIDPOW,'POWER DENSITY',8
+      CALL hbookm(NIDPOW,'POWER DENSITY',9
      &  ,'//WAVE',nobsv*nsource,CHPOWF)
 
       DO ISOUR=1,NSOURCE

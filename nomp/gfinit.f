@@ -1,4 +1,4 @@
-*CMZ :          29/10/2024  09.56.46  by  Michael Scheer
+*CMZ :          29/10/2024  16.29.10  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
 *CMZ :  4.01/04 27/12/2023  16.20.07  by  Michael Scheer
 *CMZ :  4.01/03 29/06/2023  10.07.32  by  Michael Scheer
@@ -244,7 +244,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 *KEEP,spectf90u.
       include 'spectf90u.cmn'
 *KEEP,sourcef90u.
@@ -1640,9 +1640,9 @@ C         IWFILL0=1
         CZ2=9999.
         HIG2=9999.
         WID2=9999.
-        !WBL0CUT=0.1
-        !WBL0HYS=1.0
-        !IBL0CUT=1
+        WBL0CUT=0.05
+        WBL0HYS=1.0
+        IBL0CUT=1
         ISOUREXT=0
         IF (IFOLD.NE.0) IFOLD=1
         IF (IEFOLD.NE.0) IEFOLD=1
@@ -4659,7 +4659,7 @@ c qfrms*nqfphotons should be the sqrt(nqfphotons)*qfrms
       WRITE(LUNGFO,*)
      &  '     ',SNGL(WTRA2I/UMFANG  )
       WRITE(LUNGFO,*)
-      WRITE(LUNGFO,*)'     Max. and min. deflection angle [rad]: '
+      WRITE(LUNGFO,*)'     Max. and min. hori. deflection angle [rad]: '
      &  ,SNGL(PHIMX),SNGL(PHIMN)
       WRITE(LUNGFO,*)
 
