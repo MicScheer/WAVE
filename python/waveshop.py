@@ -30015,12 +30015,12 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
   ,FiggeoEph, Ioverview,WclipE, Icallfromoverview,Kpreload
   global IzCut,IyCut
 
-
+  #reakpoint()
   if getecho():
     s = "ndistpinh(key='" + key + "', select='" + str(select) + "', plopt='" + plopt +  "', idh='" + idh + "')"
     print(s)
   #endif
-
+  #reakpoint()
   if type(key) == int:
     print("*** Integer key is not allowed:\n Use previousphotonenergy(), nextphotonenergy(), or set w.Wiesel!")
     return
@@ -31201,8 +31201,14 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     idx2000 = GetIndexN('n2000')
     n2000 = Ntup[idx2000]
 
-    if select: n2000=n2000.query(selcut + select)
-    elif selcut: n2000=n2000.query(selcut)
+    #reakpoint()
+    selcut = 'abs(y - ' + str(ycut) + ")"' < ' + str(dy/2.)
+
+    if len(select):
+      n2000=n2000.query(selcut + " and " + select)
+    elif selcut:
+      n2000=n2000.query(selcut)
+    #endif
 
     istat = nproj1(n2000,'z','power','',1000.,1.e-6,0,'HpinH')
 
@@ -31212,14 +31218,23 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     ispow = 1
 
   elif key == 'POWF':
+
     idx2000 = GetIndexN('n2000')
     n2000 = Ntup[idx2000]
-    if select: n2000=n2000.query(selcut + select)
-    elif selcut: n2000=n2000.query(selcut)
+
+    selcut = 'abs(y - ' + str(ycut) + ")"' < ' + str(dy/2.)
+
+    if len(select):
+      n2000=n2000.query(selcut + " and " + select)
+    elif selcut:
+      n2000=n2000.query(selcut)
+    #endif
+
     istat = nproj1(n2000,'z','powf','',1000.,1.e-6,0,'HpinH')
     tit = 'Total power density with emittance'
     ztit = 'power density [Watt/mm$^{2}$]'
     ispow = 1
+
   elif key == 'SPECPOW':
     if Wnfrq < 2:
       print("\nNothing to plot (only one photon energy) ")
@@ -31231,8 +31246,15 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       return
     #endif
     n1999 = Ntup[idx1999]
-    if select: n1999=n1999.query(selcut + select)
-    elif selcut: n1999=n1999.query(selcut)
+
+    selcut = 'abs(y - ' + str(ycut) + ")"' < ' + str(dy/2.)
+
+    if len(select):
+      n1999=n1999.query(selcut + " and " + select)
+    elif selcut:
+      n1999=n1999.query(selcut)
+    #endif
+
     istat = nproj1(n1999,'z','power','',1000.,1.e-6,0,'HpinH')
     tit = 'Power density within spec. range'
     ztit = 'power density [Watt/mm$^{2}$]'
@@ -31248,8 +31270,15 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       return
     #endif
     n1990 = Ntup[idx1990]
-    if select: n1990=n1990.query(selcut + select)
-    elif selcut: n1990=n1990.query(selcut)
+
+    selcut = 'abs(y - ' + str(ycut) + ")"' < ' + str(dy/2.)
+
+    if len(select):
+      n1990=n1990.query(selcut + " and " + select)
+    elif selcut:
+      n1990=n1990.query(selcut)
+    #endif
+
     istat = nproj1(n1990,'z','powf','',1000.,1.e-6,0,'HpinH')
     tit = 'Power density within spec. range, with emit.'
     ztit = 'power density [Watt/mm$^{2}$]'
@@ -32556,16 +32585,22 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
   elif key == 'POW':
     idx2000 = GetIndexN('n2000')
     n2000 = Ntup[idx2000]
-    if select: n2000=n2000.query(selcut + select)
+
+    selcut = 'abs(z - ' + str(zcut) + ")"' < ' + str(dz/2.)
+
+    if select: n2000=n2000.query(selcut + " and " +select)
     elif selcut: n2000=n2000.query(selcut)
+
     istat = nproj1(n2000,'y','power','',1000.,1.e-6,0,'HpinV')
     tit = 'Total power density'
     ztit = 'power density [Watt/mm$^{2}$]'
     ispow = 1
+
   elif key == 'POWF':
     idx2000 = GetIndexN('n2000')
+    selcut = 'abs(z - ' + str(zcut) + ")"' < ' + str(dz/2.)
     n2000 = Ntup[idx2000]
-    if select: n2000=n2000.query(selcut + select)
+    if select: n2000=n2000.query(selcut + " and " +select)
     elif selcut: n2000=n2000.query(selcut)
     istat = nproj1(n2000,'y','powf','',1000.,1.e-6,0,'HpinV')
     tit = 'Total power density with emittance'
@@ -32581,7 +32616,8 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       return
     #endif
     n1999 = Ntup[idx1999]
-    if select: n1999=n1999.query(selcut + select)
+    selcut = 'abs(z - ' + str(zcut) + ")"' < ' + str(dz/2.)
+    if select: n1999=n1999.query(selcut + " and " +select)
     elif selcut: n1999=n1999.query(selcut)
     istat = nproj1(n1999,'y','power','',1000.,1.e-6,0,'HpinV')
     tit = 'Power density within spec. range'
@@ -32598,7 +32634,8 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       return
     #endif
     n1990 = Ntup[idx1990]
-    if select: n1990=n1990.query(selcut + select)
+    selcut = 'abs(z - ' + str(zcut) + ")"' < ' + str(dz/2.)
+    if select: n1990=n1990.query(selcut + " and " +select)
     elif selcut: n1990=n1990.query(selcut)
     istat = nproj1(n1990,'y','powf','',1000.,1.e-6,0,'HpinV')
     tit = 'Power density within spec. range, with emit.'
@@ -36378,7 +36415,7 @@ def WaveOverview():
 
   if echo: print("\n End of WaveOverview()\n")
 
-  setwin('WavePlot')
+  setwin('WAVE Plot')
 #def WaveOverview()
 def WfileOpen():
 #+seq,mshimportsind.
@@ -36768,7 +36805,8 @@ def _showMenuWave(menu):
 
   fontsize = int(Myfont[1])
 
-  setwin('WavePlot')
+  setwin('WAVE Plot')
+
   wid,h,x,y = getgeo()
   x0 = x + int(0.2 * wid)
   dx = int(wid * 0.1)

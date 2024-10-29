@@ -1,3 +1,4 @@
+*CMZ :          29/10/2024  16.38.36  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.29.13  by  Michael Scheer
 *CMZ :  4.00/17 04/10/2022  08.10.22  by  Michael Scheer
 *CMZ :  4.00/15 13/02/2022  16.33.42  by  Michael Scheer
@@ -40,46 +41,6 @@
 *-- Author : Michael Scheer
       SUBROUTINE SPECDIPA
 *KEEP,gplhint.
-!******************************************************************************
-!
-!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
-!      Hahn-Meitner-Platz 1
-!      D-14109 Berlin
-!      Germany
-!
-!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
-!
-! -----------------------------------------------------------------------
-!
-!    This program is free software: you can redistribute it and/or modify
-!    it under the terms of the GNU General Public License as published by
-!    the Free Software Foundation, either version 3 of the License, or
-!    (at your option) any later version.
-!
-!    This program is distributed in the hope that it will be useful,
-!    but WITHOUT ANY WARRANTY; without even the implied warranty of
-!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-!    GNU General Public License for more details.
-!
-!    You should have received a copy (wave_gpl.txt) of the GNU General Public
-!    License along with this program.
-!    If not, see <http://www.gnu.org/licenses/>.
-!
-!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
-!    der GNU General Public License, wie von der Free Software Foundation,
-!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
-!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
-!
-!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
-!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
-!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
-!    Siehe die GNU General Public License fuer weitere Details.
-!
-!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
-!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
-!    siehe <http://www.gnu.org/licenses/>.
-!
-!******************************************************************************
 *KEND.
 
 *KEEP,spectf90u.
@@ -123,7 +84,7 @@ C--- FILL ARRAY SPEC WITH DIPOL SPECTRUM FUNCTION
 *KEND.
 
       INTEGER ISOUR,IFREQ,IOBSV,ISPLN,ITANG,I,IC,JC,IFAIL,J,JDX10,JX10,IX10
-     &  ,IWARN,IEPS,IWARNOB
+     &  ,IWARN,IEPS,IWARNOB,iout
 
       DOUBLE PRECISION T,XT,YT,ZT,VXT,VYT,VZT,VXP,VYP,VZP,BS
       DOUBLE PRECISION RX,RY,RZ,RR3,RR,PSI,DFDTDP,PAR,PER,POWR,OBANG,OBANGMN
@@ -268,6 +229,8 @@ C--- FILL ARRAY SPEC WITH DIPOL SPECTRUM FUNCTION
 
           IF (ISPECDIP.EQ.-2.or.ispecdip.eq.0) THEN
 
+            iout=0
+
             OBANGMN=1.D30
             IF (ISOURAE(2,ISOUR)-ISOURAE(1,ISOUR).LT.3) THEN
               ITANG=ISOURAE(1,ISOUR)+1
@@ -296,6 +259,7 @@ C--- FILL ARRAY SPEC WITH DIPOL SPECTRUM FUNCTION
                 VN=SQRT(VXT*VXT+VYT*VYT+VZT*VZT)
                 OBANG=ACOS(MIN((RX*VXT+RY*VYT+RZ*VZT)/RN/VN,1.D0))
                 IF (ABS(OBANG).LT.OBANGMN) THEN
+                  CALL MYBFELD(XT,YT,ZT,BX,BY,BZ,DUM,DUM,DUM)
                   ITANG=I
                   OBANGMN=OBANG
                 ENDIF   !(ABS(OBANG).LT.OBANGMN)
@@ -341,20 +305,24 @@ C--- FILL ARRAY SPEC WITH DIPOL SPECTRUM FUNCTION
 
             IF (XT.GT.XT3(3).OR.XT.LT.XT3(1)) THEN
 
+              iout=1
+
               IF (IWARN.EQ.0) THEN
                 WRITE(LUNGFO,*)'*** WARNING IN SPECDIPA:'
-                WRITE(LUNGFO,*)'problems finding tangent point'
+                WRITE(LUNGFO,*)'problems finding tangent point, setting flux-density zero'
                 WRITE(LUNGFO,*)'source number ',ISOUR
+                WRITE(LUNGFO,*)'observ. point ',sngl(obsv(1:3,iobsv))
                 WRITE(LUNGFO,*)
-     &            'maybe low WBL0CUT in namelist COLLIN causes problems'
+     &            'maybe low WBL0CUT in namelist COLLIN causes problems or observation point outide radiation cone'
                 WRITE(LUNGFO,*)'presumably you may ignore this warning'
                 WRITE(LUNGFO,*)
      &            '... or turn option IWIGGLER off and tune parameters'
                 WRITE(LUNGFO,*)
      &            'ISPECDIP, WBL0CUT ... by hand'
                 WRITE(6,*)'*** WARNING IN SPECDIPA:'
-                WRITE(6,*)'problems finding tangent point'
+                WRITE(6,*)'problems finding tangent point, setting flux-density zero'
                 WRITE(6,*)'source number ',ISOUR
+                WRITE(6,*)'observ. point ',sngl(obsv(1:3,iobsv))
                 WRITE(6,*)
      &            'maybe low WBL0CUT in namelist COLLIN causes problems'
                 WRITE(6,*)'presumably you may ignore this warning'
@@ -617,13 +585,12 @@ C--- FILL ARRAY SPEC WITH DIPOL SPECTRUM FUNCTION
           IF (B0DIP(1).NE.0.D0) THEN
             RHODIP(1)=EMOM/B0DIP(1)/CLIGHT1
           ELSE
-            WRITE(LUNGFO,*)'*** ERROR IN SPECDIP ***'
+            WRITE(LUNGFO,*)'*** ERROR IN SPECDIPA ***'
             WRITE(LUNGFO,*)'zero magnetic field for dipole ',ISOUR
-            WRITE(LUNGFO,*)'*** PROGRAM WAVE ABORTED ***'
+c            WRITE(LUNGFO,*)'*** PROGRAM WAVE ABORTED ***'
             WRITE(6,*)'*** ERROR IN SPECDIPA ***'
             WRITE(6,*)'zero magnetic field for dipole ',ISOUR
-            WRITE(6,*)'*** PROGRAM WAVE ABORTED ***'
-            STOP
+c            WRITE(6,*)'*** PROGRAM WAVE ABORTED ***'
           ENDIF
 
           OMEGAC=1.5D0*GAMMA**3*CLIGHT1/RHODIP(1)
@@ -686,10 +653,12 @@ c          ENDIF !ICBRILL
             IOBFR=IOBSV+NOBSV*(IFREQ-1)
 
             IF (XT.GE.XIANF.AND.XT.LE.XIEND) THEN
+
               SPEC(ILIOBFR)=
      &          DFDTDP(Y,PSI,GAMMA,DMYCUR,BANWID,PAR,PER,POWR)/RR
      &          *APERCORR
-              IF (SPECCUT.NE.0.D0.AND.Y.GT.SPECCUT) THEN
+
+              IF (SPECCUT.NE.0.D0.AND.Y.GT.SPECCUT.or.iout.ne.0) THEN
                 SPEC(ILIOBFR)=0.D0
                 PAR=0.D0
                 PER=0.D0
@@ -757,6 +726,7 @@ C ans is actually reduce by 1.0 to avoid large overall phase
                 WRITE(LUNGFO,*)'*** WARNING IN SPECDIPA:'
                 WRITE(LUNGFO,*)'problems finding tangent point'
                 WRITE(LUNGFO,*)'source number ',ISOUR
+                WRITE(LUNGFO,*)'observ. point ',sngl(obsv(1:3,iobsv))
                 WRITE(LUNGFO,*)
      &            'maybe low WBL0CUT or WGWINFC in namelist COLLIN causes problems'
                 WRITE(LUNGFO,*)
@@ -768,6 +738,7 @@ C ans is actually reduce by 1.0 to avoid large overall phase
                 WRITE(LUNGFO,*)
                 WRITE(6,*)'*** WARNING IN SPECDIPA:'
                 WRITE(6,*)'problems finding tangent point'
+                WRITE(6,*)'observ. point ',sngl(obsv(1:3,iobsv))
                 WRITE(6,*)'source number ',ISOUR
                 WRITE(6,*)
      &            'maybe low WBL0CUT or WGWINFC in namelist COLLIN causes problems'
