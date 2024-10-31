@@ -2574,6 +2574,10 @@ def nqhull3d(nt='?',varlis='x:y:z',select='', plopt='',iplot=1, iretval=0,linewi
 
 #enddef nqhull3d(nt='?')
 
+def plt_connect(key,fun):
+  plt.connect(key, fun)
+#enddef plt_connect(key,fun)
+
 def set_aspect(asp='!'):
   global Aspect
 
@@ -15941,7 +15945,7 @@ def window(title='', geom="!", block=False, projection = '2d',
   MPLmaster = MPLmain.canvas.toolbar.master
   Wmaster = MPLmaster
 
-  plt.connect('key_press_event', gui_key_press)
+  plt_connect('key_press_event', gui_key_press)
 
   ScreenWidth = MPLmaster.winfo_screenwidth()
   ScreenHeight = MPLmaster.winfo_screenheight()
@@ -25257,7 +25261,7 @@ def setwin(wintit):
 
   global Fig, Ax, Figman, Nwins, Nfigs
 
-
+  #reakpoint()
   ifig = -1
   fnums = plt.get_fignums()
   Nwins = len(fnums)
@@ -36463,9 +36467,14 @@ def WaveOverview():
   Kdump = KdumpOld
   Kpdf = KpdfOld
 
+  if WavesMode == 'WSHOP':
+    setwin('WAVE Shop')
+  else:
+    setwin('WAVE Plot')
+  #endif
+
   if echo: print("\n End of WaveOverview()\n")
 
-  setwin('WAVE Plot')
 #def WaveOverview()
 def WfileOpen():
 #+seq,mshimportsind.
@@ -36783,7 +36792,7 @@ def _caneselect(ev):
 #enddef _caneselect(ev)
 
 def _mesel():
-    global Wine, Myfont, Eph,Mmenu, Fmenu
+    global Wine, Myfont, Eph,Mmenu, Fmenu, Ntmenu
 
     Mmenu.unpost()
 
@@ -36850,12 +36859,16 @@ def _showMenuWave(menu):
   ,FiggeoEph, Ioverview,WclipE, Icallfromoverview,Kpreload
   global IzCut,IyCut
 
-  global Mmenu, Omenu, toolbar, NMmenu, NOmenu, Fmenu, Myfont, NFmenu, \
-  NNtmenu, Ntmenu
+
+  global Mmenu,Omenu,toolbar,NMmenu,NOmenu,Fmenu,Ntmenu,NNtmenu,Myfont,NFmenu
 
   fontsize = int(Myfont[1])
 
-  setwin('WAVE Plot')
+  if WavesMode == 'WSHOP':
+    setwin('WAVE Shop')
+  else:
+    setwin('WAVE Plot')
+  #endif
 
   wid,h,x,y = getgeo()
   x0 = x + int(0.2 * wid)
@@ -36865,7 +36878,7 @@ def _showMenuWave(menu):
     Fmenu.unpost()
     Omenu.unpost()
     Mmenu.unpost()
-    menu.post(x0+dx,y+h-int(2*fontsize*(NMmenu+1)))
+    menu.post(x0+dx,y+h-int(2*fontsize*(NNtmenu+1)))
   elif menu == Fmenu:
     Mmenu.unpost()
     Omenu.unpost()
@@ -37004,9 +37017,9 @@ def waveplotgpl():
 
   text = ""
   if WavesMode == 'WSHOP':
-    text += "Welcome to WAVE Shop\n\n"
+    text += "Welcome to WAVE-Shop\n\n"
   else:
-    text += "Welcome to WAVE Plot\n\n"
+    text += "Welcome to WAVE-Plot\n\n"
   #endif
   text += "by Michael Scheer \n Helmholtz-Zentrum Berlin\n\n"
   textndc(0.5,0.8,text,fontsize=15,color='magenta')
@@ -37690,7 +37703,7 @@ def startup(sfile='ntupplot_startup.py'):
 
   if get_mshwelcome() == False:
     mshwelcome("Ntup-Plot",2021)
-  if WavesMode == 'WAVES' or WavesMode == 'WPLOT': fcfg = 'waveplot.cfg'
+  if WavesMode == 'WAVES' or WavesMode == 'WPLOT' or WavesMode == 'WSHOP': fcfg = 'waveplot.cfg'
   elif WavesMode == 'UNDUMAG': fcfg = 'undugui.cfg'
   else: fcfg = 'ntupplot.cfg'
 
@@ -37743,7 +37756,7 @@ def _showMenu(menu):
 #---------------------------------------------------------------------------
 
 
-  if WavesMode == 'WAVES' or WavesMode == 'WPLOT':
+  if WavesMode == 'WAVES' or WavesMode == 'WPLOT'  or WavesMode == 'WSHOP':
     _showMenuWave(menu)
     return
   #endif WavesMode
@@ -39235,6 +39248,7 @@ def ntupini():
 #---------------------------------------------------------------------------
 
 
+  #reakpoint()
   Mode2D = '2d'
 
   Kzone = 1
@@ -39356,6 +39370,14 @@ def ntupini():
   Myfont = MyFont
   Fontsize = int(MyFont[1])
 
+  global WavePlotMenu
+
+  if WavesMode == 'WAVES' or WavesMode == 'WPLOT' or WavesMode == 'WSHOP':
+    NNplot = 0
+    Nplot = Menu(WavePlotMenu,tearoff=1,font=MyFont)
+    return
+  #endif
+
   NNmenu = 0
   Nmenu = Menu(Toolbar,tearoff=1,font=MyFont)
   bNmenu = Button(Toolbar,text='Ntuples',font=MyFont,
@@ -39381,11 +39403,10 @@ def ntupini():
   NNmenu += 1
   Nmenu.add_command(label='Delete', command=_nDelete)
 
-  global WavePlotMenu
-
-  if WavesMode == 'WAVES' or WavesMode == 'WPLOT':
+  if WavesMode == 'WAVES' or WavesMode == 'WPLOT' or WavesMode == 'WSHOP':
     NNplot = 0
     Nplot = Menu(WavePlotMenu,tearoff=1,font=MyFont)
+    return
   else:
     CanKey= plt.connect('key_press_event', ngui_key_press)
     NNplot = 0
@@ -39403,8 +39424,6 @@ def ntupini():
   Nplot.add_command(label='Axis title', command=_nTitle)
   NNplot += 1
   Nplot.add_command(label='Text', command=_nText)
-
-  if WavesMode == 'WAVES' or WavesMode == 'WPLOT': return
 
   CanKey= plt.connect('key_press_event', ngui_key_press)
 
@@ -39555,7 +39574,7 @@ Klegend.set(0)
 
 setlegendposition('upper right')
 
-CanKeyWave = plt.connect('key_press_event', wgui_key_press)
+CanKeyWave = plt_connect('key_press_event', wgui_key_press)
 
 toolbar = Wmain.canvas.toolbar
 Myfont = ('arial',11)
