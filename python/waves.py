@@ -3521,7 +3521,11 @@ def readwvs():
 
   Debug = 0
 
-  Fwvs = open(FWVS,'r')
+  try:
+    Fwvs = open(FWVS,'r')
+  except:
+    Quit("\n\n*** Error: Configuration file",FWVS,"not found  ***")
+  #endtry
 
   nline = 0
   for line in Fwvs:
@@ -3539,7 +3543,13 @@ def readwvs():
 
     if len(line) > 0 and c[0] != '*':
 
-      if nline == 1: WAVECom = line
+      if nline == 1:
+        WAVECom = line
+        if WavesMode == 'WSHOP':
+          print("\n\n--- Command to run WAVE read from '",FWVS,"' is '",WAVECom,"'")
+          print("In case of trouble check command, it must not contain commands\nto start GUIs like waveplot.py!\n\n")
+          sleep(3)
+      #endif
       elif nline == 2: ROOTCom = line
       elif nline == 3: EWOUTCom = line
       elif nline == 4: EDICom = line

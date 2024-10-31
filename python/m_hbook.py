@@ -2522,6 +2522,10 @@ def nqhull3d(nt='?',varlis='x:y:z',select='', plopt='',iplot=1, iretval=0,linewi
 
 #enddef nqhull3d(nt='?')
 
+def plt_connect(key,fun):
+  plt.connect(key, fun)
+#enddef plt_connect(key,fun)
+
 def set_aspect(asp='!'):
   global Aspect
 
@@ -15889,7 +15893,7 @@ def window(title='', geom="!", block=False, projection = '2d',
   MPLmaster = MPLmain.canvas.toolbar.master
   Wmaster = MPLmaster
 
-  plt.connect('key_press_event', gui_key_press)
+  plt_connect('key_press_event', gui_key_press)
 
   ScreenWidth = MPLmaster.winfo_screenwidth()
   ScreenHeight = MPLmaster.winfo_screenheight()
@@ -25205,7 +25209,7 @@ def setwin(wintit):
 
   global Fig, Ax, Figman, Nwins, Nfigs
 
-
+  #reakpoint()
   ifig = -1
   fnums = plt.get_fignums()
   Nwins = len(fnums)
