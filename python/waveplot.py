@@ -39541,8 +39541,9 @@ global Mmenu, mTraj, mSources, mSpectra, mFluxden, mStokden, mPoladen,\
 mMeriden, mBrill, mFlux, mStok, mPola, mMeri, mDist, mDistH, mDistV, mDistStokes, mDistPola,\
 mDistMeri, mDistPower, mEsel, mOptics, mBunch, mBunchSpec, mBunchPhaseSpace, mBunchDist
 
-global NMmenu, NOmenu, NFmenu
+global NMmenu, NOmenu, NFmenu, NNtmenu
 
+NNtmenu = 0
 NFmenu = 0
 NMmenu = 0
 NOmenu = 0
@@ -39587,6 +39588,27 @@ CanButWave = Wmain.canvas.mpl_connect('key_press_event',wgui_key_press)
 #Mset.add_cascade(label='Paul',menu=Mset)
 #toolbar.master.config(menu=MTop)
 
+Ntmenu = Menu(toolbar,tearoff=1,font=Myfont)
+
+NNtmenu += 1
+Ntmenu.add_command(label='List Ntuples', command=nlist)
+NNtmenu += 1
+Ntmenu.add_command(label='List histograms', command=hlist)
+NNtmenu += 1
+Ntmenu.add_command(label='Info', command=_nInfo)
+NNtmenu += 1
+Ntmenu.add_command(label='Create', command=_nCreate)
+NNtmenu += 1
+Ntmenu.add_command(label='Read', command=_nRead)
+NNtmenu += 1
+Ntmenu.add_command(label='Statistics', command=_nStat)
+NNtmenu += 1
+Ntmenu.add_command(label='Dump', command=_nDump)
+NNtmenu += 1
+Ntmenu.add_command(label='Merge', command=_nMerge)
+NNtmenu += 1
+Ntmenu.add_command(label='Delete', command=_nDelete)
+
 Fmenu = Menu(toolbar,tearoff=1,font=Myfont)
 NFmenu += 1
 Fmenu.add_command(label='Open', command=WfileOpen)
@@ -39600,10 +39622,8 @@ WavePlotMenu = Mmenu # for ntupplot
 NMmenu += 1
 Mmenu.add_command(label='Overview', command=WaveOverview)
 
-global NPLmaster, NNtmenu, Ntmenu
+global NPLmaster, NNmenu, Nmenu
 NPLmaster = get_master()
-NNtmenu = 0
-Ntmenu = Menu(Mmenu,tearoff=1,font=Myfont)
 
 mTraj = Menu(Mmenu,tearoff=1,font=Myfont)
 mSources = Menu(Mmenu,tearoff=1,font=Myfont)
@@ -40508,6 +40528,9 @@ ntupini()
 NMmenu += 1
 Mmenu.add_cascade(label='Ntuples and histograms',  menu=Nplot)
 
+bNmenu = Button(toolbar,text='Ntuples',font=Myfont,
+               command= lambda menu = Ntmenu: _showMenuWave(menu))
+
 bFmenu = Button(toolbar,text='Files',font=Myfont,
                command= lambda menu = Fmenu: _showMenuWave(menu))
 
@@ -40519,9 +40542,11 @@ bMmenu = Button(toolbar,text='Plot',font=Myfont,
 
 bExit = Button(toolbar,text='Exit',font=Myfont, command=_exit)
 
+bNmenu.pack(side=LEFT)
 bFmenu.pack(side=LEFT)
 bOmenu.pack(side=LEFT)
 bMmenu.pack(side=LEFT)
+
 bExit.pack(side=LEFT)
 
 startupwaveplot("waveplot_startup.py")
