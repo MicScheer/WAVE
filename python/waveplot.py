@@ -369,7 +369,7 @@ x_of_xlab = 0.5
 y_of_xlab = -0.15
 
 x_of_ylab = 0.5
-y_of_ylab = 1.75
+y_of_ylab = 0.5
 
 Itight = 0
 Zones = []
@@ -1601,6 +1601,10 @@ def util_determinante(a):
 
 def util_solve(a,x):
   return np.linalg.solve(a,x)
+#enddef
+
+def util_break(s=''):
+  print('Util_break:',s)
 #enddef
 #begin of m_hbook in waveplot
 
@@ -17513,7 +17517,7 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
 
   if tfs == -9.:
     tfs = TitFontSize
-    if Nxzone*Nyzone > 1:
+    if Nxzone*Nyzone > 2:
       if type(TextFontSize) == str: tfs = 'small'
       else: tfs = TextFontSize*0.75
     #endif Nxzone*Nyzone > 1
@@ -17524,12 +17528,12 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
 
   if xyzfs == -9:
     xyzfs = Atitfontsize
-    if Nxzone*Nyzone > 1: xyzfs *= 0.75
+    if Nxzone*Nyzone > 2: xyzfs *= 0.75
   #endif xyzfs == -9
 
   if titlesize == -9:
     Titlesize = Atitfontsize
-    if Nxzone*Nyzone > 1: Titlesize *= 0.75
+    if Nxzone*Nyzone > 2: Titlesize *= 0.75
   #endif titlesize == -9
 
   Xtit = xtit
@@ -17565,7 +17569,8 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
     #endif
   #endif
 
-  if ytit != '': Ax.set_ylabel(ytit,fontsize=xyzfs,x=x_of_ylab,y=y_of_ylab)
+  if ytit != '':
+    Ax.set_ylabel(ytit,fontsize=xyzfs,x=x_of_ylab,y=y_of_ylab)
 
   txexp = Ax.xaxis.get_offset_text()
   txexp.set_size(Axislabelsize)
@@ -25364,6 +25369,10 @@ def set_x_of_ylab(pos=0.5):
 def set_y_of_ylab(pos=0.5):
   global y_of_ylab
   y_of_ylab = pos
+
+def get_y_of_ylab():
+  global y_of_ylab
+  return y_of_ylab
 
 def set_y_title_abs(ytit='yTit', pos=0.5):
 #+seq,mshimportsind.

@@ -338,7 +338,7 @@ x_of_xlab = 0.5
 y_of_xlab = -0.15
 
 x_of_ylab = 0.5
-y_of_ylab = 1.75
+y_of_ylab = 0.5
 
 Itight = 0
 Zones = []
@@ -1551,6 +1551,10 @@ def util_determinante(a):
 
 def util_solve(a,x):
   return np.linalg.solve(a,x)
+#enddef
+
+def util_break(s=''):
+  print('Util_break:',s)
 #enddef
 #begin of m_hbook in waveplot
 
@@ -17463,7 +17467,7 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
 
   if tfs == -9.:
     tfs = TitFontSize
-    if Nxzone*Nyzone > 1:
+    if Nxzone*Nyzone > 2:
       if type(TextFontSize) == str: tfs = 'small'
       else: tfs = TextFontSize*0.75
     #endif Nxzone*Nyzone > 1
@@ -17474,12 +17478,12 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
 
   if xyzfs == -9:
     xyzfs = Atitfontsize
-    if Nxzone*Nyzone > 1: xyzfs *= 0.75
+    if Nxzone*Nyzone > 2: xyzfs *= 0.75
   #endif xyzfs == -9
 
   if titlesize == -9:
     Titlesize = Atitfontsize
-    if Nxzone*Nyzone > 1: Titlesize *= 0.75
+    if Nxzone*Nyzone > 2: Titlesize *= 0.75
   #endif titlesize == -9
 
   Xtit = xtit
@@ -17515,7 +17519,8 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
     #endif
   #endif
 
-  if ytit != '': Ax.set_ylabel(ytit,fontsize=xyzfs,x=x_of_ylab,y=y_of_ylab)
+  if ytit != '':
+    Ax.set_ylabel(ytit,fontsize=xyzfs,x=x_of_ylab,y=y_of_ylab)
 
   txexp = Ax.xaxis.get_offset_text()
   txexp.set_size(Axislabelsize)
@@ -25315,6 +25320,10 @@ def set_y_of_ylab(pos=0.5):
   global y_of_ylab
   y_of_ylab = pos
 
+def get_y_of_ylab():
+  global y_of_ylab
+  return y_of_ylab
+
 def set_y_title_abs(ytit='yTit', pos=0.5):
 #+seq,mshimportsind.
 # +PATCH,//WAVES/PYTHON
@@ -26223,6 +26232,14 @@ def getVxyzE():
   global VxyzE
   return VxyzE
 #end of m_hbook in waveplot
+
+if fexist("waves.wvs") == 0:
+  Quit('*** Menu configuration file waves.wvs not found ***')
+#endif
+
+if fexist("wave.in") == 0:
+  Quit('*** WAVE input wave.in not found ***')
+#endif
 
 # begin of mhb_to_pylist in waveplot
 # +PATCH,//WAVES/PYTHON
@@ -41642,7 +41659,7 @@ def readwvs():
         WAVECom = line
         if WavesMode == 'WSHOP':
           print("\n\n--- Command to run WAVE read from '",FWVS,"' is '",WAVECom,"'")
-          print("In case of trouble check command, it must not contain commands\nto start GUIs like waveplot.py!\n\n")
+          print("\nIn case of trouble check command, it must not contain commands\nto start GUIs like waveplot.py!\n\n")
           sleep(3)
       #endif
       elif nline == 2: ROOTCom = line
@@ -43107,6 +43124,8 @@ def runwave(ev=''):
     writewavein()
   #endif kWaveinRead !=0:
 
+  print("\nStarting WAVE, i.e. executing:\n",WAVECom,"\n")
+
   if not WAVECom:
 
     Fwvs = open(FWVS,'r')
@@ -43136,13 +43155,15 @@ def runwave(ev=''):
     Fwvs.close()
   #endif not WAVECom
 
-  os.system(WAVECom)
+  istat = os.system(WAVECom)
+  if istat:
+    print("*** Could not run WAVE, please check command\n",WAVECom,"\nand waves.wvs\n***")
+  else:
+    Mmenu_gray('black')
+    mhb_to_pylist()
+    Mmenu_gray()
+  #endif
 
-  Mmenu_gray('black')
-  mhb_to_pylist()
-  Mmenu_gray()
-
-  #print(WavesMode)
 #enddef runwave(ev)
 def HelpText(kmenu):
   global \
@@ -43233,12 +43254,20 @@ elif os.path.isdir(WAVEPATH + Sepp + 'python'):
 
 istat = -1
 
+mhb = 0
+
 if WisLinux:
   try:
     if Kpreload == True:
       istat = mhb_to_pylist(pwd + "/WAVE.mhb")
-      if istat == -9999: istat = 0
-    else: istat = 0
+      if istat == -9999:
+        istat = 0
+        print("\n *** Warning: Control option Kpreload is set, but WAVE.mhb does not exist!")
+        print("Please, run WAVE to get WAVE.mhb or deselect Kpreload in waveplot.cfg.")
+      #endif
+    else:
+      istat = 0
+      mhb = 1
     #endif
   except:
     print("\n\n *** Reading", pwd + "/WAVE.mhb failed ***")
@@ -43247,8 +43276,11 @@ else:
   try:
     if Kpreload == True:
       istat = mhb_to_pylist(pwd + "\\WAVE.mhb")
-      if istat == -9999: istat = 0
-    else: istat = 0
+      if istat == -9999:
+        istat = 0
+    else:
+      istat = 0
+      mhb = 1
     #endif
   except:
     print("\n\n *** Reading", pwd + "\\WAVE.mhb failed ***")
@@ -43298,7 +43330,7 @@ window('WAVE Shop',getconsole=False)
 
 waveplotgpl()
 
-if Ioverview: WaveOverview()
+if Ioverview and istat == 0 and mhb == 1: WaveOverview()
 
 Wmain = Fig
 Wmaster = Wmain.canvas.toolbar.master
@@ -44282,6 +44314,7 @@ bMmenu.pack(side=LEFT)
 
 bExit.pack(side=LEFT)
 
+#til_break('Break 1')
 ##################################################################
 
 ##################################################################
@@ -45628,6 +45661,8 @@ def WAVESexit(ev):
   sys.exit()
 #enddef
 
+#til_break("wguiwpl")
+
 Pmenu = []
 PMenuGeo = []
 
@@ -45717,5 +45752,7 @@ WPLmaster.config(menu=MenuBar)
 ##################################################################
 
 ##################################################################
+#til_break('Break 2')
 startupwaveplot("waveplot_startup.py")
 ##################################################################
+#til_break('Break 3')
