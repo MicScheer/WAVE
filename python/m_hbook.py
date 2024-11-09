@@ -1518,6 +1518,10 @@ Isurf = 0
 Iline = 0
 Iinter = 0
 Ifill1d = 0
+Xtit = ''
+Ytit = ''
+Ztit = ''
+Ptit = ''
 Gtit = ''
 Colors = ['black','red','blue','green','cyan','magenta','gray','yellow', 'white']
 Surfcolors = ['none','blue','cyan','gray','green','navajowhite','magenta','mediumspringgreen','red','salmon','yellow']
@@ -26229,3 +26233,16 @@ def getVxyzZ():
 def getVxyzE():
   global VxyzE
   return VxyzE
+
+def get_Imarker():
+  global Imarker
+  return Imarker
+def get_Iline():
+  global Iline
+  return Iline
+def set_Imarker(i):
+  global Imarker
+  Imarker = i
+def set_Iline(i):
+  global Iline
+  Iline = i
