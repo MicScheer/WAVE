@@ -416,6 +416,10 @@ Isurf = 0
 Iline = 0
 Iinter = 0
 Ifill1d = 0
+Xtit = ''
+Ytit = ''
+Ztit = ''
+Ptit = ''
 Gtit = ''
 Colors = ['black','red','blue','green','cyan','magenta','gray','yellow', 'white']
 Surfcolors = ['none','blue','cyan','gray','green','navajowhite','magenta','mediumspringgreen','red','salmon','yellow']
@@ -26231,6 +26235,19 @@ def getVxyzZ():
 def getVxyzE():
   global VxyzE
   return VxyzE
+
+def get_Imarker():
+  global Imarker
+  return Imarker
+def get_Iline():
+  global Iline
+  return Iline
+def set_Imarker(i):
+  global Imarker
+  Imarker = i
+def set_Iline(i):
+  global Iline
+  Iline = i
 #end of m_hbook in waveplot
 
 if fexist("waves.wvs") == 0:
@@ -37649,9 +37666,10 @@ def startup(sfile='ntupplot_startup.py'):
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -37706,9 +37724,10 @@ def _showMenu(menu):
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -37820,9 +37839,10 @@ def _clFillColor():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -37850,9 +37870,10 @@ def _nFillColor():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -37894,9 +37915,10 @@ def _clText():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -37967,9 +37989,10 @@ def _cnText():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -37992,9 +38015,10 @@ def _nText():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38051,9 +38075,10 @@ def _clDump():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38115,9 +38140,10 @@ def _nDump():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38226,9 +38252,10 @@ def _clRead():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38286,9 +38313,10 @@ def _nRead():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38347,9 +38375,10 @@ def _clMerge():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38386,9 +38415,10 @@ def _nMerge():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38433,9 +38463,10 @@ def _clCreate():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38472,9 +38503,10 @@ def _nCreate():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38521,9 +38553,10 @@ def _clNull():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38572,9 +38605,10 @@ def _nNull():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38629,9 +38663,10 @@ def _clTitle():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38676,9 +38711,10 @@ def _nTitle():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38730,9 +38766,10 @@ def _clInfo():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38766,9 +38803,10 @@ def _nInfo():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38814,9 +38852,10 @@ def _clDelete():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38850,9 +38889,10 @@ def _nDelete():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38898,9 +38938,10 @@ def _clStat():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -38941,9 +38982,10 @@ def _nStat():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -39003,9 +39045,10 @@ def _clPlot():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -39019,6 +39062,7 @@ def _clPlot():
 
 #---------------------------------------------------------------------------
 
+  global Imarker,Iline
 
   snam = S_nName.get()
   svars = S_nVars.get()
@@ -39046,12 +39090,36 @@ def _clPlot():
   if sisort == 'yes' or sisort == 'y': isort = 1
   else: isort = 0
 
-  if Isame == 0 and isame == 1: splopt = 'same' + splopt
+  if Isame == 0 and isame == 1:
+    if splopt == '!':
+      splopt = 'same'
+    else:
+      splopt = 'same' + splopt
+    #endif
+  #endif
 
   sleg = S_nLegend.get()
 
-  scol = S_nColor.get()
+  smarker = S_nMark.get()
+  imarker = 0
+  if yesno(smarker) == 'yes': imarker = 1
+
+  sline = S_nLine.get()
+  iline = 0
+  if yesno(sline) == 'yes': iline = 1
+  #endif
+
+  if iline == 1:
+    if splopt == '!':
+      splopt = 'line'
+    else:
+      splopt = 'line' + splopt
+    #endif
+  #endif
+
   setfillcolor(S_nFillColor.get())
+
+  scol = S_nColor.get()
 
   h = hget(snam)
 
@@ -39084,9 +39152,10 @@ def _nPlot():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -39129,7 +39198,14 @@ def _nPlot():
 
   nvar = nhead[3]
   svar = nhead[4][0]
-  if nvar > 1: svar += ":" + nhead[5][0]
+  if nvar > 1:
+    if nNam == 'n10':
+      svar += ":" + nhead[6][0]
+    else:
+      svar += ":" + nhead[5][0]
+    #endif
+  #endif
+
   if S_n3d.get() == 'yes' and nvar > 2 : svar += ":" + nhead[6][0]
 
   snsep = S_nSep.get()
@@ -39160,6 +39236,11 @@ def _nPlot():
   scol = S_nColor.get()
   if scol == '': scol = 'default'
 
+  smarker = S_nMark.get()
+  if smarker == '': smark = 'no'
+  sline = S_nLine.get()
+  if sline == '': scol = 'yes'
+
   framelabentry(WnPlot,'Name',nNam,S_nName,MyFont,widlab,wident)
   framelabentry(WnPlot,'Variables',svar,S_nVars,MyFont,widlab,wident)
   framelabentry(WnPlot,'Selection',ssel,S_nSelect,MyFont,widlab,wident)
@@ -39170,7 +39251,9 @@ def _nPlot():
   framelabentry(WnPlot,'Scaling of 3rd var.',scz,S_nScaleZ,MyFont,widlab,wident)
   framelabentry(WnPlot,'Scaling of 4th var.',sct,S_nScaleT,MyFont,widlab,wident)
 
-  framelabentry(WnPlot,'Color',scol,S_nColor,MyFont,widlab,wident)
+  framelabentry(WnPlot,'Line',sline,S_nLine,MyFont,widlab,wident)
+  framelabentry(WnPlot,'Marker',smarker,S_nMark,MyFont,widlab,wident)
+  framelabentry(WnPlot,'Coler',scol,S_nColor,MyFont,widlab,wident)
   framelabentry(WnPlot,'Fill Color',FillColor,S_nFillColor,MyFont,widlab,wident)
 
   framelabentry(WnPlot,'Same picture',same,S_nIsame,MyFont,widlab,wident)
@@ -39198,9 +39281,10 @@ def ntupini():
 
   global NPLmain, NPLmaster, MyFont,Myfont, Nmenu, NNmenu, CanBut, CanKey, Toolbar, Fontsize, \
   WError, WnCreate, S_nName, S_nTit, S_nVars, WnList, WnInfo, WnStat, \
-  WnRead, S_nFile, S_nHeader, S_nIndex, S_nDumpInd, S_nDumpHead, S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
+  WnRead, S_nFile, S_nHeader, S_nIndex, S_nPlotInd, S_nPlotHead,S_nDumpInd, S_nDumpHead, \
+  S_nSkipHead, S_nSkipFoot, S_nComment, S_nSep, \
   WnPlot,WnDump,WnDelete,WnTitle, S_nSelect, S_nWeight, S_nScaleX, S_nScaleY, \
-  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
+  S_nScaleZ, S_nScaleT,S_nLegend, S_nHisto, S_nLine, S_nMark,S_nColor, S_nPlopt,S_nIsort, S_nIsame, \
   S_nLineColor, S_nLineStyle, S_nMarkerColor, S_nMarkerStyle, S_nIsame, \
   WnNull, S_nXmin,S_nYmin,S_nZmin,S_nXmax,S_nYmax,S_nZmax, S_nLastCom, \
   S_nTitT,S_nTitX,S_nTitY,S_nTitZ,S_n3d,Omenu,NOmenu,Wmaster, \
@@ -39240,6 +39324,8 @@ def ntupini():
   S_nIndex = StringVar(); S_nIndex.set(0)
   S_nDumpInd = StringVar(); S_nDumpInd.set(False)
   S_nDumpHead = StringVar(); S_nDumpHead.set(False)
+  S_nPlotInd = StringVar(); S_nPlotInd.set(False)
+  S_nPlotHead = StringVar(); S_nPlotHead.set(False)
   S_nSkipHead = StringVar()
   S_nSkipFoot = StringVar()
   S_nComment = StringVar()
@@ -39253,6 +39339,10 @@ def ntupini():
   S_nScaleT = StringVar()
   S_nLegend = StringVar()
   S_nHisto = StringVar()
+  S_nMark = StringVar()
+  S_nMark.set('no')
+  S_nLine = StringVar()
+  S_nLine.set('yes')
   S_nColor = StringVar()
   S_nColor.set('default')
   S_nPlopt = StringVar()
