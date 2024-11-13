@@ -40627,7 +40627,7 @@ WavesMode = 'WAVES'
 ntupini()
 
 NMmenu += 1
-Mmenu.add_cascade(label='Ntuples and histograms',  menu=Nplot)
+#Mmenu.add_cascade(label='Ntuples and histograms',  menu=Nplot)
 
 bNmenu = Button(toolbar,text='Ntuples',font=Myfont,
                command= lambda menu = Ntmenu: _showMenuWave(menu))

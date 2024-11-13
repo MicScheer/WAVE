@@ -43462,6 +43462,8 @@ Ntmenu.add_command(label='Statistics', command=_nStat)
 NNtmenu += 1
 Ntmenu.add_command(label='Dump', command=_nDump)
 NNtmenu += 1
+Ntmenu.add_command(label='Plot', command=_nPlot)
+NNtmenu += 1
 Ntmenu.add_command(label='Merge', command=_nMerge)
 NNtmenu += 1
 Ntmenu.add_command(label='Delete', command=_nDelete)
