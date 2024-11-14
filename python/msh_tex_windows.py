@@ -1,4 +1,4 @@
-global TeX_mu0eqTeX_mu0,TeX_mueq,TeX_muplus,TeX_mu
+global TeX_mu0eq,TeX_mu0,TeX_mueq,TeX_muplus,TeX_mu
 global TeX_chi2ndf,TeX_chi2prob,TeX_beta,TeX_gamma,TeX_egammaev,TeX_foregammaeq
 global TeX_pow,TeX_rKauf,TeX_rKzu,TeX_eKauf,TeX_eKzu,TeX_plus,TeX_mul,TeX_slash,Tex_blank
 
