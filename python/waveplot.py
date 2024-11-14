@@ -4194,7 +4194,8 @@ def legend(lege='',loc='best',x='',y=''):
     plt.legend(lege,loc=loc)
   #endif
 
-  showplot()
+  showplot(kpdf=1)
+
 #def legend(lege)
 
 def wans(text="Q or q to quit:"):
@@ -16145,7 +16146,7 @@ def winl(title='Win_l', geom="!", block=False, projection = '2d', getconsole=Tru
   shpl()
 #enddef winl(title='', geom="!", block=False, projection = '2d')
 
-def showplot(visible=True):
+def showplot(visible=True,kpdf=0):
 #+seq,mshimportsind.
 # +PATCH,//WAVES/PYTHON
 # +KEEP,statusglobind,T=PYTHON.
@@ -16312,6 +16313,13 @@ def showplot(visible=True):
 #  getplotsize()
 
   Kplots[Kzone-1] = 1
+
+  if kpdf:
+    Npdf += 1
+    fout = WaveFilePrefix + str(Npdf) + ".pdf"
+    pplot(fout,'A4','landscape')
+    #print("\nPlot written to ",fout)
+  #endif Kdump
 
 #enddef showplot()
 
