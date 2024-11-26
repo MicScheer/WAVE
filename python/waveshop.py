@@ -15767,6 +15767,8 @@ def window_geometry(geom='', fig=-1, set=True):
     Figman =  plt.get_current_fig_manager()
   #endif type(fig) == int and fig == -1
 
+  print("geom:",geom)
+
   if set:
     fig.canvas.manager.window.wm_geometry(geom)
   else:
@@ -25820,6 +25822,7 @@ plotncyl = plotncylinder
 read_facets = read_faces
 nex = nextzone
 gtit = set_global_title
+setgeo = window_geometry
 #end of aliases in m_hbook
 
 #end of m_hbook
@@ -36451,13 +36454,16 @@ def WaveOverview():
   global Foverview
   Foverview = Fig
 
-  if Kpdf: pplot("WaveOverview.pdf",'A4','landscape')
-  print("\n--- WaveOverview.pdf written ---")
+  Kpdf = KpdfOld
+
+  if Kpdf:
+    pplot("WaveOverview.pdf",'A4','landscape')
+    print("\n--- WaveOverview.pdf written ---")
+  #enidf
 
   Fig = Figo
 
   Kdump = KdumpOld
-  Kpdf = KpdfOld
 
   if WavesMode == 'WSHOP':
     setwin('WAVE Shop')
@@ -39611,6 +39617,8 @@ def readwavein():
 
   #Start
   Nwavein = 0
+  Wavein = []
+  WaveinO = []
 
   Debug = 0
 
@@ -39711,7 +39719,7 @@ def readwavein():
   Fwin.close()
 
   if iewaves != 1:
-    Wexit("*** Error in readwavein: Bad file wave.in, check namelist $WAVES ***")
+    Wexit("*** Error in readwavein: Bad file wave.in, check namelist $WAVES or copy older input file (e.g. wave.in.bck) to wave.in ***")
 
   for i in range(Nwavein):
     if Wavein[i][1] == 'IPIN':
@@ -40935,6 +40943,19 @@ def setup_input(event):
   pmenu(0)
 
 #---------------------------------------- end setup_wavein()
+def checkskip():
+  global Wavein
+
+  print('*** checkskip ***')
+  i = 0
+  for w in Wavein:
+    try:
+      s = w[0].split()[0]
+      if s[:4] == 'SKIP':
+        print(i,Wavein[i])
+    except: pass
+    i += 1
+  #endfor
 def wiwrite(fo,s):
 
   global iemptyline
@@ -41270,6 +41291,10 @@ def writewavein():
 
     fo.close()
     print("\n --- wave.in written ---\n")
+
+#    checkskip()
+    readwavein() # work around for problems with ,,SKIP'' key-word
+#    checkskip()
 
   #endif kWaveinRead != 0:
 

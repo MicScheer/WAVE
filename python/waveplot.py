@@ -15817,6 +15817,8 @@ def window_geometry(geom='', fig=-1, set=True):
     Figman =  plt.get_current_fig_manager()
   #endif type(fig) == int and fig == -1
 
+  print("geom:",geom)
+
   if set:
     fig.canvas.manager.window.wm_geometry(geom)
   else:
@@ -25870,6 +25872,7 @@ plotncyl = plotncylinder
 read_facets = read_faces
 nex = nextzone
 gtit = set_global_title
+setgeo = window_geometry
 #end of aliases in m_hbook
 
 #end of m_hbook
@@ -36493,13 +36496,16 @@ def WaveOverview():
   global Foverview
   Foverview = Fig
 
-  if Kpdf: pplot("WaveOverview.pdf",'A4','landscape')
-  print("\n--- WaveOverview.pdf written ---")
+  Kpdf = KpdfOld
+
+  if Kpdf:
+    pplot("WaveOverview.pdf",'A4','landscape')
+    print("\n--- WaveOverview.pdf written ---")
+  #enidf
 
   Fig = Figo
 
   Kdump = KdumpOld
-  Kpdf = KpdfOld
 
   if WavesMode == 'WSHOP':
     setwin('WAVE Shop')

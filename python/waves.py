@@ -1074,6 +1074,10 @@ def util_solve(a,x):
   return np.linalg.solve(a,x)
 #enddef
 
+def util_break(s=''):
+  print('Util_break:',s)
+#enddef
+
 global WavesMode
 WavesMode = None
 
@@ -1429,7 +1433,7 @@ x_of_xlab = 0.5
 y_of_xlab = -0.15
 
 x_of_ylab = 0.5
-y_of_ylab = 1.75
+y_of_ylab = 0.5
 
 Itight = 0
 Zones = []
@@ -1507,6 +1511,10 @@ Isurf = 0
 Iline = 0
 Iinter = 0
 Ifill1d = 0
+Xtit = ''
+Ytit = ''
+Ztit = ''
+Ptit = ''
 Gtit = ''
 Colors = ['black','red','blue','green','cyan','magenta','gray','yellow', 'white']
 Surfcolors = ['none','blue','cyan','gray','green','navajowhite','magenta','mediumspringgreen','red','salmon','yellow']
@@ -1740,6 +1748,8 @@ def readwavein():
 
   #Start
   Nwavein = 0
+  Wavein = []
+  WaveinO = []
 
   Debug = 0
 
@@ -1840,7 +1850,7 @@ def readwavein():
   Fwin.close()
 
   if iewaves != 1:
-    Wexit("*** Error in readwavein: Bad file wave.in, check namelist $WAVES ***")
+    Wexit("*** Error in readwavein: Bad file wave.in, check namelist $WAVES or copy older input file (e.g. wave.in.bck) to wave.in ***")
 
   for i in range(Nwavein):
     if Wavein[i][1] == 'IPIN':
@@ -3547,7 +3557,7 @@ def readwvs():
         WAVECom = line
         if WavesMode == 'WSHOP':
           print("\n\n--- Command to run WAVE read from '",FWVS,"' is '",WAVECom,"'")
-          print("In case of trouble check command, it must not contain commands\nto start GUIs like waveplot.py!\n\n")
+          print("\nIn case of trouble check command, it must not contain commands\nto start GUIs like waveplot.py!\n\n")
           sleep(3)
       #endif
       elif nline == 2: ROOTCom = line
@@ -4968,6 +4978,19 @@ def readwvs():
 #  #endfor
 #end of readwvs --------------------------------------------------
 #enddef readwvs()
+def checkskip():
+  global Wavein
+
+  print('*** checkskip ***')
+  i = 0
+  for w in Wavein:
+    try:
+      s = w[0].split()[0]
+      if s[:4] == 'SKIP':
+        print(i,Wavein[i])
+    except: pass
+    i += 1
+  #endfor
 def wiwrite(fo,s):
 
   global iemptyline
@@ -5304,6 +5327,10 @@ def writewavein():
     fo.close()
     print("\n --- wave.in written ---\n")
 
+#    checkskip()
+    readwavein() # work around for problems with ,,SKIP'' key-word
+#    checkskip()
+
   #endif kWaveinRead != 0:
 
 #enddef writewavein():
@@ -5351,6 +5378,8 @@ def runwave(ev=''):
     writewavein()
   #endif kWaveinRead !=0:
 
+  print("\nStarting WAVE, i.e. executing:\n",WAVECom,"\n")
+
   if not WAVECom:
 
     Fwvs = open(FWVS,'r')
@@ -5380,13 +5409,15 @@ def runwave(ev=''):
     Fwvs.close()
   #endif not WAVECom
 
-  os.system(WAVECom)
+  istat = os.system(WAVECom)
+  if istat:
+    print("*** Could not run WAVE, please check command\n",WAVECom,"\nand waves.wvs\n***")
+  else:
+    Mmenu_gray('black')
+    mhb_to_pylist()
+    Mmenu_gray()
+  #endif
 
-  Mmenu_gray('black')
-  mhb_to_pylist()
-  Mmenu_gray()
-
-  #print(WavesMode)
 #enddef runwave(ev)
 def waveplot(ev):
   global \
