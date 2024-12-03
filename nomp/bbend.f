@@ -1,3 +1,4 @@
+*CMZ :          23/11/2024  14.51.09  by  Michael Scheer
 *CMZ :  4.00/11 27/07/2021  13.26.18  by  Michael Scheer
 *-- Author :    Michael Scheer   01/07/2021
       subroutine bbend(xin,yin,zin,bxout,byout,bzout,axout,ayout,azout,
@@ -16,7 +17,7 @@
 c The orbit plane contains the points Center,Pin, and Pout. The field vector
 c B is normal to the orbit plane.
 c The entrace plane is perpendicular the orbit plane, phiin is the
-c angle around B, and Pin is a point in the plane;  the exit plane is defind
+c angle around B, and Pin is a point in the plane;  the exit plane is defined
 c accordingly
 
 c The field is calculated with respect to the entrace or exit plane closer to

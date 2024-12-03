@@ -51,14 +51,14 @@ def touch(filename):
   if Iverbose: print('Touching ' + filename)
   if OS == 'Windows':
     scom = 'type ' + filename + ' > ' + path + '\\Kopie'
-    if Idry == 0: os.system(scom)
+    if Idry == 0: forcomp(scom)
     scom = 'type ' + path + '\\Kopie > ' + filename
-    if Idry == 0: os.system(scom)
+    if Idry == 0: forcomp(scom)
     scom = 'del ' + path + '\\Kopie'
-    if Idry == 0: os.system(scom)
+    if Idry == 0: forcomp(scom)
   else:
     scom = 'touch ' + filename
-    if Idry == 0: os.system(scom)
+    if Idry == 0: forcomp(scom)
   #endif
 #enddef touch(file)
 
@@ -75,14 +75,20 @@ else:
 #endif
 
 WI = os.getcwd() + Sepp
-WINCL = os.environ['WAVE_INCL'] + Sepp
 
 tree = ['bin','lib','main','mhbook','mshcern','mshplt','nomp','omp','python','shell','user']
 for d in tree:
   if not os.path.exists(d):
     print('\n Bad directory structure, trying',WINCL)
+    WINCL = os.environ['WAVE_INCL'] + Sepp
     WI = WINCL
     break
+  #endif
+#endfor
+
+for d in tree:
+  if not os.path.exists(d):
+    Quit('\n Bad directory structure, giving up!')
   #endif
 #endfor
 
@@ -219,6 +225,7 @@ def get_wave_tree():
     Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave_debug.exe').st_mtime_ns
   except:
     Texe = 0
+    kmain = 1
   #endtry
 
   top = glob.glob(WI+"*")
@@ -277,15 +284,27 @@ def get_wave_tree():
 
 #enddef get_wave_tree
 
+def forcomp(scom):
+  istat = os.system(scom)
+  if istat:
+    Quit("*** Error for:\n",scom)
+#enddef forcomp(scom)
+
 def wave_update():
 
   global WI,Wave_tree,Texe,Scomp_all,Scomp_omp,Scomp,Iverbose,Idry,Idebug,Scomp_nowarn,Sepp
 
   kmain = 0
 
-  #reakpoint()
   get_wave_tree()
-  #reakpoint()
+
+  try:
+    Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave_debug.exe').st_mtime_ns
+  except:
+    Texe = 0
+    kmain = 1
+  #endtry
+
   for td in Wave_tree:
 
     dd = td[0]
@@ -307,8 +326,6 @@ def wave_update():
     slib = []
 
     ddd = dd.split(Sepp)[-1]
-
-    #reakpoint()
 
     if ddd == 'mhbook':
       if Iverbose >= 0: print("\nProcessing",dd)
@@ -345,25 +362,34 @@ def wave_update():
       libm = WI + 'lib' + Sepp + 'libuser_modules_debug.a'
       scomp = Scomp_omp
     #endif
+
     #reakpoint()
 
     klib = 0
-    Tlib = Texe + 1
+#    Tlib = Texe + 1
     try:
       Tlib = os.stat(lib).st_mtime_ns
-      if Tlib > Texe: klib = 1
+#      if Tlib > Texe: klib = 1
     except:
       klib = 1
-    #endtry
+      Tlib = 0
+#    #endtry
 
     klibm = 0
-    Tlib = Texe + 1
+#    Tlib = Texe + 1
     try:
-      Tlib = os.stat(libm).st_mtime_ns
-      if Tlib > Texe: klibm = 1
+      Tlibm = os.stat(libm).st_mtime_ns
+#      if Tlib > Texe: klibm = 1
     except:
+      Tlibm = 0
       klibm = 1
     #endtry
+
+    if ddd == 'mshcern' or ddd == 'mshplt':
+      klibm = 0
+
+    if Tlibm > Tlib or klibm == 1:
+      klib = 1
 
     scompmod = "cd " + dd + Sepp + "mod && " + scomp + '-J.. '
     scomp = "cd " + dd + " && " + scomp
@@ -373,7 +399,10 @@ def wave_update():
       ff = f[0]
       t = f[1]
 
-      if t < Texe and klibm == 0: continue
+      if t < Tlibm: continue
+
+      klibm = 1
+      klib = 1
 
       if Iverbose > 0: print(ff)
 
@@ -398,17 +427,10 @@ def wave_update():
       if Iverbose > 0: print("\nModule:",m)
       scom = scompmod + "-o " + fo + " " + ff
       if Iverbose > 0: print("\n",scom,"\n")
-      if Idry == 0: os.system(scom)
-
-      #reakpoint()
-#      if platform.system() == 'Windows':
-#        scom = 'move ' + dsm + m + ".mod " + dd
-#      else:
-#        scom = 'mv ' + dsm + m + ".mod " + dd
-#      #endif
+      if Idry == 0: forcomp(scom)
 
       if Iverbose > 0: print("\n",scom,"\n")
-      if Idry == 0: os.system(scom)
+      if Idry == 0: forcomp(scom)
 
       slibm.append(dsm + fo)
       ranlm = 1
@@ -419,7 +441,10 @@ def wave_update():
         f = ft[0]
         t = ft[1]
 
-        if t < Texe and klibm == 0: continue
+        if t < Tlibm: continue
+
+        klibm = 1
+        klib = 1
 
         Flines = open(ds+f,'r')
         if Idebug > 1: print("\n",ds+f)
@@ -436,7 +461,7 @@ def wave_update():
               if sl[1].lower() == m:
                 # scom = 'touch ' + ds+f
                 #if Iverbose > 0: print("\n",scom,"\n")
-                #if Idry == 0: os.system(scom)
+                #if Idry == 0: forcomp(scom)
                 scom = touch(ds+f)
                 break
               #endif
@@ -469,7 +494,7 @@ def wave_update():
               if sl[1].lower() == m:
                 #scom = 'touch ' + ds+f
                 #if Iverbose > 0: print("\n",scom,"\n")
-                #if Idry == 0: os.system(scom)
+                #if Idry == 0: forcomp(scom)
                 scom = touch(ds+f)
                 break
               #endif
@@ -486,12 +511,12 @@ def wave_update():
       #reakpoint()
       for ob in slibm:
         scom = 'ar rc ' + libm + " " + ob
-        if Idry == 0: os.system(scom)
+        if Idry == 0: forcomp(scom)
       #endif
 
       scom = 'ranlib ' + libm
       if Iverbose > 0: print("\n",scom,"\n")
-      if Idry == 0: os.system(scom)
+      if Idry == 0: forcomp(scom)
       ranlm = 0
       slibm = []
       kmain = 1
@@ -506,7 +531,9 @@ def wave_update():
       #if f == 'genfun.cmn': debug()
       t = os.stat(ds+f).st_mtime_ns
 
-      if t < Texe and klib == 0: continue
+      if t < Tlib: continue
+
+      klib = 1
 
       fcmn = f.split(Sepp)[-1]
 
@@ -538,7 +565,7 @@ def wave_update():
             if sl[1].lower() == "'" + fcmn + "'" or sl[1].lower() == '"' + fcmn + '"':
               #scom = 'touch ' + ds+fft[0]
               #if Iverbose > 0: print("\n",scom,"\n")
-              #if Idry == 0: os.system(scom)
+              #if Idry == 0: forcomp(scom)
               scom = touch(ds+fft[0])
               break
             #endif
@@ -558,13 +585,15 @@ def wave_update():
 #      print(f)
       t = os.stat(ds+f).st_mtime_ns
 
-      if t < Texe and klib == 0: continue
+      if t < Tlib : continue
+
+      klib = 1
 
       fo = f[:-1] + "o"
 
       scom = scomp + "-o " + fo + " " + f
       if Iverbose > 0: print("\n",scom,"\n")
-      if Idry == 0: os.system(scom)
+      if Idry == 0: forcomp(scom)
 
       slib.append(ds + fo)
       ranl = 1
@@ -574,14 +603,14 @@ def wave_update():
     if ranl:
       for ob in slib:
         scom = 'ar rc ' + lib + " " + ob
-        if Idry == 0: os.system(scom)
+        if Idry == 0: forcomp(scom)
       #endif
 #      scom = 'ar rc ' + lib + " " + slib
 #      if Iverbose > 0: print("\n",scom,"\n")
-      if Idry == 0: os.system(scom)
+      if Idry == 0: forcomp(scom)
       scom = 'ranlib ' + lib
       if Iverbose > 0: print("\n",scom,"\n")
-      if Idry == 0: os.system(scom)
+      if Idry == 0: forcomp(scom)
       kmain = 1
       ranl = 0
       slib = []
@@ -590,10 +619,6 @@ def wave_update():
   #endfor dir
 
   if kmain:
-    #scom = WI + Sepp + "shell" + Sepp + "compile_wave_incl.sh"
-    #if Iverbose > 0: print("\n",scom,"\n")
-    #if Idry == 0: os.system(scom)
-    #if Iverbose >=0: print("\n--- " + WI  + "bin" + Sepp + "wave_debug.exe updated ---\n")
     if Idry == 0: wave_compile()
   else:
     if Iverbose >=0: print("\n--- No need to update " + WI  + "bin" + Sepp + "wave_debug.exe ---\n")
@@ -630,12 +655,12 @@ def wave_compile():
 
 #  if Idry: print("\n")
 #  if Idry: print(scom,"\n")
-#  else: os.system(scom)
+#  else: forcomp(scom)
 
   #scom = Delete + pathmod + '*.mod'
 
   #if Idry: print(scom,"\n")
-  #else: os.system(scom)
+  #else: forcomp(scom)
 
   scom = 'cd ' + pathmod + ' && ' \
   'gfortran -c -O2' + \
@@ -647,12 +672,12 @@ def wave_compile():
   ' -funroll-loops *.f'
 
   if Idry: print(scom,"\n")
-  else: os.system(scom)
+  else: forcomp(scom)
 
   #scom = move + pathmod + '*.mod ' + pathmain
 
   #if Idry: print(scom,"\n")
-  #else: os.system(scom)
+  #else: forcomp(scom)
 
   scom = 'cd ' + pathmain + ' && ' \
   'gfortran -g -cpp' + \
@@ -677,11 +702,13 @@ def wave_compile():
   ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_debug.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_modules_debug.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libwave_debug.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_debug.a'
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_debug.a'
   #endif
 
   if Idry: print(scom,"\n")
-  else: os.system(scom)
+  else: forcomp(scom)
 
 #enddef wave_compile()
 

@@ -1724,7 +1724,7 @@ else:
 
 Backslash = '\\'
 
-from numpy import *
+#from numpy import *
 
 global Narg,Argv
 Narg = len(sys.argv)
@@ -5796,7 +5796,7 @@ def pplot(pname="WavePlot.pdf",w=0,h=0):
   #endif type(w) ==  float and type(h) == float and w*h != 0.0 or type(w)== str
 
   try:
-    Fig.savefig(pname)
+    Fig.savefig(pname,bbox_inches='tight')
     print("\nFigure written to ",pname)
   except:
     print("\nCould not write PDF-Dokument, try another format... ")
@@ -17579,7 +17579,7 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
 
   plt.show(block=False)
 
-#enddef set_txyz(pltit='Title',xtit='xTit', ytit='yTit', ztit='')
+#enddef txyz(pltit='Title',xtit='xTit', ytit='yTit', ztit='')
 
 def null3d(xmin=-10., xmax=10., ymin=-10., ymax=10., zmin=-10., zmax=10.,elev=30,azim=-60,roll=0):
 #+KEEP,plotglobind,T=PYTHON.

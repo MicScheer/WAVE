@@ -11,7 +11,7 @@
 *CMZ : 00.00/00 28/04/94  16.13.49  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE ABSCOEF(FREQ,ABSMU,ABSDEN,ABSCOM,IFILTER,ICAL)
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)

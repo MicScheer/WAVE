@@ -1726,7 +1726,7 @@ else:
 
 Backslash = '\\'
 
-from numpy import *
+#from numpy import *
 
 global Narg,Argv
 Narg = len(sys.argv)
@@ -5798,7 +5798,7 @@ def pplot(pname="WavePlot.pdf",w=0,h=0):
   #endif type(w) ==  float and type(h) == float and w*h != 0.0 or type(w)== str
 
   try:
-    Fig.savefig(pname)
+    Fig.savefig(pname,bbox_inches='tight')
     print("\nFigure written to ",pname)
   except:
     print("\nCould not write PDF-Dokument, try another format... ")
@@ -17581,7 +17581,7 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
 
   plt.show(block=False)
 
-#enddef set_txyz(pltit='Title',xtit='xTit', ytit='yTit', ztit='')
+#enddef txyz(pltit='Title',xtit='xTit', ytit='yTit', ztit='')
 
 def null3d(xmin=-10., xmax=10., ymin=-10., ymax=10., zmin=-10., zmax=10.,elev=30,azim=-60,roll=0):
 #+KEEP,plotglobind,T=PYTHON.
@@ -27266,7 +27266,7 @@ def nyz(xmin=1., xmax=-1., plopt='line'):
 
   if Nmax - Nmin < 0.001:
     scaley = 1.e6
-    uny = '[texmum]'
+    uny = TeX_mum
   #endif
 
   nminmax('n10','z','',0)
@@ -27275,7 +27275,7 @@ def nyz(xmin=1., xmax=-1., plopt='line'):
 
   if Nmax - Nmin < 0.001:
     scalez = 1.e6
-    unz = '[texmum]'
+    unz = TeX_mum
   #endif
 
   if scalez < scaley:
@@ -27567,14 +27567,14 @@ def nz(xmin=1., xmax=-1., plopt='line',unitz='auto'):
     unz = "[mm]"
   elif unitz == 'mum':
     scalez = 1.0e6
-    unz = '[texmum]'
+    unz = TeX_mum
   else:
     nminmax('n10','z',sel,0)
     scalez = 1.0e3
     unz = "[mm]"
     if Nmax - Nmin < 0.001:
       scalez = 1.e6
-      unz = '[texmum]'
+      unz = TeX_mum
   #endif scalez == auto.
 
   nplot('n10','x:z',select=sel,plopt=plopt,legend='z',scaley=scalez)
@@ -27627,7 +27627,7 @@ def nzs(xmin=1., xmax=-1., plopt='default'):
   uny = "[mm]"
   if Nmax - Nmin < 0.001:
     scaley = 1.e6
-    uny = '[texmum]'
+    uny = TeX_mum
   #endif
 
   nminmax('n10','z','',0)
@@ -27635,7 +27635,7 @@ def nzs(xmin=1., xmax=-1., plopt='default'):
   unz = "[mm]"
   if Nmax - Nmin < 0.001:
     scalez = 1.e6
-    unz = '[texmum]'
+    unz = TeX_mum
   #endif
 
   if scalez < scaley:
@@ -27862,7 +27862,7 @@ def ntrack(xmin=1., xmax=-1., plopt='line'):
 
   if Nmax - Nmin < 0.001:
     scaley = 1.e6
-    uny = '[texmum]'
+    uny = TeX_mum
   #endif Nmax - Nmin < 0.001
 
   nminmax('n10','z',sel,0)
@@ -27871,7 +27871,7 @@ def ntrack(xmin=1., xmax=-1., plopt='line'):
 
   if Nmax - Nmin < 0.001:
     scalez = 1.e6
-    unz = '[texmum]'
+    unz = TeX_mum
   #endif Nmax - Nmin < 0.001
 
   nplot('n10','x:z:y',select=sel,plopt=plopt,scaley=scalez,scalez=scaley)
@@ -27924,7 +27924,7 @@ def ntracks(xmin=1., xmax=-1., plopt='default'):
   nplot('n11','x:z:y',select=sel,plopt=plopt,scaley=1.e6,scalez=1.e6)
   Lastwin = window_get_title()
 
-  txyz("Sources","long. coord. x [m]","hori. coord. z [texmum]","vert. coord. y [texmum]")
+  txyz("Sources","long. coord. x [m]","hori. coord. z " + TeX_mum,"vert. coord. y " + TeX_mum)
 
   kcurr = Kcurr; Kcurr = 0
   wave_title('default')
@@ -27966,14 +27966,14 @@ def ny(xmin=1., xmax=-1., plopt='line', unity='auto'):
     uny = "[mm]"
   elif unity == 'mum':
     scaley = 1.0e6
-    uny = '[texmum]'
+    uny = TeX_mum
   else:
     nminmax('n10','y',sel,0)
     scaley = 1.0e3
     uny = "[mm]"
     if Nmax - Nmin < 0.001:
       scaley = 1.e6
-      uny = '[texmum]'
+      uny = TeX_mum
   #endif scaley == auto.
 
   nplot('n10','x:y',select=sel,plopt=plopt,legend='y',scaley=scaley)
@@ -28024,7 +28024,7 @@ def nys(xmin=1., xmax=-1., plopt='default'):
   nplot('n11','x:y',select=sel,plopt=plopt,legend='y',scaley=1.e6)
   Lastwin = window_get_title()
 
-  txyz('Sources','long. coord. x[m]','vert. displacement y[texmum]')
+  txyz('Sources','long. coord. x[m]','vert. displacement y ' + TeX_mum)
 
   kcurr = Kcurr; Kcurr = 0
   wave_title('default')
@@ -35657,7 +35657,7 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
 
     if xmx - xmn < 0.001:
       scalex = 1.e6
-      if xTit == '!': xTit = "x [texmum]"
+      if xTit == '!': xTit = "x " + TeX_mum
     elif xmx - xmn < 1.:
       scalex = 1.e3
       if xTit == '!': xTit = "x [mm]"
