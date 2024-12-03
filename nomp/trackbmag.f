@@ -1,3 +1,4 @@
+*CMZ :          18/11/2024  11.05.31  by  Michael Scheer
 *CMZ :  4.00/15 05/04/2022  11.56.08  by  Michael Scheer
 *CMZ :  3.04/00 04/01/2018  18.10.43  by  Michael Scheer
 *CMZ :  2.70/12 01/03/2013  16.28.24  by  Michael Scheer
@@ -19,7 +20,7 @@
       SUBROUTINE TRACKBMAG(ISNORDER,X1,Y1,Z1,VX1,VY1,VZ1,
      &                      XF0,YF0,ZF0,EWSFX,EWSFY,EWSFZ,
      &  X2,Y2,Z2,VX2,VY2,VZ2,DTIM,BSHIFT,GAMMA,IMag,
-     &  BMOVECUT,iustep,ieneloss)
+     &  BMOVECUT,iustep,ieneloss,ifour)
 *KEEP,gplhint.
 !******************************************************************************
 !
@@ -76,24 +77,25 @@ C     DTIM        time intervall of one tracking step
 C     BSHIFT         fraction of step where magnetic field is
 C              determined for this step
 C     GAMMA       relativistic factor
+c     ifour: dipole is of type DIF
 
 C---  OUTPUT:
 C     X2,Y2,Z2    final coordinates of the electron
 C     VX2,VY2,VZ2    final velocity of the electron
 
-         IMPLICIT NONE
+      IMPLICIT NONE
 
       INTEGER ISNORDER
-      INTEGER IM,IUSTEP,IENELOSS,imag
+      INTEGER IM,IUSTEP,IENELOSS,imag,ifour
 
-         DOUBLE PRECISION X1,Y1,Z1,VX1,VY1,VZ1,X2,Y2,Z2,VX2,VY2,VZ2
-     &           ,DTIM,BSHIFT,X2B,Y2B,Z2B,BX1,BY1,BZ1,BX2,BY2,BZ2
-     &           ,GAMMA,DT,VXDUM,VYDUM,VZDUM,VXPDUM,VYPDUM,VZPDUM
-     &           ,X2INT,Y2INT,Z2INT,DDT,DDDT,DDT2
-     &           ,VX2INT,VY2INT,VZ2INT,VXPINT,VYPINT,VZPINT
-     &           ,VXP,VYP,VZP,XOLD,YOLD,ZOLD,VXOLD,VYOLD,VZOLD
-     &           ,X3INT,Y3INT,Z3INT,VX3INT,VY3INT,VZ3INT,DDDDT,DDDDT2
-     &           ,EWSFX,EWSFY,EWSFZ,XF0,YF0,ZF0,DIST1,DIST2,DISTI,BMOVECUT
+      DOUBLE PRECISION X1,Y1,Z1,VX1,VY1,VZ1,X2,Y2,Z2,VX2,VY2,VZ2
+     &  ,DTIM,BSHIFT,X2B,Y2B,Z2B,BX1,BY1,BZ1,BX2,BY2,BZ2
+     &  ,GAMMA,DT,VXDUM,VYDUM,VZDUM,VXPDUM,VYPDUM,VZPDUM
+     &  ,X2INT,Y2INT,Z2INT,DDT,DDDT,DDT2
+     &  ,VX2INT,VY2INT,VZ2INT,VXPINT,VYPINT,VZPINT
+     &  ,VXP,VYP,VZP,XOLD,YOLD,ZOLD,VXOLD,VYOLD,VZOLD
+     &  ,X3INT,Y3INT,Z3INT,VX3INT,VY3INT,VZ3INT,DDDDT,DDDDT2
+     &  ,EWSFX,EWSFY,EWSFZ,XF0,YF0,ZF0,DIST1,DIST2,DISTI,BMOVECUT
 
       DOUBLE PRECISION T1,T2
      &  ,DGAMMA
@@ -180,7 +182,11 @@ C--- LOOP DER TRAJEKTORIE
       ENDIF
 
       if (imag.gt.0) then
-        CALL BDI(X2B,Y2B,Z2B,BX2,BY2,BZ2,IM)
+        if (ifour.eq.0) then
+          CALL BDI(X2B,Y2B,Z2B,BX2,BY2,BZ2,IM)
+        else
+          CALL BDI(X2B,Y2B,Z2B,BX2,BY2,BZ2,-IM)
+        endif
       else
         CALL BDH(X2B,Y2B,Z2B,BX2,BY2,BZ2,IM)
       endif

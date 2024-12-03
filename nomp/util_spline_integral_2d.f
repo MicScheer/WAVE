@@ -1,3 +1,4 @@
+*CMZ :          16/08/2024  17.10.30  by  Michael Scheer
 *CMZ :  4.01/03 17/05/2023  11.24.58  by  Michael Scheer
 *CMZ :  4.01/02 12/05/2023  11.49.33  by  Michael Scheer
 *CMZ : 00.00/16 21/11/2014  14.53.59  by  Michael Scheer
@@ -49,12 +50,29 @@
       implicit none
 
       double precision x(nx),y(ny),f(nx,ny),result
-      integer istat,nx,ny,ix,iy,kstat,kalloc
+      integer :: istat,nx,ny,ix,iy,kstat,kalloc,nxyo=0,kallo=0
 
       double precision, allocatable :: fb(:),fb2(:),coef(:),
      &  w1(:),w2(:),w3(:),w4(:)
 
       save
+
+      if (kalloc.eq.0) then
+        if (kallo.eq.0) then
+          kalloc=1
+        else
+          if (max(nx,ny).gt.nxyo) then
+            deallocate(fb)
+            deallocate(fb2)
+            deallocate(coef)
+            deallocate(w1)
+            deallocate(w2)
+            deallocate(w3)
+            deallocate(w4)
+            kalloc=1
+          endif
+        endif
+      endif
 
       if (kalloc.gt.0) then
         allocate(fb(max(nx,ny)))
@@ -64,6 +82,8 @@
         allocate(w2(max(nx,ny)))
         allocate(w3(max(nx,ny)))
         allocate(w4(max(nx,ny)))
+        kallo=1
+        kalloc=0
       else if (kalloc.lt.0) then
         deallocate(fb)
         deallocate(fb2)
@@ -98,6 +118,8 @@
      &    ,coef,w1,w2,w3,w4,istat)
         kstat=kstat+istat
       endif !nx.gt.ny
+
+      nxyo=max(nx,ny)
 
       return
       end

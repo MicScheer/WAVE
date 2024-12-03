@@ -1,4 +1,0 @@
-*KEEP,mradene.
-      module mrad_ene
-      integer ieneloss_m
-      end module mrad_ene

@@ -1,3 +1,4 @@
+*CMZ :          22/11/2024  17.17.35  by  Michael Scheer
 *CMZ :  4.00/11 26/07/2021  08.38.41  by  Michael Scheer
 *CMZ :  4.00/07 09/07/2020  12.27.02  by  Michael Scheer
 *CMZ :  3.06/00 11/02/2019  12.49.00  by  Michael Scheer
@@ -92,7 +93,7 @@ C    STRUCTURE IS CENTERED AROUND ORIGIN
       include 'phycon.cmn'
 *KEND.
 
-      INTEGER ICAL,IM,ieof,imag
+      INTEGER ICAL,IM,ieof,imag,ifour
 
 *KEEP,fourier.
       include 'fourier.cmn'
@@ -101,7 +102,7 @@ C    STRUCTURE IS CENTERED AROUND ORIGIN
 *KEND.
 
       DOUBLE PRECISION BXOUT,BYOUT,BZOUT,AXOUT,AYOUT,AZOUT
-      DOUBLE PRECISION XIN,YIN,ZIN
+      DOUBLE PRECISION XIN,YIN,ZIN,x3(3),z3(3),xc,zc
       double precision shift,xcen,perlen,pern,xlamb,ahwpol,totlen
 
       DOUBLE PRECISION VN,BETA,V0,X1,Y1,Z1,X2,Y2,Z2
@@ -109,7 +110,7 @@ C    STRUCTURE IS CENTERED AROUND ORIGIN
      &  ,DTIM,BSHIFT,xlen2,dint,bx,by,bz,
      &  xfour(nfoumagcp+2+2),dxfour,
      &  posi(4,3),edge(2),strength,angle,dlength,seclen,
-     &  fint,hgap,de,ds,dum
+     &  fint,hgap,de,ds,dum,r
 
       COMPLEX CKOEF(nfoumagcp/2+1+2)
       REAL*4  YFOUR(nfoumagcp+2+2)
@@ -131,6 +132,7 @@ C--- INITIALISATION
       IF (ICAL.EQ.0) THEN
 
 C- OPEN FILE, READ FIRST TIME IN ORDER TO DECODE MAGNET-TYPES
+
 
         OPEN(UNIT=LUNMG,FILE=FILEMG,FORM='FORMATTED',STATUS='OLD')
 
@@ -158,9 +160,17 @@ C- REWIND FILE AND READ AGAIN TO GET PARAMETERS
           CORR(IM)=1.0D0
 
           IF     (CTYP(IM).EQ.'DI') THEN
-            READ(LUNMG,*)CDUM1,CDUM2,
-     &        PMAG(1,IM),PMAG(2,IM),PMAG(3,IM),PMAG(4,IM)
-
+            pmag(1:6,im)=0.0d0
+            READ(LUNMG,*,iostat=istatus)CDUM1,CDUM2,PMAG(1:5,IM)
+            if (istatus.ne.0) then
+c              rewind(lunmg)
+              backspace(lunmg)
+              backspace(lunmg)
+              READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:4,IM)
+              pmag(5,im)=0.0d0
+            endif
+            pmag(6,im)=sin(pmag(5,im)*grarad1)
+            pmag(5,im)=cos(pmag(5,im)*grarad1)
           else IF (CTYP(IM).EQ.'BEND') THEN
 
             ! 1-2: x,z of point in entrance plane
@@ -173,17 +183,24 @@ C- REWIND FILE AND READ AGAIN TO GET PARAMETERS
             read(lunmg,*)cdum1,cdum2,pmag(7:12,im)
             read(lunmg,*)pmag(1:6,im)
 
-            if (pmag(12,im).ne.3.0d0.and.pmag(12,im).ne.5.0d0)
-     &        pmag(10:11,im)=0.0d0
+            if (pmag(12,im).ne.3.0d0.and.pmag(12,im).ne.5.0d0) pmag(10:11,im)=0.0d0
 
-c            if (strength.ne.0.0d) then
-c              r=dbrho/strength
-c            else
-c              r=1.0d30
-c            endif
+            strength=pmag(7,im)
 
-            dibounds(1,im)=pmag(1,im)-abs(sin(pmag(8,im)))
-            dibounds(2,im)=pmag(5,im)+abs(sin(pmag(9,im)))
+            x3=[pmag(1,im),pmag(3,im),pmag(5,im)]
+            z3=[pmag(2,im),pmag(4,im),pmag(6,im)]
+
+            call util_circle(x3,z3,xc,zc,r)
+
+            if (strength.ne.0.0d) then
+              r=dbrho/strength
+              dibounds(1,im)=pmag(1,im)-abs(r*sin(pmag(8,im)))
+              dibounds(2,im)=pmag(5,im)+abs(r*sin(pmag(9,im)))
+            else
+              r=1.0d30
+              dibounds(1,im)=pmag(1,im)
+              dibounds(2,im)=pmag(5,im)
+            endif
 
             pmag(14,im)=cos(pmag(8,im))
             pmag(15,im)=sin(pmag(8,im))
@@ -212,6 +229,30 @@ c            endif
      &        posi,fint,hgap,de,dmyenergy,bmovecut,ds,istatus)
             pmag(11,im)=seclen
             pmag(12,im)=strength
+
+          else IF (CTYP(IM).EQ.'DQSO') THEN
+            READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:10,IM)
+            ds=sqrt(pmag(8,im)**2+pmag(9,im)**2+pmag(10,im)**2)
+            if (ds.eq.0.0d0) then
+              print*," "
+              print*,"*** Error in bmagseq: Bad normal vector for entrance plane of DQS element ***"
+              print*," "
+              stop
+            else
+              pmag(8:10,im)=pmag(8:10,im)/ds
+            endif
+            ds=1.0D0/dble(myinum)
+            cbmodel="quintic-spline"
+            angle=pmag(1,im)*radgra1
+            dlength=pmag(1,im)*pmag(2,im)
+            edge=angle/2.0d0
+            fint=pmag(6,im)
+            hgap=pmag(7,im)/2.0d0
+            call csbend(cbmodel,strength,angle,dlength,edge,seclen,
+     &        posi,fint,hgap,de,dmyenergy,bmovecut,ds,istatus)
+            pmag(11,im)=seclen
+            pmag(12,im)=strength
+
           else IF (CTYP(IM).EQ.'DQS') THEN
             READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:10,IM)
             ds=sqrt(pmag(8,im)**2+pmag(9,im)**2+pmag(10,im)**2)
@@ -234,14 +275,23 @@ c            endif
      &        posi,fint,hgap,de,dmyenergy,bmovecut,ds,istatus)
             pmag(11,im)=seclen
             pmag(12,im)=strength
+
           else IF (CTYP(IM).EQ.'DH') THEN
             READ(LUNMG,*)CDUM1,CDUM2,
      &        PMAG(1,IM),PMAG(2,IM),PMAG(3,IM),PMAG(4,IM)
           else IF (CTYP(IM).EQ.'DIF') THEN
+            pmag(1:7,im)=0.0d0
             nfoumags=nfoumags+1
-            READ(LUNMG,*)CDUM1,CDUM2,
-     &        PMAG(1,IM),PMAG(2,IM),PMAG(3,IM),PMAG(4,IM),
-     &        pmag(5,im),pmag(6,im)
+            READ(LUNMG,*,iostat=istatus)CDUM1,CDUM2,PMAG(1:7,IM)
+            if (istatus.ne.0) then
+c              rewind(lunmg)
+              backspace(lunmg)
+              backspace(lunmg)
+              READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:6,IM)
+              pmag(7,im)=0.0d0
+            endif
+            pmag(8,im)=sin(pmag(7,im)*grarad1)
+            pmag(7,im)=cos(pmag(7,im)*grarad1)
             xfoubounds(4,nfoumags)=pmag(5,im)
             xfoubounds(5,nfoumags)=pmag(6,im)
             if (pmag(6,im).gt.nfoumagcp) then
@@ -333,7 +383,11 @@ c              CALL BDI(XSTART,Y1,Z1,BXOUT,BYOUT,BZOUT,IM)
               dint=exp(2.0d0*pmag(4,im)*xlen2)/
      &          (pmag(4,im)*(exp(2.0d0*pmag(4,im)*xlen2)-1.0d0))*
      &          2.0d0*pmag(4,im)*xlen2
-              corr(im)=corr(im)/dint*(2.0d0*xlen2)
+              if (dint.ne.dint) then
+                corr(im)=1.0d0
+              else
+                corr(im)=corr(im)/dint*(2.0d0*xlen2)
+              endif
             else IF (CTYP(IM).EQ.'DH'.or.ctyp(im).eq.'DHF') THEN
 c              CALL BDH(XSTART,Y1,Z1,BXOUT,BYOUT,BZOUT,IM)
               ! The correction has only an effect, if the plateau is not reached
@@ -373,6 +427,10 @@ c            ENDIF
 
               IF (CTYP(IM).EQ.'DI'.or.ctyp(im).eq.'DIF') THEN
                 im=imag
+                ifour=0
+                IF (ctyp(im).eq.'DIF') THEN
+                  ifour=1
+                endif
               else if (CTYP(IM).EQ.'DH'.or.ctyp(im).eq.'DHF') THEN
                 im=-imag
               else
@@ -385,7 +443,7 @@ c            ENDIF
               CALL TRACKBMAG(1,X1,Y1,Z1,VX1,VY1,VZ1,
      &          xstop,0.D0,0.D0,1.D0,0.D0,0.D0,
      &          X2,Y2,Z2,VX2,VY2,VZ2,DTIM,BSHIFT,DMYGAMMA,IM,BMOVECUT,
-     &          IUSTEP,IENELOSS)
+     &          IUSTEP,IENELOSS,ifour)
 
               ANG2y=DATAN(Vy2/VX2)
               ANG2z=DATAN(VZ2/VX2)
@@ -401,7 +459,7 @@ c            ENDIF
               CALL TRACKBMAG(1,X1,Y1,Z1,VX1,VY1,VZ1,
      &          xstop,0.D0,0.D0,1.D0,0.D0,0.D0,
      &          X2,Y2,Z2,VX2,VY2,VZ2,DTIM,BSHIFT,DMYGAMMA,IM,BMOVECUT,
-     &          IUSTEP,IENELOSS)
+     &          IUSTEP,IENELOSS,ifour)
 
               ANG2y=DATAN(Vy2/VX2)
               ANG2z=DATAN(VZ2/VX2)
@@ -451,7 +509,7 @@ C---} CORRECT FOR FRINGE-FIELD-EFFECTS
                 i1=i-1
                 ip=nfoumagcp/2+1+i1
                 im=nfoumagcp/2+1-i1
-                call bdi(pmag(3,imag)-xfour(ip),0.0d0,0.0d0,bx,by,bz,imag)
+                call bdi(pmag(3,imag)-xfour(ip),0.0d0,0.0d0,bx,by,bz,-imag)
                 yfour(ip)=by
                 yfour(im)=by
               enddo

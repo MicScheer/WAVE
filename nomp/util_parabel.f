@@ -1,12 +1,14 @@
-*CMZ :  4.00/11 28/05/2021  09.14.01  by  Michael Scheer
-*CMZ :  3.05/05 10/07/2018  11.20.27  by  Michael Scheer
-*CMZ :  2.68/02 02/07/2012  11.14.22  by  Michael Scheer
-*CMZ :  2.66/09 22/03/2010  15.23.05  by  Michael Scheer
+*CMZ :          29/11/2024  18.43.16  by  Michael Scheer
+*CMZ :  4.01/05 31/10/2022  17.05.45  by  Michael Scheer
+*CMZ : 00.00/16 19/03/2014  12.30.26  by  Michael Scheer
+*CMZ : 00.00/15 03/09/2012  09.27.13  by  Michael Scheer
+*CMZ : 00.00/07 22/03/2010  15.28.00  by  Michael Scheer
 *CMZ : 00.00/02 26/03/97  10.23.11  by  Michael Scheer
 *CMZ : 00.00/00 10/01/95  15.27.40  by  Michael Scheer
-*-- Author : Michael Scheer
+*-- Author :
       SUBROUTINE UTIL_PARABEL(Xin,Yin,A,YP,XOPT,yopt,IFAIL)
-*KEEP,gplhint.
+
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -58,9 +60,10 @@ C
 
       INTEGER IFAIL
 
-      double precision A(3),X(3),Y(3),DXM,DXP,x0,a1,a2,dxm2,dxp2,dxmax,dymax,
-     &  xin(3),yin(3)
-      double precision DET,YP(3),XOPT,yopt,a22,fm,fp,f0
+      REAL*8 A(3),X(3),Y(3),DXM,DXP,x0,a1,a2,dxm2,dxp2,dxmax,dymax,
+     &  xin(3),yin(3),DET,YP(3),XOPT,yopt,a22,fm,fp,f0
+
+      IFAIL=0
 
 c calculate f=a0+a1*(x-x0)+a2*(x-x0)**2
 c  = a0 + a1*x - a0*x0 + a2*x**2 - 2*a2*x*x0 + a2*x0**2
@@ -73,9 +76,10 @@ c  df/dx=a1+2*a2*dx_max =! 0, dx_max=-a1/2/a2
       x=xin
       y=yin
 
-      if (ifail.eq.0) call util_sort_func(3,x,y)
+      call util_sort_func(3,x,y)
 
-      IFAIL=0
+c      if (x(1).le.x(2).and.x(1).le.x(3)) then
+c      endif
 
       x0=x(2)
       f0=y(2)

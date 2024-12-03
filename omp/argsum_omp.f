@@ -35,7 +35,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE ARGSUM_omp(ISOUR,IOBSV,IBUFF,nreromp,reromp)
 
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)

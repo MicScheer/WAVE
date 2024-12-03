@@ -1,4 +1,4 @@
-*CMZ :  3.05/23 22/11/2018  13.21.09  by  Michael Scheer
+*CMZ :          22/11/2018  13.21.09  by  Michael Scheer
 *-- Author :    Michael Scheer   22/11/2018
       subroutine util_minmax_real_array(n,x,xmin,xmax,kmin,kmax)
 

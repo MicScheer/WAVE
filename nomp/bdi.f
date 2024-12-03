@@ -1,3 +1,4 @@
+*CMZ :          18/11/2024  10.51.09  by  Michael Scheer
 *CMZ :  3.04/00 05/01/2018  16.13.44  by  Michael Scheer
 *CMZ :  2.70/12 01/03/2013  16.28.23  by  Michael Scheer
 *CMZ :  2.65/03 12/05/2010  13.34.28  by  Michael Scheer
@@ -10,7 +11,7 @@
 *CMZ : 00.00/00 28/04/94  16.13.43  by  Michael Scheer
 *-- Author : Michael Scheer
 C***********************************************************************
-      SUBROUTINE BDI(XI,YI,ZI,BX,BY,BZ,IMAG)
+      SUBROUTINE BDI(XI,YI,ZI,BX,BY,BZ,IMAGI)
 
 *KEEP,gplhint.
 !******************************************************************************
@@ -57,7 +58,7 @@ C***********************************************************************
 
       IMPLICIT NONE
 
-      INTEGER IMAG
+      INTEGER IMAG,imagi
 
 *KEEP,mgsqc.
       include 'mgsqc.cmn'
@@ -76,16 +77,31 @@ c pmag(2,imag): bending radius (T)
 c pmag(3,imag): Center of magnet (m)
 c pmag(4,imag): Width of edge
 
+c 'DI' type (imagi>0)
+c pmag(5,imag): cos(rotation angle)
+c pmag(6,imag): sin(rotation angle)
+
+c 'DIF' type (imagi<0)
+c pmag(7,imag): cos(rotation angle)
+c pmag(8,imag): sin(rotation angle)
+
+      imag=iabs(imagi)
+
       IF (
      &    (IWFILF.EQ.99. .OR. IMGSQF.EQ.0)
      &    .AND.
      &    PMAG(1,IMAG)*PMAG(2,IMAG).NE.0.
      &    ) THEN
 
-        X=XI-PMAG(3,IMAG)
-
-        Y=YI
-        Z=ZI
+        if (imagi.gt.0) then
+          X=pmag(5,imag)*(XI-PMAG(3,IMAG))+pmag(6,imag)*zi
+          Y=YI
+          z=-pmag(6,imag)*(XI-PMAG(3,IMAG))+pmag(5,imag)*zi
+        else
+          X=pmag(7,imag)*(XI-PMAG(3,IMAG))+pmag(7,imag)*zi
+          Y=YI
+          z=-pmag(8,imag)*(XI-PMAG(3,IMAG))+pmag(8,imag)*zi
+        endif
 
         BX=0.
         BZ=0.
