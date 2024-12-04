@@ -78,16 +78,16 @@ WI = os.getcwd() + Sepp
 
 tree = ['bin','lib','main','mhbook','mshcern','mshplt','nomp','omp','python','shell','user']
 for d in tree:
-  if not os.path.exists(d):
-    print('\n Bad directory structure, trying',WINCL)
+  if not os.path.exists(WI + d):
     WINCL = os.environ['WAVE_INCL'] + Sepp
+    print('\n Bad directory structure, trying',WINCL)
     WI = WINCL
     break
   #endif
 #endfor
 
 for d in tree:
-  if not os.path.exists(d):
+  if not os.path.exists(WI + d):
     Quit('\n Bad directory structure, giving up!')
   #endif
 #endfor

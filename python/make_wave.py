@@ -77,16 +77,16 @@ else:
 WI = os.getcwd() + Sepp
 tree = ['bin','lib','main','mhbook','mshcern','mshplt','nomp','omp','python','shell','user']
 for d in tree:
-  if not os.path.exists(d):
-    print('\n Bad directory structure, trying',WINCL)
+  if not os.path.exists(WI + d):
     WINCL = os.environ['WAVE_INCL'] + Sepp
+    print('\n Bad directory structure, trying',WINCL)
     WI = WINCL
     break
   #endif
 #endfor
 
 for d in tree:
-  if not os.path.exists(d):
+  if not os.path.exists(WI + d):
     Quit('\n Bad directory structuure, giving up!')
   #endif
 #endfor
@@ -219,7 +219,7 @@ def print_wave_tree():
 def get_wave_tree():
 
   global WI,Wave_tree,Iverbose,Idry,Idebug,Texe,Tlib,Sepp
-
+  breakpoint()
   try:
     Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave.exe').st_mtime_ns
   except:
