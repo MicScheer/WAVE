@@ -1,4 +1,5 @@
-*CMZ :          19/01/2025  08.40.03  by  Michael Scheer
+*CMZ :          19/01/2025  14.52.50  by  Michael Scheer
+*CMZ :  4.01/07 19/01/2025  08.40.03  by  Michael Scheer
 *CMZ :  4.00/11 26/07/2021  08.38.41  by  Michael Scheer
 *CMZ :  4.00/07 09/07/2020  12.27.02  by  Michael Scheer
 *CMZ :  3.06/00 11/02/2019  12.49.00  by  Michael Scheer
@@ -248,6 +249,7 @@ c              rewind(lunmg)
 
               read(lunmg,*)cdum1,cdum2,pmag(14,im),pmag(1:12,im),cbmodel,fint,gap
 
+              pmag(14,im)=pmag(14,im)*icharge
               hgap=gap/2.0d0
 
               call util_lower_case(cbmodel)
@@ -264,17 +266,9 @@ c              rewind(lunmg)
               call sbend_fringe(cbmodel,fint,hgap,
      &          pmag(15,im),pmag(16,im),pmag(17,im),pmag(18,im),istatus)
 
-              if (strength.ne.0.0d0) then
-                r=abs(dbrho)/strength
-              else
-                r=0.0d0
-              endif
-
-              if (strength.ne.0.0d) then
-                r=dbrho/strength
-                dibounds(1,im)=pmag(1,im)
-                dibounds(2,im)=pmag(7,im)
-              endif
+              !r=dbrho/strength
+              dibounds(1,im)=pmag(1,im)
+              dibounds(2,im)=pmag(7,im)
 
             else IF (
      &          CTYP(IM).EQ.'SBEND' .or.
@@ -283,7 +277,7 @@ c              rewind(lunmg)
 
               call util_skip_commentblock_end(lunmg,ieof)
 
-              read(lunmg,*)cdum1,cdum2,strength,angle,fint,gap,cbmodel,xexit,zexit,cposmodel,angex
+              read(lunmg,*)cdum1,cdum2,r,angle,fint,gap,cbmodel,xexit,zexit,cposmodel,angex
 
               !hard edge as starting point:
 
@@ -303,12 +297,6 @@ c              rewind(lunmg)
                 cposmodel="exit"
               endif
 
-              if (strength.ne.0.0d0) then
-                r=abs(dbrho)/strength
-              else
-                r=0.0d0
-              endif
-
                ds=1.0D0/dble(myinum)
 
                if (CTYP(IM).EQ.'SBEND') then
@@ -319,8 +307,7 @@ c              rewind(lunmg)
      &             cposmodel,xexit,zexit,angex,dmyenergy,strength,bmovecut,ds,icharge,fringe,fa,fb,fc,istatus)
                endif
 
-              if (strength.ne.0.0d) then
-                r=dbrho/strength
+              if (r.ne.0.0d) then
                 dibounds(1,im)=pmag(1,im)-abs(r*sin(pmag(8,im)))
                 dibounds(2,im)=pmag(5,im)+abs(r*sin(pmag(9,im)))
               else
