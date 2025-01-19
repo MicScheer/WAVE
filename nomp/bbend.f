@@ -1,4 +1,4 @@
-*CMZ :          23/11/2024  14.51.09  by  Michael Scheer
+*CMZ :  4.01/07 09/01/2025  08.41.22  by  Michael Scheer
 *CMZ :  4.00/11 27/07/2021  13.26.18  by  Michael Scheer
 *-- Author :    Michael Scheer   01/07/2021
       subroutine bbend(xin,yin,zin,bxout,byout,bzout,axout,ayout,azout,
@@ -9,7 +9,7 @@
 
       double precision xin,yin,zin,bxout,byout,bzout,axout,ayout,azout,
      &  fringe,gap,Center(3),B(3),Pin(3),vnin(3),Pout(3),vnout(3),bout(3),bn(3),
-     &  bnn,dum(3),r(3),rn(3),rnn,dumn,rin(3),rino(3),
+     &  bnn,dum(3),r(3),rn(3),rnn,dumn,rin(3),
      &  qin(3),qout(3),distin,distout,x,y,z,vnormorb(3),fint
 
       integer :: modus, istatus, inowarn, ibad=0,istat,iover, ical=0
@@ -23,7 +23,7 @@ c accordingly
 c The field is calculated with respect to the entrace or exit plane closer to
 c xin,yin,zin. Yin is the distance to the orbit plane.
 
-      save rino
+c      save rino
 
       istatus=0
       !ical=ical+1

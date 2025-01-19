@@ -194,7 +194,7 @@ def set_console_title(console='Python'):
     sys.stdout.write("\x1b]2;" + console + "\x07")
   elif platform.system() == 'Windows':
     #ctypes.windll.kernel32.SetConsoleTitleW(console)
-    system("title "+console)
+    os.system("title "+console)
   #endif
 
 #enddef set_console_title()
@@ -22717,6 +22717,7 @@ def get_console(console=''):
 
     stat = os.system(com)
     if stat: print('... Could not raise console, wmctrl is not installed ...')
+
   #endif
 
 #enddef get_console()

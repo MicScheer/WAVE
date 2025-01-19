@@ -1,7 +1,7 @@
 *KEEP,MGSQC.
 
-      INTEGER NMGSQP,mmag
-      PARAMETER(NMGSQP=10000)
+      INTEGER NMGSQP,mmag,nmgsq
+      PARAMETER(NMGSQP=100)
 
       CHARACTER(5) CTYP(NMGSQP) !see also bmagseq
 
@@ -11,9 +11,9 @@
      &  dhbounds(2,nmgsqp),
      &  qfbounds(2,nmgsqp),
      &  sxbounds(2,nmgsqp),
-     &  bmsqbounds(2)
+     &  bmsqbounds(2),rotmg(7,10,nmgsqp)
 
       COMMON/MGSQC/PMAG,COZ,CORR,dibounds,dhbounds,
-     &  uebounds,qfbounds,sxbounds,
-     &  bmsqbounds,mmag,CTYP
+     &  uebounds,qfbounds,sxbounds,rotmg,
+     &  bmsqbounds,mmag,nmgsq,CTYP
 

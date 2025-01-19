@@ -1,4 +1,4 @@
-*CMZ :          22/11/2024  17.17.35  by  Michael Scheer
+*CMZ :          19/01/2025  08.40.03  by  Michael Scheer
 *CMZ :  4.00/11 26/07/2021  08.38.41  by  Michael Scheer
 *CMZ :  4.00/07 09/07/2020  12.27.02  by  Michael Scheer
 *CMZ :  3.06/00 11/02/2019  12.49.00  by  Michael Scheer
@@ -93,7 +93,7 @@ C    STRUCTURE IS CENTERED AROUND ORIGIN
       include 'phycon.cmn'
 *KEND.
 
-      INTEGER ICAL,IM,ieof,imag,ifour
+      INTEGER :: ICAL,IM,ieof,imag,ifour,nrotmg,ir,irot,ifound
 
 *KEEP,fourier.
       include 'fourier.cmn'
@@ -102,26 +102,26 @@ C    STRUCTURE IS CENTERED AROUND ORIGIN
 *KEND.
 
       DOUBLE PRECISION BXOUT,BYOUT,BZOUT,AXOUT,AYOUT,AZOUT
-      DOUBLE PRECISION XIN,YIN,ZIN,x3(3),z3(3),xc,zc
-      double precision shift,xcen,perlen,pern,xlamb,ahwpol,totlen
+      DOUBLE PRECISION XIN,YIN,ZIN,x3(3),z3(3),xc,zc,a(3,3),ainv(3,3)
+      double precision shift,xcen,perlen,pern,xlamb,ahwpol,totlen,vin(3)
 
       DOUBLE PRECISION VN,BETA,V0,X1,Y1,Z1,X2,Y2,Z2
      &  ,VX1,VY1,VZ1,VX2,VY2,VZ2,ANG1z,ANG2z,DANGz,ang1y,ang2y,dangy
      &  ,DTIM,BSHIFT,xlen2,dint,bx,by,bz,
      &  xfour(nfoumagcp+2+2),dxfour,
-     &  posi(4,3),edge(2),strength,angle,dlength,seclen,
-     &  fint,hgap,de,ds,dum,r
+     &  posi(7,5),edge(2),strength,angle,dlength,seclen,
+     &  fint,gap,hgap,de,ds,dum,r,xexit,zexit,fringe,fa,fb,fc,angex
 
       COMPLEX CKOEF(nfoumagcp/2+1+2)
       REAL*4  YFOUR(nfoumagcp+2+2)
       EQUIVALENCE (CKOEF,YFOUR)
 
-      integer ip,i1,i,mfour,k,istatus
+      integer ip,i1,i,mfour,k,istatus,ifail,modus
 
-      character(32) cbmodel
+      character(32) cbmodel,cposmodel
       CHARACTER(3) CDUM2
       CHARACTER(5) CDUM1
-      CHARACTER(256) cnam(nmgsqp)
+      CHARACTER(256) cnam(nmgsqp),clow
 
       save ical, cnam
 
@@ -136,217 +136,362 @@ C- OPEN FILE, READ FIRST TIME IN ORDER TO DECODE MAGNET-TYPES
 
         OPEN(UNIT=LUNMG,FILE=FILEMG,FORM='FORMATTED',STATUS='OLD')
 
+        mmag=0
+        nrotmg=0
+        rotmg=0.0d0
+        pmag=0.0d0
+
         DO IM=1,NMGSQP
-          call util_skip_comment_end(lunmg,ieof)
+
+          call util_skip_commentblock_end(lunmg,ieof)
           if (ieof.ne.0) goto 99
+
           READ(LUNMG,*,END=99) cnam(im),CTYP(IM)
-          if (ctyp(im).eq.'BEND') then
-            READ(LUNMG,*,END=99) DUM
+          clow=trim(cnam(im))
+          call util_lower_case(clow)
+
+          backspace(lunmg)
+
+          if (clow.eq.'rotate') then
+            ifound=0
+            do i=1,mmag
+              if (cnam(i).eq.ctyp(im)) then
+                ifound=i
+                exit
+              endif
+            enddo
+            if (ifound.eq.0) then
+              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
+              write(6,*)"*** Limit is 10, will ignore it"
+              cycle
+            endif
+            if (pmag(19,i).ge.10.0d0) then
+              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
+              write(6,*)"*** Limit is 10, will ignore it"
+              read(lunmg,*)cdum1,cdum2
+            else
+              nrotmg=nrotmg+1
+              pmag(19,i)=pmag(19,i)+1.0d0
+              irot=int(pmag(19,i))
+              read(lunmg,*)cdum1,cdum2,rotmg(1:7,irot,i)
+            endif
+            pmag(19,im)=pmag(19,i)
+          else if (clow.eq.'brotate') then
+            ifound=0
+            do i=1,mmag
+              if (cnam(i).eq.ctyp(im)) then
+                ifound=i
+                exit
+              endif
+            enddo
+            if (ifound.eq.0) then
+              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
+              write(6,*)"*** Limit is 10, will ignore it"
+              cycle
+            endif
+            if (pmag(19,i).ge.10.0d0) then
+              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
+              write(6,*)"*** Limit is 10, will ignore it"
+              read(lunmg,*)cdum1,cdum2
+            else
+              nrotmg=nrotmg+1
+              pmag(19,i)=pmag(19,i)+1.0d0
+              irot=int(pmag(19,i))
+              read(lunmg,*)cdum1,cdum2,rotmg(1:7,irot,i)
+              pmag(20,i)=nrotmg
+            endif
+            pmag(19:20,im)=pmag(19:20,i)
+          else if (clow.eq.'shift') then
+            ifound=0
+            do i=1,mmag
+              if (cnam(i).eq.ctyp(im)) then
+                ifound=i
+                exit
+              endif
+            enddo
+            if (ifound.eq.0) then
+              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
+              write(6,*)"*** Limit is 10, will ignore it"
+              cycle
+            endif
+            if (pmag(19,i).ge.10.0d0) then
+              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
+              write(6,*)"*** Limit is 10, will ignore it"
+              read(lunmg,*)cdum1,cdum2
+            else
+              nrotmg=nrotmg+1
+              pmag(19,i)=pmag(19,i)+1.0d0
+              irot=int(pmag(19,i))
+              read(lunmg,*)cdum1,cdum2,rotmg(1:3,irot,i)
+              rotmg(7,irot,i)=-9999.0d0
+            endif
+          else
+            IF     (CTYP(IM).EQ.'DI') THEN
+              pmag(1:6,im)=0.0d0
+              call util_skip_commentblock_end(lunmg,ieof)
+              READ(LUNMG,*,iostat=istatus)CDUM1,CDUM2,PMAG(1:5,IM)
+              if (istatus.ne.0) then
+c              rewind(lunmg)
+                backspace(lunmg)
+                backspace(lunmg)
+                READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:4,IM)
+                pmag(5,im)=0.0d0
+              endif
+              pmag(6,im)=sin(pmag(5,im)*grarad1)
+              pmag(5,im)=cos(pmag(5,im)*grarad1)
+
+            else IF (
+     &          CTYP(IM).EQ.'SANDW'
+     &          ) THEN
+
+              call util_skip_commentblock_end(lunmg,ieof)
+
+              read(lunmg,*)cdum1,cdum2,pmag(14,im),pmag(1:12,im),cbmodel,fint,gap
+
+              hgap=gap/2.0d0
+
+              call util_lower_case(cbmodel)
+
+              pmag(13,im)=0.0d0
+              if (cbmodel.eq.'linear') then
+                pmag(13,im)=1.0d0
+              else if (cbmodel.eq.'cubic-spline') then
+                pmag(13,im)=3.0d0
+              else if (cbmodel.eq.'quintic-spline') then
+                pmag(13,im)=5.0d0
+              endif
+
+              call sbend_fringe(cbmodel,fint,hgap,
+     &          pmag(15,im),pmag(16,im),pmag(17,im),pmag(18,im),istatus)
+
+              if (strength.ne.0.0d0) then
+                r=abs(dbrho)/strength
+              else
+                r=0.0d0
+              endif
+
+              if (strength.ne.0.0d) then
+                r=dbrho/strength
+                dibounds(1,im)=pmag(1,im)
+                dibounds(2,im)=pmag(7,im)
+              endif
+
+            else IF (
+     &          CTYP(IM).EQ.'SBEND' .or.
+     &          CTYP(IM).EQ.'RBEND'
+     &          ) THEN
+
+              call util_skip_commentblock_end(lunmg,ieof)
+
+              read(lunmg,*)cdum1,cdum2,strength,angle,fint,gap,cbmodel,xexit,zexit,cposmodel,angex
+
+              !hard edge as starting point:
+
+              hgap=gap/2.0d0
+
+              call util_lower_case(cbmodel)
+              call util_lower_case(cposmodel)
+
+              if (
+
+     &            cposmodel.ne.'entrance'.and.
+     &            cposmodel.ne.'zenith'.and.
+     &            cposmodel.ne.'exit'
+     &            ) then
+                print*,"*** Error in BMAGSEQ: Unknown alignmet model: ",cposmodel
+                print*,"*** Using exit mode ***"
+                cposmodel="exit"
+              endif
+
+              if (strength.ne.0.0d0) then
+                r=abs(dbrho)/strength
+              else
+                r=0.0d0
+              endif
+
+               ds=1.0D0/dble(myinum)
+
+               if (CTYP(IM).EQ.'SBEND') then
+                 call sbend(nmgsqp,im,cbmodel,r,dbrho,angle,fint,hgap,
+     &             cposmodel,xexit,zexit,angex,dmyenergy,strength,bmovecut,ds,icharge,fringe,fa,fb,fc,istatus)
+               else
+                 call sbend(-nmgsqp,im,cbmodel,r,dbrho,angle,fint,hgap,
+     &             cposmodel,xexit,zexit,angex,dmyenergy,strength,bmovecut,ds,icharge,fringe,fa,fb,fc,istatus)
+               endif
+
+              if (strength.ne.0.0d) then
+                r=dbrho/strength
+                dibounds(1,im)=pmag(1,im)-abs(r*sin(pmag(8,im)))
+                dibounds(2,im)=pmag(5,im)+abs(r*sin(pmag(9,im)))
+              else
+                r=1.0d30
+                dibounds(1,im)=pmag(1,im)
+                dibounds(2,im)=pmag(5,im)
+              endif
+
+            else IF (CTYP(IM).EQ.'DIL') THEN
+              call util_skip_commentblock_end(lunmg,ieof)
+              READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:10,IM)
+              ds=sqrt(pmag(8,im)**2+pmag(9,im)**2+pmag(10,im)**2)
+              if (ds.eq.0.0d0) then
+                print*," "
+                print*,"*** Error in bmagseq: Bad normal vector for entrance plane of DCS element ***"
+                print*," "
+                stop
+              else
+                pmag(8:10,im)=pmag(8:10,im)/ds
+              endif
+              ds=1.0D0/dble(myinum)
+              cbmodel="linear"
+              angle=pmag(1,im)*radgra1
+              dlength=pmag(1,im)*pmag(2,im)
+              edge=angle/2.0d0
+              fint=pmag(6,im)
+              hgap=pmag(7,im)/2.0d0
+              call csbend(cbmodel,strength,angle,dlength,edge,seclen,
+     &          posi,fint,hgap,de,dmyenergy,bmovecut,ds,istatus)
+              pmag(11,im)=seclen
+              pmag(12,im)=strength
+
+            else IF (CTYP(IM).EQ.'DQSO') THEN
+              call util_skip_commentblock_end(lunmg,ieof)
+              READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:10,IM)
+              ds=sqrt(pmag(8,im)**2+pmag(9,im)**2+pmag(10,im)**2)
+              if (ds.eq.0.0d0) then
+                print*," "
+                print*,"*** Error in bmagseq: Bad normal vector for entrance plane of DQS element ***"
+                print*," "
+                stop
+              else
+                pmag(8:10,im)=pmag(8:10,im)/ds
+              endif
+              ds=1.0D0/dble(myinum)
+              cbmodel="quintic-spline"
+              angle=pmag(1,im)*radgra1
+              dlength=pmag(1,im)*pmag(2,im)
+              edge=angle/2.0d0
+              fint=pmag(6,im)
+              hgap=pmag(7,im)/2.0d0
+              call csbend(cbmodel,strength,angle,dlength,edge,seclen,
+     &          posi,fint,hgap,de,dmyenergy,bmovecut,ds,istatus)
+              pmag(11,im)=seclen
+              pmag(12,im)=strength
+
+            else IF (CTYP(IM).EQ.'DQS') THEN
+              call util_skip_commentblock_end(lunmg,ieof)
+              READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:10,IM)
+              ds=sqrt(pmag(8,im)**2+pmag(9,im)**2+pmag(10,im)**2)
+              if (ds.eq.0.0d0) then
+                print*," "
+                print*,"*** Error in bmagseq: Bad normal vector for entrance plane of DQS element ***"
+                print*," "
+                stop
+              else
+                pmag(8:10,im)=pmag(8:10,im)/ds
+              endif
+              ds=1.0D0/dble(myinum)
+              cbmodel="quintic-spline"
+              angle=pmag(1,im)*radgra1
+              dlength=pmag(1,im)*pmag(2,im)
+              edge=angle/2.0d0
+              fint=pmag(6,im)
+              hgap=pmag(7,im)/2.0d0
+              call csbend(cbmodel,strength,angle,dlength,edge,seclen,
+     &          posi,fint,hgap,de,dmyenergy,bmovecut,ds,istatus)
+              pmag(11,im)=seclen
+              pmag(12,im)=strength
+
+            else IF (CTYP(IM).EQ.'DH') THEN
+              call util_skip_commentblock_end(lunmg,ieof)
+              READ(LUNMG,*)CDUM1,CDUM2,
+     &          PMAG(1,IM),PMAG(2,IM),PMAG(3,IM),PMAG(4,IM)
+            else IF (CTYP(IM).EQ.'DIF') THEN
+              pmag(1:7,im)=0.0d0
+              nfoumags=nfoumags+1
+              call util_skip_commentblock_end(lunmg,ieof)
+              READ(LUNMG,*,iostat=istatus)CDUM1,CDUM2,PMAG(1:7,IM)
+              if (istatus.ne.0) then
+c              rewind(lunmg)
+                backspace(lunmg)
+                backspace(lunmg)
+                READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:6,IM)
+                pmag(7,im)=0.0d0
+              endif
+              pmag(8,im)=sin(pmag(7,im)*grarad1)
+              pmag(7,im)=cos(pmag(7,im)*grarad1)
+              xfoubounds(4,nfoumags)=pmag(5,im)
+              xfoubounds(5,nfoumags)=pmag(6,im)
+              if (pmag(6,im).gt.nfoumagcp) then
+                print*,"*** Error in BMAGSEQ: Number of Fourier coefficients exceeds dimension nfoumagcp =",nfoumagcp,"  ***"
+                stop "*** Program WAVE aborted ***"
+              endif
+            else IF (CTYP(IM).EQ.'DHF') THEN
+              nfoumags=nfoumags+1
+              call util_skip_commentblock_end(lunmg,ieof)
+              READ(LUNMG,*)CDUM1,CDUM2,
+     &          PMAG(1,IM),PMAG(2,IM),PMAG(3,IM),PMAG(4,IM),
+     &          pmag(5,im),pmag(6,im)
+              xfoubounds(4,nfoumags)=pmag(5,im)
+              xfoubounds(5,nfoumags)=pmag(6,im)
+              if (pmag(6,im).gt.nfoumagcp) then
+                print*,"*** Error in BMAGSEQ: Number of Fourier coefficients exceeds dimension nfoumagcp =",nfoumagcp,"  ***"
+                stop "*** Program WAVE aborted ***"
+              endif
+            ELSE IF (CTYP(IM).EQ.'QP'.OR.CTYP(IM).EQ.'QF') THEN
+              call util_skip_commentblock_end(lunmg,ieof)
+              READ(LUNMG,*)CDUM1,CDUM2,
+     &          PMAG(1,IM),PMAG(2,IM),PMAG(3,IM),PMAG(4,IM),PMAG(5,IM)
+            ELSE IF (CTYP(IM).EQ.'SX') THEN
+              call util_skip_commentblock_end(lunmg,ieof)
+              READ(LUNMG,*)CDUM1,CDUM2,
+     &          PMAG(1,IM),PMAG(2,IM),PMAG(3,IM),PMAG(4,IM),PMAG(5,IM)
+            ELSE IF (CTYP(IM).EQ.'UE') THEN
+              call util_skip_commentblock_end(lunmg,ieof)
+              READ(LUNMG,*)CDUM1,CDUM2,
+     &          PMAG(1:13,IM)
+              ! 1. 2.   3.     4.    5.      6.     7.     8.       9.   10.
+              ! K  B0V, B0H, Shift, XCen, PerLen, NPer, Lambda_X, Nharm Eharm
+              ! 11.     12.    13.
+              ! ctaper z-shift ang
+              shift=pmag(4,im)
+              xcen=pmag(5,im)
+              perlen=pmag(6,im)
+              pern=pmag(7,im)
+              xlamb=pmag(8,im)
+              ahwpol=((pern-1.0d0)*2+1.0d0)
+              totlen=perlen*((ahwpol-1.0d0)/2.0d0+1.0d0)+shift
+              uebounds(1,im)=xcen-0.5d0*totlen
+              uebounds(2,im)=xcen+0.5d0*totlen
+            ELSE
+
+              WRITE(LUNGFO,*)
+              WRITE(LUNGFO,*)'*** ERROR IN BMAGSEQ ***'
+              WRITE(LUNGFO,*)'ILLEGAL MAGNET TYP >> ',ctyp(im), ' << ON FILE FILEMG'
+              WRITE(LUNGFO,*)
+              WRITE(6,*)
+              WRITE(6,*)'*** ERROR IN BMAGSEQ ***'
+              WRITE(6,*)'ILLEGAL MAGNET TYP >> ',ctyp(im), ' << ON FILE FILEMG'
+              WRITE(6,*)
+
+              STOP
+
+            ENDIF !CTYP
+
+            mmag=mmag+1
+            cnam(mmag)=cnam(im)
+            ctyp(mmag)=ctyp(im)
+            pmag(:,mmag)=pmag(:,im)
+
           endif
+
+c          if (ctyp(im).eq.'BEND') then
+c            call util_skip_commentblock_end(lunmg,ieof)
+c            READ(LUNMG,*,END=99) DUM
+c          endif
         ENDDO !IM
 
 99      CONTINUE
-        mmag=IM-1
 
-C- REWIND FILE AND READ AGAIN TO GET PARAMETERS
-
-        REWIND(LUNMG)
-
-        nfoumags=0
-
-        DO IM=1,mmag
-
-          call util_skip_comment_end(lunmg,ieof)
-          CORR(IM)=1.0D0
-
-          IF     (CTYP(IM).EQ.'DI') THEN
-            pmag(1:6,im)=0.0d0
-            READ(LUNMG,*,iostat=istatus)CDUM1,CDUM2,PMAG(1:5,IM)
-            if (istatus.ne.0) then
-c              rewind(lunmg)
-              backspace(lunmg)
-              backspace(lunmg)
-              READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:4,IM)
-              pmag(5,im)=0.0d0
-            endif
-            pmag(6,im)=sin(pmag(5,im)*grarad1)
-            pmag(5,im)=cos(pmag(5,im)*grarad1)
-          else IF (CTYP(IM).EQ.'BEND') THEN
-
-            ! 1-2: x,z of point in entrance plane
-            ! 3-4: x,z of point in orbit plane
-            ! 5-6: x,z of point in exit plane
-            ! 7-9: field strength, angles of entrance and exit planes
-            ! 10-11: fint, gap
-            ! 12: mode
-
-            read(lunmg,*)cdum1,cdum2,pmag(7:12,im)
-            read(lunmg,*)pmag(1:6,im)
-
-            if (pmag(12,im).ne.3.0d0.and.pmag(12,im).ne.5.0d0) pmag(10:11,im)=0.0d0
-
-            strength=pmag(7,im)
-
-            x3=[pmag(1,im),pmag(3,im),pmag(5,im)]
-            z3=[pmag(2,im),pmag(4,im),pmag(6,im)]
-
-            call util_circle(x3,z3,xc,zc,r)
-
-            if (strength.ne.0.0d) then
-              r=dbrho/strength
-              dibounds(1,im)=pmag(1,im)-abs(r*sin(pmag(8,im)))
-              dibounds(2,im)=pmag(5,im)+abs(r*sin(pmag(9,im)))
-            else
-              r=1.0d30
-              dibounds(1,im)=pmag(1,im)
-              dibounds(2,im)=pmag(5,im)
-            endif
-
-            pmag(14,im)=cos(pmag(8,im))
-            pmag(15,im)=sin(pmag(8,im))
-            pmag(16,im)=cos(pmag(9,im))
-            pmag(17,im)=sin(pmag(9,im))
-
-          else IF (CTYP(IM).EQ.'DIL') THEN
-            READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:10,IM)
-            ds=sqrt(pmag(8,im)**2+pmag(9,im)**2+pmag(10,im)**2)
-            if (ds.eq.0.0d0) then
-              print*," "
-              print*,"*** Error in bmagseq: Bad normal vector for entrance plane of DCS element ***"
-              print*," "
-              stop
-            else
-              pmag(8:10,im)=pmag(8:10,im)/ds
-            endif
-            ds=1.0D0/dble(myinum)
-            cbmodel="linear"
-            angle=pmag(1,im)*radgra1
-            dlength=pmag(1,im)*pmag(2,im)
-            edge=angle/2.0d0
-            fint=pmag(6,im)
-            hgap=pmag(7,im)/2.0d0
-            call csbend(cbmodel,strength,angle,dlength,edge,seclen,
-     &        posi,fint,hgap,de,dmyenergy,bmovecut,ds,istatus)
-            pmag(11,im)=seclen
-            pmag(12,im)=strength
-
-          else IF (CTYP(IM).EQ.'DQSO') THEN
-            READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:10,IM)
-            ds=sqrt(pmag(8,im)**2+pmag(9,im)**2+pmag(10,im)**2)
-            if (ds.eq.0.0d0) then
-              print*," "
-              print*,"*** Error in bmagseq: Bad normal vector for entrance plane of DQS element ***"
-              print*," "
-              stop
-            else
-              pmag(8:10,im)=pmag(8:10,im)/ds
-            endif
-            ds=1.0D0/dble(myinum)
-            cbmodel="quintic-spline"
-            angle=pmag(1,im)*radgra1
-            dlength=pmag(1,im)*pmag(2,im)
-            edge=angle/2.0d0
-            fint=pmag(6,im)
-            hgap=pmag(7,im)/2.0d0
-            call csbend(cbmodel,strength,angle,dlength,edge,seclen,
-     &        posi,fint,hgap,de,dmyenergy,bmovecut,ds,istatus)
-            pmag(11,im)=seclen
-            pmag(12,im)=strength
-
-          else IF (CTYP(IM).EQ.'DQS') THEN
-            READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:10,IM)
-            ds=sqrt(pmag(8,im)**2+pmag(9,im)**2+pmag(10,im)**2)
-            if (ds.eq.0.0d0) then
-              print*," "
-              print*,"*** Error in bmagseq: Bad normal vector for entrance plane of DQS element ***"
-              print*," "
-              stop
-            else
-              pmag(8:10,im)=pmag(8:10,im)/ds
-            endif
-            ds=1.0D0/dble(myinum)
-            cbmodel="quintic-spline"
-            angle=pmag(1,im)*radgra1
-            dlength=pmag(1,im)*pmag(2,im)
-            edge=angle/2.0d0
-            fint=pmag(6,im)
-            hgap=pmag(7,im)/2.0d0
-            call csbend(cbmodel,strength,angle,dlength,edge,seclen,
-     &        posi,fint,hgap,de,dmyenergy,bmovecut,ds,istatus)
-            pmag(11,im)=seclen
-            pmag(12,im)=strength
-
-          else IF (CTYP(IM).EQ.'DH') THEN
-            READ(LUNMG,*)CDUM1,CDUM2,
-     &        PMAG(1,IM),PMAG(2,IM),PMAG(3,IM),PMAG(4,IM)
-          else IF (CTYP(IM).EQ.'DIF') THEN
-            pmag(1:7,im)=0.0d0
-            nfoumags=nfoumags+1
-            READ(LUNMG,*,iostat=istatus)CDUM1,CDUM2,PMAG(1:7,IM)
-            if (istatus.ne.0) then
-c              rewind(lunmg)
-              backspace(lunmg)
-              backspace(lunmg)
-              READ(LUNMG,*)CDUM1,CDUM2,PMAG(1:6,IM)
-              pmag(7,im)=0.0d0
-            endif
-            pmag(8,im)=sin(pmag(7,im)*grarad1)
-            pmag(7,im)=cos(pmag(7,im)*grarad1)
-            xfoubounds(4,nfoumags)=pmag(5,im)
-            xfoubounds(5,nfoumags)=pmag(6,im)
-            if (pmag(6,im).gt.nfoumagcp) then
-              print*,"*** Error in BMAGSEQ: Number of Fourier coefficients exceeds dimension nfoumagcp =",nfoumagcp,"  ***"
-              stop "*** Program WAVE aborted ***"
-            endif
-          else IF (CTYP(IM).EQ.'DHF') THEN
-            nfoumags=nfoumags+1
-            READ(LUNMG,*)CDUM1,CDUM2,
-     &        PMAG(1,IM),PMAG(2,IM),PMAG(3,IM),PMAG(4,IM),
-     &        pmag(5,im),pmag(6,im)
-            xfoubounds(4,nfoumags)=pmag(5,im)
-            xfoubounds(5,nfoumags)=pmag(6,im)
-            if (pmag(6,im).gt.nfoumagcp) then
-              print*,"*** Error in BMAGSEQ: Number of Fourier coefficients exceeds dimension nfoumagcp =",nfoumagcp,"  ***"
-              stop "*** Program WAVE aborted ***"
-            endif
-          ELSE IF (CTYP(IM).EQ.'QP'.OR.CTYP(IM).EQ.'QF') THEN
-            READ(LUNMG,*)CDUM1,CDUM2,
-     &        PMAG(1,IM),PMAG(2,IM),PMAG(3,IM),PMAG(4,IM),PMAG(5,IM)
-          ELSE IF (CTYP(IM).EQ.'SX') THEN
-            READ(LUNMG,*)CDUM1,CDUM2,
-     &        PMAG(1,IM),PMAG(2,IM),PMAG(3,IM),PMAG(4,IM),PMAG(5,IM)
-          ELSE IF (CTYP(IM).EQ.'UE') THEN
-            READ(LUNMG,*)CDUM1,CDUM2,
-     &        PMAG(1:13,IM)
-            ! 1. 2.   3.     4.    5.      6.     7.     8.       9.   10.
-            ! K  B0V, B0H, Shift, XCen, PerLen, NPer, Lambda_X, Nharm Eharm
-            ! 11.     12.    13.
-            ! ctaper z-shift ang
-            shift=pmag(4,im)
-            xcen=pmag(5,im)
-            perlen=pmag(6,im)
-            pern=pmag(7,im)
-            xlamb=pmag(8,im)
-            ahwpol=((pern-1.0d0)*2+1.0d0)
-            totlen=perlen*((ahwpol-1.0d0)/2.0d0+1.0d0)+shift
-            uebounds(1,im)=xcen-0.5d0*totlen
-            uebounds(2,im)=xcen+0.5d0*totlen
-          ELSE
-
-            WRITE(LUNGFO,*)
-            WRITE(LUNGFO,*)'*** ERROR IN BMAGSEQ ***'
-            WRITE(LUNGFO,*)'ILLEGAL MAGNET TYP ',ctyp(im), ' ON FILE FILEMG'
-            WRITE(LUNGFO,*)
-            WRITE(6,*)
-            WRITE(6,*)'*** ERROR IN BMAGSEQ ***'
-            WRITE(6,*)'ILLEGAL MAGNET TYP ',ctyp(im), ' ON FILE FILEMG'
-            WRITE(6,*)
-
-            STOP
-
-          ENDIF !CTYP
-
-        ENDDO   !IM
 
         CLOSE(LUNMG)
 
@@ -396,20 +541,7 @@ c              CALL BDH(XSTART,Y1,Z1,BXOUT,BYOUT,BZOUT,IM)
      &          (pmag(4,im)*(exp(2.0d0*pmag(4,im)*xlen2)-1.0d0))*
      &          2.0d0*pmag(4,im)*xlen2
               corr(im)=corr(im)/dint*(2.0d0*xlen2)
-c            ELSE !DI
-c              BXOUT=0.0D0
-c              BYOUT=0.0D0
-c              BZOUT=0.0D0
             ENDIF !DI
-c            IF (BYOUT.GT.1.0D-6) THEN
-c              WRITE(LUNGFO,*)
-c              WRITE(LUNGFO,*)
-c     &          '*** WARNING IN BMAGSEQ: MAGNETIC FIELD FOR XSTART NOT ZERO'
-c              WRITE(6,*)
-c              WRITE(6,*)
-c     &          '*** WARNING IN BMAGSEQ: MAGNETIC FIELD FOR XSTART NOT ZERO'
-c            STOP 'PROGRAM ABORTED'
-c            ENDIF
           ENDDO   !mmag
 
           if (kmagcor.gt.0) then
@@ -479,6 +611,7 @@ c            ENDIF
           WRITE(LUNGFO,*)'     after corrections:'
           WRITE(LUNGFO,*)
           DO IM=1,mmag
+            IF (CTYP(IM).ne.'DI'.and.ctyp(im).ne.'DIF'.and.CTYP(IM).ne.'DH'.and.ctyp(im).ne.'DHF') cycle
             WRITE(LUNGFO,1200) CTYP(IM),
      &        PMAG(1,IM),PMAG(2,IM)/CORR(IM),PMAG(3:13,IM)
 1200        FORMAT('      ',A,13E14.6)
@@ -596,6 +729,15 @@ C---} CORRECT FOR FRINGE-FIELD-EFFECTS
           else if (ctyp(im).eq.'UE') then
             WRITE(LUNGFO,1201) trim(cnam(im)),ctyp(im),uebounds(1:2,im),PMAG(1:13,IM)
           endif
+c          if (pmag(20,im).ne.0.0d0) then
+c            WRITE(LUNGFO,*)'      Shift:',sngl(shiftmg(1:3,im))
+c          endif
+c          if (pmag(19,im).ne.0.0d0) then
+c            WRITE(LUNGFO,*)'      Rotation:'
+c            WRITE(LUNGFO,*)'      ',sngl(rotmg(1,:,im))
+c            WRITE(LUNGFO,*)'      ',sngl(rotmg(2,:,im))
+c            WRITE(LUNGFO,*)'      ',sngl(rotmg(3,:,im))
+c          endif
 1201      FORMAT('      ',a,' ',a5,15E14.6)
         enddo
         write(lungfo,*)

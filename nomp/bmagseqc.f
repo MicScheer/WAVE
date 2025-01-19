@@ -1,3 +1,4 @@
+*CMZ :          19/01/2025  10.05.26  by  Michael Scheer
 *CMZ :  4.00/11 26/07/2021  09.08.58  by  Michael Scheer
 *CMZ :  3.06/00 11/02/2019  12.49.34  by  Michael Scheer
 *CMZ :  3.04/00 19/01/2018  16.33.13  by  Michael Scheer
@@ -16,7 +17,7 @@
 *CMZ : 00.00/00 28/04/94  16.13.42  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE BMAGSEQC(XIN,YIN,ZIN,BXOUT,BYOUT,BZOUT,AXOUT,AYOUT,AZOUT)
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -69,15 +70,22 @@
       include 'mgsqc.cmn'
 *KEEP,fourier.
       include 'fourier.cmn'
+*KEEP,phycon.
+      include 'phycon.cmn'
 *KEND.
 
       DOUBLE PRECISION BX,BY,BZ,BXOUT,BYOUT,BZOUT,AXOUT,AYOUT,AZOUT
       DOUBLE PRECISION XIN,YIN,ZIN,xlen2,xr,yr,zr,ex,ey,ez,dist,fint,gap,
-     &  bxr,byr,bzr,axr,ayr,azr,xbend,xshift,xsym,ybend,zbend,fringeout,
-     &  strength,pin(3),center(3),pout(3),vnin(3),vnout(3),b(3),edge(2)
+     &  bxr,byr,bzr,axr,ayr,azr,xbend,xshift,xsym,ybend,zbend,fringe,fa,fb,fc,
+     &  strength,pin(3),center(3),pout(3),vnin(3),vnout(3),b(3),edge(2),x,y,z,xrs(3),
+     &  x2,x3,x4,x5,y2,y3,vin(3),vrot(3),vout(3),phi
 
-      integer ical,istatus,modus
+      integer ical,istatus,modus,irsh
       data ical/0/
+
+      x=xin
+      y=yin
+      z=zin
 
       if (ical.eq.0) then
 
@@ -130,9 +138,9 @@
             dibounds(2,im)=pmag(3,im)+pmag(11,im)/2.0d0
             if (dibounds(1,im).lt.bmsqbounds(1)) bmsqbounds(1)=dibounds(1,im)
             if (dibounds(2,im).gt.bmsqbounds(2)) bmsqbounds(2)=dibounds(2,im)
-          else if (ctyp(im).eq.'BEND') then
-            if (dibounds(1,im).lt.bmsqbounds(1)) bmsqbounds(1)=dibounds(1,im)
-            if (dibounds(2,im).gt.bmsqbounds(2)) bmsqbounds(2)=dibounds(2,im)
+c          else if (ctyp(im).eq.'RBEND' .or. ctyp(im).eq.'SBEND') then
+c            if (dibounds(1,im).lt.bmsqbounds(1)) bmsqbounds(1)=dibounds(1,im)
+c            if (dibounds(2,im).gt.bmsqbounds(2)) bmsqbounds(2)=dibounds(2,im)
           else if (ctyp(im).eq.'DCS') then
             dibounds(1,im)=pmag(3,im)-pmag(11,im)/2.0d0
             dibounds(2,im)=pmag(3,im)+pmag(11,im)/2.0d0
@@ -181,64 +189,64 @@ C- FIELD
       IF(IWFILF.NE.99.AND.IMGSQF.NE.0) THEN
         ISTORE=IRFILF
         IRFILF=99
-        CALL BFOUR(XIN,YIN,ZIN,BX,BY,BZ,AXOUT,AYOUT,AZOUT)
+        CALL BFOUR(x,y,z,BX,BY,BZ,AXOUT,AYOUT,AZOUT)
         IRFILF=ISTORE
       ENDIF !IWFILF
 
       DO IM=1,mmag
 
+        x=xin
+        y=yin
+        z=zin
+
+        do irsh=1,int(pmag(19,im))
+          if (irsh.eq.int(pmag(20,im))) cycle
+          if (rotmg(7,irsh,im).eq.-9999d0) then
+            x=x-rotmg(1,irsh,im)
+            y=y-rotmg(2,irsh,im)
+            z=z-rotmg(3,irsh,im)
+          else
+            center=rotmg(1:3,irsh,im)
+            vrot=rotmg(4:6,irsh,im)
+            vin=[x,y,z]
+            phi=-rotmg(7,irsh,im)*grarad1
+            call util_rotate(center,vrot,phi,vin,vout,istatus)
+            x=vout(1)
+            y=vout(2)
+            z=vout(3)
+          endif
+        enddo
+
         IF (ctyp(IM).EQ.'QP') THEN
-          CALL BQP(XIN,YIN,ZIN,BXOUT,BYOUT,BZOUT,IM)
+          CALL BQP(x,y,z,BXOUT,BYOUT,BZOUT,IM)
         ELSE IF (ctyp(IM).EQ.'QF') THEN
-          if (xin+1.0d-10.ge.qfbounds(1,im).and.xin-1.0d-10.le.qfbounds(2,im)) then
-            CALL BQF(XIN,YIN,ZIN,BXOUT,BYOUT,BZOUT,IM)
+          if (x+1.0d-10.ge.qfbounds(1,im).and.x-1.0d-10.le.qfbounds(2,im)) then
+            CALL BQF(x,y,z,BXOUT,BYOUT,BZOUT,IM)
           else
             bxout=0.0d0
             byout=0.0d0
             bzout=0.0d0
           endif
         ELSE IF (ctyp(IM).EQ.'SX') THEN
-          if (xin+1.0d-10.ge.sxbounds(1,im).and.xin-1.0d-10.le.sxbounds(2,im)) then
-            CALL bsx(XIN,YIN,ZIN,BXOUT,BYOUT,BZOUT,IM)
+          if (x+1.0d-10.ge.sxbounds(1,im).and.x-1.0d-10.le.sxbounds(2,im)) then
+            CALL bsx(x,y,z,BXOUT,BYOUT,BZOUT,IM)
           else
             bxout=0.0d0
             byout=0.0d0
             bzout=0.0d0
           endif
 
-        ELSE IF (ctyp(IM).EQ.'BEND') THEN
+        ELSE IF (ctyp(IM).EQ.'SBEND' .or. ctyp(IM).EQ.'RBEND') THEN
 
-          bxout=0.0d0
-          byout=0.0d0
-          bzout=0.0d0
+          call bybend(mmag,im,x,y,z,bxout,byout,bzout,axout,ayout,azout)
 
-          if (xin+1.0d-10.ge.dibounds(1,im).and.xin-1.0d-10.le.dibounds(2,im)) then
+        ELSE IF (ctyp(IM).EQ.'SANDW') THEN
 
-            pin=[pmag(1,im),0.0d0, pmag(2,im)]
-            center=[pmag(3,im), 0.0d0, pmag(4,im)]
-            pout=[pmag(5,im), 0.0d0,pmag(6,im)]
-
-            strength=pmag(7,im)
-            edge=pmag(8:9,im)
-            fint=pmag(10,im)
-            gap=pmag(11,im)
-
-            b=[0.0d0,strength,0.0d0]
-
-            vnin=[pmag(14,im), 0.0d0, pmag(15,im)]
-            vnout=[pmag(16,im), 0.0d0, pmag(17,im)]
-
-            modus=int(pmag(12,im))
-
-            call bbend(xin,yin,zin,bxout,byout,bzout,axout,ayout,azout,
-     &        fint,gap,center,b,
-     &        pin,vnin,pout,vnout,
-     &        modus,istatus,0)
-          endif
+          call bysandwich(mmag,im,x,y,z,bxout,byout,bzout,axout,ayout,azout)
 
         ELSE IF (ctyp(IM).EQ.'DI') THEN
-          if (xin+1.0d-10.ge.dibounds(1,im).and.xin-1.0d-10.le.dibounds(2,im)) then
-            CALL BDI(XIN,YIN,ZIN,BXOUT,BYOUT,BZOUT,IM)
+          if (x+1.0d-10.ge.dibounds(1,im).and.x-1.0d-10.le.dibounds(2,im)) then
+            CALL BDI(x,y,z,BXOUT,BYOUT,BZOUT,IM)
           else
             bxout=0.0d0
             byout=0.0d0
@@ -248,11 +256,11 @@ C- FIELD
           bxout=0.0d0
           byout=0.0d0
           bzout=0.0d0
-          if (xin+1.0d-10.ge.dibounds(1,im).and.xin-1.0d-10.le.dibounds(2,im)) then
+          if (x+1.0d-10.ge.dibounds(1,im).and.x-1.0d-10.le.dibounds(2,im)) then
             xshift=pmag(11,im)/2.0d0
-            xr=xin-pmag(3,im)+xshift
-            yr=yin-pmag(4,im)
-            zr=zin-pmag(5,im)
+            xr=x-pmag(3,im)+xshift
+            yr=y-pmag(4,im)
+            zr=z-pmag(5,im)
             ex=pmag(8,im)
             ey=pmag(9,im)
             ez=pmag(10,im)
@@ -270,7 +278,7 @@ C- FIELD
                 xsym=xshift-(xbend-xshift)
               endif
               call mrad_fringe_cubic_spline(xsym,ybend,zbend,
-     &          bxr,byr,bzr,axr,ayr,azr,fint,gap,fringeout,
+     &          bxr,byr,bzr,axr,ayr,azr,fint,gap,fringe,
      &          istatus)
             endif
             if (xbend.gt.xshift) then
@@ -284,11 +292,11 @@ C- FIELD
           bxout=0.0d0
           byout=0.0d0
           bzout=0.0d0
-          if (xin+1.0d-10.ge.dibounds(1,im).and.xin-1.0d-10.le.dibounds(2,im)) then
+          if (x+1.0d-10.ge.dibounds(1,im).and.x-1.0d-10.le.dibounds(2,im)) then
             xshift=pmag(11,im)/2.0d0
-            xr=xin-pmag(3,im)+xshift
-            yr=yin-pmag(4,im)
-            zr=zin-pmag(5,im)
+            xr=x-pmag(3,im)+xshift
+            yr=y-pmag(4,im)
+            zr=z-pmag(5,im)
             ex=pmag(8,im)
             ey=pmag(9,im)
             ez=pmag(10,im)
@@ -306,7 +314,7 @@ C- FIELD
                 xsym=xshift-(xbend-xshift)
               endif
               call mrad_fringe_linear(xsym,ybend,zbend,
-     &          bxr,byr,bzr,axr,ayr,azr,fint,gap,fringeout,
+     &          bxr,byr,bzr,axr,ayr,azr,fint,gap,fringe,
      &          istatus)
             endif
             if (xbend.gt.xshift) then
@@ -320,11 +328,11 @@ C- FIELD
           bxout=0.0d0
           byout=0.0d0
           bzout=0.0d0
-          if (xin+1.0d-10.ge.dibounds(1,im).and.xin-1.0d-10.le.dibounds(2,im)) then
+          if (x+1.0d-10.ge.dibounds(1,im).and.x-1.0d-10.le.dibounds(2,im)) then
             xshift=pmag(11,im)/2.0d0
-            xr=xin-pmag(3,im)+xshift
-            yr=yin-pmag(4,im)
-            zr=zin-pmag(5,im)
+            xr=x-pmag(3,im)+xshift
+            yr=y-pmag(4,im)
+            zr=z-pmag(5,im)
             ex=pmag(8,im)
             ey=pmag(9,im)
             ez=pmag(10,im)
@@ -342,7 +350,7 @@ C- FIELD
                 xsym=xshift-(xbend-xshift)
               endif
               call mrad_fringe_quintic_spline(xsym,ybend,zbend,
-     &          bxr,byr,bzr,axr,ayr,azr,fint,gap,fringeout,
+     &          bxr,byr,bzr,axr,ayr,azr,fint,gap,fringe,
      &          istatus)
             endif
             if (xbend.gt.xshift) then
@@ -353,38 +361,50 @@ C- FIELD
             bzout=bzr*strength
           endif
         ELSE IF (ctyp(IM).EQ.'DIF') THEN
-          if (xin+1.0d-10.ge.dibounds(1,im).and.xin-1.0d-10.le.dibounds(2,im)) then
-            CALL bfoumag(XIN,YIN,ZIN,BXOUT,BYOUT,BZOUT,axout,ayout,azout,IM)
+          if (x+1.0d-10.ge.dibounds(1,im).and.x-1.0d-10.le.dibounds(2,im)) then
+            CALL bfoumag(x,y,z,BXOUT,BYOUT,BZOUT,axout,ayout,azout,IM)
           else
             bxout=0.0d0
             byout=0.0d0
             bzout=0.0d0
           endif
         ELSE IF (ctyp(IM).EQ.'DHF') THEN
-          if (xin+1.0d-10.ge.dhbounds(1,im).and.xin-1.0d-10.le.dhbounds(2,im)) then
-            CALL bfoumag(XIN,YIN,ZIN,BXOUT,BYOUT,BZOUT,axout,ayout,azout,-IM)
+          if (x+1.0d-10.ge.dhbounds(1,im).and.x-1.0d-10.le.dhbounds(2,im)) then
+            CALL bfoumag(x,y,z,BXOUT,BYOUT,BZOUT,axout,ayout,azout,-IM)
           else
             bxout=0.0d0
             byout=0.0d0
             bzout=0.0d0
           endif
         ELSE IF (ctyp(IM).EQ.'DH') THEN
-          if (xin+1.0d-10.ge.dhbounds(1,im).and.xin-1.0d-10.le.dhbounds(2,im)) then
-            CALL BDH(XIN,YIN,ZIN,BXOUT,BYOUT,BZOUT,IM)
+          if (x+1.0d-10.ge.dhbounds(1,im).and.x-1.0d-10.le.dhbounds(2,im)) then
+            CALL BDH(x,y,z,BXOUT,BYOUT,BZOUT,IM)
           else
             bxout=0.0d0
             byout=0.0d0
             bzout=0.0d0
           endif
         ELSE IF (ctyp(IM).EQ.'UE') THEN
-          if (xin+1.0d-10.ge.uebounds(1,im).and.xin-1.0d-10.le.uebounds(2,im)) then
-            CALL BUE(XIN,YIN,ZIN,BXOUT,BYOUT,BZOUT,axout,ayout,azout,IM)
+          if (x+1.0d-10.ge.uebounds(1,im).and.x-1.0d-10.le.uebounds(2,im)) then
+            CALL BUE(x,y,z,BXOUT,BYOUT,BZOUT,axout,ayout,azout,IM)
           else
             bxout=0.0d0
             byout=0.0d0
             bzout=0.0d0
           endif
         ENDIF !CTYP
+
+        if (pmag(20,im).ne.0.0d0) then
+          irsh=int(pmag(20,im))
+          center=rotmg(1:3,irsh,im)
+          vrot=rotmg(4:6,irsh,im)
+          vin=[bxout,byout,bzout]
+          phi=rotmg(7,irsh,im)*grarad1
+          call util_rotate(center,vrot,phi,vin,vout,istatus)
+          bxout=vout(1)
+          byout=vout(2)
+          bzout=vout(3)
+        endif
 
         BX=BX+BXOUT
         BY=BY+BYOUT
