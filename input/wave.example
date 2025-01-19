@@ -1,5 +1,45 @@
+!******************************************************************************
+!
+!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
+!      Hahn-Meitner-Platz 1
+!      D-14109 Berlin
+!      Germany
+!
+!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
+!
+! -----------------------------------------------------------------------
+!
+!    This program is free software: you can redistribute it and/or modify
+!    it under the terms of the GNU General Public License as published by
+!    the Free Software Foundation, either version 3 of the License, or
+!    (at your option) any later version.
+!
+!    This program is distributed in the hope that it will be useful,
+!    but WITHOUT ANY WARRANTY; without even the implied warranty of
+!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!    GNU General Public License for more details.
+!
+!    You should have received a copy (wave_gpl.txt) of the GNU General Public
+!    License along with this program.
+!    If not, see <http://www.gnu.org/licenses/>.
+!
+!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
+!    der GNU General Public License, wie von der Free Software Foundation,
+!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
+!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
+!
+!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
+!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
+!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
+!    Siehe die GNU General Public License fuer weitere Details.
+!
+!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
+!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
+!    siehe <http://www.gnu.org/licenses/>.
+!
+!******************************************************************************
  !
- ! VERSION 4.01/06
+ ! VERSION 4.01/07
  !
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
@@ -271,24 +311,37 @@
                 ! 1th column (ASCII): dummy
                 ! 2th column (ASCII): magnet type (DI or QP)
                 !
-                ! for dipoles (BEND),
+                ! for dipoles (Sector magnet SBEND, rectangular magnet RBEND),
                 !(see manual of tracking code elegant for CSBEND):
 
-                !   First line:
-                !   3th column: deflection angle [rad]
-                !   4th column: bending radius [m]
-                !   5th column: entrance edge [rad]
-                !   6th column: exit edge [rad]
-                !   7th column: Integral of fringe
-                !   8th column: Full gap of magnet
-                !   9th order of interpolation:
-                !                '1': linear
-                !                '3': cubic spline
-                !                '5': quintic spline
-                !
-                !   2nd line: x,y,z of magnet center
-                !   3rd line: x,y,z of entrance point, ex,ey,ez of nor. vec.
-                !   4th line: x,y,z of exit point, ex,ey,ez of normal vector
+                !   3th column: bending radius [m]
+                !   4th column: deflection angle [degree]
+                !   5th column: field integral of fringe field, relative fraction
+                !   6th column: gap [m]
+                !   7th column: fringe mode [hard-edge, linear, cubic-spline, quintic-spline]
+                !   8th column: x-position [m]
+                !   9th column: z-position [m]
+                !   10th column: positioning mode for x,z [entrance, zenith, exit]
+                !   11th column: rotation angle [degree]
+
+                ! for dipoles (SANDW, sandwich, i.e. field between two planes),
+
+                !   3th column: bending radius [m]
+                !   4th column: x of entrance plane [m]
+                !   5th column: y of entrance plane [m]
+                !   6th column: z of entrance plane [m]
+                !   7th column: x-component of normal vector of entrance plane
+                !   8th column: y-component of normal vector of entrance plane
+                !   9th column: z-component of normal vector of entrance plane
+                !   10th column: x of exit plane [m]
+                !   11th column: y of exit plane [m]
+                !   12th column: z of exit plane [m]
+                !   13th column: x-component of normal vector of exit plane
+                !   14th column: y-component of normal vector of exit plane
+                !   15th column: z-component of normal vector of exit plane
+                !   16th column: fringe mode [hard-edge, linear, cubic-spline, quintic-spline]
+                !   17th column: field integral of fringe field, relative fraction
+                !   18th column: gap [m]
 
                 ! for dipoles (DI):
                 !   3th column: deflection angle [rad]
@@ -298,6 +351,7 @@
                 !               f = 1/(1+exp(s*...))
                 !               infinit s means hard edge
                 !   the field is a product of two Fermi distributions
+		!   7th columne: Rotatation angle around vertical y-axis [deg.]
                 !
                 ! for dipoles with Fourier expanded field (DIF):
                 !   3th column: deflection angle [rad]
@@ -309,6 +363,7 @@
                 !   the field is a product of two Fermi distributions
                 !   7th column: k-value of transversal field gradient
                 !   8th column: number of Fourier coefficients
+		!   9th columne: Rotatation angle around vertical y-axis [deg.]
                 !
                 ! for dipoles with horizontal field (DH):
                 !   3th column: deflection angle [rad]
@@ -377,6 +432,35 @@
                 ! for quadrupoles (QF): like QP, but with fringe field
 
                 ! magnetic field routine BMAGSEQ
+		
+		! Operations:
+		
+                ! 1th column (ASCII): rotation (rotation of magnet geometry)
+                ! 2th column (ASCII): magnet name
+                ! 3th column: x of rotation axis [m]
+                ! 4th column: y of rotation axis [m]
+                ! 5th column: z of rotation axis [m]
+                ! 6th column: x-component of rotation axis
+                ! 7th column: y-component of rotation axis
+                ! 8th column: z-component of rotation axis
+                ! 9th column: rotation angle [degree]
+		
+                ! 1th column (ASCII): shiftn (shift of magnet geometry)
+                ! 2th column (ASCII): magnet name
+                ! 3th column: x-shift [m]
+                ! 4th column: y-sifht [m]
+                ! 5th column: z-shift [m]
+		
+                ! 1th column (ASCII): Brotation (rotation of magnet field)
+                ! 2th column (ASCII): magnet name
+                ! 3th column: x of rotation axis [m]
+                ! 4th column: y of rotation axis [m]
+                ! 5th column: z of rotation axis [m]
+                ! 6th column: x-component of rotation axis
+                ! 7th column: y-component of rotation axis
+                ! 8th column: z-component of rotation axis
+                ! 9th column: rotation angle [degree]
+		
 
           KMAGCOR=1  ! flag to correct fringe field effects and slopes of
                      ! trajectory on the deflection angle
