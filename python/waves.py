@@ -236,7 +236,7 @@ def set_console_title(console='Python'):
     sys.stdout.write("\x1b]2;" + console + "\x07")
   elif platform.system() == 'Windows':
     #ctypes.windll.kernel32.SetConsoleTitleW(console)
-    system("title "+console)
+    os.system("title "+console)
   #endif
 
 #enddef set_console_title()

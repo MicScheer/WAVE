@@ -87,7 +87,7 @@ for d in tree:
 
 for d in tree:
   if not os.path.exists(WI + d):
-    Quit('\n Bad directory structuure, giving up!')
+    Quit('\n Bad directory structure, giving up!')
   #endif
 #endfor
 
@@ -219,7 +219,7 @@ def print_wave_tree():
 def get_wave_tree():
 
   global WI,Wave_tree,Iverbose,Idry,Idebug,Texe,Tlib,Sepp
-  breakpoint()
+
   try:
     Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave.exe').st_mtime_ns
   except:
