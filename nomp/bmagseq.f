@@ -1,4 +1,4 @@
-*CMZ :          19/01/2025  14.52.50  by  Michael Scheer
+*CMZ :          21/01/2025  16.51.42  by  Michael Scheer
 *CMZ :  4.01/07 19/01/2025  08.40.03  by  Michael Scheer
 *CMZ :  4.00/11 26/07/2021  08.38.41  by  Michael Scheer
 *CMZ :  4.00/07 09/07/2020  12.27.02  by  Michael Scheer
@@ -80,6 +80,8 @@
 C--- READ DATA-FILE BMAGSEQ.IN, THAT CONTAINS MAGNET CONFIGURATION
 C    STRUCTURE IS CENTERED AROUND ORIGIN
 
+      use magseqf90m
+
       IMPLICIT NONE
 
 *KEEP,contrl.
@@ -94,7 +96,7 @@ C    STRUCTURE IS CENTERED AROUND ORIGIN
       include 'phycon.cmn'
 *KEND.
 
-      INTEGER :: ICAL,IM,ieof,imag,ifour,nrotmg,ir,irot,ifound
+      INTEGER :: ICAL,IM,ieof,imag,ifour,nrotmg,ir,irot,ifound,n,j,ipos(2,1000),nwords
 
 *KEEP,fourier.
       include 'fourier.cmn'
@@ -108,9 +110,9 @@ C    STRUCTURE IS CENTERED AROUND ORIGIN
 
       DOUBLE PRECISION VN,BETA,V0,X1,Y1,Z1,X2,Y2,Z2
      &  ,VX1,VY1,VZ1,VX2,VY2,VZ2,ANG1z,ANG2z,DANGz,ang1y,ang2y,dangy
-     &  ,DTIM,BSHIFT,xlen2,dint,bx,by,bz,
+     &  ,DTIM,BSHIFT,xlen2,dint,bx,by,bz,x,y,z,
      &  xfour(nfoumagcp+2+2),dxfour,
-     &  posi(7,5),edge(2),strength,angle,dlength,seclen,
+     &  posi(7,5),edge(2),strength,angle,dlength,seclen,scale(6),offset(3),
      &  fint,gap,hgap,de,ds,dum,r,xexit,zexit,fringe,fa,fb,fc,angex
 
       COMPLEX CKOEF(nfoumagcp/2+1+2)
@@ -122,7 +124,7 @@ C    STRUCTURE IS CENTERED AROUND ORIGIN
       character(32) cbmodel,cposmodel
       CHARACTER(3) CDUM2
       CHARACTER(5) CDUM1
-      CHARACTER(256) cnam(nmgsqp),clow
+      CHARACTER(256) cnam(nmgsqp),clow,cfile(nmgsqp),cline
 
       save ical, cnam
 
@@ -138,6 +140,7 @@ C- OPEN FILE, READ FIRST TIME IN ORDER TO DECODE MAGNET-TYPES
         OPEN(UNIT=LUNMG,FILE=FILEMG,FORM='FORMATTED',STATUS='OLD')
 
         mmag=0
+        nmgsq=0
         nrotmg=0
         rotmg=0.0d0
         pmag=0.0d0
@@ -162,12 +165,13 @@ C- OPEN FILE, READ FIRST TIME IN ORDER TO DECODE MAGNET-TYPES
               endif
             enddo
             if (ifound.eq.0) then
-              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
-              write(6,*)"*** Limit is 10, will ignore it"
+              write(6,*)"*** Error in BMAGSEQ: Magnet not found: ",ctyp(im)
+              write(6,*)"*** Will ignore it"
+              read(lunmg,*) cline
               cycle
             endif
             if (pmag(19,i).ge.10.0d0) then
-              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
+              write(6,*)"*** Error in BMAGSEQ: Too many rotations or shifts for magnet ",cnam(im)
               write(6,*)"*** Limit is 10, will ignore it"
               read(lunmg,*)cdum1,cdum2
             else
@@ -177,6 +181,32 @@ C- OPEN FILE, READ FIRST TIME IN ORDER TO DECODE MAGNET-TYPES
               read(lunmg,*)cdum1,cdum2,rotmg(1:7,irot,i)
             endif
             pmag(19,im)=pmag(19,i)
+          else if (clow.eq.'bscale') then
+            ifound=0
+            do i=1,mmag
+              if (cnam(i).eq.ctyp(im)) then
+                ifound=i
+                exit
+              endif
+            enddo
+            if (ifound.eq.0) then
+              write(6,*)"*** Error in BMAGSEQ: Magnet not found: ",ctyp(im)
+              write(6,*)"*** Will ignore it"
+              read(lunmg,*) cline
+              cycle
+            endif
+            if (pmag(19,i).ge.10.0d0) then
+              write(6,*)"*** Error in BMAGSEQ: Too many operations for magnet ",cnam(im)
+              write(6,*)"*** Limit is 10, will ignore it"
+              read(lunmg,*)cdum1,cdum2
+            else
+              nrotmg=nrotmg+1
+              pmag(19,i)=pmag(19,i)+1.0d0
+              irot=int(pmag(19,i))
+              read(lunmg,*)cdum1,cdum2,rotmg(1:3,irot,i)
+              pmag(20,i)=-nrotmg
+            endif
+            pmag(19:20,im)=pmag(19:20,i)
           else if (clow.eq.'brotate') then
             ifound=0
             do i=1,mmag
@@ -186,12 +216,13 @@ C- OPEN FILE, READ FIRST TIME IN ORDER TO DECODE MAGNET-TYPES
               endif
             enddo
             if (ifound.eq.0) then
-              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
-              write(6,*)"*** Limit is 10, will ignore it"
+              write(6,*)"*** Error in BMAGSEQ: Magnet not found: ",ctyp(im)
+              write(6,*)"*** Will ignore it"
+              read(lunmg,*) cline
               cycle
             endif
             if (pmag(19,i).ge.10.0d0) then
-              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
+              write(6,*)"*** Error in BMAGSEQ: Too many rotations or shifts for magnet ",cnam(im)
               write(6,*)"*** Limit is 10, will ignore it"
               read(lunmg,*)cdum1,cdum2
             else
@@ -211,12 +242,13 @@ C- OPEN FILE, READ FIRST TIME IN ORDER TO DECODE MAGNET-TYPES
               endif
             enddo
             if (ifound.eq.0) then
-              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
-              write(6,*)"*** Limit is 10, will ignore it"
+              write(6,*)"*** Error in BMAGSEQ: Magnet not found: ",ctyp(im)
+              write(6,*)"*** Will ignore it"
+              read(lunmg,*) cline
               cycle
             endif
             if (pmag(19,i).ge.10.0d0) then
-              write(6,*)"*** Error in BMAGSEQ: To many rotations or shifts for magnet ",cnam(im)
+              write(6,*)"*** Error in BMAGSEQ: Too many rotations or shifts for magnet ",cnam(im)
               write(6,*)"*** Limit is 10, will ignore it"
               read(lunmg,*)cdum1,cdum2
             else
@@ -231,6 +263,7 @@ C- OPEN FILE, READ FIRST TIME IN ORDER TO DECODE MAGNET-TYPES
               pmag(1:6,im)=0.0d0
               call util_skip_commentblock_end(lunmg,ieof)
               READ(LUNMG,*,iostat=istatus)CDUM1,CDUM2,PMAG(1:5,IM)
+              pmag(5,im)=-pmag(5,im) !20.1.2025 to be consistent with key 'rotate'
               if (istatus.ne.0) then
 c              rewind(lunmg)
                 backspace(lunmg)
@@ -269,6 +302,20 @@ c              rewind(lunmg)
               !r=dbrho/strength
               dibounds(1,im)=pmag(1,im)
               dibounds(2,im)=pmag(7,im)
+
+            else IF (CTYP(IM).EQ.'FOUR') THEN
+
+              nmgsq=nmgsq+1
+              call util_skip_commentblock_end(lunmg,ieof)
+              read(lunmg,*)cdum1,cdum2,cfile(nmgsq),pmag(5,im),pmag(1:3,im),pmag(6,im)
+              pmag(4,im)=nmgsq
+
+            else IF (CTYP(IM).EQ.'MAP') THEN
+
+              nmgsq=nmgsq+1
+              call util_skip_commentblock_end(lunmg,ieof)
+              read(lunmg,*)cdum1,cdum2,cfile(nmgsq),pmag(5,im),pmag(1:3,im)
+              pmag(4,im)=nmgsq
 
             else IF (
      &          CTYP(IM).EQ.'SBEND' .or.
@@ -491,7 +538,30 @@ c          endif
           stop
         endif
 
+        n=0
+        if (nmgsq.gt.0) then
+          allocate(seqmag(nmgsq))
+          do im=1,mmag
+            if (ctyp(im).eq.'FOUR') then
+              n=n+1
+              seqmag(n)%cfilefour=cfile(n)
+              seqmag(n)%pmag(1:20)=pmag(1:20,im)
+            else if (ctyp(im).eq.'MAP') then
+              n=n+1
+              seqmag(n)%cfilemap=cfile(n)
+              seqmag(n)%pmag(1:20)=pmag(1:20,im)
+              seqmag(n)%xcen=seqmag(n)%pmag(1)
+              seqmag(n)%ycen=seqmag(n)%pmag(2)
+              seqmag(n)%zcen=seqmag(n)%pmag(3)
+              seqmag(n)%rho=seqmag(n)%pmag(5)
+            endif
+            if (n.eq.nmgsq) exit
+          enddo
+        endif
+
 C---{ CORRECT FOR FRINGE-FIELD-EFFECTS
+
+        corr=1.0d0
 
         IF (KMAGCOR.NE.0) THEN
 
@@ -716,15 +786,6 @@ C---} CORRECT FOR FRINGE-FIELD-EFFECTS
           else if (ctyp(im).eq.'UE') then
             WRITE(LUNGFO,1201) trim(cnam(im)),ctyp(im),uebounds(1:2,im),PMAG(1:13,IM)
           endif
-c          if (pmag(20,im).ne.0.0d0) then
-c            WRITE(LUNGFO,*)'      Shift:',sngl(shiftmg(1:3,im))
-c          endif
-c          if (pmag(19,im).ne.0.0d0) then
-c            WRITE(LUNGFO,*)'      Rotation:'
-c            WRITE(LUNGFO,*)'      ',sngl(rotmg(1,:,im))
-c            WRITE(LUNGFO,*)'      ',sngl(rotmg(2,:,im))
-c            WRITE(LUNGFO,*)'      ',sngl(rotmg(3,:,im))
-c          endif
 1201      FORMAT('      ',a,' ',a5,15E14.6)
         enddo
         write(lungfo,*)

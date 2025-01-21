@@ -1,4 +1,5 @@
-*CMZ :          19/01/2025  10.05.26  by  Michael Scheer
+*CMZ :          21/01/2025  16.11.51  by  Michael Scheer
+*CMZ :  4.01/07 19/01/2025  10.05.26  by  Michael Scheer
 *CMZ :  4.00/11 26/07/2021  09.08.58  by  Michael Scheer
 *CMZ :  3.06/00 11/02/2019  12.49.34  by  Michael Scheer
 *CMZ :  3.04/00 19/01/2018  16.33.13  by  Michael Scheer
@@ -17,7 +18,10 @@
 *CMZ : 00.00/00 28/04/94  16.13.42  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE BMAGSEQC(XIN,YIN,ZIN,BXOUT,BYOUT,BZOUT,AXOUT,AYOUT,AZOUT)
-*KEEP,GPLHINT.
+
+      use magseqf90m
+
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -80,8 +84,7 @@
      &  strength,pin(3),center(3),pout(3),vnin(3),vnout(3),b(3),edge(2),x,y,z,xrs(3),
      &  x2,x3,x4,x5,y2,y3,vin(3),vrot(3),vout(3),phi
 
-      integer ical,istatus,modus,irsh
-      data ical/0/
+      integer :: ical=0,istatus,modus,irsh,kmag
 
       x=xin
       y=yin
@@ -240,6 +243,26 @@ C- FIELD
 
           call bybend(mmag,im,x,y,z,bxout,byout,bzout,axout,ayout,azout)
 
+        ELSE IF (ctyp(IM).EQ.'MAP') THEN
+
+          kmag=int(pmag(4,im))
+
+          if (seqmag(kmag)%ical.eq.0.
+     &        .or.x.ge.seqmag(kmag)%xmin
+     &        .or.x.le.seqmag(kmag)%xmax) then
+            call bmapseq(kmag,x,y,z,bxout,byout,bzout,axout,ayout,azout)
+          endif
+
+        ELSE IF (ctyp(IM).EQ.'FOUR') THEN
+
+          kmag=int(pmag(4,im))
+
+          if (seqmag(kmag)%ical.eq.0.
+     &        .or.x.ge.seqmag(kmag)%xmin
+     &        .or.x.le.seqmag(kmag)%xmax) then
+            call bseqfour(kmag,x,y,z,bxout,byout,bzout,axout,ayout,azout)
+          endif
+
         ELSE IF (ctyp(IM).EQ.'SANDW') THEN
 
           call bysandwich(mmag,im,x,y,z,bxout,byout,bzout,axout,ayout,azout)
@@ -394,7 +417,7 @@ C- FIELD
           endif
         ENDIF !CTYP
 
-        if (pmag(20,im).ne.0.0d0) then
+        if (pmag(20,im).gt.0.0d0) then
           irsh=int(pmag(20,im))
           center=rotmg(1:3,irsh,im)
           vrot=rotmg(4:6,irsh,im)
@@ -404,6 +427,13 @@ C- FIELD
           bxout=vout(1)
           byout=vout(2)
           bzout=vout(3)
+        endif
+
+        if (pmag(20,im).lt.0.0d0) then
+          irsh=-int(pmag(20,im))
+          bxout=bxout*rotmg(1,irsh,im)
+          byout=byout*rotmg(2,irsh,im)
+          bzout=bzout*rotmg(3,irsh,im)
         endif
 
         BX=BX+BXOUT
