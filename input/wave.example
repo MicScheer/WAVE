@@ -309,8 +309,23 @@
 
                 ! file format: *
                 ! 1th column (ASCII): dummy
-                ! 2th column (ASCII): magnet type (DI or QP)
-                !
+                ! 2th column (ASCII): magnet type (DI, QP or ...)
+
+                ! for x,y,z,bx,by,bz field maps ('MAP')
+
+                !   3th column: bending radius [m]
+                !   4th column: x [m]
+                !   5th column: y [m]
+                !   6th column: z [m]
+		
+                ! for Fourier expanded fields ('FOUR')
+
+                !   3th column: bending radius [m]
+                !   4th column: x [m]
+                !   5th column: y [m]
+                !   6th column: z [m]
+                !   7th column: k of transversal gradient [1/m]
+		
                 ! for dipoles (Sector magnet SBEND, rectangular magnet RBEND),
                 !(see manual of tracking code elegant for CSBEND):
 
@@ -414,7 +429,7 @@
                 !               to take displacement of beam into
                 !               account (due to dipoles)
                 !   7th column: rotation angle of magnet in the orbit
-         !                      plane [rad] to take slope of trajectory into
+                !               plane [rad] to take slope of trajectory into
                 !               account (due to dipoles)
 
                 ! for sextupoles (SX):
