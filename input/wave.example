@@ -434,7 +434,7 @@
 
                 ! for sextupoles (SX):
                 !   3th column: length of magnet [m]
-                !   4th column: gradient g of quadrupole [1/m**3]
+                !   4th column: gradient g of sextopole [1/m**3]
                 !   5th column: x-position of magnet center [m]
                 !   6th column: z-position of magnet center [m]
                 !               to take displacement of beam into
@@ -450,7 +450,7 @@
 		
 		! Operations:
 		
-                ! 1th column (ASCII): rotation (rotation of magnet geometry)
+                ! 1th column (ASCII): rotate (rotation of magnet geometry)
                 ! 2th column (ASCII): magnet name
                 ! 3th column: x of rotation axis [m]
                 ! 4th column: y of rotation axis [m]
@@ -460,13 +460,13 @@
                 ! 8th column: z-component of rotation axis
                 ! 9th column: rotation angle [degree]
 		
-                ! 1th column (ASCII): shiftn (shift of magnet geometry)
+                ! 1th column (ASCII): shift (shift of magnet geometry)
                 ! 2th column (ASCII): magnet name
                 ! 3th column: x-shift [m]
                 ! 4th column: y-sifht [m]
                 ! 5th column: z-shift [m]
 		
-                ! 1th column (ASCII): Brotation (rotation of magnet field)
+                ! 1th column (ASCII): brotate (rotation of magnet field)
                 ! 2th column (ASCII): magnet name
                 ! 3th column: x of rotation axis [m]
                 ! 4th column: y of rotation axis [m]
@@ -477,7 +477,13 @@
                 ! 9th column: rotation angle [degree]
 		
 
-          KMAGCOR=1  ! flag to correct fringe field effects and slopes of
+                ! 1th column (ASCII): bscale (shift of magnet geometry)
+                ! 2th column (ASCII): magnet name
+                ! 3th column: scaling factor for Bx
+                ! 4th column: scaling factor for By
+                ! 5th column: scaling factor for Bz
+		
+          KMAGCOR=0  ! flag to correct fringe field effects and slopes of
                      ! trajectory on the deflection angle
                      ! Be aware of side-effects
                      ! KMAGCOR<0: Only the on-axis integral is corrected

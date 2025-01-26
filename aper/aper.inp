@@ -1,0 +1,5 @@
+-1000.0000       1000.000 ! min. and max. of x-axis 
+-450.0000      +1000.0000 ! x-intervall
+-100.00000      100.00000 ! min. and max. of y-axis
+10 ! width of magnets
+0.0000000E+00 ! WLS-position
