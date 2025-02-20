@@ -385,12 +385,14 @@ def wave_update():
       klibm = 1
     #endtry
 
-    if ddd == 'mshcern' or ddd == 'mshplt':
+#    if ddd == 'mshcern' or ddd == 'mshplt':
+    if ddd == 'mshcern':
       klibm = 0
 
     if Tlibm > Tlib or klibm == 1:
       klib = 1
 
+    #reakpoint()
     scompmod = "cd " + dd + Sepp + "mod && " + scomp + '-J.. '
     scomp = "cd " + dd + " && " + scomp
 
@@ -409,6 +411,8 @@ def wave_update():
       fo = ff[:-1] + "o"
       fm = ff[:-1] + "mod"
 
+      #reakpoint()
+
       Flines = open(ds+"mod"+Sepp+ff,'r')
 
       while True:
@@ -425,6 +429,7 @@ def wave_update():
       Flines.close()
 
       if Iverbose > 0: print("\nModule:",m)
+      breakpoint()
       scom = scompmod + "-o " + fo + " " + ff
       if Iverbose > 0: print("\n",scom,"\n")
       if Idry == 0: forcomp(scom)
@@ -697,6 +702,7 @@ def wave_compile():
   ' ..' + Sepp + 'lib' + Sepp + 'libmhbook_debug.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libmhbook_modules_debug.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_modules_debug.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libmshcern_debug.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libwave_modules_debug.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_debug.a' + \
@@ -705,6 +711,7 @@ def wave_compile():
   ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_debug.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libwave_debug.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_debug.a'
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_modules_debug.a'
   #endif
 
   if Idry: print(scom,"\n")

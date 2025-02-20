@@ -384,7 +384,8 @@ def wave_update():
       klibm = 1
     #endtry
 
-    if ddd == 'mshcern' or ddd == 'mshplt':
+#    if ddd == 'mshcern' or ddd == 'mshplt':
+    if ddd == 'mshcern':
       klibm = 0
 
     if Tlibm > Tlib or klibm == 1:
@@ -696,6 +697,7 @@ def wave_compile():
   ' ..' + Sepp + 'lib' + Sepp + 'libmhbook.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libmhbook_modules.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libmshplt.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_modules.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libmshcern.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libwave_modules.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp.a' + \
@@ -703,7 +705,8 @@ def wave_compile():
   ' ..' + Sepp + 'lib' + Sepp + 'libwave.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp.a' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libwave.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt.a'
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_modules.a'
   #endif
 
   if Idry: print(scom,"\n")
