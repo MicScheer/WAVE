@@ -3,6 +3,8 @@
       integer iwstat(maxinstp),iwinstance,nwinstances,nwgood
       integer kpython
 
+      integer getpid
+
       character(32) chplatform, chrmtree, chrmdir,chrmfile,chmkdir,chcpfile,
      &  chcptree,chmvfile
       character(1024) chpythonpath,chhostname,chcompiler,chcwd,chwavepath,

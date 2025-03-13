@@ -1,5 +1,6 @@
-*CMZ :  4.01/02 05/05/2023  16.01.54  by  Michael Scheer
-*CMZ :  4.01/00 13/03/2023  14.53.55  by  Michael Scheer
+*CMZ :          11/03/2025  09.34.28  by  Michael Scheer
+*CMZ :  4.01/02 05/05/2023  15.52.33  by  Michael Scheer
+*CMZ :  4.01/00 13/03/2023  13.32.35  by  Michael Scheer
 *CMZ :  4.00/11 16/02/2021  14.20.30  by  Michael Scheer
 *CMZ :  2.01/08 13/08/2020  11.30.15  by  Michael Scheer
 *CMZ :  2.01/05 26/06/2020  14.58.35  by  Michael Scheer
@@ -78,7 +79,7 @@
       module undumagf90m
 
 c +PATCH,//UNDUMAG/SEQ
-c +DECK,UNDUMAGF90M.
+c +DECK,UNDUMAGF90M,T=F77.
 
       implicit none
 
@@ -145,8 +146,7 @@ c      real*4, dimension (:,:,:), allocatable :: wwmatrix
      &  kforcemag,kurad,kbextern,kresiron,kprint,ndivfboxy,
      &  ncwires,nrace,nwind,ncrace,ncfila,narc,ncarc,nwcarc,nwrace,nwwind,
      &  nwcrace,nwarc,ncoil,
-     &  nrbar,nwrbar,nthwir,nwthwir,nmagcyl,kwave,
-     &  iforcegrid
+     &  nrbar,nwrbar,nthwir,nwthwir,nmagcyl,kwave,iforcegrid
 
       integer kundumap
 
@@ -158,7 +158,7 @@ c      real*4, dimension (:,:,:), allocatable :: wwmatrix
      &  chmagsm,chmothsm,chmagsi,chmothsi,chmagpols,chmothso
       character(32) chmag,chmoth,chforcemag
 
-      namelist/undumagn/
+      namelist/undumagnam/
      &  maxiter,maxiterrec,maxiteriron,nchiiron,ibulk,iunduplot,kcomment,
      &  krunnum,kdate,ktetmesh,kesti,
      &  kplsym,nxmap,intmaglis,noduplis,nymap,nzmap

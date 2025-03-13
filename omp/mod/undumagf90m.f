@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  09.34.28  by  Michael Scheer
 *CMZ :  4.01/02 05/05/2023  15.52.33  by  Michael Scheer
 *CMZ :  4.01/00 13/03/2023  13.32.35  by  Michael Scheer
 *CMZ :  4.00/11 16/02/2021  14.20.30  by  Michael Scheer
@@ -157,7 +158,7 @@ c      real*4, dimension (:,:,:), allocatable :: wwmatrix
      &  chmagsm,chmothsm,chmagsi,chmothsi,chmagpols,chmothso
       character(32) chmag,chmoth,chforcemag
 
-      namelist/undumagn/
+      namelist/undumagnam/
      &  maxiter,maxiterrec,maxiteriron,nchiiron,ibulk,iunduplot,kcomment,
      &  krunnum,kdate,ktetmesh,kesti,
      &  kplsym,nxmap,intmaglis,noduplis,nymap,nzmap

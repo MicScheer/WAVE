@@ -1,11 +1,13 @@
 
 # +PATCH,//WAVE/PYTHON
-# +DECK,wave_make,T=PYTHON.
+# +DECK,WAVE_MAKE_INTEL_DEBUG,T=PYTHON.
 
 import os
 import sys
 import platform
 import glob
+
+#reakpoint()
 
 def Quit(*args, delay=0):
   #reakpoint()
@@ -102,7 +104,7 @@ if nargs > 1:
     n = '\n'
     print(n)
     print("Usage: python3 " + args[0] + " [verbose level]",n)
-    print("To force total recompilation delete ",n,"bin" + Sepp + "wave.exe",n)
+    print("To force total recompilation delete ",n,"bin" + Sepp + "wave_debug.exe",n)
     Quit()
   #end try
 #endif
@@ -111,10 +113,10 @@ if nargs > 2: Idebug = int(args[2])
 
 global Wave_tree,Scomp_all,Scomp_omp,Scomp,Texe,Tlib,Scomp_nowarn
 
-Scomp = "gfortran -std=legacy -c -O2 -cpp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
-Scomp_nowarn = "gfortran -w -std=legacy -c -O2 -cpp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
-Scomp_all = "gfortran -std=legacy -c -O2 -cpp -fcheck=all -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
-Scomp_omp = "gfortran -std=legacy -c -O2 -cpp -finit-local-zero -fcheck=all -fopenmp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -ffixed-line-length-none -funroll-loops "
+Scomp = "ifx -save -fpp  -c -g -O0 -traceback -vms -nod-lines -warn noalignments -zero -132 -funroll-loops "
+Scomp_nowarn = "ifx -save -fpp -w  -c -g -O0 -traceback -vms -nod-lines -warn noalignments -zero -132 -funroll-loops "
+Scomp_all = "ifx -save -fpp  -c -g -O0  -traceback -vms -nod-lines -warn noalignments -zero -132 -funroll-loops "
+Scomp_omp = "ifx -fpp  -c -g -O0 -zero -132  -fopenmp -traceback -vms -nod-lines -warn noalignments  -funroll-loops "
 
 try:
   import config_fortran as cf
@@ -221,7 +223,7 @@ def get_wave_tree():
   global WI,Wave_tree,Iverbose,Idry,Idebug,Texe,Tlib,Sepp
 
   try:
-    Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave.exe').st_mtime_ns
+    Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave_debug.exe').st_mtime_ns
   except:
     Texe = 0
     kmain = 1
@@ -298,7 +300,7 @@ def wave_update():
   get_wave_tree()
 
   try:
-    Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave.exe').st_mtime_ns
+    Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave_debug.exe').st_mtime_ns
   except:
     Texe = 0
     kmain = 1
@@ -328,37 +330,37 @@ def wave_update():
 
     if ddd == 'mhbook':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libmhbook.a'
-      libm = WI + 'lib' + Sepp + 'libmhbook_modules.a'
+      lib = WI + 'lib' + Sepp + 'libmhbook_debug.a'
+      libm = WI + 'lib' + Sepp + 'libmhbook_modules_debug.a'
     elif ddd == 'mshcern':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libmshcern.a'
-      libm = WI + 'lib' + Sepp + 'libmshcern_modules.a'
+      lib = WI + 'lib' + Sepp + 'libmshcern_debug.a'
+      libm = WI + 'lib' + Sepp + 'libmshcern_modules_debug.a'
       scomp = Scomp_nowarn
     elif ddd == 'mshplt':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libmshplt.a'
-      libm = WI + 'lib' + Sepp + 'libmshplt_modules.a'
+      lib = WI + 'lib' + Sepp + 'libmshplt_debug.a'
+      libm = WI + 'lib' + Sepp + 'libmshplt_modules_debug.a'
     elif ddd == 'nomp':
       #reakpoint()
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libwave.a'
-      libm = WI + 'lib' + Sepp + 'libwave_modules.a'
+      lib = WI + 'lib' + Sepp + 'libwave_debug.a'
+      libm = WI + 'lib' + Sepp + 'libwave_modules_debug.a'
       scomp = Scomp_all
     elif ddd == 'omp':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libwave_omp.a'
-      libm = WI + 'lib' + Sepp + 'libwave_omp_modules.a'
+      lib = WI + 'lib' + Sepp + 'libwave_omp_debug.a'
+      libm = WI + 'lib' + Sepp + 'libwave_omp_modules_debug.a'
       scomp = Scomp_omp
     elif ddd == 'urad':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'liburad.a'
-      libm = WI + 'lib' + Sepp + 'liburad_modules.a'
+      lib = WI + 'lib' + Sepp + 'liburad_debug.a'
+      libm = WI + 'lib' + Sepp + 'liburad_modules_debug.a'
       scomp = Scomp_all  # uradcfft does boundary tricks
     elif ddd == 'user':
       if Iverbose >= 0: print("\nProcessing",dd)
-      lib = WI + 'lib' + Sepp + 'libuser.a'
-      libm = WI + 'lib' + Sepp + 'libuser_modules.a'
+      lib = WI + 'lib' + Sepp + 'libuser_debug.a'
+      libm = WI + 'lib' + Sepp + 'libuser_modules_debug.a'
       scomp = Scomp_omp
     #endif
 
@@ -391,7 +393,7 @@ def wave_update():
     if Tlibm > Tlib or klibm == 1:
       klib = 1
 
-    scompmod = "cd " + dd + Sepp + "mod && " + scomp + '-J.. '
+    scompmod = "cd " + dd + Sepp + "mod && " + scomp + '-module .. '
     scomp = "cd " + dd + " && " + scomp
 
     for f in modfor: # Compile modules
@@ -621,7 +623,7 @@ def wave_update():
   if kmain:
     if Idry == 0: wave_compile()
   else:
-    if Iverbose >=0: print("\n--- No need to update " + WI  + "bin" + Sepp + "wave.exe ---\n")
+    if Iverbose >=0: print("\n--- No need to update " + WI  + "bin" + Sepp + "wave_debug.exe ---\n")
   #endif
 
 
@@ -638,7 +640,7 @@ def wave_compile():
   #Idry = 1
 
   if Iverbose:
-    print("\nMaking .." + Sepp + "bin" + Sepp + "wave.exe\n")
+    print("\nMaking .." + Sepp + "bin" + Sepp + "wave_debug.exe\n")
 
   if platform.system() == 'Windows':
     Move = 'move '
@@ -663,16 +665,18 @@ def wave_compile():
   #else: forcomp(scom)
 
   scom = 'cd ' + pathmod + ' && ' \
-  'gfortran -c -O2' + \
-  ' -fcheck=bounds -fbacktrace' + \
-  ' -ffpe-summary=invalid,zero,overflow' + \
-  ' -fdec -fd-lines-as-comments' + \
-  ' -Wno-align-commons -fno-automatic -ffixed-line-length-none' + \
-  ' -finit-local-zero -J..' + \
+  'ifx -save -fpp -c -g -O0' + \
+  ' -check bounds -traceback' + \
+  ' -vms -nod-lines' + \
+  ' -warn noalignments ' + \
+  ' -zero -132 -module ..' + \
   ' -funroll-loops *.f'
 
   if Idry: print(scom,"\n")
-  else: forcomp(scom)
+  else:
+    if Iverbose: print('\n',scom)
+    forcomp(scom)
+  #endif
 
   #scom = move + pathmod + '*.mod ' + pathmain
 
@@ -680,33 +684,31 @@ def wave_compile():
   #else: forcomp(scom)
 
   scom = 'cd ' + pathmain + ' && ' \
-  'gfortran -O2 -cpp' + \
+  'ifx -fpp -g -O0' + \
   ' -fopenmp' + \
-  ' -fcheck=bounds' + \
-  ' -fbacktrace' + \
-  ' -ffpe-summary=invalid,zero,overflow' + \
-  ' -fdec -fd-lines-as-comments' + \
-  ' -Wno-align-commons' + \
-  ' -ffixed-line-length-none' + \
-  ' -finit-local-zero' + \
+  ' -check bounds' + \
+  ' -traceback' + \
+  ' -vms -nod-lines' + \
+  ' -warn noalignments' + \
+  ' -zero -132' + \
   ' -funroll-loops' + \
-  ' -o ..' + Sepp + 'bin' + Sepp + 'wave.exe wave_main.f' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libuser.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libuser_modules.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmhbook.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmhbook_modules.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_modules.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmshcern.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave_modules.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_modules.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libwave.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt.a' + \
-  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_modules.a'
+  ' -o ..' + Sepp + 'bin' + Sepp + 'wave_debug.exe wave_main.f' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libuser_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libuser_modules_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmhbook_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmhbook_modules_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_modules_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshcern_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_modules_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_modules_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_omp_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libwave_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_debug.a' + \
+  ' ..' + Sepp + 'lib' + Sepp + 'libmshplt_modules_debug.a'
   #endif
 
   if Idry: print(scom,"\n")

@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  12.03.57  by  Michael Scheer
 *CMZ :  4.00/07 12/05/2020  13.52.08  by  Michael Scheer
 *CMZ :  4.00/04 19/11/2019  17.28.12  by  Michael Scheer
 *-- Author : Michael Scheer
@@ -5,7 +6,7 @@
 
       implicit none
 
-      integer pid,istat,nfirst,nlast,luno,kstat,lpid,ifound,i
+      integer pid,istat,nfirst,nlast,luno,kstat,lpid,ifound,i,isystem
       real r(1)
       character(16) chran, chpid, cstat
       character(1024) chpy,cline,chpyout
@@ -19,7 +20,7 @@
       write(chran,*)int(r*10**8)
       call  util_string_trim(chran,nfirst,nlast)
       chpy=".w" // chran(nfirst:nlast) // ".pid"
-      istat = system('tasklist /nh /fi "pid eq "' // trim(chpid) // '" > ' // trim(chpy))
+      istat=isystem('tasklist /nh /fi "pid eq "' // trim(chpid) // '" > ' // trim(chpy))
       if (istat.ne.0) then
         istat = -1
         return
@@ -41,7 +42,7 @@
 
  91   close(luno)
 
-      istat = system("rm " // trim(chpy))
+      istat=isystem("rm " // trim(chpy))
       if (istat.ne.0) then
         istat = -1
         return

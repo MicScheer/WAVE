@@ -1,11 +1,13 @@
 
 # +PATCH,//WAVE/PYTHON
-# +DECK,wave_make,T=PYTHON.
+# +DECK,wave_make_intel,T=PYTHON.
 
 import os
 import sys
 import platform
 import glob
+
+#reakpoint()
 
 def Quit(*args, delay=0):
   #reakpoint()
@@ -111,10 +113,10 @@ if nargs > 2: Idebug = int(args[2])
 
 global Wave_tree,Scomp_all,Scomp_omp,Scomp,Texe,Tlib,Scomp_nowarn
 
-Scomp = "gfortran -std=legacy -c -O2 -cpp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
-Scomp_nowarn = "gfortran -w -std=legacy -c -O2 -cpp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
-Scomp_all = "gfortran -std=legacy -c -O2 -cpp -fcheck=all -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -fno-automatic -ffixed-line-length-none -finit-local-zero -funroll-loops "
-Scomp_omp = "gfortran -std=legacy -c -O2 -cpp -finit-local-zero -fcheck=all -fopenmp -fbacktrace -ffpe-summary=invalid,zero,overflow -fdec -fd-lines-as-comments -Wno-align-commons -ffixed-line-length-none -funroll-loops "
+Scomp = "ifx -save -fpp  -c -O2 -traceback -vms -nod-lines -warn noalignments -zero -132 -funroll-loops "
+Scomp_nowarn = "ifx -save -fpp -w  -c -O2 -traceback -vms -nod-lines -warn noalignments -zero -132 -funroll-loops "
+Scomp_all = "ifx -save -fpp  -c -O2  -traceback -vms -nod-lines -warn noalignments -zero -132 -funroll-loops "
+Scomp_omp = "ifx -fpp  -c -O2 -zero -132  -fopenmp -traceback -vms -nod-lines -warn noalignments  -funroll-loops "
 
 try:
   import config_fortran as cf
@@ -391,7 +393,7 @@ def wave_update():
     if Tlibm > Tlib or klibm == 1:
       klib = 1
 
-    scompmod = "cd " + dd + Sepp + "mod && " + scomp + '-J.. '
+    scompmod = "cd " + dd + Sepp + "mod && " + scomp + '-module .. '
     scomp = "cd " + dd + " && " + scomp
 
     for f in modfor: # Compile modules
@@ -663,16 +665,18 @@ def wave_compile():
   #else: forcomp(scom)
 
   scom = 'cd ' + pathmod + ' && ' \
-  'gfortran -c -O2' + \
-  ' -fcheck=bounds -fbacktrace' + \
-  ' -ffpe-summary=invalid,zero,overflow' + \
-  ' -fdec -fd-lines-as-comments' + \
-  ' -Wno-align-commons -fno-automatic -ffixed-line-length-none' + \
-  ' -finit-local-zero -J..' + \
+  'ifx -save -fpp -c -O2' + \
+  ' -check bounds -traceback' + \
+  ' -vms -nod-lines' + \
+  ' -warn noalignments ' + \
+  ' -zero -132 -module ..' + \
   ' -funroll-loops *.f'
 
   if Idry: print(scom,"\n")
-  else: forcomp(scom)
+  else:
+    if Iverbose: print('\n',scom)
+    forcomp(scom)
+  #endif
 
   #scom = move + pathmod + '*.mod ' + pathmain
 
@@ -680,15 +684,13 @@ def wave_compile():
   #else: forcomp(scom)
 
   scom = 'cd ' + pathmain + ' && ' \
-  'gfortran -O2 -cpp' + \
+  'ifx -fpp -O2' + \
   ' -fopenmp' + \
-  ' -fcheck=bounds' + \
-  ' -fbacktrace' + \
-  ' -ffpe-summary=invalid,zero,overflow' + \
-  ' -fdec -fd-lines-as-comments' + \
-  ' -Wno-align-commons' + \
-  ' -ffixed-line-length-none' + \
-  ' -finit-local-zero' + \
+  ' -check bounds' + \
+  ' -traceback' + \
+  ' -vms -nod-lines' + \
+  ' -warn noalignments' + \
+  ' -zero -132' + \
   ' -funroll-loops' + \
   ' -o ..' + Sepp + 'bin' + Sepp + 'wave.exe wave_main.f' + \
   ' ..' + Sepp + 'lib' + Sepp + 'libwave.a' + \

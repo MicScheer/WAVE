@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  12.00.36  by  Michael Scheer
 *CMZ :  4.01/02 14/05/2023  13.16.19  by  Michael Scheer
 *CMZ :  4.01/00 09/01/2023  20.53.38  by  Michael Scheer
 *CMZ :  4.00/15 08/04/2022  17.00.19  by  Michael Scheer
@@ -644,16 +645,19 @@ c        CALL MHROUT(IDINPUT,ICYCLE,' ')
         write(luns_mh(kfile_mh),'(a)')"          18    ! length of title"
         write(luns_mh(kfile_mh),'(a)')"INPUT FILE WAVE.IN"
         if (abs(ihinput).eq.1) then
-          write(luns_mh(kfile_mh),'(a)')"                    6           1          11    ! length of pathname, number of variables, and length of variable names"
+          write(luns_mh(kfile_mh),'(a)')"                    6           1          11    "
+     &      //"! length of pathname, number of variables, and length of variable names"
           write(luns_mh(kfile_mh),'(a)')"//WAVE"
           write(luns_mh(kfile_mh),'(a)')"LINE_1:C*32"
         else if (abs(ihinput).eq.2) then
-          write(luns_mh(kfile_mh),'(a)')"                    6           2          11    ! length of pathname, number of variables, and length of variable names"
+          write(luns_mh(kfile_mh),'(a)')"                    6           2          11    "
+     &      //"! length of pathname, number of variables, and length of variable names"
           write(luns_mh(kfile_mh),'(a)')"//WAVE"
           write(luns_mh(kfile_mh),'(a)')"LINE_1:C*32"
           write(luns_mh(kfile_mh),'(a)')"LINE_2:C*32"
         else if (abs(ihinput).eq.3) then
-          write(luns_mh(kfile_mh),'(a)')"                    6           3          11    ! length of pathname, number of variables, and length of variable names"
+          write(luns_mh(kfile_mh),'(a)')"                    6           3          11    "
+     &      //"! length of pathname, number of variables, and length of variable names"
           write(luns_mh(kfile_mh),'(a)')"//WAVE"
           write(luns_mh(kfile_mh),'(a)')"LINE_1:C*32"
           write(luns_mh(kfile_mh),'(a)')"LINE_2:C*32"

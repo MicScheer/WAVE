@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  14.15.58  by  Michael Scheer
 *CMZ :  4.01/02 07/05/2023  12.03.20  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.06.37  by  Michael Scheer
 *CMZ :  4.00/16 23/07/2022  09.11.30  by  Michael Scheer
@@ -29,6 +30,10 @@
       integer kbundumag,luntmp,lunclc,lunmat,istat,lunnam,lund,ki,ke,kio,keo,
      &  kip,kep,kim,kem,indi,inde,nwords,ipos(2,10),
      &  iutil_fexist,lungfo,i,k,k1end,k2end,k1,k2,ixsym,nendpol,nendmag
+
+      integer isystem
+      external isystem
+
 
       character(250) cval,cend
       character(16) c16
@@ -534,7 +539,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag1 HMag1 $colormag                 !key, name, mother, color'
            write(lunclc,'(a)') '$x1LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -542,7 +548,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag2 Mag2 $colormag                  !key, name, mother, color'
            write(lunclc,'(a)') '$x2LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                       !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.        !segmention'
@@ -550,7 +557,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag3 HMag3 $colormag                 !key, name, mother, color'
            write(lunclc,'(a)') '$x3LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -558,7 +566,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag4 HMag4 $colormag                 !key, name, mother, color'
            write(lunclc,'(a)') '$x4LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -566,7 +575,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag5 Mag5 $colormag                  !key, name, mother, color'
            write(lunclc,'(a)') '$x5LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$Br 0.0 -1.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 -1.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                       !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.        !segmention'
@@ -574,7 +584,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag6 HMag6 $colormag                 !key, name, mother, color'
            write(lunclc,'(a)') '$x6LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -585,7 +596,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag7 HMag7 $colormag                 !key, name, mother, color'
            write(lunclc,'(a)') '$x1URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -593,7 +605,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag8 Mag8 $colormag                  !key, name, mother, color'
            write(lunclc,'(a)') '$x2URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                       !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.        !segmention'
@@ -601,7 +614,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag9 HMag9 $colormag                 !key, name, mother, color'
            write(lunclc,'(a)') '$x3URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -609,7 +623,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag10 HMag10 $colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x4URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -617,7 +632,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag11 Mag11 $colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x5URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$Br 0.0 -1.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 -1.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                       !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.        !segmention'
@@ -625,7 +641,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag12 HMag12 $colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x6URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -636,7 +653,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag13 HMag13 $colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -644,7 +662,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag14 Mag14 $colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                       !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.        !segmention'
@@ -652,7 +671,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag15 HMag15 $colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -660,21 +680,24 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag16 HMag16 $colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x4LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag17 Mag17 $colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x5LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$Br 0.0 -1.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 -1.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                       !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.        !segmention'
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag18 HMag18 $colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x6LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -685,7 +708,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag19 HMag19 $colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -693,7 +717,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag20 Mag20 $colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                       !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.        !segmention'
@@ -701,7 +726,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag21 HMag21 $colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -709,7 +735,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag22 HMag22 $colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x4LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -717,7 +744,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag23 Mag23 $colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x5LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$Br 0.0 -1.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 -1.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                       !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.        !segmention'
@@ -725,7 +753,8 @@
            write(lunclc,'(a)') '& Magnet'
            write(lunclc,'(a)') 'Block mag24 HMag24 $colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x6LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -737,7 +766,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag25 Mag25 $e1colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x1E1LRMagCen $yMagCen $zMagCen            !position'
-           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                  !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                  '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -745,7 +775,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag26 Mag26 $e1colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x2E1LRMagCen $yMagCen $zMagCen            !position'
-           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                  !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                  '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                       !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.        !segmention'
@@ -753,7 +784,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag27 HMag27 $e1colormag             !key, name, mother, color'
            write(lunclc,'(a)') '$x3E1LRMagCen $yMagCen $zMagCen            !position'
-           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                 !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                 '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -764,7 +796,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag28 HMag28 $e1colormag             !key, name, mother, color'
            write(lunclc,'(a)') '$x1E1URMagCen $yUMagCen $zMagCen           !position'
-           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                 !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                 '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -772,7 +805,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag29 Mag29 $e1colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x2E1URMagCen $yUMagCen $zMagCen           !position'
-           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                  !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                  '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                       !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.        !segmention'
@@ -780,7 +814,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag30 HMag30 $e1colormag             !key, name, mother, color'
            write(lunclc,'(a)') '$x3E1URMagCen $yUMagCen $zMagCen           !position'
-           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                  !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                  '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                   !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.    !segmention'
@@ -792,7 +827,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag31 HMag31 $e1colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x1E1LLMagCen $yMagCen $zLLMagCen           !position'
-           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                    !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.     !segmention'
@@ -800,7 +836,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag32 Mag32 $e1colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x2E1LLMagCen $yMagCen $zLLMagCen           !position'
-           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                        !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.         !segmention'
@@ -808,7 +845,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag33 HMag33 $e1colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x3E1LLMagCen $yMagCen $zLLMagCen           !position'
-           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                  !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                  '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                    !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.     !segmention'
@@ -820,7 +858,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag34 HMag34 $e1colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x1E1LRMagCen $yUMagCen $zULMagCen          !position'
-           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                  !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                  '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                    !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.     !segmention'
@@ -828,7 +867,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag35 Mag35 $e1colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x2E1LRMagCen $yUMagCen $zULMagCen          !position'
-           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                        !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.         !segmention'
@@ -836,7 +876,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag36 HMag36 $e1colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x3E1LRMagCen $yUMagCen $zULMagCen          !position'
-           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                    !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.     !segmention'
@@ -844,7 +885,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag37 HMag37 $e2colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x1E2LRMagCen $yMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                    !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.     !segmention'
@@ -852,7 +894,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag38 Mag38 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x2E2LRMagCen $yMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                        !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.         !segmention'
@@ -860,7 +903,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag39 HMag39 $e2colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x3E2LRMagCen $yMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                  !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                  '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                    !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.     !segmention'
@@ -872,7 +916,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag40 HMag40 $e2colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x1E2URMagCen $yUMagCen $zMagCen            !position'
-           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                  !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                  '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                    !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.     !segmention'
@@ -880,7 +925,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag41 Mag41 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x2E2URMagCen $yUMagCen $zMagCen            !position'
-           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                        !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.         !segmention'
@@ -888,7 +934,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag42 HMag42 $e2colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x3E2URMagCen $yUMagCen $zMagCen            !position'
-           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                    !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.     !segmention'
@@ -900,7 +947,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag43 HMag43 $e2colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x1E2LLMagCen $yMagCen $zLLMagCen           !position'
-           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                    !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.     !segmention'
@@ -908,7 +956,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag44 Mag44 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x2E2LLMagCen $yMagCen $zLLMagCen           !position'
-           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                        !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.         !segmention'
@@ -916,7 +965,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag45 HMag45 $e2colormag              !key, name, mother, color'
            write(lunclc,'(a)') '$x3E2LLMagCen $yMagCen $zLLMagCen           !position'
-           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                  !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                  '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                    !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.     !segmention'
@@ -928,7 +978,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag46 HMag46 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1E2LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -936,7 +987,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag47 Mag47 $e2colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2E2LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -944,7 +996,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag48 HMag48 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3E2LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -952,7 +1005,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag49 HMag49 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D0LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                      !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                      '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -960,7 +1014,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag50 Mag50 $e2colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D0LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                      !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                      '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -968,7 +1023,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag51 HMag51 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D0LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                     !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                     '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -976,7 +1032,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag52 HMag52 $e1colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D1LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -984,7 +1041,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag53 Mag53 $e1colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D1LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -992,7 +1050,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag54 HMag54 $e1colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D1LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1004,7 +1063,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag55 HMag55 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D0URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                     !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                     '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1012,7 +1072,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag56 Mag56 $e2colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D0URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                      !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                      '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -1020,7 +1081,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag57 HMag57 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D0URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                      !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                      '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1028,7 +1090,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag58 HMag58 $e1colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D1URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1036,7 +1099,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag59 Mag59 $e1colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D1URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -1044,7 +1108,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag60 HMag60 $e1colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D1URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1056,7 +1121,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag61 HMag61 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D0LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                      !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                      '
+     &      //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1064,7 +1130,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag62 Mag62 $e2colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D0LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                      !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                      '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -1072,7 +1139,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag63 HMag63 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D0LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                     !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                     '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1080,7 +1148,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag64 HMag64 $e1colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D1LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1088,7 +1157,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag65 Mag65 $e1colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D1LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -1096,7 +1166,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag66 HMag66 $e1colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D1LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1108,7 +1179,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag67 HMag67 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D0ULMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                     !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $matrec                     '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1116,7 +1188,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag68 Mag68 $e2colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D0ULMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                      !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 0.0 1.0 0.0 $matrec                      '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -1124,7 +1197,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag69 HMag69 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D0ULMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                      !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $matrec                      '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1136,7 +1210,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag70 HMag70 $e1colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D1LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1144,7 +1219,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag71 Mag71 $e1colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D1LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -1152,7 +1228,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag72 HMag72 $e1colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D1LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E1Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1160,7 +1237,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag73 HMag73 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D2LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1168,7 +1246,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag74 Mag74 $e2colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D2LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -1176,7 +1255,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag75 HMag75 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D2LRMagCen $yMagCen $zMagCen              !position'
-           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1188,7 +1268,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag76 HMag76 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D2URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1196,7 +1277,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag77 Mag77 $e2colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D2URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -1204,7 +1286,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag78 HMag78 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D2URMagCen $yUMagCen $zMagCen             !position'
-           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1216,7 +1299,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag79 HMag79 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D2LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1224,7 +1308,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag80 Mag80 $e2colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D2LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -1232,7 +1317,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag81 HMag81 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D2LLMagCen $yMagCen $zLLMagCen            !position'
-           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1244,7 +1330,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag82 HMag82 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x1D2LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                   !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br -1.0 0.0 0.0 $matrec                   '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1252,7 +1339,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag83 Mag83 $e2colormag                !key, name, mother, color'
            write(lunclc,'(a)') '$x2D2LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 0.0 1.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxMag $LyMag $LzMag                         !dimension'
            write(lunclc,'(a)') '$nMagDivX $nMagDivY $nMagDivZ 1. 1.          !segmention'
@@ -1260,7 +1348,8 @@
            write(lunclc,'(a)') '& Special_Magnet'
            write(lunclc,'(a)') 'Block mag84 HMag84 $e2colormag               !key, name, mother, color'
            write(lunclc,'(a)') '$x3D2LRMagCen $yUMagCen $zULMagCen           !position'
-           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                    !length bc and components of mag. vector, material index' //
+           write(lunclc,'(a)') '$E2Br 1.0 0.0 0.0 $matrec                    '
+     &       //'!length of bc and components of mag. vector, material index' //
      &      ''
            write(lunclc,'(a)') '$LxHalfMag $LyMag $LzMag                     !dimension'
            write(lunclc,'(a)') '$nHalfMagDivX $nMagDivY $nMagDivZ 1. 1.      !segmention'
@@ -1313,43 +1402,43 @@
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$nPeriods=" // cval(k1:k2)
 
-          write(cval,'(g12.6)')undugap_h
+          write(cval,'(g13.6)')undugap_h
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$FullGap=" // cval(k1:k2)
 
           write(lunclc,'(a)') " "
-          write(cval,'(g12.6)')abs(umagbc_h)
+          write(cval,'(g13.6)')abs(umagbc_h)
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$Br=" // cval(k1:k2)
-          write(cval,'(g12.6)')abs(umupar_h)
+          write(cval,'(g13.6)')abs(umupar_h)
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$Mu=" // cval(k1:k2)
-          write(cval,'(g12.6)')abs(uksiper_h)
+          write(cval,'(g13.6)')abs(uksiper_h)
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$KsiPerp=" // cval(k1:k2)
           write(lunclc,'(a)') "$MagMat=1"
           write(lunclc,'(a)') " "
 
-          write(cval,'(g12.6)')umaglx_h
+          write(cval,'(g13.6)')umaglx_h
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$LxMag=" // cval(k1:k2)
-          write(cval,'(g12.6)')umagly_h
+          write(cval,'(g13.6)')umagly_h
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$LyMag=" // cval(k1:k2)
-          write(cval,'(g12.6)')umaglz_h
+          write(cval,'(g13.6)')umaglz_h
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$LzMagFull=" // cval(k1:k2)
-          write(cval,'(g12.6)')UMAGCH_H
+          write(cval,'(g13.6)')UMAGCH_H
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$ChamfM=" // cval(k1:k2)
           write(lunclc,'(a)') " "
 
-          write(cval,'(g12.6)')UCOATING_H
+          write(cval,'(g13.6)')UCOATING_H
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$MCoating=" // cval(k1:k2)
           write(lunclc,'(a)') " "
 
-          write(cval,'(g12.6)')UMAGSPAC_H
+          write(cval,'(g13.6)')UMAGSPAC_H
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$AirGap=" // cval(k1:k2)
           write(lunclc,'(a)') " "
@@ -1369,23 +1458,24 @@
           write(lunclc,'(a)') "$IronMat=2"
           write(lunclc,'(a)') " "
 
-          write(cval,'(g12.6)')upollx_h
+          write(cval,'(g13.6)')upollx_h
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$LxPol=" // cval(k1:k2)
-          write(cval,'(g12.6)')upolly_h
+          write(cval,'(g13.6)')upolly_h
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$LyPol=" // cval(k1:k2)
-          write(cval,'(g12.6)')upollz_h
+          write(cval,'(g13.6)')upollz_h
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$LzPolFull=" // cval(k1:k2)
-          write(cval,'(g12.6)')UPOLCH_H
+          write(cval,'(g13.6)')UPOLCH_H
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$ChamfP=" // cval(k1:k2)
 
           write(lunclc,'(a)') " "
-          write(cval,'(g12.6)')UPOLSPAC_H
+          write(cval,'(g13.6)')UPOLSPAC_H
           call util_string_trim(cval,k1,k2)
-          write(lunclc,'(a)') "$KeeperGap=" // cval(k1:k2) // "                 ! Be careful with ixsym, if keeper- and airgap are different"
+          write(lunclc,'(a)') "$KeeperGap=" // cval(k1:k2) // "                 "
+     &      //"! Be careful with ixsym, if keeper- and airgap are different"
           write(lunclc,'(a)') " "
 
           write(cval,*)nupdivx_h
@@ -1404,10 +1494,10 @@
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$nPolDivZHalf=" // cval(k1:k2)
           write(lunclc,'(a)') " "
-          write(cval,'(g12.6)')max(FracDivFe_h,1.0d0)
+          write(cval,'(g13.6)')max(FracDivFe_h,1.0d0)
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$FracDivFeY=" // cval(k1:k2)
-          write(cval,'(g12.6)')max(FracDivFeZ_h,1.0d0)
+          write(cval,'(g13.6)')max(FracDivFeZ_h,1.0d0)
           call util_string_trim(cval,k1,k2)
           write(lunclc,'(a)') "$FracDivFeZ=" // cval(k1:k2)
           write(lunclc,'(a)') " "
@@ -1429,42 +1519,42 @@
               cline="$LxEndMag" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmaglx_h(i)
+              write(cval,'(g13.6)')usmaglx_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
               cline="$LyEndMag" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmagly_h(i)
+              write(cval,'(g13.6)')usmagly_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
               cline="$LzEndMagFull" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmaglz_h(i)
+              write(cval,'(g13.6)')usmaglz_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
               cline="$ChamfEndMag" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmagch_h(i)
+              write(cval,'(g13.6)')usmagch_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
               cline="$SpacerEndMag" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmagspac_h(i)
+              write(cval,'(g13.6)')usmagspac_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
               cline="$YoffsetEndMag" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmagdy_h(i)
+              write(cval,'(g13.6)')usmagdy_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
@@ -1477,42 +1567,42 @@
               cline="$LxEndPol" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmaglx_h(i)
+              write(cval,'(g13.6)')usmaglx_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
               cline="$LyEndPol" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmagly_h(i)
+              write(cval,'(g13.6)')usmagly_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
               cline="$LzEndPolFull" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmaglz_h(i)
+              write(cval,'(g13.6)')usmaglz_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
               cline="$ChamfEndPol" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmagch_h(i)
+              write(cval,'(g13.6)')usmagch_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
               cline="$SpacerEndPol" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmagspac_h(i)
+              write(cval,'(g13.6)')usmagspac_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
               cline="$YoffsetEndPol" // cend(k1end:k2end) // "="
               call util_string_trim(cline,k1,k2)
               cline=cline(k1:k2)
-              write(cval,'(g12.6)')usmagdy_h(i)
+              write(cval,'(g13.6)')usmagdy_h(i)
               call util_string_trim(cval,k1,k2)
               write(lunclc,'(a)')trim(cline) // cval(k1:k2)
 
@@ -1664,7 +1754,8 @@
           write(lunclc,'(a)') "& Magnet"
           write(lunclc,'(a)') "BlockChamf mag1 Mag1 $Mcol                  !key, name, mother, color "
           write(lunclc,'(a)') "$xMag1 $yMag $zMag                          !position of magnet"
-          write(lunclc,'(a)') "$Br 1.0 0.0 0.0 $MagMat                     !length bc and components of mag. vector, material index"
+          write(lunclc,'(a)') '$Br 1.0 0.0 0.0 $MagMat                     '
+     &      //'!length of bc and components of mag. vector, material index'
           write(lunclc,'(a)') "$LxMag $LyMag $LzMag $ChamfM                !dimensions"
           write(lunclc,'(a)') "$nMagDivX $nMagDivY $nMagDivZHalf 1. 1.     !segmentation"
           write(lunclc,'(a)') " "
@@ -1695,7 +1786,8 @@
           write(lunclc,'(a)') "& Magnet"
           write(lunclc,'(a)') "BlockChamf mag2 Mag2 $Mcol                  !key, name, mother, color "
           write(lunclc,'(a)') "$xMag2 $yMag $zMag                          !position of magnet"
-          write(lunclc,'(a)') "$Br -1.0 0.0 0.0 $MagMat                    !length bc and components of mag. vector, material index"
+          write(lunclc,'(a)') '$Br -1.0 0.0 0.0 $MagMat                    '
+     &      //'!length of bc and components of mag. vector, material index'
           write(lunclc,'(a)') "$LxMag $LyMag $LzMag $ChamfM                !dimensions"
           write(lunclc,'(a)') "$nMagDivX $nMagDivY $nMagDivZHalf 1. 1.     !segmentation"
           write(lunclc,'(a)') " "
@@ -1774,9 +1866,11 @@
      &          " $zMag" // "    !position of magnet"
 
               if (nendmag/2*2.eq.nendmag) then
-                write(lunclc,'(a)') "$Br -1. 0. 0. $MagMat                            !length bc and components of mag. vector, material index"
+                write(lunclc,'(a)') '$Br -1. 0. 0. $MagMat                            '
+     &            //'!length of bc and components of mag. vector, material index'
               else
-                write(lunclc,'(a)') "$Br 1. 0. 0. $MagMat                             !length bc and components of mag. vector, material index"
+                write(lunclc,'(a)') '$Br 1. 0. 0. $MagMat                             '
+     &            //'!length of bc and components of mag. vector, material index'
               endif
 
               write(lunclc,'(a)') "$LxEndMag" // cend(k1end:k2end) //
@@ -1853,7 +1947,7 @@ c      stop "Ende in run_undumag"
       print*,"      ",trim(cline)
       print*,''
 
-      istat=system(trim(cline))
+      istat=isystem(trim(cline))
 
       if (istat.ne.0) then
         print*,"*** Error in run_undumag: Bad return status, check undumag.log ***"

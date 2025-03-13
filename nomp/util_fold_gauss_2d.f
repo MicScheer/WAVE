@@ -1,10 +1,11 @@
-*CMZ :          23/08/2024  14.52.21  by  Michael Scheer
+*CMZ :          06/03/2025  18.47.11  by  Michael Scheer
+*CMZ :  4.01/07 23/08/2024  14.52.21  by  Michael Scheer
 *CMZ : 00.00/15 07/12/2012  20.04.19  by  Michael Scheer
 *-- Author :    Michael Scheer   06/12/2012
       subroutine util_fold_gauss_2d(nx,ny,x,y,f,sigx,rnsigx,sigy,rnsigy,fg,ispline,istat)
 
 c Folding of f(x(ix),y(iy)) with a 2D Gaussian.
-c The Gaussian is considered form -rnsig*sig -> +rnsig*sig
+c The Gaussian is considered from -rnsig*sig -> +rnsig*sig
 C IT'S ONLY CORRECT FOR X,Y FAR ENOUGH FROM THE EDGES!!
 
 c Dimensions f(nx,ny), fg(nx,ny)

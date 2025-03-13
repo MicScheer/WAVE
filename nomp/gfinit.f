@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  14.40.14  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
 *CMZ :  4.01/04 27/12/2023  16.20.07  by  Michael Scheer
@@ -244,7 +245,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -314,6 +315,8 @@
 
       IMPLICIT NONE
 
+*KEEP,wvers.
+      include 'wvers.cmn'
 *KEEP,datetime.
       include 'datetime.cmn'
 *KEND.
@@ -691,14 +694,14 @@ C--- OPEN OUTPUT-FILE
 
       CALL ZEIT(LUNGFO)
 
+*KEEP,wversion.
+      include 'wversion.cmn'
+*KEND.
       WRITE(LUNGFO,*)
       WRITE(LUNGFO,*)'          *********************************************'
       WRITE(LUNGFO,*)'          *          PROGRAM WAVE                     *'
       WRITE(LUNGFO,*)'          *                                           *'
-      WRITE(LUNGFO,*)
-*KEEP,wversion.
-      include 'wversion.cmn'
-*KEND.
+      write(lungfo,*) chwversion
       WRITE(LUNGFO,*)'          *                                           *'
       WRITE(LUNGFO,*)'          *          Michael Scheer                   *'
       WRITE(LUNGFO,*)'          *              BESSY                        *'

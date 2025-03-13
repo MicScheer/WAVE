@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  12.03.57  by  Michael Scheer
 *CMZ :  4.01/00 14/03/2023  11.10.53  by  Michael Scheer
 *CMZ :  4.00/17 28/11/2022  15.21.16  by  Michael Scheer
 *CMZ :  4.00/07 29/05/2020  12.52.31  by  Michael Scheer
@@ -62,7 +63,7 @@
       include 'waveenv.cmn'
 *KEND.
 
-      integer :: nbacksl=0, nslash=0, inam=0
+      integer :: nbacksl=0, nslash=0, inam=0,isystem
 
       integer lunin,iutil_fexist,k1,k2,istat,luns,ipos(2,1000),i,nwords
       character(1024) cline,chos,chsys,chshell,chpath,chtest,chpy
@@ -190,7 +191,7 @@
         print*,"-- Will now execute 'uname > .wavesystem' --"
         print*,""
 
-        istat = system('uname > .wavesystem')
+        istat=isystem('uname > .wavesystem')
 
         if (istat.eq.0) then
           open(newunit=luns,file='.wavesystem',status='old')
@@ -244,15 +245,15 @@
 
         if (chplatform.eq.'LINUX' .or. chplatform.eq.'MINGW') then
           print*,"-- Trying to find python3 path using command 'which' --"
-          istat = system('which python3 > .wavesystem')
+          istat=isystem('which python3 > .wavesystem')
           open(newunit=luns,file='.wavesystem',status='old')
           read(luns,'(a)') chpythonpath
           close(luns)
         else
           print*,"-- Trying to find python3 path using command 'where' --"
-          istat = system('where python')
+          istat=isystem('where python')
           if (istat.eq.0) then
-            istat = system('where python > .wavesystem')
+            istat=isystem('where python > .wavesystem')
             if (istat.eq.0) then
               open(newunit=luns,file='.wavesystem',status='old')
               read(luns,'(a)') chpythonpath

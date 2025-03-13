@@ -429,7 +429,7 @@ def wave_update():
       Flines.close()
 
       if Iverbose > 0: print("\nModule:",m)
-      breakpoint()
+      #reakpoint()
       scom = scompmod + "-o " + fo + " " + ff
       if Iverbose > 0: print("\n",scom,"\n")
       if Idry == 0: forcomp(scom)
@@ -715,7 +715,10 @@ def wave_compile():
   #endif
 
   if Idry: print(scom,"\n")
-  else: forcomp(scom)
+  else:
+    if Iverbose: print('\n',scom)
+    forcomp(scom)
+  #endif
 
 #enddef wave_compile()
 

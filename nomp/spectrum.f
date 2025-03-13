@@ -1,4 +1,5 @@
-*CMZ :          30/09/2024  14.48.47  by  Michael Scheer
+*CMZ :          11/03/2025  14.08.52  by  Michael Scheer
+*CMZ :  4.01/07 30/09/2024  14.48.47  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.52.02  by  Michael Scheer
 *CMZ :  4.01/04 20/11/2023  18.32.01  by  Michael Scheer
 *CMZ :  4.01/03 01/07/2023  10.08.32  by  Michael Scheer
@@ -283,6 +284,8 @@ C--- MAIN ROUTINE TO CALCULATE SYNCHROTRON RADIATION SPECTRA
 
       DOUBLE PRECISION ENEDOSMX,S1,S2,S3,S4,DUM1,DUM2,RMS
       DOUBLE PRECISION WSNOBFR1(NDFREQP),WSNOBFR2(NDFREQP),SPECBUFF(NDFREQP)
+
+      character(7) :: ch6000h='[mGy/6000h]'
 
       WRITE(LUNGFO,*)
       WRITE(LUNGFO,*)'     SPECTRUM'
@@ -2418,16 +2421,16 @@ c          ENDIF  !IAMPLI
         IF (IDOSE.NE.0) THEN
 
           WRITE(LUNGFO,*)" "
-          WRITE(LUNGFO,*)"     *** CAUTION: THE DOSE CALCULATIONS ARE NOT MEANT FOR RADITATION SAFETY PRUPOSES OR MEDICAL APPLICATIONS ***"
+          WRITE(LUNGFO,*)"     *** CAUTION: THE DOSE CALCULATIONS ARE NOT MEANT FOR RADITATION S"
+     &      //"AFETY PRUPOSES OR MEDICAL APPLICATIONS ***"
           WRITE(LUNGFO,*)" "
 
           WRITE(LUNGFO,*)
      &      '     Absorbed energy dose rate [Gy/sec]:',SNGL(ENEDOS(IO))
           WRITE(LUNGFO,*)
-     &      '     Absorbed energy dose rate [mGy/h]:',SNGL(ENEDOS(IO)
-     &      *1000.*3600)
+     &      '     Absorbed energy dose rate [mGy/h]:',SNGL(ENEDOS(IO)*1000.*3600)
           WRITE(LUNGFO,*)
-     &      '     Absorbed energy dose rate [mGy/6000h]:',SNGL(ENEDOS(IO)
+     &      '     Absorbed energy dose rate' // ch6000h // ':',SNGL(ENEDOS(IO)
      &      *1000.*3600*6000)
            WRITE(LUNGFO,*)
 
@@ -2442,7 +2445,7 @@ c          ENDIF  !IAMPLI
      &        '     Maximum absorbed energy dose rate [mGy/h]:',SNGL(ENEDOSMX
      &        *1000.*3600)
             WRITE(LUNGFO,*)
-     &        '     Maximum absorbed energy dose rate [mGy/6000h]:',SNGL(ENEDOSMX
+     &        '     Maximum absorbed energy dose rate' // ch6000h //':',SNGL(ENEDOSMX
      &        *1000.*3600*6000)
             WRITE(LUNGFO,*)
 
@@ -2869,7 +2872,8 @@ c        ENDIF !IAMPLI
           IF (IDOSE.NE.0) THEN
 
             WRITE(LUNGFO,*)" "
-            WRITE(LUNGFO,*)"     *** CAUTION: THE DOSE CALCULATIONS ARE NOT MEANT FOR RADITATION SAFETY PRUPOSES OR MEDICAL APPLICATIONS ***"
+            WRITE(LUNGFO,*)"     *** CAUTION: THE DOSE CALCULATIONS ARE NOT MEANT FOR "
+     &        //"RADITATION SAFETY PRUPOSES OR MEDICAL APPLICATIONS ***"
             WRITE(LUNGFO,*)" "
 
             DO IO=1,NOBSV

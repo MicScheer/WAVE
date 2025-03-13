@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  08.04.03  by  Michael Scheer
 *CMZ :  4.01/00 13/03/2023  16.34.49  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.50.19  by  Michael Scheer
 *CMZ :  4.00/11 30/04/2021  09.31.12  by  Michael Scheer
@@ -109,6 +110,8 @@ c+seq,platform.
      &  conv_adjust,var_adjust(1000),chimin,chi,
      &  a,b,y,y0,x,x0,xpar(3),ypar(3),apar(3),yp(3),
      &  x1,y1,xopt,yopt,dybad
+
+      real :: rando(1000)
 
       integer lchvar_adjust(1000),loop,nvar_adjust,ivar,max_adjust,kvar_adjust,
      &  iblank,ic1,ibad
@@ -312,9 +315,11 @@ c+seq,platform.
 
             else if (nvar_adjust.gt.0) then
 
+              call util_random(kvar_adjust,rando)
+
               do ivar=1,kvar_adjust
                 var_adjust(ivar)=bound1_adjust(ivar)+
-     &            ran(0)*(bound2_adjust(ivar)-bound1_adjust(ivar))
+     &            rando(ivar)*(bound2_adjust(ivar)-bound1_adjust(ivar))
               enddo
 
               call adjust_input(kvar_adjust,chvar_adjust,var_adjust)

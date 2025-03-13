@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  11.56.13  by  Michael Scheer
 *CMZ :  4.01/00 09/01/2023  20.52.32  by  Michael Scheer
 *CMZ :  4.00/14 22/12/2021  13.31.15  by  Michael Scheer
 *CMZ :  4.00/13 20/12/2021  16.32.19  by  Michael Scheer
@@ -290,7 +291,8 @@ C- FILL CWN BUFFER
         write(luns_mh(kfile_mh),'(a)')"                   16                    4    ! id and kind of histogram of Ntuple"
         write(luns_mh(kfile_mh),'(a)')"          20     ! length of title"
         write(luns_mh(kfile_mh),'(a)')"OUTPUT FILE WAVE.OUT"
-        write(luns_mh(kfile_mh),'(a)')"                    6           3          11    ! length of pathname, number of variables, and length of variable names"
+        write(luns_mh(kfile_mh),'(a)')"                    6           3          11    "
+     &    //"! length of pathname, number of variables, and length of variable names"
         write(luns_mh(kfile_mh),'(a)')"//WAVE"
         write(luns_mh(kfile_mh),'(a)')"LINE_1:C*32"
         write(luns_mh(kfile_mh),'(a)')"LINE_2:C*32"

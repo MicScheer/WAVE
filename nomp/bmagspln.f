@@ -1,3 +1,4 @@
+*CMZ :          12/03/2025  11.25.59  by  Michael Scheer
 *CMZ :  4.00/17 04/10/2022  08.10.22  by  Michael Scheer
 *CMZ :  4.00/16 09/09/2022  17.24.46  by  Michael Scheer
 *CMZ :  3.02/03 04/11/2014  12.27.16  by  Michael Scheer
@@ -22,7 +23,7 @@
 *-- Author : Michael Scheer   22/06/95
 
       SUBROUTINE BMAGSPLN(X,Y,Z,BX,BY,BZ)
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -89,12 +90,15 @@ C    FIELD BY SPLINE INTERPOLATION
       DOUBLE PRECISION X,Y,Z,BX,BY,BZ,DUM
       DOUBLE PRECISION XSTOPR
       DOUBLE PRECISION H,A,B,A3A,B3B,H26,H1
+      double precision :: xold
 
       INTEGER ICAL,I,MCODE,MDIM
       INTEGER KLO,KHI,K,KD
 
       DATA KLO/1/
       DATA ICAL/0/
+
+      save
 
       IF (ICAL.EQ.0) THEN
 
@@ -209,9 +213,11 @@ C    FIELD BY SPLINE INTERPOLATION
         DEALLOCATE(WS3)
         DEALLOCATE(WS4)
 
-        ICAL=1
-
       ENDIF !ICAL
+
+      ICAL=ICAL+1
+
+c      print*,ical,x
 
       IF (IBYONLY.EQ.0) THEN
 
@@ -220,15 +226,17 @@ C    FIELD BY SPLINE INTERPOLATION
             BX=BXAMAG(1)+(BXAMAG(2)-BXAMAG(1))/(XAMAG(2)-XAMAG(1))*(X-XAMAG(1))
             BY=BYAMAG(1)+(BYAMAG(2)-BYAMAG(1))/(XAMAG(2)-XAMAG(1))*(X-XAMAG(1))
             BZ=BZAMAG(1)+(BZAMAG(2)-BZAMAG(1))/(XAMAG(2)-XAMAG(1))*(X-XAMAG(1))
-            RETURN
+            goto 8888 !return
           ELSE
             WRITE(LUNGFO,*)
             WRITE(LUNGFO,*)'*** ERROR IN BMAGSPLN: X OUT OF RANGE ***'
             WRITE(LUNGFO,*)'TRY TO INCREASE NPLOI OR TO DECREASE MYINUM'
+            WRITE(LUNGFO,*)'ICAL:',ical
             WRITE(LUNGFO,*)
             WRITE(6,*)
             WRITE(6,*)'*** ERROR IN BMAGSPLN: X OUT OF RANGE ***'
             WRITE(6,*)'TRY TO INCREASE NPLOI OR TO DECREASE MYINUM'
+            WRITE(6,*)'ICAL,X,XAMAG(1):',ical,x,xamag(1)
             WRITE(6,*)
             STOP
           ENDIF
@@ -239,15 +247,17 @@ C    FIELD BY SPLINE INTERPOLATION
             BX=BXAMAG(MDIM-1)+(BXAMAG(MDIM)-BXAMAG(MDIM-1))/(XAMAG(MDIM)-XAMAG(MDIM-1))*(X-XAMAG(MDIM-1))
             BY=BYAMAG(MDIM-1)+(BYAMAG(MDIM)-BYAMAG(MDIM-1))/(XAMAG(MDIM)-XAMAG(MDIM-1))*(X-XAMAG(MDIM-1))
             BZ=BZAMAG(MDIM-1)+(BZAMAG(MDIM)-BZAMAG(MDIM-1))/(XAMAG(MDIM)-XAMAG(MDIM-1))*(X-XAMAG(MDIM-1))
-            RETURN
+            goto 8888 !return
           ELSE
             WRITE(LUNGFO,*)
             WRITE(LUNGFO,*)'*** ERROR IN BMAGSPLN: X OUT OF RANGE ***'
             WRITE(LUNGFO,*)'TRY TO INCREASE NPLOI OR TO DECREASE MYINUM'
             WRITE(LUNGFO,*)
+            WRITE(LUNGFO,*)'ICAL:',ical
             WRITE(6,*)
             WRITE(6,*)'*** ERROR IN BMAGSPLN: X OUT OF RANGE ***'
             WRITE(6,*)'TRY TO INCREASE NPLOI OR TO DECREASE MYINUM'
+            WRITE(6,*)'ICAL,X,XAMAG(MDIM):',ical,x,xamag(MDIM)
             WRITE(6,*)
             STOP
           ENDIF
@@ -325,15 +335,17 @@ C--- BMAG_SPLINE_INTER_XYZ}
         IF (X.LT.XAMAG(1)) THEN
           IF (XAMAG(1)-X.LT.2.*(XAMAG(2)-XAMAG(1))) THEN
             BY=BYAMAG(1)+(BYAMAG(2)-BYAMAG(1))/(XAMAG(2)-XAMAG(1))*(X-XAMAG(1))
-            RETURN
+            goto 8888 !return
           ELSE
             WRITE(LUNGFO,*)
             WRITE(LUNGFO,*)'*** ERROR IN BMAGSPLN: X OUT OF RANGE ***'
             WRITE(LUNGFO,*)'TRY TO INCREASE NPLOI OR TO DECREASE MYINUM'
+            WRITE(LUNGFO,*)'ICAL:',ical
             WRITE(LUNGFO,*)
             WRITE(6,*)
             WRITE(6,*)'*** ERROR IN BMAGSPLN: X OUT OF RANGE ***'
             WRITE(6,*)'TRY TO INCREASE NPLOI OR TO DECREASE MYINUM'
+            WRITE(6,*)'ICAL,X,XAMAG(1):',ical,x,xamag(1)
             WRITE(6,*)
             STOP
           ENDIF
@@ -342,15 +354,17 @@ C--- BMAG_SPLINE_INTER_XYZ}
         IF (X.GT.XAMAG(MDIM)) THEN
           IF (X-XAMAG(MDIM).LT.2.*(XAMAG(MDIM)-XAMAG(MDIM-1))) THEN
             BY=BYAMAG(MDIM-1)+(BYAMAG(MDIM)-BYAMAG(MDIM-1))/(XAMAG(MDIM)-XAMAG(MDIM-1))*(X-XAMAG(MDIM-1))
-            RETURN
+            goto 8888 !return
           ELSE
             WRITE(LUNGFO,*)
             WRITE(LUNGFO,*)'*** ERROR IN BMAGSPLN: X OUT OF RANGE ***'
             WRITE(LUNGFO,*)'TRY TO INCREASE NPLOI OR TO DECREASE MYINUM'
+            WRITE(LUNGFO,*)'ICAL:',ical
             WRITE(LUNGFO,*)
             WRITE(6,*)
             WRITE(6,*)'*** ERROR IN BMAGSPLN: X OUT OF RANGE ***'
             WRITE(6,*)'TRY TO INCREASE NPLOI OR TO DECREASE MYINUM'
+            WRITE(6,*)'ICAL,X,XAMAG(MDIM):',ical,x,xamag(mdim)
             WRITE(6,*)
             STOP
           ENDIF
@@ -418,6 +432,15 @@ C HUNT DOWN
 C--- BMAG_SPLINE_INTER_XYZ}
 
       ENDIF !IBYONLY
+
+8888  continue
+
+c      if (ical.gt.1.and.x.le.xold) then
+c        print*,"ical",ical,x,xold
+c        stop
+c      endif
+
+      xold=x
 
       RETURN
       END

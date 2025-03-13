@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  11.16.33  by  Michael Scheer
 *CMZ :  4.00/17 03/11/2022  12.52.10  by  Michael Scheer
 *CMZ :  4.00/07 12/05/2020  09.51.13  by  Michael Scheer
 *CMZ :  4.00/04 28/06/2019  12.34.52  by  Michael Scheer
@@ -8,6 +9,9 @@
       implicit none
 
       integer luno,ifound,nfirst,nlast,kstat
+      integer isystem
+      external isystem
+
       real r(1)
 
       character(*) chpycom
@@ -33,13 +37,13 @@
 
       if (trim(chpycom).eq.'auto') then
         cline='python3 ' // trim(chpy)
-        ifound=system(trim(cline))
+        ifound=isystem(trim(cline))
         if (ifound.eq.0) then
           ifound=1
           chpycom='python3'
         else
           cline='/usr/bin/python3 ' // trim(chpy)
-          ifound=system(trim(cline))
+          ifound=isystem(trim(cline))
           if (ifound.eq.0) then
             ifound=1
             chpycom='/usr/bin/python3'
@@ -49,7 +53,7 @@
         endif
       else
         cline=trim(chpycom) // " " // trim(chpy)
-        ifound=system(trim(cline))
+        ifound=isystem(trim(cline))
         if (ifound.eq.0) then
           ifound=1
         else

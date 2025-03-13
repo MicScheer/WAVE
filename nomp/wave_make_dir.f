@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  11.16.33  by  Michael Scheer
 *CMZ :  4.00/17 21/11/2022  15.33.16  by  Michael Scheer
 *CMZ :  4.00/11 21/11/2020  11.27.00  by  Michael Scheer
 *CMZ :  4.00/04 28/06/2019  13.21.55  by  Michael Scheer
@@ -12,6 +13,9 @@
 *KEND.
 
       integer luno,istat,kstat,nfirst,nlast,iutil_fexist
+      integer isystem
+      external isystem
+
       real r(1)
 
       character(*) chdir
@@ -38,10 +42,10 @@
         flush(luno)
         close(luno)
         cline=trim(chpythonhome) // chpathsep // trim(chpythoncom) // " " // trim(chpy)
-        istat=system(trim(cline))
+        istat=isystem(trim(cline))
         call util_file_delete(trim(chpy),kstat)
       else
-        istat=system(trim(chmkdir) // " " // trim(chdir))
+        istat=isystem(trim(chmkdir) // " " // trim(chdir))
       endif !kpython
 
       istat=-1

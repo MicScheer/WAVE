@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  11.16.33  by  Michael Scheer
 *CMZ :  4.00/17 28/11/2022  15.15.17  by  Michael Scheer
 *CMZ :  4.00/11 21/11/2020  12.01.26  by  Michael Scheer
 *CMZ :  4.00/07 12/05/2020  13.45.30  by  Michael Scheer
@@ -9,6 +10,9 @@
 
       implicit none
       integer ipid,istat,nfirst,nlast,luno,kstat
+      integer isystem
+      external isystem
+
       real r(1)
       character(16) chran, chpid, cstat
       character(1024) chpy,cline,chpyout
@@ -33,7 +37,7 @@
         flush(luno)
         close(luno)
         cline=trim(chpythonhome) // chpathsep // trim(chpythoncom) // " " // trim(chpy)
-        istat=system(trim(cline))
+        istat=isystem(trim(cline))
         open(newunit=luno,file=trim(chpyout))
         read(luno,*) cstat
         close(luno)

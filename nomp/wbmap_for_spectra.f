@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  14.12.38  by  Michael Scheer
 *CMZ :  4.00/15 09/03/2022  15.57.19  by  Michael Scheer
 *-- Author :    Michael Scheer   28/09/95
       subroutine wbmap_for_spectra
@@ -61,7 +62,7 @@ c--- to write 3d field map for program spectra
       include 'bmap.cmn'
 *KEND.
 
-      double precision :: dx=0.0d0,dy=0.0d0,dz=0.0d,
+      double precision :: dx=0.0d0,dy=0.0d0,dz=0.0d0,
      &  bx,by,bz,ax,ay,az,x,y,z,r,phi
 
       integer ix,iy,iz,lunmap

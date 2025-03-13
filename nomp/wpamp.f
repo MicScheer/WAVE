@@ -1,4 +1,5 @@
-*CMZ :          02/05/2024  11.53.53  by  Michael Scheer
+*CMZ :          11/03/2025  13.14.19  by  Michael Scheer
+*CMZ :  4.01/07 02/05/2024  11.53.53  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.10.19  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.11.12  by  Michael Scheer
 *CMZ :  4.00/15 14/03/2022  09.02.26  by  Michael Scheer
@@ -159,7 +160,8 @@
 
         write(lungfo,*)
         write(lungfo,*)'     WPAMP: Processing spawned runs'
-        write(lungfo,*)'     (If some information is missing, please check wave.out of spawned runs, i.e. ....stage.1/wave.out etc.)'
+        write(lungfo,*)'     (If some information is missing, please check wave.out of spawned '
+     &    //'runs, i.e. ....stage.1/wave.out etc.)'
         write(lungfo,*)
 
         call util_string_trim(trim(chwavedir),ifirstch,lastch)
@@ -172,10 +174,12 @@
         corrins=dble(nwinstances)/dble(nwgood)
         if (corrins.ne.1.0d0) then
           print*,""
-          print*,"*** Warning in WPAMP: NOT ALL INSTANCES HAVE FINISHED CORRECTLY: BE CAREFUL, ESPECIALLY WITH NORMALIZATION!!"
+          print*,"*** Warning in WPAMP: NOT ALL INSTANCES HAVE FINISHED CORRECTLY: BE CAREFUL, "
+     &      //"ESPECIALLY WITH NORMALIZATION!!"
           print*,""
           write(lungfo,*)""
-          write(lungfo,*)"*** Warning in WPAMP: NOT ALL INSTANCES HAVE FINISHED CORRECTLY: BE CAREFUL, ESPECIALLY WITH NORMALIZATION!!"
+          write(lungfo,*)"*** Warning in WPAMP: NOT ALL INSTANCES HAVE FINISHED CORRECTLY: BE "
+     &      //"CAREFUL, ESPECIALLY WITH NORMALIZATION!!"
           write(lungfo,*)""
         endif
 

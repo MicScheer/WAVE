@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  11.52.10  by  Michael Scheer
 *CMZ :  4.01/02 19/04/2023  08.53.56  by  Michael Scheer
 *CMZ :  4.00/17 04/11/2022  09.31.48  by  Michael Scheer
 *CMZ :  4.00/16 29/09/2022  11.22.54  by  Michael Scheer
@@ -130,14 +131,13 @@ C MODULES FOR THE INDIVIDUAL TASKS
       DOUBLE PRECISION DUM11,DUM12,DUM13,DUM14,DUM15,DUM16,DUM17,DUM18,DUM19,DUM20
       DOUBLE PRECISION DUM21,DUM22,DUM23,DUM24
       real dumvers
-      integer idumvers
+      integer idumvers,getpid
 
       open(newunit=lunpid,file='wave.pid')
       kpid=getpid()
       write(lunpid,*) kpid
       close(lunpid)
 
-      chwversion=
 *KEEP,wversion.
       include 'wversion.cmn'
 *KEND.

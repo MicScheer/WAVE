@@ -1,3 +1,4 @@
+*CMZ :          11/03/2025  15.14.37  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.06.37  by  Michael Scheer
@@ -44,13 +45,17 @@
       include 'random.cmn'
 *KEEP,waveenv.
       include 'waveenv.cmn'
+*KEEP,wvers.
+      include 'wvers.cmn'
 *KEND.
-
       integer lun0,lunin,lunclu,kins,ins,m1,m2,n1,n2,irun,istat,lunout,ianf,iend,ipid,
      &  lunfis,ieof,l1,l2,ialldone,masterpid,n1ins,n2ins,lpid,npids,i,idum,
      &  lunpid,lun10,i10,k10,ndim,kcount,lstat,kempty,k1,k2,ierr,kbuncherr,
      &  kstat,luni,lun,lunsi,iel1,iel2,lunspai,lunspao,iutil_fexist,nread,
      &  nfirst,nlast,icheckpid,lunbun,lunbu,ni,nl,nwords
+
+      integer isystem
+      external isystem
 
       integer inspid(maxinstp),iwruns(0:maxinstp),ipos(2,maxinstp)
       integer :: iline=0
@@ -65,14 +70,14 @@
       print*,""
       print*,""
 
+*KEEP,wversion.
+      include 'wversion.cmn'
+*KEND.
       WRITE(6,*)
       WRITE(6,*)'          *********************************************'
       WRITE(6,*)'          *          PROGRAM WAVE                     *'
       WRITE(6,*)'          *                                           *'
-      WRITE(6,*)
-*KEEP,wversion.
-      include 'wversion.cmn'
-*KEND.
+      WRITE(6,*) chwversion
       WRITE(6,*)'          *                                           *'
       WRITE(6,*)'          *          Michael Scheer                   *'
       WRITE(6,*)'          *              BESSY                        *'
@@ -696,14 +701,14 @@ C--- RANDOM NUMBERS
      &        // chwavehome(l1:l2) // "/bin/wave.exe "
      &        // chwavehome(l1:l2) // "/bin/wave_spawned.exe 2>/dev/null"
 
-            istat=system(trim(cline))
+            istat=isystem(trim(cline))
 
             cline="cd " // trim(cstage) // " && "  // chwavehome(l1:l2)
      &        // "/bin/wave_spawned.exe > " //
      &        trim(cstage) // "/wave.log 2>&1 &"
 
             print*,trim(cline)
-            istat=system(trim(cline))
+            istat=isystem(trim(cline))
 
             ipid=0
             do while(ipid.eq.0)
@@ -732,7 +737,7 @@ C--- RANDOM NUMBERS
      &        trim(cstage) // "/wave.log"
 
             print*,trim(cline)
-            istat=system(trim(cline))
+            istat=isystem(trim(cline))
 
           endif !LINUX
 

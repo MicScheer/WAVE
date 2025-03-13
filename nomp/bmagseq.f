@@ -1,4 +1,4 @@
-*CMZ :          21/01/2025  16.51.42  by  Michael Scheer
+*CMZ :          11/03/2025  14.21.54  by  Michael Scheer
 *CMZ :  4.01/07 19/01/2025  08.40.03  by  Michael Scheer
 *CMZ :  4.00/11 26/07/2021  08.38.41  by  Michael Scheer
 *CMZ :  4.00/07 09/07/2020  12.27.02  by  Michael Scheer
@@ -112,7 +112,7 @@ C    STRUCTURE IS CENTERED AROUND ORIGIN
      &  ,VX1,VY1,VZ1,VX2,VY2,VZ2,ANG1z,ANG2z,DANGz,ang1y,ang2y,dangy
      &  ,DTIM,BSHIFT,xlen2,dint,bx,by,bz,x,y,z,
      &  xfour(nfoumagcp+2+2),dxfour,
-     &  posi(7,5),edge(2),strength,angle,dlength,seclen,scale(6),offset(3),
+     &  posi(7,5),edge(2),strength,angle,dlength,seclen,
      &  fint,gap,hgap,de,ds,dum,r,xexit,zexit,fringe,fa,fb,fc,angex
 
       COMPLEX CKOEF(nfoumagcp/2+1+2)
@@ -354,14 +354,14 @@ c              rewind(lunmg)
      &             cposmodel,xexit,zexit,angex,dmyenergy,strength,bmovecut,ds,icharge,fringe,fa,fb,fc,istatus)
                endif
 
-              if (r.ne.0.0d) then
-                dibounds(1,im)=pmag(1,im)-abs(r*sin(pmag(8,im)))
-                dibounds(2,im)=pmag(5,im)+abs(r*sin(pmag(9,im)))
-              else
-                r=1.0d30
-                dibounds(1,im)=pmag(1,im)
-                dibounds(2,im)=pmag(5,im)
-              endif
+               if (r.ne.0.0d0) then
+                 dibounds(1,im)=pmag(1,im)-abs(r*sin(pmag(8,im)))
+                 dibounds(2,im)=pmag(5,im)+abs(r*sin(pmag(9,im)))
+               else
+                 r=1.0d30
+                 dibounds(1,im)=pmag(1,im)
+                 dibounds(2,im)=pmag(5,im)
+               endif
 
             else IF (CTYP(IM).EQ.'DIL') THEN
               call util_skip_commentblock_end(lunmg,ieof)
