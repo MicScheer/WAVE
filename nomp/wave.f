@@ -1,4 +1,4 @@
-*CMZ :          11/03/2025  11.52.10  by  Michael Scheer
+*CMZ :          18/03/2025  16.37.16  by  Michael Scheer
 *CMZ :  4.01/02 19/04/2023  08.53.56  by  Michael Scheer
 *CMZ :  4.00/17 04/11/2022  09.31.48  by  Michael Scheer
 *CMZ :  4.00/16 29/09/2022  11.22.54  by  Michael Scheer
@@ -39,7 +39,7 @@
 *CMZ : 00.00/00 28/04/94  16.11.30  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE WAVE
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -132,6 +132,7 @@ C MODULES FOR THE INDIVIDUAL TASKS
       DOUBLE PRECISION DUM21,DUM22,DUM23,DUM24
       real dumvers
       integer idumvers,getpid
+      external function getpid
 
       open(newunit=lunpid,file='wave.pid')
       kpid=getpid()

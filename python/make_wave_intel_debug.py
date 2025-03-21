@@ -113,10 +113,10 @@ if nargs > 2: Idebug = int(args[2])
 
 global Wave_tree,Scomp_all,Scomp_omp,Scomp,Texe,Tlib,Scomp_nowarn
 
-Scomp = "ifx -save -fpp  -c -g -O0 -traceback -vms -nod-lines -warn noalignments -zero -132 -funroll-loops "
-Scomp_nowarn = "ifx -save -fpp -w  -c -g -O0 -traceback -vms -nod-lines -warn noalignments -zero -132 -funroll-loops "
-Scomp_all = "ifx -save -fpp  -c -g -O0  -traceback -vms -nod-lines -warn noalignments -zero -132 -funroll-loops "
-Scomp_omp = "ifx -fpp  -c -g -O0 -zero -132  -fopenmp -traceback -vms -nod-lines -warn noalignments  -funroll-loops "
+Scomp = "ifx -save -fpp  -c -g -O0 -traceback -vms -nod-lines  -zero -132 -funroll-loops "
+Scomp_nowarn = "ifx -save -fpp -w  -c -g -O0 -traceback -vms -nod-lines  -zero -132 -funroll-loops "
+Scomp_all = "ifx -save -fpp  -c -g -O0  -traceback -vms -nod-lines  -zero -132 -funroll-loops "
+Scomp_omp = "ifx -fpp  -c -g -O0 -zero -132  -fopenmp -traceback -vms -nod-lines   -funroll-loops "
 
 try:
   import config_fortran as cf
@@ -301,6 +301,27 @@ def wave_update():
 
   try:
     Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave_debug.exe').st_mtime_ns
+    Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave.exe').st_mtime_ns
+    Tmain = os.stat(WI + Sepp + 'main' + Sepp + 'wave_main.f').st_mtime_ns
+    if Tmain > Texe: kmain=1
+    cm = glob.glob(WI + Sepp + 'main' + Sepp + '*.cmn')
+    for ff in cm:
+      f = ff.split(Sepp)[-1]
+      tf = os.stat(ff).st_mtime_ns
+      if tf > Texe:
+        kmain=1
+        break
+      #endif
+    mods = glob.glob(WI + Sepp + 'main' + Sepp + 'mod' + Sepp + '*.f')
+    for ff in mods:
+      f = ff.split(Sepp)[-1]
+      tf = os.stat(ff).st_mtime_ns
+      if tf > Texe:
+        kmain=1
+        break
+      #endif
+    #endfor
+
   except:
     Texe = 0
     kmain = 1
@@ -666,9 +687,8 @@ def wave_compile():
 
   scom = 'cd ' + pathmod + ' && ' \
   'ifx -save -fpp -c -g -O0' + \
-  ' -check bounds -traceback' + \
+  '  -traceback' + \
   ' -vms -nod-lines' + \
-  ' -warn noalignments ' + \
   ' -zero -132 -module ..' + \
   ' -funroll-loops *.f'
 
@@ -686,10 +706,8 @@ def wave_compile():
   scom = 'cd ' + pathmain + ' && ' \
   'ifx -fpp -g -O0' + \
   ' -fopenmp' + \
-  ' -check bounds' + \
   ' -traceback' + \
   ' -vms -nod-lines' + \
-  ' -warn noalignments' + \
   ' -zero -132' + \
   ' -funroll-loops' + \
   ' -o ..' + Sepp + 'bin' + Sepp + 'wave_debug.exe wave_main.f' + \

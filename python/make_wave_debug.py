@@ -300,6 +300,27 @@ def wave_update():
 
   try:
     Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave_debug.exe').st_mtime_ns
+    Texe = os.stat(WI + Sepp + 'bin' + Sepp + 'wave.exe').st_mtime_ns
+    Tmain = os.stat(WI + Sepp + 'main' + Sepp + 'wave_main.f').st_mtime_ns
+    if Tmain > Texe: kmain=1
+    cm = glob.glob(WI + Sepp + 'main' + Sepp + '*.cmn')
+    for ff in cm:
+      f = ff.split(Sepp)[-1]
+      tf = os.stat(ff).st_mtime_ns
+      if tf > Texe:
+        kmain=1
+        break
+      #endif
+    mods = glob.glob(WI + Sepp + 'main' + Sepp + 'mod' + Sepp + '*.f')
+    for ff in mods:
+      f = ff.split(Sepp)[-1]
+      tf = os.stat(ff).st_mtime_ns
+      if tf > Texe:
+        kmain=1
+        break
+      #endif
+    #endfor
+
   except:
     Texe = 0
     kmain = 1

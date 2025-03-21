@@ -1,4 +1,4 @@
 *KEEP,wvers.
-      character(45) chwversion
+      character(55) chwversion
       real wversion
       common/wvers/wversion,chwversion
