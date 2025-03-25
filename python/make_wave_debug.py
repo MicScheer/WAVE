@@ -382,6 +382,8 @@ def wave_update():
       lib = WI + 'lib' + Sepp + 'libuser_debug.a'
       libm = WI + 'lib' + Sepp + 'libuser_modules_debug.a'
       scomp = Scomp_omp
+    else:
+      continue
     #endif
 
     #reakpoint()

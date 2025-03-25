@@ -1,4 +1,4 @@
-*CMZ :          11/03/2025  08.04.03  by  Michael Scheer
+*CMZ :          11/03/2025  16.04.16  by  Michael Scheer
 *CMZ :  4.01/00 13/03/2023  16.34.49  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.50.19  by  Michael Scheer
 *CMZ :  4.00/11 30/04/2021  09.31.12  by  Michael Scheer
@@ -117,7 +117,7 @@ c+seq,platform.
      &  iblank,ic1,ibad
 
       integer lenc, nargs
-      integer ipid,getpid,i,k,ifound,l,istat
+      integer ipid,i,k,ifound,l,istat
 
       CHARACTER(8) DAY
       CHARACTER(10) TIM

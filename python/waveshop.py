@@ -9994,7 +9994,7 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
         tex = ""
         ip = 0
         for p in par:
-          tex += "P" + str(ip) + " = " + '{:.4g}'.format(p)  + '{:.4g}'.format(sig[ip]) + "\n"
+          tex += "P" + str(ip) + " = " + '{:.4g}'.format(p)   + " +/- " + '{:.4g}'.format(sig[ip]) + "\n"
           ip += 1
         #endfor
       #endif
@@ -23722,6 +23722,7 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
     Kstat = Kold
 
     if Kstat:
+
       if StatFontSize < 0:
         dpi = Fig.dpi
         nxy = max(Nxzone,Nyzone)
