@@ -1,4 +1,4 @@
-*CMZ :          11/03/2025  14.40.14  by  Michael Scheer
+*CMZ :          29/03/2025  12.10.58  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
 *CMZ :  4.01/04 27/12/2023  16.20.07  by  Michael Scheer
@@ -591,11 +591,11 @@ C--- READ PARAMETER AND CONTRL-FLAGS FROM NAMELISTS
 
       OPEN (UNIT=LUNGFI,FILE=FILEI,STATUS='OLD')
 
-      READ(LUNGFI, CONTRL )
-      READ(LUNGFI,randomn)
-      READ(LUNGFI,cluster)
+c      READ(LUNGFI, CONTRL )
+c      READ(LUNGFI,randomn)
+c      READ(LUNGFI,cluster)
 c     WRITE(6,*)'READING NAMELIST B0SCGLOBN'
-      READ(LUNGFI, B0SCGLOBN )
+c      READ(LUNGFI, B0SCGLOBN )
       IF(IBHELM.NE.0 ) WRITE(6,*)'READING NAMELIST BBHELM'
       IF(IBHELM.NE.0 ) READ(LUNGFI, BBHELM )
 c     WRITE(6,*)'READING NAMELIST BBFELD'
@@ -619,7 +619,7 @@ c     WRITE(6,*)'READING NAMELIST DEPOLA'
 c     WRITE(6,*)'READING NAMELIST WLSOPTN'
       READ(LUNGFI, WLSOPTN )
 c     WRITE(6,*)'READING NAMELIST MYFILES'
-      READ(LUNGFI, MYFILES )
+c      READ(LUNGFI, MYFILES )
 c     WRITE(6,*)'READING NAMELIST TRALINN'
       READ(LUNGFI, TRALINN )
 c     WRITE(6,*)'READING NAMELIST PHASETRACKN'
@@ -634,11 +634,11 @@ c     WRITE(6,*)'READING NAMELIST SPECTN'
       READ(LUNGFI, SPECTN )
 c     WRITE(6,*)'READING NAMELIST WFOLDN'
       READ(LUNGFI, WFOLDN )
-      READ(LUNGFI,BUNCHN)
+c      READ(LUNGFI,BUNCHN)
 c     WRITE(6,*)'READING NAMELIST PINHOLE'
       READ(LUNGFI, PINHOLE )
 c     WRITE(6,*)'READING NAMELIST FREQN'
-      READ(LUNGFI, FREQN )
+c      READ(LUNGFI, FREQN )
 c     WRITE(6,*)'READING NAMELIST WBTABN'
       READ(LUNGFI, WBTABN )
 c     WRITE(6,*)'READING NAMELIST RECN'
@@ -844,9 +844,9 @@ c     WRITE(6,*)'READING NAMELIST ROIN'
       READ(LUNGFI,ROIN)
 
 c     WRITE(6,*)'READING NAMELIST BERRORN'
-      READ(LUNGFI, BERRORN )
-      ihphotons=0
-      if (ieneloss.lt.0) read(lungfi,photonn)
+c      READ(LUNGFI, BERRORN )
+c      ihphotons=0
+c      if (ieneloss.lt.0) read(lungfi,photonn)
 c     WRITE(6,*)'READING NAMELIST USERN'
       READ(LUNGFI,USERN)
       WRITE(LUNGFO,*)
@@ -936,6 +936,64 @@ C (15. MAI 2004)
         write(lungfo,*)' '
         ispec=1
       endif
+
+      IF (
+     &    ispec.ne.0.and.(IFOLD.NE.0.or.iefold.ne.0).AND.
+     &    (IEMIT.ne.0.or.ioptic.ne.0.or.iemiahw.ne.0.or.ibeampol.ne.0)
+     &    ) THEN !29.3.2025
+
+        if (espread.eq.9999.and.delgam.eq.9999.) then
+          WRITE(6,*)
+          WRITE(6,*)'     *** ERROR IN GFINIT ***'
+          WRITE(6,*)'     DELGAM and ESPREAD are both 9999'
+          WRITE(6,*)'     Please check namelists DEPOLA and WFOLDN '
+          WRITE(6,*)
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'     *** ERROR IN GFINIT ***'
+          WRITE(LUNGFO,*)'     DELGAM and ESPREAD are both 9999'
+          WRITE(LUNGFO,*)'     Please check namelists DEPOLA and WFOLDN '
+          WRITE(LUNGFO,*)
+          stop "*** Program WAVE aborted ***"
+        else if (espread.eq.9999.) then
+          espread=delgam
+        else if (delgam.eq.9999.) then
+          delgam=espread
+        endif
+
+        if (espread.ne.delgam) then
+
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'     *** WARINING IN GFINIT ***'
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'     DELGAM in namelist DEPOLA and ESPREAD in namelist WFOLDN are different!'
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'     Be careful!'
+          WRITE(LUNGFO,*)
+
+          WRITE(6,*)
+          WRITE(6,*)'     *** WARINING IN GFINIT ***'
+          WRITE(6,*)
+          WRITE(6,*)'     DELGAM in namelist DEPOLA and ESPREAD in namelist WFOLDN are different!'
+          WRITE(6,*)
+          WRITE(6,*)'     Be careful!'
+          WRITE(6,*)
+
+        endif
+      endif
+
+c 29.3.2025
+c          WRITE(LUNGFO,*)
+c          WRITE(LUNGFO,*)'     *** ERROR IN GFINIT ***'
+c          WRITE(LUNGFO,*)
+c     &       '     FLAG ISIGUSR NOT SET. THIS REQUIRES FLAG IEMIT TO BE SET'
+c          WRITE(LUNGFO,*)
+c          WRITE(6,*)
+c          WRITE(6,*) '     *** ERROR IN GFINIT ***'
+c          WRITE(6,*)
+c     &       '     FLAG ISIGUSR NOT SET. THIS REQUIRES FLAG IEMIT TO BE SET'
+c          WRITE(6,*)
+c          STOP '*** PROGRAM WAVE ABORTED ***'
+c      ENDIF
 
       if (ibunch.ne.0.and.iubunch.eq.3) then
         open(unit=21,file='wave_phasespace.dat',status='old')
@@ -3079,20 +3137,6 @@ C     ENDIF
           WRITE(6,*) '     *** ERROR IN GFINIT ***'
           WRITE(6,*)
      &'     FLAG IFOLD SET. FLAG IPIN MUST BE GREATER OR EQUAL ZERO'
-          WRITE(6,*)
-          STOP '*** PROGRAM WAVE ABORTED ***'
-      ENDIF
-
-      IF (ispec.ne.0.and.IFOLD.NE.0.AND.ISIGUSR.EQ.0.AND.IEMIT.EQ.0) THEN
-          WRITE(LUNGFO,*)
-          WRITE(LUNGFO,*)'     *** ERROR IN GFINIT ***'
-          WRITE(LUNGFO,*)
-     &       '     FLAG ISIGUSR NOT SET. THIS REQUIRES FLAG IEMIT TO BE SET'
-          WRITE(LUNGFO,*)
-          WRITE(6,*)
-          WRITE(6,*) '     *** ERROR IN GFINIT ***'
-          WRITE(6,*)
-     &       '     FLAG ISIGUSR NOT SET. THIS REQUIRES FLAG IEMIT TO BE SET'
           WRITE(6,*)
           STOP '*** PROGRAM WAVE ABORTED ***'
       ENDIF

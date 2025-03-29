@@ -975,7 +975,7 @@
            ! IFOLD.LT.-2: use routine old precedure of WAVE
            ! parameter namelist WFOLDN
 
-          ISIGUSR=1  ! if flag is set sigmas for folding are taken from
+          ISIGUSR=0  ! if flag is set sigmas for folding are taken from
                      ! namelist WFOLDN, otherwise calculated from emittance
                      ! and beta functions BETAH, BETAHP, BETAV, BETAPV
                      ! in namelist DEPOLA (be careful, if distributions are
@@ -1900,7 +1900,7 @@
       DI4RING=0.0 ! I4
       DI5RING=0.0020588 ! I5
 
-      DELGAM=0.001
+      DELGAM=9999. ! 9999.: delgam = espread from namelist WFOLDN
 
       $END
 
@@ -2497,7 +2497,8 @@
 
               ! Try 1./sqrt(sqrt(2.)) = 0.841
 
-      ESPREAD=0.001  ! rel. energy spread of the beam (for energy folding)
+      ESPREAD=9999.  ! rel. energy spread of the beam (for energy folding)
+                     ! 9999.: espread = delgam from namelist DEPOLA
       NSIGE=3        ! number of sigmas for energy folding
 
       $END

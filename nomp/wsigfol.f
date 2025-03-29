@@ -1,3 +1,4 @@
+*CMZ :          29/03/2025  11.55.45  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.11  by  Michael Scheer
 *CMZ :  2.56/00 25/06/2010  12.15.46  by  Michael Scheer
 *CMZ :  2.55/00 10/08/2005  15.45.45  by  Michael Scheer
@@ -92,7 +93,9 @@ C    THE SIGMAS DEPEND ON DISTANCE OF OBSERVER AND SOURCE POINT
 
       INTEGER ISOUR,ICEN
 
-      DOUBLE PRECISION BETH,BETPH,BETV,BETPV,DIST2,DIST,ALFH,ALFV,GAMH,GAMV
+      DOUBLE PRECISION BETH,BETPH,BETV,BETPV,DIST2,DIST,ALFH,ALFV,GAMH,GAMV,
+     &  s0,s1,s2,phase1,phase2,gamma1,beta1,alpha1,gamma2,beta2,alpha2,beta0,gamma0,
+     &  betap1,betap2
 
       IF(NSOURCE.GT.LIDIMP) THEN
         WRITE(LUNGFO,*)
@@ -154,19 +157,51 @@ C- DISTANCE FROM PINHOLE CENTER TO CENTER OF SOURCE
 
 C- BETA-FUNCTION AND DERIVATIVE
 
-          ICEN=ISOURCEN(ISOUR)
-          BETH=WBETA(2,ICEN)
-          BETPH=WBETA(3,ICEN)
-          BETV=WBETA(4,ICEN)
-          BETPV=WBETA(5,ICEN)
-          ALFH=-BETPH/2.
-          GAMH=(1.+ALFH**2)/BETH
-          ALFV=-BETPV/2.
-          GAMV=(1.+ALFV**2)/BETV
+          if (iemit.ne.0) then
 
-          WSIG2Z(ISOUR)=EPS0H*(BETH+DIST2*GAMH-2.*DIST*ALFH)
+            ICEN=ISOURCEN(ISOUR)
+            BETH=WBETA(2,ICEN)
+            BETPH=WBETA(3,ICEN)
+            BETV=WBETA(4,ICEN)
+            BETPV=WBETA(5,ICEN)
+            ALFH=-BETPH/2.
+            GAMH=(1.+ALFH**2)/BETH
+            ALFV=-BETPV/2.
+            GAMV=(1.+ALFV**2)/BETV
+
+          else
+
+            s1=xbetfun
+            s2=SOURCEN(1,1,ISOUR)
+
+            beta1=betah
+            alpha1=-betah/2.0d0
+            gamma1=(1.0d0+alpha1**2)/beta1
+
+            call util_beta_function_drift(
+     &        s0,beta0,gamma0,
+     &        s1,beta1,betap1,alpha1,gamma1,phase1,
+     &        s2,beta2,betap2,alpha2,gamma2,phase2)
+            beth=beta2
+            alfh=alpha2
+            gamh=gamma2
+
+            beta1=betav
+            alpha1=-betav/2.0d0
+            gamma1=(1.0d0+alpha1**2)/beta1
+
+            call util_beta_function_drift(
+     &        s0,beta0,gamma0,
+     &        s1,beta1,betap1,alpha1,gamma1,phase1,
+     &        s2,beta2,betap2,alpha2,gamma2,phase2)
+            betv=beta2
+            alfv=alpha2
+            gamv=gamma2
+
+          endif
+
+          WSIG2Z(ISOUR)=EPS0H*(BETH+DIST2*GAMH-2.*DIST*ALFH)+(disp0*delgam)**2+(dist*ddisp0*delgam)**2
           WSIG2Y(ISOUR)=EPS0V*(BETV+DIST2*GAMV-2.*DIST*ALFV)
-
 
           WSIGZ(ISOUR)=DSQRT(WSIG2Z(ISOUR))
           WSIGY(ISOUR)=DSQRT(WSIG2Y(ISOUR))

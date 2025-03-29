@@ -1,4 +1,4 @@
-*CMZ :          11/03/2025  15.14.37  by  Michael Scheer
+*CMZ :          25/03/2025  12.58.03  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.06.37  by  Michael Scheer
@@ -142,7 +142,8 @@
       read(lunin,bunchn)
       read(lunin,freqn)
       read(lunin,berrorn)
-      read(lunin,photonn)
+      ihphotons=0
+      if (ieneloss.lt.0) read(lunin,photonn)
       close(lunin)
 
       if (kampli.ne.0.or.iundulator.eq.2) then
@@ -700,6 +701,8 @@ C--- RANDOM NUMBERS
             cline="ln -s "
      &        // chwavehome(l1:l2) // "/bin/wave.exe "
      &        // chwavehome(l1:l2) // "/bin/wave_spawned.exe 2>/dev/null"
+
+        call util_break
 
             istat=isystem(trim(cline))
 
