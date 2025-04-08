@@ -2497,7 +2497,7 @@
 
               ! Try 1./sqrt(sqrt(2.)) = 0.841
 
-      ESPREAD=9999.  ! rel. energy spread of the beam (for energy folding)
+      ESPREAD=0.001  ! rel. energy spread of the beam (for energy folding)
                      ! 9999.: espread = delgam from namelist DEPOLA
       NSIGE=3        ! number of sigmas for energy folding
 
