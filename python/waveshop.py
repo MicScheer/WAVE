@@ -15050,9 +15050,18 @@ def vmean(x='?',y=''):
   return res[2]
 #enddef
 
-def vrms(x='?',y=''):
-  res = vstat(x,y)
-  return res[3]
+def vcovcorr(x,y,a=1.,b=1.):
+  n=len(x)
+  rmsx=x.std()
+  varx=rmsx**2*n
+  rmsy=y.std()
+  vary=rmsy**2*n
+  xy=x*y
+  sumxy=xy.sum()
+  cov=sumxy/n
+  rmsxy=np.sqrt((a**2*varx+2.0*a*b*sumxy+b**2*vary)/n)
+  corr=cov/rmsx/rmsy
+  return rmsx,rmsy,rmsxy,cov,corr
 #enddef
 
 def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
@@ -15769,7 +15778,7 @@ def window_geometry(geom='', fig=-1, set=True):
     Figman =  plt.get_current_fig_manager()
   #endif type(fig) == int and fig == -1
 
-  print("geom:",geom)
+  #print("geom:",geom)
 
   if set:
     fig.canvas.manager.window.wm_geometry(geom)
@@ -19236,7 +19245,9 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
         Ndump += 1
         fout = WaveFilePrefix + str(Ndump) + ".dat"
         #eval("vwritexy(" + sx + "," + sy + ",'" + fout + "')")
-        eval("vwritexy(sx,sy,'" + fout + "')")
+        if type(sx) == str: sx = eval(sx)
+        if type(sy) == str: sy = eval(sy)
+        exec("vwritexy(sx,sy,'" + fout + "')")
         print("\nData written to ",fout)
         WaveDump = fout
       #endif
@@ -19352,6 +19363,9 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
     if Kdump:
       Ndump += 1
       fout = WaveFilePrefix + str(Ndump) + ".dat"
+      if type(sx) == str: sx = eval(sx)
+      if type(sy) == str: sy = eval(sy)
+      if type(sz) == str: sz = eval(sz)
       eval("vwritexyz(" + sx + "," + sy + "," + sz + ",'" + fout + "')")
       print("\nData written to ",fout)
       WaveDump = fout
@@ -23260,6 +23274,13 @@ def seed(iseed=0, plopt=''):
   from pickle import dump
   import numpy as np
 
+  if type(iseed) == str:
+    os.system("shuf -i 0-100000 -n1 > .iseed")
+    F = open(".iseed",'r')
+    iseed = int(F.readline().strip())
+    F.close()
+  #endif
+
   if iseed >= 0: np.random.seed(iseed)
 
   if plopt == 'w':
@@ -26500,6 +26521,8 @@ def nphasespace_ellip(emit,beta0,s,npoi=1000):
 
   return neli
 #enddef
+
+def nl(): print('\n')
 #end of m_hbook in waveplot
 
 if fexist("waves.wvs") == 0:

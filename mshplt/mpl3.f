@@ -1,3 +1,4 @@
+*CMZ :  1.04/00 11/02/2025  15.55.04  by  Michael Scheer
 *CMZ :  0.00/06 19/08/2014  18.59.39  by  Michael Scheer
 *CMZ :  1.17/00 17/04/2014  18.23.45  by  Michael Scheer
 *CMZ :  1.16/04 16/04/2014  14.56.04  by  Michael Scheer
@@ -19,7 +20,7 @@
      &  icolor,ired,igreen,iblue
      &  )
 
-      call mshplt_pline3d(n,x,y,z)
+      call mshplt_pline_3d(n,x,y,z)
 
       call mshplt_get_color(
      &  icolor,ired,igreen,iblue
