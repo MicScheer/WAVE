@@ -1,3 +1,4 @@
+*CMZ :          28/04/2025  10.47.11  by  Michael Scheer
 *CMZ :  3.06/00 15/02/2019  14.44.39  by  Michael Scheer
 *CMZ :  3.05/00 25/04/2018  13.09.51  by  Michael Scheer
 *CMZ :  3.02/03 10/11/2014  10.47.09  by  Michael Scheer
@@ -33,7 +34,7 @@
 *-- Author :    Michael Scheer   02/12/2003
       subroutine bpolyplot(iplot,xmin,xmax,ymin,ymax,zmin,zmax,theta,phi,
      &  usercom)
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -82,7 +83,7 @@
 
       implicit none
 
-*KEEP,mshplt.
+*KEEP,mshpltincl.
       include 'mshplt.cmn'
 *KEND.
 
