@@ -22,6 +22,15 @@ fi
 
 echo "Shell variable WAVE, i.e. WAVE's home is $WAVE"
 echo " "
+
+if test x$WAVE_INCL = x; then
+  export WAVE_INCL=$WAVE
+fi
+
+echo " "
+echo "Shell variable WAVE_INCL, i.e. WAVE's source directory is $WAVE_INCL"
+echo " "
+
 echo "Checking installation"
 echo " "
 
