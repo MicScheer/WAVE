@@ -9,6 +9,8 @@ echo " "
 if test x$WAVE = x; then
    echo Shell variable WAVE not defined, trying to set it...
 
+   cd ..
+
    no_wave='no'
    for d in 'stage' 'bin' 'python' 'shell'; do
      (ls -la | grep  -q $d) || no_wave='yes'

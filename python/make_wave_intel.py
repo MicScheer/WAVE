@@ -77,7 +77,7 @@ else:
 #endif
 
 WI = os.getcwd() + Sepp
-tree = ['bin','lib','main','mhbook','mshcern','mshplt','nomp','omp','python','shell','user']
+tree = ['bin','main','mhbook','mshcern','mshplt','nomp','omp','python','shell','user']
 for d in tree:
   if not os.path.exists(WI + d):
     WINCL = os.environ['WAVE_INCL'] + Sepp
@@ -86,6 +86,8 @@ for d in tree:
     break
   #endif
 #endfor
+
+if not os.path.exists(WI + 'lib')  os.system('mkdir ' + WI + 'lib')
 
 for d in tree:
   if not os.path.exists(WI + d):
