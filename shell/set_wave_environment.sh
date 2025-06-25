@@ -1,20 +1,53 @@
 # +PATCH,//WAVE/SHELL
 # +DECK,set_wave_environment,T=SHELL.
+echo " "
+echo "----------------------------------------------------------------"
+echo "This is set_wave_environment.sh"
+echo "----------------------------------------------------------------"
+echo " "
 
-echo
-if test $SHELL = /bin/bash; then
-  cd ${BASH_ARGV[0]%/*}
-else
-  cd ${0%/*}
+if test x$WAVE = x; then
+   echo Shell variable WAVE not defined, trying to set it...
+
+   no_wave='no'
+   for d in 'stage' 'bin' 'python' 'shell'; do
+     (ls -la | grep  -q $d) || no_wave='yes'
+     if test x$no_wave = xyes; then
+       echo '*** directory ' $d not found '***' && echo "This script must be run from a sub-directory of WAVE's home"
+       return
+     fi
+   done
+   export WAVE=`pwd`
 fi
 
-cd ..
-export WAVE=${PWD}
-echo Environment WAVE set to: $WAVE
+echo "Shell variable WAVE, i.e. WAVE's home is $WAVE"
+echo " "
+echo "Checking installation"
+echo " "
 
-if test -d $WAVE; then
+   no_wave='no'
+   for d in 'stage' 'bin' 'python'; do
+     (ls -la $WAVE | grep  -q $d) || no_wave='yes'
+     if test x$no_wave = xyes; then
+       echo '*** directory ' $d not found '***' && echo "Check $WAVE"
+       return
+     fi
+   done
 
-  cd $WAVE
+   no_wave='no'
+   for f in 'bin/wave.exe' 'python/waveplot.py' 'python/waves.py' 'python/waveshop.py' 'stage/wave.in' 'stage/wave' 'stage/undumag'; do
+     ls -la $WAVE/$f > /dev/null || no_wave='yes'
+     if test x$no_wave = xyes; then
+       echo "'*** missing' $f  '***'"
+       return
+     else
+       echo "'--- found ' $f  '---'"
+     fi
+   done
+
+echo " "
+echo "Setting command aliases"
+echo " "
 
   alias es='$EDITOR $WAVE/shell/set_wave_environment.sh'
   alias ss='. $WAVE/shell/set_wave_environment.sh'
@@ -30,7 +63,8 @@ if test -d $WAVE; then
   echo
   alias wave='. $WAVE/stage/wave'
   alias undumag='. $WAVE/stage/undumag'
-  alias waves='cd $WAVE/stage; bash $WAVE/shell/title.sh; ipython3 -i $WAVE/python/waves.py'
+  alias waves='cd $WAVE/stage; ipython3 -i $WAVE/python/waves.py'
+  alias waveshop='cd $WAVE/stage; ipython3 -i $WAVE/python/waveshop.py'
   alias wave
   alias undumag
   alias waves
@@ -39,8 +73,8 @@ if test -d $WAVE; then
 
   cd $WAVE/stage
 
-else
-  echo
-  echo Error: $WAVE not found or it is not a directory!
-  echo
-fi
+echo " "
+echo "To run WAVE, enter wave"
+echo "For plotting results, enter wplot"
+echo "To start GUI, try waveshop or waves"
+echo " "
