@@ -87,15 +87,13 @@ for d in tree:
   #endif
 #endfor
 
-if not os.path.exists(WI + 'lib')  os.system('mkdir ' + WI + 'lib')
-
 for d in tree:
   if not os.path.exists(WI + d):
     Quit('\n Bad directory structure, giving up!')
   #endif
 #endfor
 
-if not os.path.exists(WI + 'lib')  os.system('mkdir ' + WI + 'lib')
+if not os.path.exists(WI + 'lib'):  os.system('mkdir ' + WI + 'lib')
 
 Iverbose = 0
 Idebug = 0

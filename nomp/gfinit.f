@@ -1,4 +1,4 @@
-*CMZ :          29/03/2025  12.10.58  by  Michael Scheer
+*CMZ :          26/06/2025  08.33.16  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
 *CMZ :  4.01/04 27/12/2023  16.20.07  by  Michael Scheer
@@ -245,7 +245,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -513,7 +513,7 @@ C     CALL UTIL_TEST_BATCH(IBATCH)
       scbfour=-9999.
       xshbfour=-9999.
 
-      XINTER=-9999.
+c      XINTER=-9999.
       xbetfun=9999.
       IW_BLEN=0
       IW_BLENF=0
@@ -591,7 +591,6 @@ C--- READ PARAMETER AND CONTRL-FLAGS FROM NAMELISTS
 
       OPEN (UNIT=LUNGFI,FILE=FILEI,STATUS='OLD')
 
-c      READ(LUNGFI, CONTRL )
 c      READ(LUNGFI,randomn)
 c      READ(LUNGFI,cluster)
 c     WRITE(6,*)'READING NAMELIST B0SCGLOBN'
@@ -938,9 +937,10 @@ C (15. MAI 2004)
       endif
 
       IF (
-     &    ispec.ne.0.and.(IFOLD.NE.0.or.iefold.ne.0).AND.
-     &    (IEMIT.ne.0.or.ioptic.ne.0.or.iemiahw.ne.0.or.ibeampol.ne.0)
-     &    ) THEN !29.3.2025
+     &    ispec.ne.0.and.(IFOLD.NE.0.or.iefold.ne.0)
+c     &    .and.(IEMIT.ne.0.or.ioptic.ne.0.or.iemiahw.ne.0.or.ibeampol.ne.0)
+c     &    ) THEN !29.3.2025
+     &  ) THEN !8.4.2025
 
         if (espread.eq.9999.and.delgam.eq.9999.) then
           WRITE(6,*)
