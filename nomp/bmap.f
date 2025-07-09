@@ -1,4 +1,4 @@
-*CMZ :          09/07/2025  12.10.41  by  Michael Scheer
+*CMZ :          09/07/2025  12.24.04  by  Michael Scheer
 *CMZ :  4.00/16 09/08/2022  09.07.08  by  Michael Scheer
 *CMZ :  4.00/07 07/06/2020  15.15.28  by  Michael Scheer
 *CMZ :  3.05/05 13/07/2018  11.51.31  by  Michael Scheer
@@ -14,7 +14,7 @@
 C**********************************************************************
       subroutine bmap(xin,yin,zin,bxout,byout,bzout)
 C**********************************************************************
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -375,8 +375,16 @@ c        STOP
       ENDIF
 
       if (ical.gt.0) then
-        if(x.ge.bmappe(1,(klo-1)*nyz+1)) ix1=klo
-        if(x.le.bmappe(1,(khi-1)*nyz+1)) ix2=khi
+        if(x.ge.bmappe(1,(klo-1)*nyz+1)) then
+          ix1=klo
+        else
+          ix1=1
+        endif
+        if(x.le.bmappe(1,(khi-1)*nyz+1)) then
+          ix2=khi
+        else
+          ix2=nx
+        endif
       endif
 
       ical=1
