@@ -1,3 +1,4 @@
+*CMZ :          09/07/2025  12.10.41  by  Michael Scheer
 *CMZ :  4.00/16 09/08/2022  09.07.08  by  Michael Scheer
 *CMZ :  4.00/07 07/06/2020  15.15.28  by  Michael Scheer
 *CMZ :  3.05/05 13/07/2018  11.51.31  by  Michael Scheer
@@ -87,6 +88,8 @@ c     &  bmbxmin,bmbxmax,bmbymin,bmbymax,bmbzmin,bmbzmax,
       integer ical,iwarnx,iwarny,iwarnz,nx,ny,nz,last,ntot,ianf,
      &  kd,ix1,ix2,iy1,iy2,iz1,iz2,nyz,i,k,
      &  kx1,kx2,kx3,ky1,ky2,ky3,kz1,kz2,kz3
+
+      integer :: klo=-1,khi=-1
 
       character(2048) cline
 
@@ -283,7 +286,7 @@ c     &  bmbxmin,bmbxmax,bmbymin,bmbymax,bmbzmin,bmbzmax,
         if (nz.gt.1) bmapdz=(bmzmax-bmzmin)/(nz-1)
 
         ix1=1
-        ix2=ntot
+        ix2=nx
         nyz=ny*nz
 
         write(lungfo,*)
@@ -297,7 +300,6 @@ c     &  bmbxmin,bmbxmax,bmbymin,bmbymax,bmbzmin,bmbzmax,
         write(lungfo,*)' Bzmin, Bzmax of map:',sngl(bmbzmin),sngl(bmbzmax)
         write(lungfo,*)
 
-        ical=1
       endif
 
       if (bxout.eq.-9999.0d0) then
@@ -372,44 +374,29 @@ c        STOP
 c        STOP
       ENDIF
 
-      if (x.lt.bmxmin) then
+      if (ical.gt.0) then
+        if(x.ge.bmappe(1,(klo-1)*nyz+1)) ix1=klo
+        if(x.le.bmappe(1,(khi-1)*nyz+1)) ix2=khi
+      endif
+
+      ical=1
+
+      if (x.ge.bmxmin-step.and.x.le.bmxmin) then
         ix1=1
         ix2=2
-      else if (x.gt.bmxmax) then
+      else if (x.le.bmxmax.and.x.ge.bmxmax-step) then
         ix1=nx-1
         ix2=nx
-      else
+      endif
 
-        if (x.ge.bmappe(1,(ix1-1)*nyz+1)) then
-c hunt up
-          kd=1
-111       ix2=min(ix1+kd,nx)
-          if (x.gt.bmappe(1,nyz*(ix2-1)+1)) then
-            kd=2*kd
-            ix1=ix2
-            goto 111
-          endif
-        else    !(x.ge.bmappe(1,ix1))
-c hunt down
-          kd=1
-          ix2=ix1
-22        ix1=max(ix2-kd,1)
-          if (x.lt.bmappe(1,(ix1-1)*nyz+1)) then
-            kd=2*kd
-            ix2=ix1
-            goto 22
-          endif
+1111  if (ix2-ix1.gt.1) then
+        k=(ix2+ix1)/2
+        if(bmappe(1,(k-1)*nyz+1).gt.x)then
+          ix2=k
+        else
+          ix1=k
         endif
-
-1111    if (ix2-ix1.gt.1) then
-          k=(ix2+ix1)/2
-          if(bmappe(1,(k-1)*nyz+1).gt.x)then
-            ix2=k
-          else
-            ix1=k
-          endif
-          goto 1111
-        endif
+        goto 1111
       endif
 
       x1=bmappe(1,(ix1-1)*nyz+1)
@@ -640,6 +627,9 @@ c hunt down
       bxout=b(1)
       byout=b(2)
       bzout=b(3)
+
+      klo=ix1
+      khi=ix2
 
       return
       end
