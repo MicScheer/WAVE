@@ -651,7 +651,7 @@ def readint(s,default=-9999):
   else: return int(float(ans))
 #enddef
 
-def printnl(line):
+def printnl(line=''):
   print("\n",line,"\n")
 #enddef printnl()
 
@@ -844,7 +844,7 @@ c--   workingspace: aa(n),bb(n),cc(n),c(n),cn(n)
 
   #enddo
 
-  # vorletzte zeile
+  # vorletzte Zeile
 
   bb[n2]=bb[n2]/aa[n2]
   cc[n2]=cc[n2]/aa[n2]
@@ -1477,13 +1477,21 @@ def util_vnorm(v):
 
 def util_rotate(cen,vrot,phi,vin,eps=1.0e-10):
 
+
       istat=0
+      rm = [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]
+
+      if phi == 0.0:
+        vout=vin
+        return istat, vout,rm
+      #endif
+
       vlen=util_vnorm(vrot)
 
       if vlen == 0.0:
         vout=vin
         istat=1
-        return istat, vout
+        return istat, vout,rm
       #endif
 
       o = vrot/vlen
@@ -1681,6 +1689,14 @@ ck934=echarge1/(2.0e0*pi1*emasskg1*clight1)/100.0e0
 fwhmgauss1=np.sqrt(2.0*np.log(2))*2.0
 fwhmsinxx21=2.783115
 rmssinxx21=1.05244
+
+global \
+sclight1,secharge1,shbarev1
+
+sclight1 = str(clight1)
+secharge1 = str(echarge1)
+shbarev1 = str(hbarev1)
+
 
 global Ftyp,Ftype
 Ff = open("ftypedum","w")
@@ -2623,6 +2639,8 @@ def set_y_stat(y='!'):
       if Nyzone > 1:y = 0.8 - (Nyzone-1)*0.15
   elif y == '+':
     y = YStat + 0.2
+  elif y == '-':
+    y = YStat - 0.2
   #endif
   Ystat = y
   YStat = y
@@ -9666,7 +9684,7 @@ def nscan(nt='?',varlis='',select='',isilent=0,ifirst=0,ilast=0):
 
 
   if type(nt) == str and nt == '?':
-    print("\nUsage: nscan(nt,varlis,select)")
+    print("\nUsage: nscan(nt,varlis,select='',isilent=0,ifirst=0,ilast=0))")
     return
   #if type(nt) == str and nt == '?'
 
@@ -13156,7 +13174,7 @@ comment='*', sep=' '):
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
-  if len(nt) == 0:
+  if type(nt) == str() and len(nt) == 0:
     print("nt = nread(nt, file='ntuple.dat',header=None, skiphead=-1, skipfoot=0, silent=0, comment='*', sep=' ')")
     return None
   #endif
@@ -13529,10 +13547,13 @@ def nproj2(nt='?', xy='', weight=1., select='',
   #endif Kecho
 
   if select:
+    ntf = nt
     nt = nt.query(select)
     Nsel = nt
     select=''
     if len(nt) == 0:
+      print("Ntuple:\n",ntf)
+      print("select:\n",select,'\n')
       print("*** No data survived selection in nproj2  ***")
       return -1
     #endif len(nt) == 0
@@ -18995,6 +19016,8 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
+  #reakpoint()
+
   NxBinMax = 0
   nto = nt
 
@@ -19186,8 +19209,11 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
           sopt = ", c='" + lcol + "',ls='" + Linestyle + "',lw=" + str(Linewidth)
 
           if isort:
-
-            scom = "global VsortX, VsortY; VsortX, VsortY = vsortxy(" + sx + "," + sy + ")"
+            if type(sx) == str: sx = eval(sx)
+            if type(sy) == str: sy = eval(sy)
+            scom = "global VsortX, VsortY; VsortX, VsortY = vsortxy(sx,sy)"
+#            Quit(scom)
+#            scom = "global VsortX, VsortY; VsortX, VsortY = vsortxy(" + sx + "," + sy + ")"
             exec(scom)
             if Iclosed:
               sx = list(VsortX)
@@ -19366,7 +19392,8 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
       if type(sx) == str: sx = eval(sx)
       if type(sy) == str: sy = eval(sy)
       if type(sz) == str: sz = eval(sz)
-      eval("vwritexyz(" + sx + "," + sy + "," + sz + ",'" + fout + "')")
+#      eval("vwritexyz(" + sx + "," + sy + "," + sz + ",'" + fout + "')")
+      eval("vwritexyz(sx,sy,sz,'" + fout + "')")
       print("\nData written to ",fout)
       WaveDump = fout
     #endif Kdump
@@ -20518,7 +20545,6 @@ def vspline(x,y,xspl='!', periodic=False, ypp1=0.0, yppn=0.0):
 
   import numpy as np
 
-  #nreakpoint()
   n = len(x)
 
   if n < 2:
@@ -21660,6 +21686,7 @@ def vsortxy(x,y):
 
   nt = make_dataframe('x:y',x,y)
   nt = nt.sort_values(by='x')
+  nt = nt.drop_duplicates()
   nt.index = range(len(nt))
 
   return nt.x, nt.y
@@ -25103,10 +25130,17 @@ def settextcolor(tc='black'):
   global Textcolor
   Textcolor = tc
 
+def tred(): settextcolor('green')
+def tblue(): settextcolor('blue')
+def tgreen(): settextcolor('green')
+def tcyan(): settextcolor('cyan')
+def tmagenta(): settextcolor('magenta')
+
 def gettextcolor(): return Textcolor
 
 def setlinecolor(lc='red'):
-  global Linecolor
+  global Linecolor,Colors
+  if type(lc) == int: lc = Colors[lc-1]
   mpl.rcParams['lines.color'] = lc
   Linecolor = lc
 
@@ -26014,6 +26048,12 @@ nex = nextzone
 gtit = set_global_title
 setgeo = window_geometry
 setfit = optfit
+
+tgruen = tgreen
+trot = tred
+tblau = tblue
+tlila = tmagenta
+thellblau = tcyan
 #end of aliases in m_hbook
 
 #end of m_hbook
@@ -26523,6 +26563,10 @@ def nphasespace_ellip(emit,beta0,s,npoi=1000):
 #enddef
 
 def nl(): print('\n')
+def xstp(): set_x_stat('+')
+def xstm(): set_x_stat('-')
+def ystp(): set_y_stat('+')
+def ystm(): set_y_stat('-')
 #end of m_hbook in waveplot
 
 if fexist("waves.wvs") == 0:
@@ -29273,6 +29317,7 @@ def esel(sel=-1.):
   ,FiggeoEph, Ioverview,WclipE, Icallfromoverview,Kpreload
   global IzCut,IyCut
 
+  #reakpoint()
   if Wispe == 0: return
 
   if GetIndexH1('h148000') == -1:
@@ -29308,6 +29353,11 @@ def esel(sel=-1.):
         smax = Wfd[i]
       #endif fd[i] > smax:
   #endfor i in range(len(fd)):
+
+  if smax ==  0.0:
+    Wiesel = 1
+    Wesel = Wener[0]
+  #endif
 
 #enddef esel():
 
@@ -33684,6 +33734,8 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
+    else:
+      select = 'iene == 1'
     #endif select != ''
     #n37=n37.query(select)
 
@@ -37966,9 +38018,13 @@ def startup(sfile='ntupplot_startup.py'):
 
   if get_mshwelcome() == False:
     mshwelcome("Ntup-Plot",2021)
-  if WavesMode == 'WAVES' or WavesMode == 'WPLOT' or WavesMode == 'WSHOP': fcfg = 'waveplot.cfg'
-  elif WavesMode == 'UNDUMAG': fcfg = 'undugui.cfg'
-  else: fcfg = 'ntupplot.cfg'
+  if WavesMode == 'WAVES' or WavesMode == 'WPLOT' or WavesMode == 'WSHOP':
+    fcfg = 'waveplot.cfg'
+  elif WavesMode == 'UNDUMAG':
+    fcfg = 'undugui.cfg'
+  else:
+    fcfg = 'ntupplot.cfg'
+  #endif
 
   print("\n")
   print("\nHints:\n------")
