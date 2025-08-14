@@ -1,9 +1,9 @@
-*CMZ :          16/08/2024  17.10.30  by  Michael Scheer
+*CMZ :          03/08/2025  10.05.09  by  Michael Scheer
 *CMZ :  4.01/03 17/05/2023  11.24.58  by  Michael Scheer
 *CMZ :  4.01/02 12/05/2023  11.49.33  by  Michael Scheer
 *CMZ : 00.00/16 21/11/2014  14.53.59  by  Michael Scheer
 *-- Author :    Michael Scheer   21/11/2014
-      subroutine util_spline_integral_2d(nx,ny,x,y,f,result,istat,kalloc)
+      subroutine util_spline_integral_2d(nx,ny,x,y,f,result,istat)
 *KEEP,gplhint.
 !******************************************************************************
 !
@@ -49,77 +49,37 @@
 
       implicit none
 
-      double precision x(nx),y(ny),f(nx,ny),result
-      integer :: istat,nx,ny,ix,iy,kstat,kalloc,nxyo=0,kallo=0
+      double precision x(nx),y(ny),f(nx,ny),result,coef(4,4,nx,ny),a(4,4),dx,dy
+      integer nx,ny,ix,iy,istat,k,l
 
-      double precision, allocatable :: fb(:),fb2(:),coef(:),
-     &  w1(:),w2(:),w3(:),w4(:)
+      call util_coef_spline_2d(nx,ny,f,coef,istat)
+      if (istat.ne.0) return
 
-      save
+      dx=(x(nx)-x(1))/(nx-1)
+      dy=(y(ny)-y(1))/(ny-1)
 
-      if (kalloc.eq.0) then
-        if (kallo.eq.0) then
-          kalloc=1
-        else
-          if (max(nx,ny).gt.nxyo) then
-            deallocate(fb)
-            deallocate(fb2)
-            deallocate(coef)
-            deallocate(w1)
-            deallocate(w2)
-            deallocate(w3)
-            deallocate(w4)
-            kalloc=1
-          endif
-        endif
-      endif
+      result=0.0d0
 
-      if (kalloc.gt.0) then
-        allocate(fb(max(nx,ny)))
-        allocate(fb2(max(nx,ny)))
-        allocate(coef(max(nx,ny)))
-        allocate(w1(max(nx,ny)))
-        allocate(w2(max(nx,ny)))
-        allocate(w3(max(nx,ny)))
-        allocate(w4(max(nx,ny)))
-        kallo=1
-        kalloc=0
-      else if (kalloc.lt.0) then
-        deallocate(fb)
-        deallocate(fb2)
-        deallocate(coef)
-        deallocate(w1)
-        deallocate(w2)
-        deallocate(w3)
-        deallocate(w4)
-        return
-      endif
+      do iy=1,ny-1
+        do ix=1,nx-1
 
-      kstat=0
+          a(1:4,1:4)=coef(1:4,1:4,ix,iy)
+          do k=1,4
+            do l=1,4
+              result=result+a(k,l)/k/l
+            enddo
+          enddo
 
-      if (ny.gt.nx) then
-        do ix=1,nx
-          fb(1:ny)=f(ix,1:ny)
-          call util_spline_integral_stat(y,fb,ny,fb2(ix)
-     &      ,coef,w1,w2,w3,w4,istat)
-          kstat=kstat+istat
         enddo
-        call util_spline_integral_stat(x,fb2,nx,result
-     &    ,coef,w1,w2,w3,w4,istat)
-        kstat=kstat+istat
-      else !nx.gt.ny?
-        do iy=1,ny
-          fb(1:nx)=f(1:nx,iy)
-          call util_spline_integral_stat(x,fb,nx,fb2(iy)
-     &      ,coef,w1,w2,w3,w4,istat)
-          kstat=kstat+istat
-        enddo
-        call util_spline_integral_stat(y,fb2,ny,result
-     &    ,coef,w1,w2,w3,w4,istat)
-        kstat=kstat+istat
-      endif !nx.gt.ny
+      enddo
 
-      nxyo=max(nx,ny)
+c      a(1:4,1:4)=coef(1:4,1:4,1,1)
+c      do k=1,4
+c        do l=1,4
+c          result=result-a(k,l)/k/l
+c        enddo
+c      enddo
 
-      return
+      result=result*dx*dy
+
       end

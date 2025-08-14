@@ -1,4 +1,4 @@
-*CMZ :          11/03/2025  14.08.52  by  Michael Scheer
+*CMZ :          08/04/2025  09.11.40  by  Michael Scheer
 *CMZ :  4.01/07 30/09/2024  14.48.47  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.52.02  by  Michael Scheer
 *CMZ :  4.01/04 20/11/2023  18.32.01  by  Michael Scheer
@@ -160,7 +160,7 @@
 *CMZ : 00.00/00 28/04/94  16.11.39  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE SPECTRUM
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -2114,6 +2114,7 @@ C--- OUTPUT RESULTS
 
       WRITE(LUNGFO,*)
       WRITE(LUNGFO,*)'     Bandwidth:',SNGL(BANWID)
+      WRITE(LUNGFO,*)'     SPECNOR:',SNGL(SPECNOR)
       WRITE(LUNGFO,*)
 
       IF(IPIN.EQ.0) THEN

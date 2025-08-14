@@ -572,7 +572,7 @@
 
       IRBTABXYZ=0 ! magnetic fields Bx,By and Bz on device axis are read
                   ! from data files FILETB, FILETBX, FILETBZ and interpolated
-                  ! by splines (some format as for IRBTAB>0)
+                  ! by splines (same format as for IRBTAB>0)
 
       IRFILB0=0   ! read 3D mag. field table from file FILEB0
                   ! format of routine BMESS
@@ -895,6 +895,8 @@
 
         IFREQ2P=3 ! =0 : spectrum is calculated for listed photon
                   !      energies on file FILEFR
+		  !      Each line contains a single photon energy
+		  !      or an intervall like Elow Ehigh Nephoton
                   ! =1 : spectrum is calculated for energy FREQLOW
                   !      in namelist FREQN
                   ! =-1: spectrum is calculated for energy
@@ -925,7 +927,7 @@
                 ! for the parameters of the pinhole see namelist PINHOLE
                 ! if negative integration over pinhole is skipped
                 ! [ OBSOLETE: IPIN = 2 (for ISPECMODE = 5) allows flux calculation with
-                ! only one mash point in pinhole (see ISPECMODE) ]
+                ! only one mesh point in pinhole (see ISPECMODE) ]
                 !
                 ! IPIN = 3, flux through pinhole by Monte-Carlo.
                 ! Only useful for IBUNCH set and NEINBUNCH = 1. For each electron
@@ -994,7 +996,7 @@
                      ! IPHASE.LT.0 means spline-integration used
                      ! ABS(IPHASE.GT.1) means additional application of
                      ! geometrical optic
-
+		
         IDOSE=0      ! To calculate absorbed energy dose
                      !IDOSE > 0: F(X)=AA*X**BB interpolation of coef.
                      !IDOSE < 0: linear interpolation of coef.
@@ -2177,8 +2179,8 @@
         ! the phase space is defined by a collimator
         ! trajectories are written to file FILEO
 
-        ! for mash sizes of the grid i.e. e.g DZOPT=9999.
-        ! mash is fit do aperture according to number of mash points
+        ! for mesh sizes of the grid i.e. e.g DZOPT=9999.
+        ! mesh is fit do aperture according to number of mesh points
 
         NZOPT=8     !grid of horizontal displacement
         DZOPT=9999.  !grid of horizontal displacement
@@ -3495,8 +3497,8 @@
                         !points. The other points given be MPHASEZ, MPHASEY
                         !serve as edge for the folding procedure
 
-        NPHASEZ=51      !number of horizontal mesh points
-        NPHASEY=51      !number of vertical mesh points
+        NPHASEZ=31      !number of horizontal mesh points
+        NPHASEY=31      !number of vertical mesh points
         MPHASEZ=-9999   !total number of horizontal mesh points
                         !-9999: MPHASEZ according to dgsigz(1) and the
                         ! sigma of the Gaussian
@@ -3504,6 +3506,20 @@
                         !-9999: MPHASEY according to dgsigy(1) and the
                         ! sigma of the Gaussian
 
+        IWIGNER=0           ! calculate Wigner distribution function
+	                    !  1: All polarisations states, i.e. Wzz,Wyy,Wzy
+			    ! -1: Wzz only
+			    ! -2: Wyy only
+			    ! -3: Wzy only
+			    ! -4: Wyz only
+	
+	WIGTHETAZ=-9999.0   ! Hori. opening angle of radiation cone [rad]
+	                    ! -9999: Estimated from device length and photon energy
+	NWIGTHETAZ=31       ! number of angles in z
+	WIGTHETAY=-9999.0   ! Vert. opening angle of radiation cone [rad]
+	                    ! -9999: Estimated from device length and photon energy
+	NWIGTHETAY=31       ! number of angles in y
+	
         IPHFOLD=1       !Folding of flux-density distribution according
                         !to beta functions PHBETH and PBETV, and the
                         !emittances EPS0H and ESP0V of namelist DEPOLA

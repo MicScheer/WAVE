@@ -1,4 +1,5 @@
-*CMZ :          20/08/2024  17.20.56  by  Michael Scheer
+*CMZ :          14/08/2025  11.49.59  by  Michael Scheer
+*CMZ :  4.01/07 20/08/2024  17.20.56  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  18.40.00  by  Michael Scheer
 *CMZ :  4.01/04 28/11/2023  14.20.34  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  10.59.52  by  Michael Scheer
@@ -143,21 +144,23 @@
 *KEND.
 
       CHARACTER(8) OLDDIR
+      character(64) c64
 
       integer :: idebug=1
 
-      INTEGER ICYCLE,NTUP_P,IOBS,IPHZ,iy,iz,iy1,iz1,IPHY,ifrq,IEPS,I,NGEO_P,ISOUR
+      INTEGER ICYCLE,NTUP_P,IOBS,IPHZ,iy,iz,iy1,iz1,IPHY,ifrq,IEPS,I,NGEO_P,ISOUR,itz,ity
       INTEGER NIDGEO1,ISTAT,NIDGEO2,NBEAM_P,J,IELEM,NSIZE_P
-      INTEGER IOBSY,IOBSZ,K,ix,is,mthreadso
+      INTEGER IOBSY,IOBSZ,K,ix,is,mthreadso,lunwig,modus
 
       complex*16 efc(3),bfc(3),expsh,rea(3)
 
       integer
      &  mphasey_omp,mphasez_omp,nphasey_omp,nphasez_omp,iphfold_omp,
      &  nphelem_omp,ihsel_omp,ith,nfreq_omp,iphase_omp
+
       integer ic,kobs
 
-      double precision reanor,dum,
+      double precision reanor,dum,specnor_si,wigflux(4),
      &  phaperzm_omp,phaperzp_omp,phaperzpm_omp,phaperzpp_omp,
      &  phaperym_omp,phaperyp_omp,phaperypm_omp,phaperypp_omp,
      &  phelem_omp(5,4,nphelemp),dgsigz_omp,dgsigy_omp,r(3),ef(3) !,bf(3)
@@ -171,7 +174,7 @@
       REAL*4 FLOW,FHIG,DF
 
       DOUBLE PRECISION XPH,YPH,ZPH,XOBS,YOBS,ZOBS,DX,DY,DZ,DZY2,ANS
-     &  ,OMC,DOMC,DR,DRRED,DX2,DMASHZ,DMASHY,PHLOWZ,PHLOWY,EPS(6)
+     &  ,OMC,DOMC,DR,DRRED,DX2,DMESHZ,DMESHY,PHLOWZ,PHLOWY,EPS(6)
      &  ,FOCUS,RLAMBDA1,smax,sfmax
 
       DOUBLE PRECISION XSOUR,YSOUR,ZSOUR,DR2PH,DR2SOUR,THETA,PHI,TANTHE,TANPHI
@@ -212,13 +215,17 @@
      &  ,YAI5Y(NDOBSVYP)
      &  ,YAI6Y(NDOBSVYP)
 
+      complex*16, dimension (:,:), allocatable :: esour
+      double precision, dimension (:,:,:,:), allocatable :: wig
+      double precision, dimension (:), allocatable :: thez,they
+
       double precision, dimension (:,:,:), allocatable :: phspec3,phspec3f,
      &  phspec3fy
 
       double precision, dimension (:), allocatable :: zphw,yphw,freq_omp,
      &  specwz,specwy,specfwz,specfwy,phws1,phws2,phcoef,phws3,phws4
 
-      double precision phgsigz,phgsigy,wlen,sigrp,sigr,rn,rnx,rny,rnz
+      double precision phgsigz,phgsigy,wlen,sigrp,sigr,rn,rnx,rny,rnz,dtz,dty
 
       integer is0
 
@@ -241,6 +248,9 @@
       data chsize /'ie','is','zrms','yrms'/
 
       DATA EPSBEAM/0.001D0/
+
+      call zeit(lungfo)
+      write(lungfo,*)"     Performing field propagation"
 
       call zeit(6)
       write(6,*)"     Performing field propagation"
@@ -283,12 +293,14 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
       else
         sigrp=sqrt(wlen/(dble(kampli)*phrperl))
       endif
+
       sigr=wlen/twopi1/sigrp
       !call util_break
       if (phwid.eq.-9999.0d0) then
         phwid=10.0d0*sqrt(sigr**2+
      &    ((phcenx-sourcen(1,1,1))*sigrp)**2)
       endif
+
       if (phhig.eq.-9999.0d0) then
         phhig=10.0d0*sqrt(sigr**2+
      &    ((phcenx-sourcen(1,1,1))*sigrp)**2)
@@ -298,16 +310,16 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
       nphasey=(nphasey/2)*2+1
 
       IF (NPHASEZ.GT.1) THEN
-        DMASHZ=PHWID/(NPHASEZ-1)
+        DMESHZ=PHWID/(NPHASEZ-1)
       ELSE
         PHWID=0.D0
-        DMASHZ=0.D0
+        DMESHZ=0.D0
       ENDIF
       IF (NPHASEY.GT.1) THEN
-        DMASHY=PHHIG/(NPHASEY-1)
+        DMESHY=PHHIG/(NPHASEY-1)
       ELSE
         PHHIG=0.D0
-        DMASHY=0.D0
+        DMESHY=0.D0
       ENDIF
 
       DA=PINW/max(1,(MOBSVZ-1))*PINH/max(1,(MOBSVY-1))
@@ -346,16 +358,16 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
       endif
 
       if (mphasez.eq.-9999) then
-        if (dmashz.gt.0.0d0) then
-          mphasez=nphasez+(dgsigz(1)*phgsigz/dmashz+1)*4
+        if (dmeshz.gt.0.0d0) then
+          mphasez=nphasez+(dgsigz(1)*phgsigz/dmeshz+1)*4
         else
           mphasez=0
         endif
       endif
 
       if (mphasey.eq.-9999) then
-        if (dmashy.gt.0.0d0) then
-          mphasey=nphasey+(dgsigy(1)*phgsigy/dmashy+1)*4
+        if (dmeshy.gt.0.0d0) then
+          mphasey=nphasey+(dgsigy(1)*phgsigy/dmeshy+1)*4
         else
           mphasey=0
         endif
@@ -554,7 +566,7 @@ c          rnz=ef(1)*bf(2)-ef(2)*bf(1)
 
       PHLOWZ=PHCENZ-PHWID/2.D0
       PHLOWY=PHCENY-PHHIG/2.D0
-      YPH=PHLOWY-DMASHY
+      YPH=PHLOWY-DMESHY
 
       OMC=FREQ(1)/(HBAREV1*CLIGHT1)
       IF (ifreq2P.GT.2) THEN
@@ -596,7 +608,7 @@ c          rnz=ef(1)*bf(2)-ef(2)*bf(1)
 !$OMp& SHARED(nphelem_omp,ihsel_omp,nfreq_omp,freq_omp,wtoe1,iphase_omp)
 !$OMP& SHARED(phaperzm_omp,phaperzp_omp,phaperzpm_omp,phaperzpp_omp)
 !$OMP& SHARED(phaperym_omp,phaperyp_omp,phaperypm_omp,phaperypp_omp)
-!$OMP& SHARED(phelem_omp,dmashy,dmashz,obsv,phlowy,phlowz,dx,dx2)
+!$OMP& SHARED(phelem_omp,dmeshy,dmeshz,obsv,phlowy,phlowz,dx,dx2)
 !$OMP& SHARED(ampli,reaima,domc,omc,da,obsvz,obsvy,yphw,zphw)
 
 !$OMP& FIRSTPRIVATE(phshift,expom,dexpom,nobsvz,nobsvy,nobsv,iy1,iz1)
@@ -605,6 +617,7 @@ c          rnz=ef(1)*bf(2)-ef(2)*bf(1)
 !$OMP& FIRSTPRIVATE(yai1,yai2,yai3,yai4,yai5,yai6)
 !$OMP& FIRSTPRIVATE(yar1,yar2,yar3,yar4,yar5,yar6)
 !$OMP& FIRSTPRIVATE(XA,xay,RESULT,RESULTY)
+!$OMP& FIRSTPRIVATE(reanor)
 
       allocate(
      &  x_th(max(nobsvy,nobsvz)),
@@ -620,13 +633,13 @@ c          rnz=ef(1)*bf(2)-ef(2)*bf(1)
         iphy=iy+iy1
 
         ith=OMP_GET_THREAD_NUM()+1
-        yph=phlowy+dble(iy-1)*dmashy
+        yph=phlowy+dble(iy-1)*dmeshy
 
         DO iz=1,nphasez_omp
 
           iphz=iz+iz1
 
-          zph=phlowz+dble(iz-1)*dmashz
+          zph=phlowz+dble(iz-1)*dmeshz
 
           DO IOBS=1,NOBSV
 
@@ -692,7 +705,7 @@ c+seq,dum2.
 
           DO ifrq=1,NFREQ_omp
 
-            RLAMBDA1=FREQ_omp(ifrq)/WTOE1*1.0D9   !1/lambda[m]=1/(wtoe1/freq*1.e-9)
+            RLAMBDA1=FREQ_omp(ifrq)/WTOE1*1.0D9*reanor   !1/lambda[m]=1/(wtoe1/freq*1.e-9)
 
             IF (IPHASE_omp.GT.0) THEN
 
@@ -942,11 +955,11 @@ c+seq,dummy.
 !$OMP END PARALLEL
 
       do iphz=1,mphasez
-        zphw(iphz)=-(mphasez-1)*dmashz/2.0+(iphz-1)*dmashz
+        zphw(iphz)=-(mphasez-1)*dmeshz/2.0+(iphz-1)*dmeshz
       enddo
 
       do iphy=1,mphasey
-        yphw(iphy)=-(mphasey-1)*dmashy/2.0+(iphy-1)*dmashy
+        yphw(iphy)=-(mphasey-1)*dmeshy/2.0+(iphy-1)*dmeshy
       enddo
 
       !print*,iz1,iy1,dgsigz_omp,dgsigy_omp
@@ -958,7 +971,7 @@ c+seq,dummy.
 !$OMp& SHARED(nphelem_omp,ihsel_omp,nfreq_omp,freq_omp,wtoe1,iphase_omp)
 !$OMP& SHARED(phaperzm_omp,phaperzp_omp,phaperzpm_omp,phaperzpp_omp)
 !$OMP& SHARED(phaperym_omp,phaperyp_omp,phaperypm_omp,phaperypp_omp)
-!$OMP& SHARED(phelem_omp,dmashy,dmashz,obsv,phlowy,phlowz,dx,dx2)
+!$OMP& SHARED(phelem_omp,dmeshy,dmeshz,obsv,phlowy,phlowz,dx,dx2)
 !$OMP& SHARED(ampli,reaima,phshift,domc,omc,da,obsvz,obsvy,yphw,zphw)
 !$OMP& SHARED(smax,phspec3,sfmax,phspec3fy,phspec3f,dgsigz_omp,dgsigy_omp,phgsigz,phgsigy)
 
@@ -1058,6 +1071,12 @@ c     &            phws1,phws2,phws3,phws4)
 
 !$OMP END PARALLEL
 
+      SPECNOR_SI= !merke/synchrotron_radiation.txt
+     &  dmycur ! Strom
+     &  /echarge1/hbar1*clight1/PI1*EPS01
+     &  *banwid !BW
+
+      ampli=ampli/sqrt(specnor_si)
       sfmax=-1.0d30
 
       do ifrq=1,nfreq
@@ -1072,24 +1091,24 @@ c     &            phws1,phws2,phws3,phws4)
             TUP(5)=ifrq
             TUP(6)=IPHY
             TUP(7)=IPHZ
-            ef(1:3)=DREAL(reanor*ampli(1:3,iphz,iphy,ifrq))
-c            bf(1:3)=DREAL(reanor*ampli(4:6,iphz,iphy,ifrq))
+            ef(1:3)=DREAL(ampli(1:3,iphz,iphy,ifrq))
+c            bf(1:3)=DREAL(ampli(4:6,iphz,iphy,ifrq))
             efc(1:3)=ampli(1:3,iphz,iphy,ifrq)
             bfc(1:3)=ampli(4:6,iphz,iphy,ifrq)
             TUP(8)=ef(1)
-            TUP(9)=DIMAG(reanor*ampli(1,iphz,iphy,ifrq))
+            TUP(9)=DIMAG(ampli(1,iphz,iphy,ifrq))
             TUP(10)=ef(2)
-            TUP(11)=DIMAG(reanor*ampli(2,iphz,iphy,ifrq))
+            TUP(11)=DIMAG(ampli(2,iphz,iphy,ifrq))
             TUP(12)=ef(3)
-            TUP(13)=DIMAG(reanor*ampli(3,iphz,iphy,ifrq))
-            TUP(14)=phspec3(iphz,iphy,ifrq)*reanor**2
-            TUP(15)=phspec3f(iphz,iphy,ifrq)*reanor**2
-            TUP(16)=DREAL(reanor*ampli(4,iphz,iphy,ifrq))
-            TUP(17)=DIMAG(reanor*ampli(4,iphz,iphy,ifrq))
-            TUP(18)=DREAL(reanor*ampli(5,iphz,iphy,ifrq))
-            TUP(19)=DIMAG(reanor*ampli(5,iphz,iphy,ifrq))
-            TUP(20)=DREAL(reanor*ampli(6,iphz,iphy,ifrq))
-            TUP(21)=DIMAG(reanor*ampli(6,iphz,iphy,ifrq))
+            TUP(13)=DIMAG(ampli(3,iphz,iphy,ifrq))
+            TUP(14)=phspec3(iphz,iphy,ifrq)  !*reanor**2
+            TUP(15)=phspec3f(iphz,iphy,ifrq)  !*reanor**2
+            TUP(16)=DREAL(ampli(4,iphz,iphy,ifrq))
+            TUP(17)=DIMAG(ampli(4,iphz,iphy,ifrq))
+            TUP(18)=DREAL(ampli(5,iphz,iphy,ifrq))
+            TUP(19)=DIMAG(ampli(5,iphz,iphy,ifrq))
+            TUP(20)=DREAL(ampli(6,iphz,iphy,ifrq))
+            TUP(21)=DIMAG(ampli(6,iphz,iphy,ifrq))
 c            rnx=ef(2)*bf(3)-ef(3)*bf(2)
 c            rny=ef(3)*bf(1)-ef(1)*bf(3)
 c            rnz=ef(1)*bf(2)-ef(2)*bf(1)
@@ -1133,27 +1152,27 @@ c            rnz=ef(1)*bf(2)-ef(2)*bf(1)
 
         call hbook2m(NIDPHASE-1,'PHASE',
      &    mPHASEZ,
-     &    SNGL(PHCENZ-(mphasez-1)*dmashz/2.-PHWID/(NPHASEZ-1)/2.),
-     &    SNGL(PHCENZ+(mphasez-1)*dmashz/2.+PHWID/(NPHASEZ-1)/2.),
+     &    SNGL(PHCENZ-(mphasez-1)*dmeshz/2.-PHWID/(NPHASEZ-1)/2.),
+     &    SNGL(PHCENZ+(mphasez-1)*dmeshz/2.+PHWID/(NPHASEZ-1)/2.),
      &    mPHASEY,
-     &    SNGL(PHCENY-(mphasey-1)*dmashy/2.-PHHIG/(NPHASEY-1)/2.),
-     &    SNGL(PHCENY+(mphasey-1)*dmashy/2.+PHHIG/(NPHASEY-1)/2.),
+     &    SNGL(PHCENY-(mphasey-1)*dmeshy/2.-PHHIG/(NPHASEY-1)/2.),
+     &    SNGL(PHCENY+(mphasey-1)*dmeshy/2.+PHHIG/(NPHASEY-1)/2.),
      &    0.0)
         CALL MHROUT(NIDPHASE-1,ICYCLE,' ')
         CALL hdeletm(NIDPHASE-1)
 
         call hbook1m(NIDPHASE-2,'PHASE (HORIZONTAL CUT)',
      &    mPHASEZ,
-     &    SNGL(PHCENZ-(mphasez-1)*dmashz/2.-PHWID/(NPHASEZ-1)/2.),
-     &    SNGL(PHCENZ+(mphasez-1)*dmashz/2.+PHWID/(NPHASEZ-1)/2.),
+     &    SNGL(PHCENZ-(mphasez-1)*dmeshz/2.-PHWID/(NPHASEZ-1)/2.),
+     &    SNGL(PHCENZ+(mphasez-1)*dmeshz/2.+PHWID/(NPHASEZ-1)/2.),
      &    0.0)
         CALL MHROUT(NIDPHASE-2,ICYCLE,' ')
         CALL hdeletm(NIDPHASE-2)
 
         call hbook1m(NIDPHASE-3,'PHASE (VERTICAL CUT)',
      &    mPHASEY,
-     &    SNGL(PHCENY-(mphasey-1)*dmashy/2.-PHHIG/(NPHASEY-1)/2.),
-     &    SNGL(PHCENY+(mphasey-1)*dmashy/2.+PHHIG/(NPHASEY-1)/2.),
+     &    SNGL(PHCENY-(mphasey-1)*dmeshy/2.-PHHIG/(NPHASEY-1)/2.),
+     &    SNGL(PHCENY+(mphasey-1)*dmeshy/2.+PHHIG/(NPHASEY-1)/2.),
      &    0.0)
         CALL MHROUT(NIDPHASE-3,ICYCLE,' ')
         CALL hdeletm(NIDPHASE-3)
@@ -1162,8 +1181,8 @@ c            rnz=ef(1)*bf(2)-ef(2)*bf(1)
 
         call hbook1m(NIDPHASE-2,'PHASE (HORIZONTAL CUT)',
      &    mPHASEZ,
-     &    SNGL(PHCENZ-(mphasez-1)*dmashz/2.-PHWID/(NPHASEZ-1)/2.),
-     &    SNGL(PHCENZ+(mphasez-1)*dmashz/2.+PHWID/(NPHASEZ-1)/2.),
+     &    SNGL(PHCENZ-(mphasez-1)*dmeshz/2.-PHWID/(NPHASEZ-1)/2.),
+     &    SNGL(PHCENZ+(mphasez-1)*dmeshz/2.+PHWID/(NPHASEZ-1)/2.),
      &    0.0)
         CALL MHROUT(NIDPHASE-2,ICYCLE,' ')
         CALL hdeletm(NIDPHASE-2)
@@ -1172,8 +1191,8 @@ c            rnz=ef(1)*bf(2)-ef(2)*bf(1)
 
         call hbook1m(NIDPHASE-3,'PHASE (VERTICAL CUT)',
      &    mPHASEY,
-     &    SNGL(PHCENY-(mphasey-1)*dmashy/2.-PHHIG/(NPHASEY-1)/2.),
-     &    SNGL(PHCENY+(mphasey-1)*dmashy/2.+PHHIG/(NPHASEY-1)/2.),
+     &    SNGL(PHCENY-(mphasey-1)*dmeshy/2.-PHHIG/(NPHASEY-1)/2.),
+     &    SNGL(PHCENY+(mphasey-1)*dmeshy/2.+PHHIG/(NPHASEY-1)/2.),
      &    0.0)
         CALL MHROUT(NIDPHASE-3,ICYCLE,' ')
         CALL hdeletm(NIDPHASE-3)
@@ -1761,6 +1780,106 @@ C--- APPLY MATRICES OF BEAMLINE
         CALL hdeletm(IDSEL+11)
 
       ENDIF !IHSEL.NE.0
+
+      if (iwigner.ne.0) then
+
+        call zeit(lungfo)
+
+        write(lungfo,*)"     Calculating Wigner distributions"
+        write(lungfo,*)"     "
+        write(lungfo,*)"     IWIGNER:",IWIGNER
+
+        call zeit(6)
+        write(6,*)"     Calculating Wigner distributions"
+
+        wigflux=0.0d0
+
+        allocate(thez(nwigthetaz),they(nwigthetay),esour(mphasez,mphasey),
+     &    wig(mphasez,mphasey,nwigthetaz,nwigthetay))
+
+        if (wigthetaz.eq.-9999.0d0) then
+          wigthetaz=2.0d0*sigrp
+        endif
+
+        if (wigthetay.eq.-9999.0d0) then
+          wigthetay=2.0d0*sigrp
+        endif
+
+        write(lungfo,*)"     NWIGTHETAY, WIGTHETAY [mrad]:", nwigthetay, wigthetay*1000.0d0
+        write(lungfo,*)"     NWIGTHETAZ, WIGTHETAZ [mrad]:", nwigthetaz, wigthetaz*1000.0d0
+        write(lungfo,*)"     "
+        write(lungfo,*)"     Eph, Flux of Wxx, Wyy, Wxy, Wyx:"
+        write(lungfo,*)"     "
+
+        dtz=wigthetaz/(nwigthetaz-1)
+        thez(1)=-wigthetaz/2.0d0
+        do i=2,nwigthetaz
+          thez(i)=thez(i-1)+dtz
+          if (abs(thez(i)).le.1.0e-12) thez(i)=0.0d0
+        enddo
+
+        dty=wigthetay/(nwigthetay-1)
+        they(1)=-wigthetay/2.0d0
+        do i=2,nwigthetay
+          they(i)=they(i-1)+dty
+          if (abs(they(i)).le.1.0e-12) they(i)=0.0d0
+        enddo
+
+        open(unit=lunwig,file='wigner.wav')
+
+        write(c64,*) icode
+        write(lunwig,'(a)') '* ' // trim(c64) // " " // trim(code)
+
+        DO ifrq=1,NFREQ
+
+          do modus=1,4
+
+            if (modus.eq.1) then
+              if (iwigner.eq.-2.or.iwigner.eq.-3.or.iwigner.eq.-4) cycle
+              esour(:,:)=ampli(3,:,:,ifrq)
+            else if (modus.eq.2) then
+              if (iwigner.eq.-1.or.iwigner.eq.-3.or.iwigner.eq.-4) cycle
+              esour(:,:)=ampli(2,:,:,ifrq)
+            else if (modus.eq.3) then
+              if (iwigner.eq.-1.or.iwigner.eq.-2.or.iwigner.eq.-4) cycle
+              esour(:,:)=dcmplx(dreal(ampli(3,:,:,ifrq)),dimag(ampli(2,:,:,ifrq)))
+            else if (modus.eq.4) then
+              if (iwigner.eq.-1.or.iwigner.eq.-2.or.iwigner.eq.-3) cycle
+              esour(:,:)=dcmplx(dreal(ampli(2,:,:,ifrq)),dimag(ampli(3,:,:,ifrq)))
+            endif
+
+            call undulator_wigner_num(mphasez,mphasey,dmeshz,dmeshy,wtoe1/freq(ifrq),esour,
+     &        nwigthetaz,nwigthetay,thez,they,wig,dmycur,banwid)
+
+            do ity=1,nwigthetay
+              do itz=1,nwigthetaz
+                do iphy=1,mphasey
+                  if (abs(yphw(iphy)-phceny).gt.phhig/2.0d0+1.0d-12) cycle
+                  do iphz=1,mphasez
+                    if (abs(zphw(iphz)-phcenz).gt.phwid/2.0d0+1.0d-12) cycle
+                    write(lunwig,'(I5,10(1pe15.5))') modus,
+     &                freq(ifrq),zphw(iphz),yphw(iphy),thez(itz),they(ity),
+     &                dreal(esour(iphz,iphy)),dimag(esour(iphz,iphy)),
+     &                wig(iphz,iphy,itz,ity)
+
+                     wigflux(modus)=wigflux(modus)+wig(iphz,iphy,itz,ity)
+                  enddo
+                enddo
+              enddo
+            enddo
+          enddo !modus
+
+          flush(lunwig)
+
+          wigflux=wigflux*dmeshz*dmeshy*dtz*dty
+          write(lungfo,*)"     ",sngl(freq(ifrq)),sngl(wigflux)
+
+        enddo !ifrq
+
+        close(lunwig)
+
+        deallocate(thez,they,esour,wig)
+      endif !iwigner
 
       if (mhbookp.eq.0.and.iroottrees.ge.0) then
         CALL hrendm('PHASE')

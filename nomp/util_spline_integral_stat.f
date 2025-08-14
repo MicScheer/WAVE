@@ -1,10 +1,11 @@
-*CMZ :          16/08/2024  14.55.31  by  Michael Scheer
+*CMZ :          03/08/2025  09.42.28  by  Michael Scheer
+*CMZ :  4.01/07 16/08/2024  14.55.31  by  Michael Scheer
 *CMZ :  4.01/03 16/05/2023  19.38.31  by  Michael Scheer
 *CMZ : 00.00/02 17/08/2004  09.47.26  by  Michael Scheer
 *CMZ : 00.00/00 10/01/95  15.25.29  by  Michael Scheer
 *-- Author :
       SUBROUTINE UTIL_SPLINE_INTEGRAL_STAT(X,Y,N,RESULT
-     &                                 ,COEF,WORK1,WORK2,WORK3,WORK4,ISTAT)
+     &  ,COEF,WORK1,WORK2,WORK3,WORK4,ISTAT)
 
 C---  CALCULATES INTERGRAL OF Y(X) VIA SPLINES
 
@@ -17,6 +18,7 @@ C---  CALCULATES INTERGRAL OF Y(X) VIA SPLINES
 C---  SPLINE-COEFFICIENTS
 
       CALL UTIL_SPLINE_COEF_STATus(X,Y,N,0.0d0,0.0d0,COEF,WORK1,WORK2,WORK3,WORK4,ISTAT)
+      if (istat.ne.0) return
 
 C--- INTEGRATION
 

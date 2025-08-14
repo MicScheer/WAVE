@@ -3,6 +3,7 @@
       INTEGER
      &  nphasez,nphasey,mphasez,mphasey,NIDPHASE
      &  ,NIDGEO,IDSEL,IHSEL,NPHELEMP,NPHELEM,iphfold
+     &  ,iwigner,nwigthetaz,nwigthetay
 
       PARAMETER (NPHELEMP=5)
 
@@ -13,6 +14,8 @@
      &  PHGEOSUM(NDFREQP),PHGEOSEL(NDFREQP),PHBEAM(NDFREQP),
      &  PHELEM(5,4,NPHELEMP),
      &  PHBETH,PHBETV
+     &  ,wigthetaz,wigthetay
+
       COMMON/PHASEC/
      &  phgshift,PHCENX,PHCENY,PHCENZ,PHWID,PHHIG,
      &  PHAPERZM,PHAPERZP,PHAPERZPM,PHAPERZPP,
@@ -20,6 +23,8 @@
      &  PHGEOSUM,PHGEOSEL,PHELEM,PHBEAM,
      &  PHBETH,PHBETV,
      &  nphasez,nphasey,mphasez,mphasey,NIDPHASE,NIDGEO,IDSEL,IHSEL,NPHELEM,iphfold
+     &  ,iwigner,nwigthetaz,nwigthetay
+     &  ,wigthetaz,wigthetay
 
       NAMELIST/PHASEN/
      &  phgshift,PHCENX,PHCENY,PHCENZ,PHWID,PHHIG,
@@ -27,4 +32,6 @@
      &  PHAPERYM,PHAPERYP,PHAPERYPM,PHAPERYPP,
      &  PHBETH,PHBETV,
      &  nphasez,nphasey,mphasez,mphasey,IHSEL,NPHELEM,PHELEM,iphfold
+     &  ,iwigner,nwigthetaz,nwigthetay
+     &  ,wigthetaz,wigthetay
 

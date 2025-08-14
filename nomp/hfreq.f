@@ -1,4 +1,5 @@
-*CMZ :          29/10/2024  16.01.45  by  Michael Scheer
+*CMZ :          12/08/2025  12.50.49  by  Michael Scheer
+*CMZ :  4.01/07 29/10/2024  16.01.45  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  13.30.35  by  Michael Scheer
 *CMZ :  4.01/04 15/11/2023  18.07.40  by  Michael Scheer
 *CMZ :  4.01/03 10/06/2023  15.52.02  by  Michael Scheer
@@ -81,7 +82,7 @@
 *CMZ : 00.00/00 28/04/94  16.12.39  by  Michael Scheer
 *-- Author :  Michael Scheer
       SUBROUTINE HFREQ
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -173,7 +174,7 @@ C--- HISTOGRAMS FOR SPECTRA OF SINGLE OBSERVATION POINTS OR PINHOLE
       INTEGER ICYCLE,MFREQ,I,ISTAT,I47,jsource
 
       COMPLEX*16 e(3),b(3)
-      DOUBLE PRECISION WEIGHT,smax,reanor,rn(3),
+      DOUBLE PRECISION WEIGHT,smax,specnor_si,reanor,rn(3),
      &  dist,dist0,ddist,h2,censoux,censouy,censouz,dphase,wlen,waves
 
       REAL*4 FLOW,FHIG,DF
@@ -1996,7 +1997,12 @@ C--- NTUPLE
         enddo
       enddo
 
-      reanor=sqrt(smax/reanor)
+      SPECNOR_SI= !merke/synchrotron_radiation.txt
+     &  dmycur ! Strom
+     &  /echarge1/hbar1*clight1/PI1*EPS01
+     &  *banwid !BW
+
+      reanor=sqrt(smax/reanor/specnor_si)
 
       DO ISOUR=1,NSOURCE
 

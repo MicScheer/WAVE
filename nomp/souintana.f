@@ -1,4 +1,5 @@
-*CMZ :          11/05/2024  13.54.34  by  Michael Scheer
+*CMZ :          12/08/2025  12.32.12  by  Michael Scheer
+*CMZ :  4.01/07 11/05/2024  13.54.34  by  Michael Scheer
 *CMZ :  4.01/05 21/04/2024  11.34.30  by  Michael Scheer
 *CMZ :  4.01/04 15/11/2023  12.38.14  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  13.01.26  by  Michael Scheer
@@ -243,7 +244,8 @@ c     &  ,H2,H2R2
      &  ,DGAMSUM,BETA,GAMGAM,GAMGAM0,AMPDT,sqnphsp
      &  ,xn1,slopein,slope,drn1,drn2,zn1,yn1,wi,
      &  zz,yy,zzp,yyp,zzi,yyi,yypi,zzpi,
-     &  yeleco,zeleco,zpeleco,ypeleco
+     &  yeleco,zeleco,zpeleco,ypeleco,specnor_si,affenor
+
       double precision, save :: soura(3,4),soure(3,4)
 
       DOUBLE PRECISION VX1,VY1,VZ1,BX1,BY1,BZ1
@@ -308,6 +310,13 @@ c     &  ,H2,H2R2
       DATA IWARNBET1N/0/
 
       save
+
+      SPECNOR_SI= !merke/synchrotron_radiation.txt
+     &  dmycur ! Strom
+     &  /echarge1/hbar1*clight1/PI1*EPS01
+     &  *banwid !BW
+
+      affenor=sqrt(specnor*bunnor/specnor_si)
 
       IF (ICAL.EQ.0) THEN
 
@@ -1458,12 +1467,12 @@ c          baff(3)=conjg(rnx*daff(2)-rny*daff(1))
      &            +DREAL(affe(3,ifrob))*DREAL(affe(3,ifrob))
      &            +DIMAG(affe(3,ifrob))*DIMAG(affe(3,ifrob))
      &            )*specnor*bunnor
-                FILLT(23)=DREAL(affe(4,ifrob))*specnor*bunnor
-                FILLT(24)=DIMAG(affe(4,ifrob))*specnor*bunnor
-                FILLT(25)=DREAL(affe(5,ifrob))*specnor*bunnor
-                FILLT(26)=DIMAG(affe(5,ifrob))*specnor*bunnor
-                FILLT(27)=DREAL(affe(6,ifrob))*specnor*bunnor
-                FILLT(28)=DIMAG(affe(6,ifrob))*specnor*bunnor
+                FILLT(23)=DREAL(affe(4,ifrob))*affenor
+                FILLT(24)=DIMAG(affe(4,ifrob))*affenor
+                FILLT(25)=DREAL(affe(5,ifrob))*affenor
+                FILLT(26)=DIMAG(affe(5,ifrob))*affenor
+                FILLT(27)=DREAL(affe(6,ifrob))*affenor
+                FILLT(28)=DIMAG(affe(6,ifrob))*affenor
                 FILLT(29)=DOM1
                 FILLT(30)=bx
                 FILLT(31)=by
@@ -1575,12 +1584,12 @@ c            baff(3)=conjg(rnx*daff(2)-rny*daff(1))
      &              +DREAL(affe(3,ifrob))*DREAL(affe(3,ifrob))
      &              +DIMAG(affe(3,ifrob))*DIMAG(affe(3,ifrob))
      &              )*specnor*bunnor
-                  FILLT(23)=DREAL(affe(1,ifrob))*specnor*bunnor
-                  FILLT(24)=DIMAG(affe(1,ifrob))*specnor*bunnor
-                  FILLT(25)=DREAL(affe(2,ifrob))*specnor*bunnor
-                  FILLT(26)=DIMAG(affe(2,ifrob))*specnor*bunnor
-                  FILLT(27)=DREAL(affe(3,ifrob))*specnor*bunnor
-                  FILLT(28)=DIMAG(affe(3,ifrob))*specnor*bunnor
+                  FILLT(23)=DREAL(affe(1,ifrob))*affenor
+                  FILLT(24)=DIMAG(affe(1,ifrob))*affenor
+                  FILLT(25)=DREAL(affe(2,ifrob))*affenor
+                  FILLT(26)=DIMAG(affe(2,ifrob))*affenor
+                  FILLT(27)=DREAL(affe(3,ifrob))*affenor
+                  FILLT(28)=DIMAG(affe(3,ifrob))*affenor
                   FILLT(29)=DOM1
                   FILLT(30)=bx
                   FILLT(31)=by
@@ -2011,22 +2020,22 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
           FSPEC(8)=1
           FSPEC(9)=1
           FSPEC(10)=kfreq
-          FSPEC(11)=dreal(affe(1,ifrob))*sqrt(specnor*bunnor)
-          FSPEC(12)=dimag(affe(1,ifrob))*sqrt(specnor*bunnor)
-          FSPEC(13)=dreal(affe(2,ifrob))*sqrt(specnor*bunnor)
-          FSPEC(14)=dimag(affe(2,ifrob))*sqrt(specnor*bunnor)
-          FSPEC(15)=dreal(affe(3,ifrob))*sqrt(specnor*bunnor)
-          FSPEC(16)=dimag(affe(3,ifrob))*sqrt(specnor*bunnor)
+          FSPEC(11)=dreal(affe(1,ifrob))*affenor
+          FSPEC(12)=dimag(affe(1,ifrob))*affenor
+          FSPEC(13)=dreal(affe(2,ifrob))*affenor
+          FSPEC(14)=dimag(affe(2,ifrob))*affenor
+          FSPEC(15)=dreal(affe(3,ifrob))*affenor
+          FSPEC(16)=dimag(affe(3,ifrob))*affenor
           FSPEC(17)=0.0d0
           FSPEC(18)=0.0d0
           FSPEC(19)=0.0d0
           FSPEC(20)=0.0d0
-          FSPEC(21)=dreal(affe(4,ifrob))*sqrt(specnor*bunnor)
-          FSPEC(22)=dimag(affe(4,ifrob))*sqrt(specnor*bunnor)
-          FSPEC(23)=dreal(affe(5,ifrob))*sqrt(specnor*bunnor)
-          FSPEC(24)=dimag(affe(5,ifrob))*sqrt(specnor*bunnor)
-          FSPEC(25)=dreal(affe(6,ifrob))*sqrt(specnor*bunnor)
-          FSPEC(26)=dimag(affe(6,ifrob))*sqrt(specnor*bunnor)
+          FSPEC(21)=dreal(affe(4,ifrob))*affenor
+          FSPEC(22)=dimag(affe(4,ifrob))*affenor
+          FSPEC(23)=dreal(affe(5,ifrob))*affenor
+          FSPEC(24)=dimag(affe(5,ifrob))*affenor
+          FSPEC(25)=dreal(affe(6,ifrob))*affenor
+          FSPEC(26)=dimag(affe(6,ifrob))*affenor
           FSPEC(27)=0.0d0
           FSPEC(28)=0.0d0
           FSPEC(29)=0.0d0

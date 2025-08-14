@@ -1,3 +1,4 @@
+*CMZ :          12/08/2025  12.19.37  by  Michael Scheer
 *CMZ :  4.01/03 10/06/2023  09.57.38  by  Michael Scheer
 *CMZ :  4.00/14 07/02/2022  16.17.00  by  Michael Scheer
 *CMZ :  3.02/05 22/03/2015  19.55.19  by  Michael Scheer
@@ -148,7 +149,7 @@
 
       DOUBLE PRECISION XPH,YPH,ZPH,XOBS,YOBS,ZOBS,DX,DY,DZ,DZY2,ANS
      &  ,OMC,DOMC,DR,DRRED,DX2,DMASHZ,DMASHY,PHLOWZ,PHLOWY,EPS(6)
-     &  ,FOCUS,RLAMBDA1,smax,sfmax
+     &  ,FOCUS,RLAMBDA1,smax,sfmax,specnor_si
 
       DOUBLE PRECISION XSOUR,YSOUR,ZSOUR,DR2PH,DR2SOUR,THETA,PHI,TANTHE,TANPHI
      &  ,DXPH,DA,EPSBEAM
@@ -700,6 +701,13 @@ c        YPH=PHLOWY-DMASHY
 c        DO iphy=(mphasey-nphasey)/2+1,(mphasey-nphasey)/2+NPHASEY
 
         sfmax=-1.0d30
+
+      SPECNOR_SI= !merke/synchrotron_radiation.txt
+     &  dmycur ! Strom
+     &  /echarge1/hbar1*clight1/PI1*EPS01
+     &  *banwid !BW
+
+      ampli=ampli/sqrt(specnor_si)
 
         DO iphy=1,mphasey
 
