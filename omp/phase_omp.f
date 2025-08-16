@@ -1,4 +1,4 @@
-*CMZ :          14/08/2025  11.49.59  by  Michael Scheer
+*CMZ :          16/08/2025  21.16.33  by  Michael Scheer
 *CMZ :  4.01/07 20/08/2024  17.20.56  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  18.40.00  by  Michael Scheer
 *CMZ :  4.01/04 28/11/2023  14.20.34  by  Michael Scheer
@@ -38,7 +38,7 @@
 *CMZ :  1.03/06 29/09/98  14.43.55  by  Michael Scheer
 *-- Author :    Michael Scheer   18/09/98
       SUBROUTINE PHASE_omp
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -215,7 +215,9 @@
      &  ,YAI5Y(NDOBSVYP)
      &  ,YAI6Y(NDOBSVYP)
 
-      complex*16, dimension (:,:), allocatable :: esour
+      complex*16, dimension (:,:), allocatable :: esourz,esoury
+      complex*16, dimension (:,:,:), allocatable :: esourzy
+
       double precision, dimension (:,:,:,:), allocatable :: wig
       double precision, dimension (:), allocatable :: thez,they
 
@@ -1794,7 +1796,10 @@ C--- APPLY MATRICES OF BEAMLINE
 
         wigflux=0.0d0
 
-        allocate(thez(nwigthetaz),they(nwigthetay),esour(mphasez,mphasey),
+        allocate(thez(nwigthetaz),they(nwigthetay),
+     &    esourz(mphasez,mphasey),
+     &    esoury(mphasez,mphasey),
+     &    esourzy(2,mphasez,mphasey),
      &    wig(mphasez,mphasey,nwigthetaz,nwigthetay))
 
         if (wigthetaz.eq.-9999.0d0) then
@@ -1808,58 +1813,71 @@ C--- APPLY MATRICES OF BEAMLINE
         write(lungfo,*)"     NWIGTHETAY, WIGTHETAY [mrad]:", nwigthetay, wigthetay*1000.0d0
         write(lungfo,*)"     NWIGTHETAZ, WIGTHETAZ [mrad]:", nwigthetaz, wigthetaz*1000.0d0
         write(lungfo,*)"     "
-        write(lungfo,*)"     Eph, Flux of Wxx, Wyy, Wxy, Wyx:"
+        write(lungfo,*)"     Eph, Flux of Wzz, Wyy, Wzy, Wyz:"
         write(lungfo,*)"     "
 
         dtz=wigthetaz/(nwigthetaz-1)
-        thez(1)=-wigthetaz/2.0d0
+        thez(1)=wigthetazcen-wigthetaz/2.0d0
         do i=2,nwigthetaz
           thez(i)=thez(i-1)+dtz
           if (abs(thez(i)).le.1.0e-12) thez(i)=0.0d0
         enddo
 
         dty=wigthetay/(nwigthetay-1)
-        they(1)=-wigthetay/2.0d0
+        they(1)=wigthetaycen-wigthetay/2.0d0
         do i=2,nwigthetay
           they(i)=they(i-1)+dty
           if (abs(they(i)).le.1.0e-12) they(i)=0.0d0
         enddo
 
-        open(unit=lunwig,file='wigner.wav')
+        open(newunit=lunwig,file='wigner.wav')
 
         write(c64,*) icode
         write(lunwig,'(a)') '* ' // trim(c64) // " " // trim(code)
 
         DO ifrq=1,NFREQ
 
+          esourz(:,:)=ampli(3,:,:,ifrq)
+          esoury(:,:)=ampli(2,:,:,ifrq)
+
           do modus=1,4
 
             if (modus.eq.1) then
               if (iwigner.eq.-2.or.iwigner.eq.-3.or.iwigner.eq.-4) cycle
-              esour(:,:)=ampli(3,:,:,ifrq)
+              esourzy(1,:,:)=esourz(:,:)
+              esourzy(2,:,:)=conjg(esourz(:,:))
             else if (modus.eq.2) then
               if (iwigner.eq.-1.or.iwigner.eq.-3.or.iwigner.eq.-4) cycle
-              esour(:,:)=ampli(2,:,:,ifrq)
+              esourzy(1,:,:)=esoury(:,:)
+              esourzy(2,:,:)=conjg(esoury(:,:))
             else if (modus.eq.3) then
               if (iwigner.eq.-1.or.iwigner.eq.-2.or.iwigner.eq.-4) cycle
-              esour(:,:)=dcmplx(dreal(ampli(3,:,:,ifrq)),dimag(ampli(2,:,:,ifrq)))
+              esourzy(1,:,:)=esourz(:,:)
+              esourzy(2,:,:)=conjg(esoury(:,:))
             else if (modus.eq.4) then
               if (iwigner.eq.-1.or.iwigner.eq.-2.or.iwigner.eq.-3) cycle
-              esour(:,:)=dcmplx(dreal(ampli(2,:,:,ifrq)),dimag(ampli(3,:,:,ifrq)))
+              esourzy(1,:,:)=esoury(:,:)
+              esourzy(2,:,:)=conjg(esourz(:,:))
             endif
 
-            call undulator_wigner_num(mphasez,mphasey,dmeshz,dmeshy,wtoe1/freq(ifrq),esour,
+            call undulator_wigner_num(mphasez,mphasey,dmeshz,dmeshy,wtoe1/freq(ifrq),esourzy,
      &        nwigthetaz,nwigthetay,thez,they,wig,dmycur,banwid)
 
             do ity=1,nwigthetay
               do itz=1,nwigthetaz
+                iy=0
                 do iphy=1,mphasey
                   if (abs(yphw(iphy)-phceny).gt.phhig/2.0d0+1.0d-12) cycle
+                  iy=iy+1
+                  iz=0
                   do iphz=1,mphasez
                     if (abs(zphw(iphz)-phcenz).gt.phwid/2.0d0+1.0d-12) cycle
-                    write(lunwig,'(I5,10(1pe15.5))') modus,
+                    iz=iz+1
+
+                    write(lunwig,'(5I5,12(1pe15.5))') modus,iz,iy,itz,ity,
      &                freq(ifrq),zphw(iphz),yphw(iphy),thez(itz),they(ity),
-     &                dreal(esour(iphz,iphy)),dimag(esour(iphz,iphy)),
+     &                dreal(esourz(iphz,iphy)),dimag(esourz(iphz,iphy)),
+     &                dreal(esoury(iphz,iphy)),dimag(esoury(iphz,iphy)),
      &                wig(iphz,iphy,itz,ity)
 
                      wigflux(modus)=wigflux(modus)+wig(iphz,iphy,itz,ity)
@@ -1869,7 +1887,7 @@ C--- APPLY MATRICES OF BEAMLINE
             enddo
           enddo !modus
 
-          flush(lunwig)
+c          flush(lunwig)
 
           wigflux=wigflux*dmeshz*dmeshy*dtz*dty
           write(lungfo,*)"     ",sngl(freq(ifrq)),sngl(wigflux)
@@ -1878,7 +1896,7 @@ C--- APPLY MATRICES OF BEAMLINE
 
         close(lunwig)
 
-        deallocate(thez,they,esour,wig)
+        deallocate(thez,they,esourz,esoury,esourzy,wig)
       endif !iwigner
 
       if (mhbookp.eq.0.and.iroottrees.ge.0) then
