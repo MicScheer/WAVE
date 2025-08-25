@@ -1643,7 +1643,7 @@ clight1,cgam1,cq1,alpha1,dnull1,done1,sqrttwopi1,\
 emassg1,emasse1,echarge1,emasskg1,eps01,erad1,\
 grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
 radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
-ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max
+ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max,specnor_si
 
 global complex_0,complex_i
 
@@ -1689,6 +1689,9 @@ ck934=echarge1/(2.0e0*pi1*emasskg1*clight1)/100.0e0
 fwhmgauss1=np.sqrt(2.0*np.log(2))*2.0
 fwhmsinxx21=2.783115
 rmssinxx21=1.05244
+
+#merke/synchrotron_radiation.txt
+specnor_si=1.0/echarge1/hbar1*clight1/pi1*eps01
 
 global \
 sclight1,secharge1,shbarev1
@@ -23503,7 +23506,7 @@ def b_to_K(bv='?',lam=None,bh=0.0):
   grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
   ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
-  g1const,h2const
+  g1const,h2const,specnor_si
 
   global complex_0,complex_i
 
@@ -23530,7 +23533,7 @@ def K_to_b(K='?',lam=None):
   grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
   ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
-  g1const,h2const
+  g1const,h2const,specnor_si
 
   global complex_0,complex_i
 
@@ -23553,7 +23556,7 @@ def K_to_harm(K='?',lam=None,ebeam=None):
   grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
   ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
-  g1const,h2const
+  g1const,h2const,specnor_si
 
   global complex_0,complex_i
 
@@ -23578,7 +23581,7 @@ def b_to_harm(b='?',lam=None,ebeam=None):
   grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
   ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
-  g1const,h2const
+  g1const,h2const,specnor_si
 
   global complex_0,complex_i
 
@@ -23595,7 +23598,7 @@ def harm_to_K(ebeam='?',lam=None,nharm=None,harm=None):
   grarad1,hbar1,hbarev1,hplanck1,pol1con1,pol2con1,\
   radgra1,rmu01,rmu04pi1,twopi1,pi1,halfpi1,wtoe1,gaussn1,ck934,\
   ecdipev,ecdipkev,fwhmgauss1,fwhmsinxx21,rmssinxx21,g1max,h2max, \
-  g1const,h2const
+  g1const,h2const,specnor_si
 
   global complex_0,complex_i
 
@@ -26054,6 +26057,7 @@ trot = tred
 tblau = tblue
 tlila = tmagenta
 thellblau = tcyan
+#wvars = list_wave_input_parameters
 #end of aliases in m_hbook
 
 #end of m_hbook
@@ -26453,10 +26457,10 @@ def vshiftphase(vreal,vimag,ishift=-9999,shift=9999.):
   for i in range(n):
     vcn[i] = complex(vr[i],vi[i])/vc00
     vc[i] = vcn[i]*vc00a
-    vr[i] = real(vc[i])
-    vi[i] = imag(vc[i])
-    vrn[i] = real(vcn[i])
-    vin[i] = imag(vcn[i])
+    vr[i] = np.real(vc[i])
+    vi[i] = np.imag(vc[i])
+    vrn[i] = np.real(vcn[i])
+    vin[i] = np.imag(vcn[i])
   #endfor
 
   return vr,vi,vrn,vin,vc00
@@ -28490,6 +28494,10 @@ def wave_title(gtit='Run_and_Code', fontsize=-9):
 
 #def wave_title(gtit='Run_and_Code', fontsize=16)
 
+def list_wave_input_parameters():
+  ninfo('n222')
+wvars = list_wave_input_parameters
+
 def wave_input_parameters():
 
   global Wdirs, Wfiles, Wfile, Wcode, Wrun \
@@ -30383,7 +30391,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     s = "ndistpinh(key='" + key + "', select='" + str(select) + "', plopt='" + plopt +  "', idh='" + idh + "')"
     print(s)
   #endif
-  #reakpoint()
+
   if type(key) == int:
     print("*** Integer key is not allowed:\n Use previousphotonenergy(), nextphotonenergy(), or set w.Wiesel!")
     return
@@ -30465,7 +30473,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = ' iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30487,7 +30495,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = ' iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30509,7 +30517,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = ' iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30517,7 +30525,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     select = selcut + select
     istat = nproj1(idx37,'z','re_y',select,1000.,1.,0,'HpinH')
     tit = 'Hori. cut of Ay_Real.'
-    ztit = 'a.u.'
+    ztit = 'Vs/m'
 
   elif key == 'AYI' or key == 'EYI':
     idx37 = GetIndexN('n3700')
@@ -30528,7 +30536,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     elif type(select) == int:
       select = 'iene == ' + str(select)
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30536,7 +30544,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     select = selcut + select
     istat = nproj1(idx37,'z','im_y',select,1000.,1.,0,'HpinH')
     tit = 'Hori. cut of Ay_Imag.'
-    ztit = 'a.u.'
+    ztit = 'Vs/m'
 
   elif key == 'AZR' or key == 'EZR':
     idx37 = GetIndexN('n3700')
@@ -30546,7 +30554,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = ' iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30554,7 +30562,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     select = selcut + select
     istat = nproj1(idx37,'z','re_z',select,1000.,1.,0,'HpinH')
     tit = 'Hori. cut of Az_Real.'
-    ztit = 'a.u.'
+    ztit = 'Vs/m'
 
   elif key == 'AZI' or key == 'EZI':
     idx37 = GetIndexN('n3700')
@@ -30564,7 +30572,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = ' iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30572,7 +30580,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     select = selcut + select
     istat = nproj1(idx37,'z','im_z',select,1000.,1.,0,'HpinH')
     tit = 'Hori. cut of Az_Imag.'
-    ztit = 'a.u.'
+    ztit = 'Vs/m'
 
   elif key == 'APH':
     idx37 = GetIndexN('n3700')
@@ -30582,7 +30590,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = ' iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30600,7 +30608,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30618,7 +30626,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30636,7 +30644,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30654,7 +30662,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30672,7 +30680,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30690,7 +30698,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30708,7 +30716,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30726,7 +30734,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30744,7 +30752,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30762,7 +30770,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30780,7 +30788,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30798,7 +30806,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30816,7 +30824,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30834,7 +30842,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30852,7 +30860,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30870,7 +30878,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30892,7 +30900,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30913,7 +30921,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30934,7 +30942,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30955,7 +30963,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30976,7 +30984,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -30997,7 +31005,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31018,7 +31026,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31039,7 +31047,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31060,7 +31068,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31081,7 +31089,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31102,7 +31110,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31123,7 +31131,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31144,7 +31152,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31165,7 +31173,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31186,7 +31194,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31207,7 +31215,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31230,7 +31238,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31251,7 +31259,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31272,7 +31280,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31293,7 +31301,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31314,7 +31322,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31335,7 +31343,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31356,7 +31364,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31377,7 +31385,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31398,7 +31406,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31419,7 +31427,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31440,7 +31448,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31461,7 +31469,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31482,7 +31490,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31503,7 +31511,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31524,7 +31532,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31545,7 +31553,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31853,7 +31861,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31875,7 +31883,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31883,7 +31891,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     select = selcut + select
     istat = nproj1(idx37,'y','re_y',select,1000.,1.0,0,'HpinV')
     tit = 'Vert. cut of Ay_Real'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'AZR' or key == 'EZR':
     idx37 = GetIndexN('n3700')
@@ -31893,7 +31901,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31901,7 +31909,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     select = selcut + select
     istat = nproj1(idx37,'y','re_z',select,1000.,1.0,0,'HpinV')
     tit = 'Vert. cut of Az_Real'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'AYI' or key == 'EYI':
     idx37 = GetIndexN('n3700')
@@ -31911,7 +31919,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31919,7 +31927,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     select = selcut + select
     istat = nproj1(idx37,'y','im_y',select,1000.,1.0,0,'HpinV')
     tit = 'Vert. cut of Ay_Imag'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'AZI' or key == 'EZI':
     idx37 = GetIndexN('n3700')
@@ -31929,7 +31937,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31937,7 +31945,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     select = selcut + select
     istat = nproj1(idx37,'y','im_z',select,1000.,1.0,0,'HpinV')
     tit = 'Vert. cut of Az_Imag'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'APH':
     idx37 = GetIndexN('n3700')
@@ -31947,7 +31955,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31964,7 +31972,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -31986,7 +31994,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32004,7 +32012,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32022,7 +32030,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32040,7 +32048,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32058,7 +32066,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32076,7 +32084,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32094,7 +32102,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32112,7 +32120,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32130,7 +32138,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32148,7 +32156,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32166,7 +32174,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32184,7 +32192,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32202,7 +32210,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32220,7 +32228,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32238,7 +32246,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32256,7 +32264,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32277,7 +32285,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32298,7 +32306,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32319,7 +32327,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32340,7 +32348,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32361,7 +32369,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32382,7 +32390,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32403,7 +32411,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32424,7 +32432,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32445,7 +32453,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32466,7 +32474,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32487,7 +32495,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32508,7 +32516,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32529,7 +32537,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32550,7 +32558,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32571,7 +32579,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32592,7 +32600,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32615,7 +32623,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32636,7 +32644,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32657,7 +32665,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32678,7 +32686,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32699,7 +32707,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32720,7 +32728,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32741,7 +32749,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32762,7 +32770,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32783,7 +32791,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32804,7 +32812,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32825,7 +32833,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32846,7 +32854,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32867,7 +32875,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32888,7 +32896,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32909,7 +32917,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -32930,7 +32938,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -33209,7 +33217,7 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
     #endif select != ''
     istat = nproj1(n6000,'z','re_y',selcut + select,1000.,1.0,0,'HpinPhH')
     tit = 'Hori. cut of Ay_Real'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'APH':
     if select == '':
@@ -33220,7 +33228,7 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
     #endif select != ''
     istat = nproj1(n6000,'z','phi0',selcut + select,1000.,1.0,0,'HpinPhH')
     tit = 'Hori. cut of Phase Advance'
-    ztit='a.u.'
+    ztit=''
 
   elif key == 'AZR' or key == 'EZR':
     if select == '':
@@ -33231,7 +33239,7 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
     #endif select != ''
     istat = nproj1(n6000,'z','re_z',selcut + select,1000.,1.0,0,'HpinPhH')
     tit = 'Hori. cut of Az_Real'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'AYI' or key == 'EYI':
     if select == '':
@@ -33242,7 +33250,7 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
     #endif select != ''
     istat = nproj1(n6000,'z','im_y',selcut + select,1000.,1.0,0,'HpinPhH')
     tit = 'Hori. cut of Ay_Imag'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'AZI' or key == 'EZI':
     if select == '':
@@ -33253,7 +33261,7 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
     #endif select != ''
     istat = nproj1(n6000,'z','im_z',selcut + select,1000.,1.0,0,'HpinPhH')
     tit = 'Hori. cut of Az_Imag'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'FF' or key == 'FDF':
     if select == '':
@@ -33470,7 +33478,7 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
     #endif select != ''
     istat = nproj1(n6000,'y','re_y',selcut + select,1000.,1.0,0,'HpinPhV')
     tit = 'Vert. cut of Ay_Real'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'AZR' or key == 'EZR':
     if select == '':
@@ -33481,7 +33489,7 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
     #endif select != ''
     istat = nproj1(n6000,'y','re_z',selcut + select,1000.,1.0,0,'HpinPhV')
     tit = 'Vert. cut of Az_Real'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'APH':
     if select == '':
@@ -33492,7 +33500,7 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
     #endif select != ''
     istat = nproj1(n6000,'y','phi0',selcut + select,1000.,1.0,0,'HpinPhV')
     tit = 'Vert. cut of Phase Advance'
-    ztit='a.u.'
+    ztit=''
 
   elif key == 'AYI' or key == 'EYI':
     if select == '':
@@ -33503,7 +33511,7 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
     #endif select != ''
     istat = nproj1(n6000,'y','im_y',selcut + select,1000.,1.0,0,'HpinPhV')
     tit = 'Vert. cut of Ay_Imag'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'AZI' or key == 'EZI':
     if select == '':
@@ -33514,7 +33522,7 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
     #endif select != ''
     istat = nproj1(n6000,'y','im_z',selcut + select,1000.,1.0,0,'HpinPhV')
     tit = 'Vert. cut of Az_Imag'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'FF' or key == 'FDF':
     if select == '':
@@ -33730,7 +33738,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -33753,7 +33761,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -33772,14 +33780,14 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
     istat = nproj2("n3700",'z:y','re_z',select,1000.,1000.,1.0,0,0,'Hpin')
     tit = 'Field ampl. Az_Real'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'AZI' or key == 'EZI':
     if select == '':
@@ -33787,14 +33795,14 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
     istat = nproj2("n3700",'z:y','im_z',select,1000.,1000.,1.0,0,0,'Hpin')
     tit = 'Field ampl. Az_Imag'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'AYR' or key == 'EYR':
     if select == '':
@@ -33802,14 +33810,14 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
     istat = nproj2("n3700",'z:y','re_y',select,1000.,1000.,1.0,0,0,'Hpin')
     tit = 'Field ampl. Ay_Real'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'AYI' or key == 'EYI':
     if select == '':
@@ -33817,14 +33825,14 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
     istat = nproj2("n3700",'z:y','im_y',select,1000.,1000.,1.0,0,0,'Hpin')
     tit = 'Field ampl. Ay_Imag'
-    ztit='a.u.'
+    ztit='Vs/m'
 
   elif key == 'APH':
     if select == '':
@@ -33832,14 +33840,14 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
     #endif select != ''
     istat = nproj2("n3700",'z:y','phi0',select,1000.,1000.,1.0,0,0,'Hpin')
     tit = 'Phase Advance'
-    ztit='a.u.'
+    ztit=''
 
 #{Polarization
   elif key == 'P0EF':
@@ -33850,7 +33858,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -33868,7 +33876,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -33886,7 +33894,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -33904,7 +33912,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -33922,7 +33930,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -33940,7 +33948,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -33958,7 +33966,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -33976,7 +33984,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -33994,7 +34002,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34012,7 +34020,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34030,7 +34038,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34048,7 +34056,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34066,7 +34074,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34084,7 +34092,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34102,7 +34110,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34120,7 +34128,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34141,7 +34149,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34162,7 +34170,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34183,7 +34191,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34204,7 +34212,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34225,7 +34233,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34246,7 +34254,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34267,7 +34275,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34288,7 +34296,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34309,7 +34317,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34331,7 +34339,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34352,7 +34360,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34373,7 +34381,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34395,7 +34403,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34418,7 +34426,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34439,7 +34447,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34460,7 +34468,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34483,7 +34491,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34504,7 +34512,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34525,7 +34533,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34546,7 +34554,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34567,7 +34575,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34588,7 +34596,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34609,7 +34617,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34630,7 +34638,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34651,7 +34659,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34672,7 +34680,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34693,7 +34701,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34714,7 +34722,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34735,7 +34743,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34756,7 +34764,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34777,7 +34785,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -34798,7 +34806,7 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
       select = 'iene == ' + str(Wiesel)
     elif type(select) == int:
       if select < 0: select = 0
-      elif select > len(Wener)-1: select = len(Wener)-1
+      elif select > len(Wener): select = len(Wener)
       Wesel = Wener[select-1]
       Wiesel = select
       select = 'iene == ' + str(select)
@@ -35014,7 +35022,7 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
     #endif select != ''
     istat = nproj2(n6000,'z:y','re_y',select,1000.,1000.,1.0,0,0,'HpinPh')
     tit = 'Field amplitude Ay_Real'
-    ztit = 'a.u.'
+    ztit = 'Vs/m'
 
   elif key == 'AZR' or key == 'EZR':
     if select == '':
@@ -35025,7 +35033,7 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
     #endif select != ''
     istat = nproj2(n6000,'z:y','re_z',select,1000.,1000.,1.0,0,0,'HpinPh')
     tit = 'Field amplitude Az_Real'
-    ztit = 'a.u.'
+    ztit = 'Vs/m'
 
   elif key == 'AYI' or key == 'EYI':
     if select == '':
@@ -35036,7 +35044,7 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
     #endif select != ''
     istat = nproj2(n6000,'z:y','im_y',select,1000.,1000.,1.0,0,0,'HpinPh')
     tit = 'Field amplitude Ay_Imag'
-    ztit = 'a.u.'
+    ztit = 'Vs/m'
 
   elif key == 'AZI' or key == 'EZI':
     if select == '':
@@ -35047,7 +35055,7 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
     #endif select != ''
     istat = nproj2(n6000,'z:y','im_z',select,1000.,1000.,1.0,0,0,'HpinPh')
     tit = 'Field amplitude Az_Imag'
-    ztit = 'a.u.'
+    ztit = 'Vs/m'
 
   elif key == 'F':
     if select == '':
@@ -35058,7 +35066,12 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
     #endif select != ''
     istat = nproj2(n6000,'z:y','spec',select,1000.,1000.,1.0e-6,0,0,'HpinPh')
     tit = 'Flux-density'
-    ztit = 'a.u.'
+    if Kcurr == 0:
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+    else:
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+    #endif
+    #ztit = 'a.u.'
 
   elif key == 'FF':
     if select == '':
@@ -35069,7 +35082,12 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
     #endif select != ''
     istat = nproj2(n6000,'z:y','spec',select,1000.,1000.,1.0e-6,0,0,'HpinPh')
     tit = 'Flux-density with emittance'
-    ztit = 'a.u.'
+    if Kcurr == 0:
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+    else:
+      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+    #endif
+#    ztit = 'a.u.'
 
   else:
 
