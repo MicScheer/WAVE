@@ -28638,7 +28638,7 @@ def wave_input_parameters():
 
 #enddef wave_input_parameters()
 
-def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='yes'):
+def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='!'):
 
 #+seq,mshimportsind.
 # +PATCH,//WAVES/PYTHON
@@ -28728,6 +28728,11 @@ def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='yes'):
     #endif
     print(s)
   #endif getecho()
+
+  if clipe == '!' and Wiefo >0:
+    clipe = 'yes'
+  else:
+    clipe = 'no'
 
   plotopt(plopt)
 
@@ -29494,7 +29499,7 @@ def nextphotonenergy():
 #enddef
 #---------------------------------------------------------------
 
-def hflux(key='f', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='yes'):
+def hflux(key='f', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='!'):
 
 #+seq,mshimportsind.
 # +PATCH,//WAVES/PYTHON
@@ -29585,6 +29590,11 @@ def hflux(key='f', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='yes'):
     #endif
     print(s)
   #endif getecho()
+
+  if clipe == '!' and Wiefo >0:
+    clipe = 'yes'
+  else:
+    clipe = 'no'
 
   plotopt(plopt)
 
