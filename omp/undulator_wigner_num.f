@@ -1,4 +1,4 @@
-*CMZ :          16/08/2025  13.56.50  by  Michael Scheer
+*CMZ :          24/08/2025  14.21.07  by  Michael Scheer
 *-- Author :    Michael Scheer   16/04/2025
       subroutine undulator_wigner_num(nx,ny,dx,dy,wlen,esour,ntx,nty,thex,they,wig,curr,banwid)
 
@@ -15,6 +15,7 @@
 
       complex*16, intent(in) :: esour(2,nx,ny)
 c      complex*16  :: wkern(2*nx,2*ny,nx,ny)
+c      complex*16 :: wigc(nx,ny,ntx,nty)
 
       real*8, intent(in):: wlen,thex(ntx),they(nty),dx,dy
       real*8, intent(out) :: wig(nx,ny,ntx,nty)
@@ -26,17 +27,18 @@ c      complex*16  :: wkern(2*nx,2*ny,nx,ny)
 
       integer :: ix,iy,itx,ity,kx,ky,jfail,nper,iypm,ixpm,lx,ly,ifound,nmaxth=1
 
-c      print*
-c      print*,"     Calculating Wigner Distribution for ",sngl(wlen)," nm"
-c      print*
+      print*
+      print*,"     Calculating Wigner Distribution for ",sngl(wlen)," nm"
+      print*
 
-c      secin=secnds(0.0)
+      secin=secnds(0.0)
 
       wlen12=1.0d0/(wlen*1.0d-9)**2
-      ek=twopi1/(wlen*1.0d-9) !1/m
+      ek=twopi1/abs(wlen*1.0d-9) !1/m
       eki=ci*ek
 
       wig=0.0d0
+c      wigc=(0.0d0,0.0d0)
 
       if (ntx.gt.1) then
         dtx=thex(2)-thex(1)
@@ -61,6 +63,9 @@ c      call undulator_wigner_kernel(nx,ny,esour,wkern) bringt's nicht
 
       wignor=specnor_si*dx*dy*wlen12
 
+c      nmaxth=1
+c      print*,"Nur ein Thread!"
+
 !$OMP PARALLEL NUM_THREADS(nmaxth) DEFAULT(PRIVATE)
 !$OMP& FIRSTPRIVATE(nx,ny,ntx,nty,dx,dy,eki,wlen12,they,thex,dtx,dty,wignor)
 !$OMP& SHARED(esour,wig)
@@ -75,49 +80,59 @@ c      call undulator_wigner_kernel(nx,ny,esour,wkern) bringt's nicht
 
         do ix=1,nx
 
-              do iypm=-ny+1,ny-1
+          do iypm=-ny+1,ny-1
 
-                ypm=dy*iypm
+            ypm=dy*iypm
 
-                ky=iy-iypm/2
-                ly=iy+iypm/2
+            ky=iy-iypm/2
+            ly=iy+iypm/2
 
-                if (ky.lt.1.or.ky.gt.ny) cycle
-                if (ly.gt.ny.or.ly.lt.1) cycle
+            if (ky.lt.1.or.ky.gt.ny) cycle
+            if (ly.gt.ny.or.ly.lt.1) cycle
 
-                do ity=1,nty
-                  ty=they(ity)
+            do ity=1,nty
+              ty=they(ity)
 
-                do ixpm=-nx+1,nx-1
+              do ixpm=-nx+1,nx-1
 
-                  xpm=dx*ixpm
+                xpm=dx*ixpm
 
-                  kx=ix-ixpm/2
-                  lx=ix+ixpm/2
+                kx=ix-ixpm/2
+                lx=ix+ixpm/2
 
-                  if (kx.lt.1.or.kx.gt.nx) cycle
-                  if (lx.gt.nx.or.lx.lt.1) cycle
+                if (kx.lt.1.or.kx.gt.nx) cycle
+                if (lx.gt.nx.or.lx.lt.1) cycle
 
-                  do itx=1,ntx
+                do itx=1,ntx
 
-                    em=esour(1,kx,ky)
-                    ep=esour(2,lx,ly)
+                  em=esour(1,kx,ky)
+                  ep=esour(2,lx,ly)
 
-c                  em=wkern(ixpm+nx,iypm+ny,kx,ky)
-c                  ep=wkern(ixpm+nx,iypm+ny,lx,ly)
+                  if (wlen.gt.0.0d0) then
+                    if (itx.eq.1) then
+                      tx=thex(itx)
+                      expom=exp(-eki*(xpm*tx+ypm*ty))
+                      expdtx=exp(-eki*xpm*dtx)
+                    else
+                      expom=expom*expdtx
+                    endif
 
-                  if (itx.eq.1) then
-                    tx=thex(itx)
-                    expom=exp(-eki*(xpm*tx+ypm*ty))
-                    expdtx=exp(-eki*xpm*dtx)
                   else
-                    expom=expom*expdtx
+                    if (itx.eq.1) then
+                      tx=thex(itx)
+                      expom=exp(eki*(xpm*tx+ypm*ty))
+                      expdtx=exp(eki*xpm*dtx)
+                    else
+                      expom=expom*expdtx
+                    endif
                   endif
 
 C                  expom=exp(-eki*(xpm*tx+ypm*ty))
 
                   wig(ix,iy,itx,ity)=wig(ix,iy,itx,ity)+
      &              dreal(em*ep*expom)*wignor
+c                  wigc(ix,iy,itx,ity)=wigc(ix,iy,itx,ity)+
+c     &              em*ep*expom*wignor
 
                 enddo
               enddo
@@ -130,8 +145,9 @@ C                  expom=exp(-eki*(xpm*tx+ypm*ty))
 !$OMP END DO
 !$OMP END PARALLEL
 
-c      secout=secnds(0.0)
+c      wig=dreal(wig)
+      secout=secnds(0.0)
 
-c      print*,"     Seconds used:",secout-secin
+      print*,"     Seconds used:",secout-secin
 
       end

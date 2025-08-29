@@ -1,4 +1,4 @@
-*CMZ :          25/03/2025  12.58.03  by  Michael Scheer
+*CMZ :          28/08/2025  10.10.23  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.06.37  by  Michael Scheer
@@ -148,7 +148,7 @@
 
       if (kampli.ne.0.or.iundulator.eq.2) then
         !if (iundulator.eq.2) mthreads=-1
-        ibunch=0
+        !ibunch=0
         if (mthreads.lt.0.or.mthreads.gt.OMP_GET_MAX_THREADS()) then
           mthreads=OMP_GET_MAX_THREADS()
         else if (mthreads.eq.0) then
@@ -179,9 +179,9 @@
       endif
 
       if (
-     &    ipin.eq.0.and.ibunch.eq.0
+     &    (ipin.eq.0.and.ibunch.eq.0
      &    .or.
-     &    ibunch.ne.0.and.neinbunch*nbunch.eq.1
+     &    ibunch.ne.0.and.neinbunch*nbunch.eq.1) .and. iundulator.ne.2
      &    ) then
         mthreads=0
       endif
@@ -196,6 +196,8 @@
         endif
         icluster=1
       endif
+
+      if (iundulator.eq.2) icluster=0
 
 C--- RANDOM NUMBERS
 
@@ -275,34 +277,41 @@ C--- RANDOM NUMBERS
       endif
 
       if (icluster.ge.0) then
-        nwinstances=max(icluster,mthreads,1)
-        if (ibunch.ne.0) mthreads=0
-        if (nwinstances.gt.maxinstp) then
-          print*,"--- Warning in waveinstances: Number of instances limited to ",
-     &      maxinstp
-          nwinstances=maxinstp
-        endif
-        if (ibunch.ne.0) then
-          if (nbunch.eq.1.and.neinbunch.ge.1) then
-            if (neinbunch.lt.nwinstances) then
-              nwinstances=neinbunch
-            endif
-            if (neinbunch/nwinstances.lt.2) then
-              nwinstances=1
-            endif
-          else if (nbunch.gt.1.and.neinbunch.eq.1) then
-            if (nbunch.lt.nwinstances) then
-              nwinstances=nbunch
-            endif
+
+        if (iundulator.ne.2) then
+          nwinstances=max(icluster,mthreads,1)
+          if (ibunch.ne.0) mthreads=0
+          if (nwinstances.gt.maxinstp) then
+            print*,"--- Warning in waveinstances: Number of instances limited to ",
+     &        maxinstp
+            nwinstances=maxinstp
           endif
-        endif !(ibunch.ne.0) then
+          if (ibunch.ne.0) then
+            if (nbunch.eq.1.and.neinbunch.ge.1) then
+              if (neinbunch.lt.nwinstances) then
+                nwinstances=neinbunch
+              endif
+              if (neinbunch/nwinstances.lt.2) then
+                nwinstances=1
+              endif
+            else if (nbunch.gt.1.and.neinbunch.eq.1) then
+              if (nbunch.lt.nwinstances) then
+                nwinstances=nbunch
+              endif
+            endif
+          endif !(ibunch.ne.0) then
+        endif !iundulator.ne.2
+
         iwstat=1
         inspid=0
         masterpid=kpid
+
       else
+
         inspid(iwinstance)=kpid
         goto 9999
-      endif
+
+      endif !icluster
 
       if (ibunch.ne.0.and.iubunch.eq.3) then
         open(newunit=lunspai,file="wave_phasespace.dat")

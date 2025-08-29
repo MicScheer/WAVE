@@ -1,4 +1,4 @@
-*CMZ :          26/06/2025  08.33.16  by  Michael Scheer
+*CMZ :          27/08/2025  19.18.14  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
 *CMZ :  4.01/04 27/12/2023  16.20.07  by  Michael Scheer
@@ -1076,7 +1076,9 @@ c        perellip=5.0d0
         if (xstart.eq.9999.0d0.and.xinter.eq.-9999.0d0
      &      .and.xstop.eq.9999.0d0) then
 c          xstart=-(perellip*xlellip+ellshft*xlellip)/2.0d0+xcenell
-          xstart=-(5.0d0*xlellip+ellshft*xlellip)/2.0d0+xcenell
+c          xstart=-(5.0d0*xlellip+ellshft*xlellip)/2.0d0+xcenell
+          xstart=-(xlellip+ellshft*xlellip)/2.0d0+xcenell
+          xstop=xstart+xlellip
         endif
 
         park=parkell
@@ -1611,18 +1613,6 @@ c          NLPOI=-9999
 
             ISPECMODE=2
 
-            IF (IPHASE.NE.0) THEN
-              WRITE(LUNGFO,*)' '
-              WRITE(LUNGFO,*)
-     &          '*** Warning in GFINIT: IPHASE set to zero, due to IBUNCH'
-              WRITE(LUNGFO,*)' '
-              PRINT *,' '
-              PRINT *,
-     &          '*** Warning in GFINIT: IPHASE set to zero, due to IBUNCH'
-              PRINT *,' '
-              iphase=0
-            ENDIF
-
             IF (iampli.ne.0.and.iamprep.lt.0) THEN
               WRITE(LUNGFO,*)
      &          '*** Error in GFINIT: IBUNCH and IAMPREP < 0 are not compatible ***'
@@ -1667,18 +1657,6 @@ c          NLPOI=-9999
             WRITE(LUNGFO,*)
      &        '      *** Warning in GFINIT: IEFOLD is used for IBUNCH, be careful!'
             WRITE(LUNGFO,*)' '
-          endif
-
-          IF (iundulator.ne.2
-     &        .and.IPIN.GT.0.and.ipin.ne.3.and.neinbunch.eq.1) then
-            IPIN=3
-            WRITE(6,*)' '
-            WRITE(6,*)
-     &        '      *** GFINIT: IPIN=3 has been set due to IUNDULATOR and IBUNCH and NEINBUNCH=1, be careful!'
-            WRITE(lungfo,*)' '
-            WRITE(lungfo,*)
-     &        '      *** GFINIT: IPIN=3 has been set due to IUNDULATOR and IBUNCH and NEINBUNCH=1, be careful!'
-            WRITE(6,*)' '
           endif
 
           BMOVECUT=1.0D-6
@@ -1826,7 +1804,7 @@ C         IWFILL0=1
         endif
       ENDIF !IWIGGLER
 
-      if (iwiggler.ne.0.and.ibunch.ne.0.and.ipin.ne.0.and.neinbunch.eq.1) ipin=3
+      !if (iwiggler.ne.0.and.ibunch.ne.0.and.ipin.ne.0.and.neinbunch.eq.1) ipin=3
 
       if (espread.le.0.0d0.and.iefold.ne.0) then
         iefold=0

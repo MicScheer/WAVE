@@ -1,4 +1,5 @@
-*CMZ :          18/10/2024  09.41.32  by  Michael Scheer
+*CMZ :          27/08/2025  14.45.47  by  Michael Scheer
+*CMZ :  4.01/07 18/10/2024  09.41.32  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  07.41.13  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  13.39.24  by  Michael Scheer
 *CMZ :  4.01/02 14/05/2023  11.47.49  by  Michael Scheer
@@ -46,7 +47,7 @@ cc+seq,uservar.
       double precision :: t,udgamtot,upow,vf0,vn,vx0,vx2,vxf0,vxi,vy0,vy2,vyf0,
      &  vyi,vz0,vz2,vzf0,vzi,wlen1,x0,x2,xf0,xi,xlell,y0,y2,yf0,yi,ypi,yy,yyp,
      &  z0,z2,zf0,zi,zpi,zz,zzp,fillb(41),stok1,stok2,stok3,stok4,speknor,
-     &  sqnbunch,sqnphsp,specnor,sbnor,rpin,r00(3),xph0,
+     &  sqnbunch,sqnphsp,specnor,specnor_si,sbnor,rpin,r00(3),xph0,
      &  r(3),r0(3),pw,ph,phsum,pkerr,ppin,parke,pc(3),pcbrill(3),om1,
      &  park,pr,hbarev,obs(3),om,fhigh,flow,gamma,eix,eiy,eiz,emassg,
      &  efx,efy,efz,eharm1,ecdipev,ebeam,dtpho,dt,dtelec,dd0,debeam,
@@ -157,20 +158,26 @@ c     &    fpriv(3,npinzprop_u,npinyprop_u),
 
       if (perlen_u.ne.0.0d0) then
         emom=emasse1*dsqrt((gamma_u-1.0d0)*(gamma_u+1.0d0))
-c*** OBSOLITE, SEE z0= further down
         xkellip=twopi1/perlen_u
-        zampell=beffv_u*clight1/emom/xkellip**2
-        yampell=beffh_u*clight1/emom/xkellip**2
-c        zampell=zmx
-c        yampell=ymx
         parkh=echarge1*dabs(beffh_u)*perlen_u/(twopi1*emasskg1*clight1)
         parkv=echarge1*dabs(beffv_u)*perlen_u/(twopi1*emasskg1*clight1)
-        zpampell=parkv/gamma_u
+
+        if (modewave.eq.0) then
+c*** OBSOLITE, SEE z0= further down
+          zampell=beffv_u*clight1/emom/xkellip**2
+          yampell=beffh_u*clight1/emom/xkellip**2
+c        zampell=zmx
+c        yampell=ymx
 c        print*,zpampell
 c        ypampell=parkh/gamma_u
 c        zpampell=tan(phimx)
 c        print*,zpampell
 c        stop
+        else
+          call util_break
+          yampell=ymx-ymn
+          zampell=zmx-zmn
+        endif
       else
         print*,''
         print*,'*** Error in urad_amprep: Zero period-length of undulator ***'
@@ -393,8 +400,16 @@ c      dtim0=ds/beta
      &  /(4.0d0*pi1**2*clight*hbarev)
      &  /(4.0d0*pi1*eps01)
      &  *curr_u
+
+      SPECNOR_SI= !merke/synchrotron_radiation.txt
+     &  curr_u ! Strom
+     &  /echarge1/hbar1*clight1/PI1*EPS01
+     &  *banwid_u !BW
+     &  /1.0d6 !mm**2 > m**2
+
       sbnor=specnor*bunnor
       speknor=specnor
+
       jeneloss=0
       pw=pinw_u
       ph=pinh_u
@@ -1062,7 +1077,8 @@ c      endif
 
       anor=sqrt(stokes_u(1,iobfr)/
      &  (amp(1)*dconjg(amp(1))+amp(2)*dconjg(amp(2))+amp(3)*dconjg(amp(3))))
-      arad_u=arad_u*anor
+
+      arad_u=arad_u*anor/sqrt(specnor_si)
 
       if (modepin_u.ne.0) then
         do iepho=1,nepho_u
@@ -1074,6 +1090,12 @@ c            fieldbunch(1:6,iz,iy,iepho)=fieldbunch(1:6,iz,iy,iepho)
             enddo
           enddo
         enddo
+        fieldbunch=fieldbunch*anor/sqrt(specnor_si)
+      endif
+
+c      if (ifieldprop_u.eq.2) then
+      if (ifieldprop_u.gt.0) then
+        stokesprop_u=stokesprop_u*specnor_si
       endif
 
       return

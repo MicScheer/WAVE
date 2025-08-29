@@ -1,4 +1,5 @@
-*CMZ :          18/10/2024  14.11.15  by  Michael Scheer
+*CMZ :          15/08/2025  12.40.07  by  Michael Scheer
+*CMZ :  4.01/07 18/10/2024  14.11.15  by  Michael Scheer
 *CMZ :  4.01/05 15/04/2024  11.54.00  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  15.30.57  by  Michael Scheer
 *CMZ :  4.01/02 12/05/2023  17.13.05  by  Michael Scheer
@@ -11,11 +12,22 @@
 
       implicit none
 
+*KEEP,phyconparam.
+      include 'phyconparam.cmn'
+*KEND.
+
       complex*16 :: cph00,ci=(0.0d0,1.0d0)
+      real*8 specnor_si
 
       integer :: mthreads,ktime=1,kfreq,icbrill,iobfr,iobsv
 
       if (ktime.eq.1) call util_zeit_kommentar_delta(6,'Entered urad_phase_prop',1)
+
+      SPECNOR_SI= !merke/synchrotron_radiation.txt
+     &  curr_u ! Strom
+     &  /echarge1/hbar1*clight1/PI1*EPS01
+     &  *banwid_u !BW
+     &  *1.0d-6 !m**2 -> mm**2
 
       if (ifieldprop_u.gt.0) then
 
@@ -45,6 +57,8 @@
       else
         aradprop_u=aradprop_u*exp(ci*globphaseprop_u)
       endif
+
+      stokesprop_u=stokesprop_u*specnor_si
 
       if (ktime.eq.1) call util_zeit_kommentar_delta(6,'Leaving urad_phase_prop',0)
 

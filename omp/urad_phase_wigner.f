@@ -1,4 +1,5 @@
-*CMZ :          01/08/2024  10.22.17  by  Michael Scheer
+*CMZ :          09/08/2025  09.15.54  by  Michael Scheer
+*CMZ :  4.01/07 01/08/2024  10.22.17  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  15.30.57  by  Michael Scheer
 *CMZ :  4.01/02 12/05/2023  17.13.05  by  Michael Scheer
 *CMZ :  4.01/00 21/02/2023  16.51.29  by  Michael Scheer
@@ -171,8 +172,8 @@ c              endif
         ei2d(:,:)=aradi(2,:,:,iepho)
 
         call util_wigner_2d(
-     &    npinzprop_u,nzwig,nzthewig,z,wigthez,
-     &    npinyprop_u,nywig,nythewig,y,wigthey,
+     &    npinzprop_u,nzwig,nzthewig,z,thetazwig,
+     &    npinyprop_u,nywig,nythewig,y,thetaywig,
      &    om,er2d,ei2d,wig2d,mthreads_u,istat)
         wigr(1:nzwig,1:nywig,1:nzthewig,1:nythewig,iepho,1)=
      &    dreal(wig2d(1:nzwig,1:nywig,1:nzthewig,1:nythewig))
@@ -183,8 +184,8 @@ c              endif
         ei2d(:,:)=aradi(1,:,:,iepho)
 
         call util_wigner_2d(
-     &    npinzprop_u,nzwig,nzthewig,z,wigthez,
-     &    npinyprop_u,nywig,nythewig,y,wigthey,
+     &    npinzprop_u,nzwig,nzthewig,z,thetazwig,
+     &    npinyprop_u,nywig,nythewig,y,thetaywig,
      &    om,er2d,ei2d,wig2d,mthreads_u,istat)
         wigr(1:nzwig,1:nywig,1:nzthewig,1:nythewig,iepho,2)=
      &    dreal(wig2d(1:nzwig,1:nywig,1:nzthewig,1:nythewig))
@@ -195,8 +196,8 @@ c              endif
         ei2d(:,:)=aradi(2,:,:,iepho)
 
         call util_wigner_2d(
-     &    npinzprop_u,nzwig,nzthewig,z,wigthez,
-     &    npinyprop_u,nywig,nythewig,y,wigthey,
+     &    npinzprop_u,nzwig,nzthewig,z,thetazwig,
+     &    npinyprop_u,nywig,nythewig,y,thetaywig,
      &    om,er2d,ei2d,wig2d,mthreads_u,istat)
         wigr(1:nzwig,1:nywig,1:nzthewig,1:nythewig,iepho,3)=
      &    dreal(wig2d(1:nzwig,1:nywig,1:nzthewig,1:nythewig))
@@ -207,8 +208,8 @@ c              endif
         ei2d(:,:)=aradi(1,:,:,iepho)
 
         call util_wigner_2d(
-     &    npinzprop_u,nzwig,nzthewig,z,wigthez,
-     &    npinyprop_u,nywig,nythewig,y,wigthey,
+     &    npinzprop_u,nzwig,nzthewig,z,thetazwig,
+     &    npinyprop_u,nywig,nythewig,y,thetaywig,
      &    om,er2d,ei2d,wig2d,mthreads_u,istat)
         wigr(1:nzwig,1:nywig,1:nzthewig,1:nythewig,iepho,4)=
      &    dreal(wig2d(1:nzwig,1:nywig,1:nzthewig,1:nythewig))
