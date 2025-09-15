@@ -1,4 +1,4 @@
-*CMZ :          16/08/2025  21.16.33  by  Michael Scheer
+*CMZ :          15/09/2025  18.52.13  by  Michael Scheer
 *CMZ :  4.01/07 20/08/2024  17.20.56  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  18.40.00  by  Michael Scheer
 *CMZ :  4.01/04 28/11/2023  14.20.34  by  Michael Scheer
@@ -150,7 +150,7 @@
 
       INTEGER ICYCLE,NTUP_P,IOBS,IPHZ,iy,iz,iy1,iz1,IPHY,ifrq,IEPS,I,NGEO_P,ISOUR,itz,ity
       INTEGER NIDGEO1,ISTAT,NIDGEO2,NBEAM_P,J,IELEM,NSIZE_P
-      INTEGER IOBSY,IOBSZ,K,ix,is,mthreadso,lunwig,modus
+      INTEGER IOBSY,IOBSZ,K,ix,is,mthreadso,lunwig,kpola
 
       complex*16 efc(3),bfc(3),expsh,rea(3)
 
@@ -219,6 +219,7 @@
       complex*16, dimension (:,:,:), allocatable :: esourzy
 
       double precision, dimension (:,:,:,:), allocatable :: wig
+      double precision, dimension (:,:), allocatable :: fdwigzy,fdwigtzty
       double precision, dimension (:), allocatable :: thez,they
 
       double precision, dimension (:,:,:), allocatable :: phspec3,phspec3f,
@@ -448,13 +449,13 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
      &    nobsv*nfreq,CHTAGS)
       endif
 
-      if (user(1).eq.1.0d0) then
-        rea(1:2)=(0.0d0,0.0d0)
-        rea(3)=dcmplx(reaima(3,1,icbrill),reaima(3,2,icbrill))
-        reaima=0.0d0
-        reaima(3,1,icbrill)=dreal(rea(3))
-        reaima(3,2,icbrill)=dimag(rea(3))
-      endif
+c      if (user(1).eq.1.0d0) then
+c        rea(1:2)=(0.0d0,0.0d0)
+c        rea(3)=dcmplx(reaima(3,1,icbrill),reaima(3,2,icbrill))
+c        reaima=0.0d0
+c        reaima(3,1,icbrill)=dreal(rea(3))
+c        reaima(3,2,icbrill)=dimag(rea(3))
+c      endif
 
       if (abs(phgshift).eq.9999.0d0) then
         do ifrq=1,nfreq
@@ -636,12 +637,14 @@ c          rnz=ef(1)*bf(2)-ef(2)*bf(1)
 
         ith=OMP_GET_THREAD_NUM()+1
         yph=phlowy+dble(iy-1)*dmeshy
+        if (abs(yph).le.1.0d-12) yph=0.0d0
 
         DO iz=1,nphasez_omp
 
           iphz=iz+iz1
 
           zph=phlowz+dble(iz-1)*dmeshz
+          if (abs(zph).le.1.0d-12) zph=0.0d0
 
           DO IOBS=1,NOBSV
 
@@ -958,10 +961,12 @@ c+seq,dummy.
 
       do iphz=1,mphasez
         zphw(iphz)=-(mphasez-1)*dmeshz/2.0+(iphz-1)*dmeshz
+        if (abs(zphw(iphz)).le.1.0d-12) zphw(iphz)=0.0d0
       enddo
 
       do iphy=1,mphasey
         yphw(iphy)=-(mphasey-1)*dmeshy/2.0+(iphy-1)*dmeshy
+        if (abs(yphw(iphy)).le.1.0d-12) yphw(iphy)=0.0d0
       enddo
 
       !print*,iz1,iy1,dgsigz_omp,dgsigy_omp
@@ -1800,7 +1805,8 @@ C--- APPLY MATRICES OF BEAMLINE
      &    esourz(mphasez,mphasey),
      &    esoury(mphasez,mphasey),
      &    esourzy(2,mphasez,mphasey),
-     &    wig(mphasez,mphasey,nwigthetaz,nwigthetay))
+     &    wig(mphasez,mphasey,nwigthetaz,nwigthetay),
+     &    fdwigzy(mphasez,mphasey),fdwigtzty(nwigthetaz,nwigthetay))
 
         if (wigthetaz.eq.-9999.0d0) then
           wigthetaz=2.0d0*sigrp
@@ -1816,23 +1822,39 @@ C--- APPLY MATRICES OF BEAMLINE
         write(lungfo,*)"     Eph, Flux of Wzz, Wyy, Wzy, Wyz:"
         write(lungfo,*)"     "
 
-        dtz=wigthetaz/(nwigthetaz-1)
-        thez(1)=wigthetazcen-wigthetaz/2.0d0
+        if (nwigthetaz.gt.1) then
+          dtz=wigthetaz/(nwigthetaz-1)
+          thez(1)=wigthetazcen-wigthetaz/2.0d0
+        else
+          dtz=1.0d0
+          thez(1)=wigthetazcen
+        endif
+
         do i=2,nwigthetaz
           thez(i)=thez(i-1)+dtz
           if (abs(thez(i)).le.1.0e-12) thez(i)=0.0d0
         enddo
 
-        dty=wigthetay/(nwigthetay-1)
-        they(1)=wigthetaycen-wigthetay/2.0d0
+        if (nwigthetay.gt.1) then
+          dty=wigthetay/(nwigthetay-1)
+          they(1)=wigthetaycen-wigthetay/2.0d0
+        else
+          dty=1.0d0
+          they(1)=wigthetaycen
+        endif
+
         do i=2,nwigthetay
           they(i)=they(i-1)+dty
           if (abs(they(i)).le.1.0e-12) they(i)=0.0d0
         enddo
 
-        open(newunit=lunwig,file='wigner.wav')
+        if (nwigefold.le.1) then
+          open(newunit=lunwig,file='wigner.wav')
+        else
+          open(newunit=lunwig,file='wigner.' // c64(1:len_trim(c64)))
+        endif
 
-        write(c64,*) icode
+        write(c64,*) icode, nfreq
         write(lunwig,'(a)') '* ' // trim(c64) // " " // trim(code)
 
         DO ifrq=1,NFREQ
@@ -1840,21 +1862,21 @@ C--- APPLY MATRICES OF BEAMLINE
           esourz(:,:)=ampli(3,:,:,ifrq)
           esoury(:,:)=ampli(2,:,:,ifrq)
 
-          do modus=1,4
+          do kpola=1,4
 
-            if (modus.eq.1) then
+            if (kpola.eq.1) then
               if (iwigner.eq.-2.or.iwigner.eq.-3.or.iwigner.eq.-4) cycle
               esourzy(1,:,:)=esourz(:,:)
               esourzy(2,:,:)=conjg(esourz(:,:))
-            else if (modus.eq.2) then
+            else if (kpola.eq.2) then
               if (iwigner.eq.-1.or.iwigner.eq.-3.or.iwigner.eq.-4) cycle
               esourzy(1,:,:)=esoury(:,:)
               esourzy(2,:,:)=conjg(esoury(:,:))
-            else if (modus.eq.3) then
+            else if (kpola.eq.3) then
               if (iwigner.eq.-1.or.iwigner.eq.-2.or.iwigner.eq.-4) cycle
               esourzy(1,:,:)=esourz(:,:)
               esourzy(2,:,:)=conjg(esoury(:,:))
-            else if (modus.eq.4) then
+            else if (kpola.eq.4) then
               if (iwigner.eq.-1.or.iwigner.eq.-2.or.iwigner.eq.-3) cycle
               esourzy(1,:,:)=esoury(:,:)
               esourzy(2,:,:)=conjg(esourz(:,:))
@@ -1863,33 +1885,48 @@ C--- APPLY MATRICES OF BEAMLINE
             call undulator_wigner_num(mphasez,mphasey,dmeshz,dmeshy,wtoe1/freq(ifrq),esourzy,
      &        nwigthetaz,nwigthetay,thez,they,wig,dmycur,banwid)
 
-            do ity=1,nwigthetay
-              do itz=1,nwigthetaz
-                iy=0
-                do iphy=1,mphasey
-                  if (abs(yphw(iphy)-phceny).gt.phhig/2.0d0+1.0d-12) cycle
-                  iy=iy+1
-                  iz=0
-                  do iphz=1,mphasez
-                    if (abs(zphw(iphz)-phcenz).gt.phwid/2.0d0+1.0d-12) cycle
-                    iz=iz+1
-
-                    write(lunwig,'(5I5,12(1pe15.5))') modus,iz,iy,itz,ity,
-     &                freq(ifrq),zphw(iphz),yphw(iphy),thez(itz),they(ity),
-     &                dreal(esourz(iphz,iphy)),dimag(esourz(iphz,iphy)),
-     &                dreal(esoury(iphz,iphy)),dimag(esoury(iphz,iphy)),
-     &                wig(iphz,iphy,itz,ity)
-
-                     wigflux(modus)=wigflux(modus)+wig(iphz,iphy,itz,ity)
+            do iphy=1,mphasey
+              do iphz=1,mphasez
+                fdwigzy(iphz,iphy)=0.0d0
+                do ity=1,nwigthetay
+                  do itz=1,nwigthetaz
+                    fdwigzy(iphz,iphy)=fdwigzy(iphz,iphy)+wig(iphz,iphy,itz,ity)*dtz*dty
                   enddo
                 enddo
               enddo
             enddo
-          enddo !modus
 
-c          flush(lunwig)
+            do ity=1,nwigthetay
+              do itz=1,nwigthetaz
+                fdwigtzty(itz,ity)=0.0d0
+                do iphy=1,mphasey
+                  do iphz=1,mphasez
+                    fdwigtzty(itz,ity)=fdwigtzty(itz,ity)+wig(iphz,iphy,itz,ity)*dmeshz*dmeshy
+                  enddo
+                enddo
+              enddo
+            enddo
+
+            do ity=1,nwigthetay
+              do itz=1,nwigthetaz
+                do iphy=1,mphasey
+                  do iphz=1,mphasez
+                    write(lunwig,'(6I5,15(1pe15.5))') kpola,iphz,iphy,itz,ity,ifrq,
+     &                freq(ifrq),zphw(iphz),yphw(iphy),thez(itz),they(ity),
+     &                dreal(esourz(iphz,iphy)),dimag(esourz(iphz,iphy)),
+     &                dreal(esoury(iphz,iphy)),dimag(esoury(iphz,iphy)),
+     &                wig(iphz,iphy,itz,ity),
+     &                fdwigzy(iphz,iphy),fdwigtzty(itz,ity)
+
+                     wigflux(kpola)=wigflux(kpola)+wig(iphz,iphy,itz,ity)
+                  enddo
+                enddo
+              enddo
+            enddo
+          enddo !kpola
 
           wigflux=wigflux*dmeshz*dmeshy*dtz*dty
+
           write(lungfo,*)"     ",sngl(freq(ifrq)),sngl(wigflux)
 
         enddo !ifrq
@@ -1927,6 +1964,8 @@ c          flush(lunwig)
       DEALLOCATE(phws4)
       DEALLOCATE(phcoef)
       DEALLOCATE(freq_omp)
+
+      if (iwigner.ne.0) deallocate(fdwigzy,fdwigtzty)
 
       mthreads=mthreadso
 

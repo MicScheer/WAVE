@@ -148,7 +148,7 @@ def set_console_title(console='Python'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -550,7 +550,7 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -1217,7 +1217,7 @@ Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
 Fig1,Ax1,Fig6,Ax6,Fig2,Ax2,Fig7,Ax7,Fig3,Ax3,Fig8,Ax8,\
 Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
 FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, \
+Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, \
 Kplots, Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Legend, CanButId, CanButIds, \
 Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Icmap, \
 MarkerSize, MarkerType, MarkerColor, \
@@ -1525,6 +1525,7 @@ Iclosed = 0
 Iboxes = 0
 Inoempty = 0
 Ierr = 0
+Inoerr = 0
 Isurf = 0
 Iline = 0
 Iinter = 0
@@ -1788,6 +1789,8 @@ VlocDist = 0
 
 global Aspect
 Aspect = "auto"
+
+global globyopt
 
 def plotfaces(faces, isame=0,
                 facecolor='b',edgecolor='black',alpha=0.5,
@@ -2651,6 +2654,10 @@ def get_y_stat():
   global Ystat
   return Ystat
 #endif
+
+def rystat(): ystat(0.8)
+def pystat(): ystat('+')
+def mystat(): ystat('-')
 
 def ellipse(x0,y0,a,b,alpha=0.0,n=1000):
 
@@ -4237,7 +4244,7 @@ def hdump(hist='?',filh='hdump.dat'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -4324,7 +4331,7 @@ def hprint(hist='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -4400,7 +4407,7 @@ def hfun(hist='?',fun='x', nx=101, xmin=-0.5, xmax=100.5):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -4510,7 +4517,7 @@ def h1header_update(hist='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -4679,7 +4686,7 @@ def h1reset(h):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -4757,7 +4764,7 @@ def hdelete(h='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -4841,7 +4848,7 @@ def hmin(h='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -4923,7 +4930,7 @@ def hmax(h='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -4992,7 +4999,7 @@ def printplopt():
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -5042,6 +5049,7 @@ def printplopt():
   print("boxes; Iboxes:",Iboxes)
   print("cont3d; Icont3d:",Icont3d)
   print("err, E; Ierr:",Ierr)
+  print("nerr, NE; Inoerr:",Inoerr)
   print("fill1d, F; Ifill1d:",Ifill1d)
   print("hist, H; Ihist:",Ihist)
   print("inter; Iinter:",Iinter)
@@ -5066,7 +5074,7 @@ def plotoptions(plopt=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -5117,6 +5125,7 @@ def plotoptions(plopt=''):
   Icont3d = 0
   Itrisurf = 0
   Ierr = 0
+  Inoerr = 0
   Isurf = 0
   Iline = 0
   Iinter = 0
@@ -5179,6 +5188,7 @@ def plotoptions(plopt=''):
   if re.search('fill1d',plopt) or re.search('F',plopt): Iplotopt = 1;  Ifill1d = 1
   if re.search('prof',plopt) or re.search('P',plopt): Iplotopt = 1;  Iprof = 1
   if re.search('sprof',plopt) or re.search('profs',plopt) or re.search('spread',plopt): Iplotopt = 1;  Iprof = 1; Ierr = 1
+  if re.search('noerr',plopt) or re.search('NE',plopt): Iplotopt = 1;  Inoerr = 1; Ierr = 0
   if re.search('noempty',plopt) or re.search('N',plopt): Iplotopt = 1;  Inoempty = 1
 
   if not Linestyle or Linestyle == 'none' or Linewidth <= 0.: Iline = 0
@@ -5261,7 +5271,7 @@ def mhb_mkdir(chdir='!'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -5365,7 +5375,7 @@ def mhb_ldir():
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -5439,7 +5449,7 @@ def mhb_pwd(isilent=0,iretval=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -5508,7 +5518,7 @@ def mhb_cd(cdir='!'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -5626,7 +5636,7 @@ def zoom(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30,zmin=1.2345e30,zmax=1.2345e30)
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -5703,7 +5713,7 @@ def zoom3d(xmin,xmax,ymin=-1.2345e30,ymax=1.2345e30,zmin=1.2345e30,zmax=1.2345e3
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -5791,7 +5801,7 @@ def pplot(pname="WavePlot.pdf",w=0,h=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -5859,7 +5869,7 @@ def h1pack(idh='?', data=None):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -5940,7 +5950,7 @@ def hcopn(idh='?', nt='', varlis='x:y:ey', ntit='!',kweedzero=1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -6076,7 +6086,7 @@ def nrandom(nt='?',varlis='', n=100, width=[1.], modu='u', iplot=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -6170,7 +6180,7 @@ def nhull2d(nt='?',varlis='',select='', iplot=1, iretval=1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -6379,7 +6389,7 @@ def vhull2d(vx,vy,varlis='',iplot=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -6683,7 +6693,7 @@ def nhull3dbad(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,color='!'
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -7099,7 +7109,7 @@ def nappend(nt='?', nt2=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -7186,7 +7196,7 @@ def nfill(nt='?', data=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -7312,7 +7322,7 @@ def npeaksabs(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretva
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -7439,7 +7449,7 @@ def hpeaks(h='?', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -7517,7 +7527,7 @@ def npeaks(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -7639,7 +7649,7 @@ def nstat(nt='?',var='',select='', iretval=1, isilent=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -7825,7 +7835,7 @@ def nsum(nt='?',var='',select='', iretval=1, isilent=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -7932,7 +7942,7 @@ def nmax(nt='?',var='',select='',iretval=1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -8042,7 +8052,7 @@ def nmin(nt='?',var='',select='', iretval=1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -8152,7 +8162,7 @@ def nminmax(nt='?',var='',select='',iretval=1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -8480,7 +8490,7 @@ def nrenvars(nt,varlis):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -8568,7 +8578,7 @@ def nparse(nt,varlis):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -8758,7 +8768,7 @@ def set_linecolor(lcol='r'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -8825,7 +8835,7 @@ def h2fill(idh='?', x=1.e30, y=1.e30, w=1.):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -9042,7 +9052,7 @@ def h1fill(idh=-1, x=1.e30, wei=1.):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -9201,7 +9211,7 @@ def hbook2(idh=-1, tit='Histogram2D',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -9375,7 +9385,7 @@ def h2reset(idh):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -9513,7 +9523,7 @@ def hbook1(idh=-1, tit='Histogram1D', nx=10, xmin=0., xmax=1., overwrite=False):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -9644,7 +9654,7 @@ def nscan(nt='?',varlis='',select='',isilent=0,ifirst=0,ilast=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -9776,7 +9786,7 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -10071,7 +10081,7 @@ def nintern(nt='?',varlis='',select='',xint='!'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -10188,7 +10198,7 @@ def ninter(nt='?',varlis='',select='',xint='!'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -10359,7 +10369,7 @@ def nspline(nt='?',varlis='',select='',xspl='!',periodic=False):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -10492,7 +10502,7 @@ def nsolve(nt='?',varlis='',select='',val=0.0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -10615,7 +10625,7 @@ def ndump(nt='',varlis='',select='',fout='ndump.dat', sep=' ',floatform='%.5e',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -10773,7 +10783,7 @@ def nreset(nt='?', varlis=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -10882,7 +10892,7 @@ def ndelete(nt='?',isilent=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -10978,7 +10988,7 @@ def ncre(ntname='', nttit='', varlis='', ioverwrite=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -11128,7 +11138,7 @@ def GetIndexH2(idh='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -11229,7 +11239,7 @@ def GetIndexN(nt='?', isilent=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -11348,7 +11358,7 @@ def GetIndexNct(idh='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -11431,7 +11441,7 @@ def GetIndexH1(idh='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -11535,7 +11545,7 @@ def GetIndex(idh='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -11636,7 +11646,7 @@ def h1opt(idh):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -11763,7 +11773,7 @@ def voptpar(vx,vy):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -11878,7 +11888,7 @@ def h1print(idh='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -11957,7 +11967,7 @@ def H1Info(idh='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -12058,7 +12068,7 @@ def H2Info(idh='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -12180,7 +12190,7 @@ def hstat2d(idh='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -12253,7 +12263,7 @@ def H1List():
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -12426,7 +12436,7 @@ def nentry(nt='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -12507,7 +12517,7 @@ def ninfo(nt='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -12608,7 +12618,7 @@ def nlist():
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -12677,7 +12687,7 @@ def NctList():
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -12745,7 +12755,7 @@ def ncolumns(fname='ntuple.dat', skiphead=-1, sep=' '):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -12850,7 +12860,7 @@ def ncolumnsguess(fname='ntuple.dat'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -12966,7 +12976,7 @@ silent=0, comment='*', sep=' ',iguessncols=1, iplot=1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -13052,7 +13062,7 @@ silent=0, comment='*', sep=' ', iguessncols=1, iplot=1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -13135,7 +13145,7 @@ comment='*', sep=' '):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -13295,7 +13305,7 @@ comment='*', sep=' ',iguessncols=1, ioverwrite=1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -13459,7 +13469,7 @@ def nproj2(nt='?', xy='', weight=1., select='',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -13827,7 +13837,7 @@ def nproj2n(nt='?', xy='', weight=1., select='',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -14168,7 +14178,7 @@ def nproj1(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -14476,7 +14486,7 @@ def nproj1n(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -14793,7 +14803,7 @@ def hstat1d(idh='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -14839,7 +14849,7 @@ def hstat1d(idh='?'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -14951,7 +14961,7 @@ def vstat(x='?',y=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -14997,7 +15007,7 @@ def vstat(x='?',y=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -15109,7 +15119,7 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -15155,7 +15165,7 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -15296,14 +15306,15 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
     if plopt == 'same' or plopt == 'S':
       if ey.max() == 0:
         plopt = 'h'
-      else:
+      elif Inoerr == 0:
         plopt = 'e'
       #endif ey.max() == 0
     else:
       if ey.max() == 0:
         plopt = 'hsame'
       else:
-        plopt = 'errsame'
+        if Inoerr == 0: plopt = 'errsame'
+        else: plopt = 'same'
       #endif ey.max() == 0
     #endif
   #endif plopt == '':
@@ -15369,13 +15380,18 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
       if ny[i] == 0: continue
       xpl.append(x[i])
       ypl.append(yave[i])
-      epl.append(stdyprof[i])
+      if Inoerr == 0:
+        epl.append(stdyprof[i])
+      else:
+        epl.append(0.0)
+      #endif
     #endfor
 
     if not Iline:
         plt.errorbar(xpl,ypl,epl, ls='',marker=Markertype,fillstyle=Fillstyle, mfc=Markercolor, mec=Markercolor, ms=Markersize, mew=1, c=lincol)
     else:
         vplxy(xpl,ypl,'L')
+    #endif
 
     VxyzX = deepcopy(x)
     VxyzY = deepcopy(yave)
@@ -15575,7 +15591,7 @@ def hplot(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', block
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -15652,7 +15668,7 @@ def hplave(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', bloc
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -15869,7 +15885,7 @@ def window(title='', geom="!", block=False, projection = '2d',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -16011,7 +16027,7 @@ def win2(title='Win_2', geom="!", block=False, projection = '2d', getconsole=Tru
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -16052,7 +16068,7 @@ def winr(title='Win_r', geom="!", block=False, projection = '2d', getconsole=Tru
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -16097,7 +16113,7 @@ def winl(title='Win_l', geom="!", block=False, projection = '2d', getconsole=Tru
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -16152,7 +16168,7 @@ def showplot(visible=True,kpdf=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -16335,7 +16351,7 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -16758,7 +16774,7 @@ def zone(nx=1, ny=1, kzone=1, isame='', projection='2d', visible=True):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -16943,7 +16959,7 @@ def window_close(win=-1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -17022,7 +17038,7 @@ def window_clear(win=-1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -17109,7 +17125,7 @@ def set_title(title='Title',tfs=-9.,titx=-9.,tity=-9):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -17184,7 +17200,7 @@ def set_x_title(xtit='xTit',pos=0.5):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -17250,7 +17266,7 @@ def set_z_title(ztit='zTit',pos=0.5):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -17318,7 +17334,7 @@ def set_titles(gtit='',pltit='Title',xtit='xTit', ytit='yTit', ztit=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -17388,7 +17404,7 @@ def set_global_title(gtit='', fontsize='!'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -17467,7 +17483,7 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -17624,7 +17640,7 @@ def null3d(xmin=-10., xmax=10., ymin=-10., ymax=10., zmin=-10., zmax=10.,elev=30
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -17678,7 +17694,7 @@ def null(xmin=-10., xmax=10., ymin=-10., ymax=10.):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -17868,7 +17884,7 @@ def run_on_figure(x=0.03,y=0.95,fontsize='!',ishow=1, iforce=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -17991,7 +18007,7 @@ def date_on_figure(x=0.04,y=0.02,fontsize='!',ishow=1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -18092,7 +18108,7 @@ def optnrun(krun=False):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -18132,7 +18148,7 @@ def optrun(krun=True):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -18172,7 +18188,7 @@ def optndate(kdate=False):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -18212,7 +18228,7 @@ def optdate(kdate=True):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -18262,7 +18278,7 @@ def set_author(author=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -18315,7 +18331,7 @@ def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0, overwrite=True):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -18429,7 +18445,7 @@ def hcopy2d(idh,idnew,tit='',scalex=1.,scaley=1., scalez=1., reset=0, overwrite=
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -18977,7 +18993,7 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -19281,26 +19297,29 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
 
       if Kstat:
 
-        try:
+        #try:
 
-          xmin,xmax,xmean,xrms,xopt,yopt = nstat(nt,varlis[0]+":"+varlis[1],"",
-                                                 iretval=1,isilent=1)
+        xmin,xmax,xmean,xrms,xopt,yopt = nstat(nt,varlis[0]+":"+varlis[1],"",
+                                               iretval=1,isilent=1)
 
-          tex = "Mean: " + '{:.4g}'.format(xmean) + \
-          "\nRMS: " + '{:.4g}'.format(xrms)
+        tex = "Mean: " + '{:.4g}'.format(xmean) + \
+        "\nRMS: " + '{:.4g}'.format(xrms)
 
-          if yopt != None:
-            tex += \
-            "\nxOpt: " + '{:.4g}'.format(xopt) + \
-            "\nyOpt: " + '{:.4g}'.format(yopt)
-          else:
-            scom = "yopt = nt." + varlis[1] + ".max()"
-            exec(scom)
-          #endif
+        if yopt != None:
+          tex += \
+          "\nxOpt: " + '{:.4g}'.format(xopt) + \
+          "\nyOpt: " + '{:.4g}'.format(yopt)
+        else:
+          scom = "global globyopt; globyopt = (nt." + varlis[1] + ").max()"
+          exec(scom)
+          yopt = globyopt
+          tex += \
+          "\nyOpt: " + '{:.4g}'.format(yopt)
+        #endif
 
-          text(Xstat,Ystat,tex,halign='left')
-        except:
-          pass
+        text(Xstat,Ystat,tex,halign='left')
+        #except:
+        #  pass
         #endtry
 
       #endif
@@ -19543,7 +19562,7 @@ def vprint(v):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -19609,7 +19628,7 @@ def vprintxy(x,y):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -19687,7 +19706,7 @@ def vplxy(x='!',y='!',plopt='',label='',color='!',fillcolor='none'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -19934,7 +19953,7 @@ def vplxyey(x,y,ey='',plopt='o',label='',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -20014,7 +20033,7 @@ def vplxyerr(x,y,ey='',ex='',plopt='o',label='',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -20096,7 +20115,7 @@ def vinter(x,y,xint='!'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -20203,7 +20222,7 @@ def vintern(x,y,xint='!'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -20376,7 +20395,7 @@ def vspline_index(x,y,nspl=1001, periodic=False, ypp1=0.0, yppn=0.0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -20495,7 +20514,7 @@ def vspline(x,y,xspl='!', periodic=False, ypp1=0.0, yppn=0.0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -20665,7 +20684,7 @@ def vspline_old(x,y,xspl='!', periodic=False):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -20877,7 +20896,7 @@ def nupdate_header(nt,reindex=1):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -21033,7 +21052,7 @@ def vsolve(x,y,val=0.0,xmin=-1.0e30,xmax=1.0e30):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -21158,7 +21177,7 @@ def vsolvelin(x,y,val=0.0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -21227,7 +21246,7 @@ def voptspl(x,y):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -21331,7 +21350,7 @@ def ncopn(nt,ncnam,varlis='',select='',ioverwrite=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -21437,7 +21456,7 @@ def ncopv(nt,varlis,select=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -21567,7 +21586,7 @@ def nclone(nt,ncnam,nctit='',ioverwrite=0):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -22480,7 +22499,7 @@ def getzone(projection=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -22634,7 +22653,7 @@ def set_console_title(console='Python'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -22706,7 +22725,7 @@ def get_console(console=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -22785,7 +22804,7 @@ def getax(visible=True):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -22857,7 +22876,7 @@ def vplbxy(x,y,u,v,scale=-9999.0,plopt='',tit='',xtit='',ytit='',ztit='',label='
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -22956,7 +22975,7 @@ def vplbxyz(x,y,z,u,v,w,scale,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -23036,7 +23055,7 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -23183,7 +23202,7 @@ def vplxyzt(x,y,z,t,plopt='',tit='',xtit='',ytit='',ztit='', label='',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -23256,7 +23275,7 @@ def textbox(text,x=0.05, y=0.95, tcolor=None, bgcolor='white', alpha=0.9,
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -23345,7 +23364,7 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -23681,7 +23700,7 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -23830,7 +23849,7 @@ def vfit(fitfun, x, y, ey = '', absolute_sigma='default', parstart=None,
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -24122,7 +24141,7 @@ def vfitdipole(x,y, ey = '', fringemodel='quintic-spline',absolute_sigma='defaul
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -24207,7 +24226,7 @@ def vfitexp(x,y, ey = '', absolute_sigma='default', parstart=None,
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -24280,7 +24299,7 @@ def vfitexp2(x,y, ey = '', absolute_sigma='default', parstart=None,
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -24359,7 +24378,7 @@ def vfitgauss(x,y, ey = '', absolute_sigma='default',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -24430,7 +24449,7 @@ def vfitcosh(x,y, ey = '', absolute_sigma='default',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -24501,7 +24520,7 @@ def vfitcos(x,y, ey = '', absolute_sigma='default',
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -24569,7 +24588,7 @@ def hget(idh=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -24646,7 +24665,7 @@ def nget(idn=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -25583,7 +25602,7 @@ def set_y_title_abs(ytit='yTit', pos=0.5):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -26056,6 +26075,10 @@ tblau = tblue
 tlila = tmagenta
 thellblau = tcyan
 #wvars = list_wave_input_parameters
+
+ryst = rystat
+pyst = pystat
+myst = mystat
 #end of aliases in m_hbook
 
 #end of m_hbook
@@ -26067,7 +26090,7 @@ def plotoptions_unklar(plopt=''):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \

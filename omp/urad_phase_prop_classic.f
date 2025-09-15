@@ -1,3 +1,4 @@
+*CMZ :          13/09/2025  10.12.52  by  Michael Scheer
 *CMZ :  4.01/07 11/08/2024  15.26.17  by  Michael Scheer
 *CMZ :  4.01/05 15/04/2024  09.37.27  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  15.30.57  by  Michael Scheer
@@ -11,13 +12,14 @@
 
       implicit none
 
-      complex*16 :: czero=(0.0d0,0.0d0),cone=(1.0d0,0.0d0),a3(3)
+      complex*16 :: czero=(0.0d0,0.0d0),cone=(1.0d0,0.0d0),a3(3),a3p(3)
 
       double complex, dimension(:), allocatable :: expom,dexpom,phshift
 
       double complex :: apolh,apolr,apoll,apol45
-      double precision dx,dx2,dy,dyph,dzph,dz,y,z,omc,domc,phlowz,phlowy,dzy2,eps(6),
-     &  dr,drred,da,x,xobs,yobs,zobs,rlambda1,ans,stok1,stok2,stok3,stok4
+      double precision :: dx,dx2,dy,dyph,dzph,dz,y,z,omc,domc,phlowz,phlowy,dzy2,eps(6),
+     &  dr,drred,da,x,xobs,yobs,zobs,rlambda1,ans,stok1,stok2,stok3,stok4,stoknor,enor,
+     &  eabsmaxprop=-1.0d30
 
       integer :: ktime=1,i,
      &  mthreads,iy,iz,n,jy,jz,iobs,ieps,ifrq,iobfr,jobs,jobfr
@@ -49,7 +51,7 @@ c      aradprop_u=(0.0d0,0.0d0)
         phlowz=0.0d0
       endif
 
-      da=pinw_u*pinh_u/dble(max(1,npinz_u-1)*max(1,npiny_u-1))
+      da=pinw_u/1000.0d0*pinh_u/1000.0d0/dble(max(1,npinz_u-1)*max(1,npiny_u-1))
 
       n=0
 
@@ -178,6 +180,8 @@ c+seq,dum2.
 
 !$OMP END PARALLEL
 
+      eabsmaxprop=-1.0d30
+
       if (ifieldprop_u.ne.2) then
 
         do ifrq=1,nepho_u
@@ -230,7 +234,27 @@ c+seq,dum2.
 
       endif !(ifieldprop_u.ne.2)
 
-      obsvprop_u=obsvprop_u*1000.0d0
+      IOBFR=nobsv_u/2+1+NOBSV_u*(nepho_u/2)
+      jobfr=nobsvprop_u/2+1+nobsvprop_u*(nepho_u/2)
+
+      a3=arad_u(1:3,iobfr)
+      a3p=aradprop_u(1:3,jobfr)
+
+c      print*,sqrt(norm2(dreal(a3*dconjg(a3)))),sqrt(norm2(dreal(a3p*dconjg(a3p))))
+c      enor=sqrt(norm2(dreal(a3*dconjg(a3)))/norm2(dreal(a3p*dconjg(a3p))))
+c      print*,enor
+c      enor=norm2(dreal(a3*dconjg(a3)))/norm2(dreal(a3p*dconjg(a3))))
+c      print*,enor
+c      stoknor=enor**2
+c      stop
+c      stoknor=enor**2
+c      stokesprop_u=stokesprop_u/stoknor
+c      aradprop_u=aradprop_u/enor
+
+c      print*,enor,1.0d0/enor,stoknor,1.0d0/stoknor
+c      obsvprop_u=obsvprop_u*1000.0d0
+
+      deallocate(expom,dexpom,phshift)
 
       return
       end

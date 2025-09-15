@@ -1,4 +1,4 @@
-*CMZ :          24/08/2025  14.21.07  by  Michael Scheer
+*CMZ :          11/09/2025  15.05.09  by  Michael Scheer
 *-- Author :    Michael Scheer   16/04/2025
       subroutine undulator_wigner_num(nx,ny,dx,dy,wlen,esour,ntx,nty,thex,they,wig,curr,banwid)
 
@@ -23,15 +23,14 @@ c      complex*16 :: wigc(nx,ny,ntx,nty)
       real*8 :: tx,ty,ek,dtx,dty,xm,xp,xpm,ypm,ym,yp,rp,rm,x,y,wlen12,wignor,curr,banwid,
      &  specnor_si
 
-      real secin,secout
-
       integer :: ix,iy,itx,ity,kx,ky,jfail,nper,iypm,ixpm,lx,ly,ifound,nmaxth=1
 
-      print*
-      print*,"     Calculating Wigner Distribution for ",sngl(wlen)," nm"
-      print*
+c      real secin,secout
+c      print*
+c      print*,"     Calculating Wigner Distribution for ",sngl(wlen)," nm"
+c      print*
 
-      secin=secnds(0.0)
+c      secin=secnds(0.0)
 
       wlen12=1.0d0/(wlen*1.0d-9)**2
       ek=twopi1/abs(wlen*1.0d-9) !1/m
@@ -61,10 +60,20 @@ c      call undulator_wigner_kernel(nx,ny,esour,wkern) bringt's nicht
      &  /echarge1/hbar1*clight1/PI1*EPS01
      &  *banwid
 
-      wignor=specnor_si*dx*dy*wlen12
+      wignor=specnor_si*dx*dy*wlen12 !??*4.0d0 ! factor 4 due to change in integration variables!?
 
 c      nmaxth=1
 c      print*,"Nur ein Thread!"
+
+c      do iy=1,ny
+c        do ix=1,nx
+c          write(77,*)ix,iy,
+c     &      dreal(esour(1,ix,iy)),dimag(esour(2,ix,iy)),
+c     &      dreal(esour(2,ix,iy)),dimag(esour(2,ix,iy))
+c        enddo
+c      enddo
+c      flush(77)
+c      close(77)
 
 !$OMP PARALLEL NUM_THREADS(nmaxth) DEFAULT(PRIVATE)
 !$OMP& FIRSTPRIVATE(nx,ny,ntx,nty,dx,dy,eki,wlen12,they,thex,dtx,dty,wignor)
@@ -146,8 +155,8 @@ c     &              em*ep*expom*wignor
 !$OMP END PARALLEL
 
 c      wig=dreal(wig)
-      secout=secnds(0.0)
+c      secout=secnds(0.0)
 
-      print*,"     Seconds used:",secout-secin
+c      print*,"     Seconds used:",secout-secin
 
       end

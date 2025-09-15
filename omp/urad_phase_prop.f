@@ -1,4 +1,4 @@
-*CMZ :          15/08/2025  12.40.07  by  Michael Scheer
+*CMZ :          10/09/2025  13.45.08  by  Michael Scheer
 *CMZ :  4.01/07 18/10/2024  14.11.15  by  Michael Scheer
 *CMZ :  4.01/05 15/04/2024  11.54.00  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  15.30.57  by  Michael Scheer
@@ -54,7 +54,7 @@
             aradprop_u(:,iobfr)=aradprop_u(:,iobfr)/cph00
           enddo
         enddo
-      else
+      else if (globphaseprop_u.ne.0.0d0) then
         aradprop_u=aradprop_u*exp(ci*globphaseprop_u)
       endif
 

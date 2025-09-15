@@ -3506,12 +3506,18 @@
                         !-9999: MPHASEY according to dgsigy(1) and the
                         ! sigma of the Gaussian
 
+	PHGSHIFT=0.0 .  !global phase shift [rad]
+	                !9999: Shift such, that the imaginary part of the on-axis horizontal field
+			!      becomes zero
         IWIGNER=0           ! calculate Wigner distribution function
 	                    !  1: All polarisations states, i.e. Wzz,Wyy,Wzy
 			    ! -1: Wzz only
 			    ! -2: Wyy only
 			    ! -3: Wzy only
 			    ! -4: Wyz only
+
+	NWIGEFOLD=15        ! number of beam energy steps
+	NOSPLINEWEF=0	    ! to use simple summation instead of spline integration
 	
 	WIGTHETAZ=-9999.0   ! Hori. opening angle of radiation cone [rad]
 	                    ! -9999: Estimated from device length and photon energy

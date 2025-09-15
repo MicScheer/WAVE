@@ -1,4 +1,4 @@
-*CMZ :          28/08/2025  10.10.23  by  Michael Scheer
+*CMZ :          15/09/2025  14.44.23  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.06.37  by  Michael Scheer
@@ -39,6 +39,10 @@
       include 'berror.cmn'
 *KEEP,ampli.
       include 'ampli.cmn'
+*KEEP,phasef90.
+      include 'phasef90.cmn'
+*KEEP,wfoldf90.
+      include 'wfoldf90.cmn'
 *KEEP,photon.
       include 'photon.cmn'
 *KEEP,random.
@@ -48,11 +52,12 @@
 *KEEP,wvers.
       include 'wvers.cmn'
 *KEND.
+
       integer lun0,lunin,lunclu,kins,ins,m1,m2,n1,n2,irun,istat,lunout,ianf,iend,ipid,
      &  lunfis,ieof,l1,l2,ialldone,masterpid,n1ins,n2ins,lpid,npids,i,idum,
      &  lunpid,lun10,i10,k10,ndim,kcount,lstat,kempty,k1,k2,ierr,kbuncherr,
      &  kstat,luni,lun,lunsi,iel1,iel2,lunspai,lunspao,iutil_fexist,nread,
-     &  nfirst,nlast,icheckpid,lunbun,lunbu,ni,nl,nwords
+     &  nfirst,nlast,icheckpid,lunbun,lunbu,ni,nl,nwords,kwigerr
 
       integer isystem
       external isystem
@@ -139,12 +144,43 @@
       read(lunin,cluster)
       read(lunin,b0scglobn)
       read(lunin,myfiles)
+      read(lunin,wfoldn)
       read(lunin,bunchn)
       read(lunin,freqn)
+      read(lunin,phasen)
       read(lunin,berrorn)
       ihphotons=0
       if (ieneloss.lt.0) read(lunin,photonn)
       close(lunin)
+
+      iwigefold=0
+      if (ispec.eq.0) iwigner=0
+
+      if (iwigner.ne.0.and.nwigefold.gt.1.and.espread.ne.0.0d0) then
+
+        irnsize=64
+
+        if (irnmode.lt.0) then
+          open(newunit=lun,file='wave.seeds',status='old')
+          read(lun,*)irnsize
+          do i=1,irnsize
+            read(lun,*)idum,irnseed(i)
+          enddo
+          close(lun)
+          call util_random_set_seed(irnsize,irnseed)
+        else if (irnmode.eq.1) then
+          call util_random_set_seed(irnsize,irnseed)
+        else
+          call util_random_init(irnsize,irnseed)
+        endif
+
+        kwigerr=0
+        call winstwigefold(kwigerr)
+        if (kwigerr.ne.0) then
+          stop '*** Aborting due to bad return from winstwigefold ***'
+        endif
+        return
+      endif
 
       if (kampli.ne.0.or.iundulator.eq.2) then
         !if (iundulator.eq.2) mthreads=-1
@@ -711,7 +747,7 @@ C--- RANDOM NUMBERS
      &        // chwavehome(l1:l2) // "/bin/wave.exe "
      &        // chwavehome(l1:l2) // "/bin/wave_spawned.exe 2>/dev/null"
 
-        call util_break
+            call util_break
 
             istat=isystem(trim(cline))
 

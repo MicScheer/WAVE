@@ -1,3 +1,4 @@
+*CMZ :          13/09/2025  10.16.17  by  Michael Scheer
 *CMZ :  4.01/07 13/08/2024  10.11.51  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.49.56  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  15.30.57  by  Michael Scheer
@@ -37,7 +38,7 @@ c+seq,uservar.
       integer
      &  npiny,npinz,nper,nepho,mthreads,nelec,icohere,ihbunch,i,nlpoi,
      &  modeph,modepin,modesphere,modebunch,iy,iz,iobsv,noranone,modewave,
-     &  icbrill,iobs,iobfr,ifrq
+     &  icbrill,iobs,iobfr,ifrq,kalloerr
 
 c      if (modewave.ne.0) call util_zeit_kommentar(6,'Entered urad_phase')
       call util_zeit_kommentar_delta(6,'Entered urad_phase',1)
@@ -94,7 +95,7 @@ c      if (modewave.ne.0) call util_zeit_kommentar(6,'Entered urad_phase')
      &  arad_u(6,nobsv_u*nepho_u),
      &  specpow_u(nobsv_u),
      &  stokes_u(4,nobsv_u*nepho_u),pow_u(nobsv_u)
-     &  )
+     &  ,stat=kalloerr)
 
       if (ihbunch_u.gt.0) then
         allocate(fbunch_u(41,nelec_u/ihbunch_u*nepho_u))
@@ -224,6 +225,9 @@ c      endif
         arad_u=arad_u/1.0d3
       endif
 
+      pincen_u=pincen_u*1000.0d0
+      pinw_u=pinw_u*1000.0d0
+      pinh_u=pinh_u*1000.0d0
       obsv_u=obsv_u*1000.0d0
 
 c      if (modewave.ne.0) call util_zeit_kommentar(6,'Leaving urad_phase')
