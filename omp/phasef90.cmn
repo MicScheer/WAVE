@@ -4,6 +4,7 @@
      &  nphasez,nphasey,mphasez,mphasey,NIDPHASE
      &  ,NIDGEO,IDSEL,IHSEL,NPHELEMP,NPHELEM,iphfold
      &  ,iwigner,nwigthetaz,nwigthetay
+     &  ,nwigefold,nosplinewef,iwigefold
 
       PARAMETER (NPHELEMP=5)
 
@@ -23,8 +24,8 @@
      &  PHGEOSUM,PHGEOSEL,PHELEM,PHBEAM,
      &  PHBETH,PHBETV,
      &  nphasez,nphasey,mphasez,mphasey,NIDPHASE,NIDGEO,IDSEL,IHSEL,NPHELEM,iphfold
-     &  ,iwigner,nwigthetaz,nwigthetay
-     &  ,wigthetaz,wigthetay,wigthetazcen,wigthetaycen
+     &  ,iwigner,nwigthetaz,nwigthetay,nwigefold,nosplinewef
+     &  ,wigthetaz,wigthetay,wigthetazcen,wigthetaycen,iwigefold
 
       NAMELIST/PHASEN/
      &  phgshift,PHCENX,PHCENY,PHCENZ,PHWID,PHHIG,
@@ -33,5 +34,5 @@
      &  PHBETH,PHBETV,
      &  nphasez,nphasey,mphasez,mphasey,IHSEL,NPHELEM,PHELEM,iphfold
      &  ,iwigner,nwigthetaz,nwigthetay
-     &  ,wigthetaz,wigthetay,wigthetazcen,wigthetaycen
+     &  ,wigthetaz,wigthetay,wigthetazcen,wigthetaycen,nwigefold,nosplinewef
 
