@@ -1,4 +1,4 @@
-*CMZ :          16/08/2024  09.21.28  by  Michael Scheer
+*CMZ :  4.01/07 16/08/2024  09.21.28  by  Michael Scheer
 *-- Author :    Michael Scheer   15/08/2024
 *CMZ :          15/08/2024  11.02.29  by  Michael Scheer
       subroutine util_fold_gauss_lin_2d(nx,ny,x,y,fin,rnsigx,sigx,rnsigy,sigy,fold)

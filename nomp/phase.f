@@ -35,7 +35,7 @@
 *CMZ :  1.03/06 29/09/98  14.43.55  by  Michael Scheer
 *-- Author :    Michael Scheer   18/09/98
       SUBROUTINE PHASE
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)

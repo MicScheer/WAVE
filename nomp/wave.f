@@ -1,4 +1,5 @@
-*CMZ :          18/03/2025  16.37.16  by  Michael Scheer
+*CMZ :          19/09/2025  15.04.03  by  Michael Scheer
+*CMZ :  4.02/00 18/03/2025  16.37.16  by  Michael Scheer
 *CMZ :  4.01/02 19/04/2023  08.53.56  by  Michael Scheer
 *CMZ :  4.00/17 04/11/2022  09.31.48  by  Michael Scheer
 *CMZ :  4.00/16 29/09/2022  11.22.54  by  Michael Scheer
@@ -39,7 +40,7 @@
 *CMZ : 00.00/00 28/04/94  16.11.30  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE WAVE
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -84,10 +85,7 @@
 
       use ompmod
       use clustermod
-
-*KEEP,spectf90u.
-      include 'spectf90u.cmn'
-*KEND.
+      use spectf90
 
 C THIS IS THE PROCESSING ROUTINE OF THE PROGRAM WAVE
 C IT CALLS THE INITIALIZATION ROUTINE GFINIT AND THE
@@ -134,16 +132,17 @@ C MODULES FOR THE INDIVIDUAL TASKS
       integer idumvers,getpid
       external function getpid
 
-      open(newunit=lunpid,file='wave.pid')
-      kpid=getpid()
-      write(lunpid,*) kpid
-      close(lunpid)
-
+      chwversion=
 *KEEP,wversion.
       include 'wversion.cmn'
 *KEND.
 
       nocern=1
+
+      open(newunit=lunpid,file='wave.pid')
+      kpid=getpid()
+      write(lunpid,*) kpid
+      close(lunpid)
 
       do i=1,128
         if (chwversion(i:i).eq."V") then

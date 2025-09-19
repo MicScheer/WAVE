@@ -1,4 +1,5 @@
-*CMZ :          15/09/2025  14.44.23  by  Michael Scheer
+*CMZ :          19/09/2025  14.59.51  by  Michael Scheer
+*CMZ :  4.02/00 15/09/2025  14.44.23  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.06.37  by  Michael Scheer
@@ -75,9 +76,11 @@
       print*,""
       print*,""
 
+      chwversion=
 *KEEP,wversion.
       include 'wversion.cmn'
 *KEND.
+
       WRITE(6,*)
       WRITE(6,*)'          *********************************************'
       WRITE(6,*)'          *          PROGRAM WAVE                     *'

@@ -1,4 +1,4 @@
-*CMZ :          11/03/2025  11.56.13  by  Michael Scheer
+*CMZ :  4.02/00 17/09/2025  10.02.56  by  Michael Scheer
 *CMZ :  4.01/00 09/01/2023  20.52.32  by  Michael Scheer
 *CMZ :  4.00/14 22/12/2021  13.31.15  by  Michael Scheer
 *CMZ :  4.00/13 20/12/2021  16.32.19  by  Michael Scheer
@@ -240,6 +240,11 @@ C--- TERMINATES HBOOK AND WRITE HISTOS TO FILE
       endif
       fillp(54)=ihbeta
       fillp(55)=kampli
+      if (ispec.ne.0) then
+        fillp(56)=iphase
+        fillp(57)=iwigner
+        fillp(58)=nwigefold
+      endif
 
       call hfm(nid222,fillp)
 

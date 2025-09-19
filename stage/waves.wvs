@@ -1462,6 +1462,10 @@ $MENU
         $VARIABLE
                 B0ELLIPH
         $TEXT
+                Shift of horiz. and vert. fields [periods]
+        $VARIABLE
+                ELLSHFT
+        $TEXT
                 Number of periods
         $VARIABLE
                 PERELLIP
@@ -1477,10 +1481,10 @@ $MENU
 	        Energy of considered harmonic
         $VARIABLE
 	        HARMELL
-*        $TEXT
-*                Shift of horiz. and vert. fields [periods]
-*        $VARIABLE
-*                ELLSHFT
+        $TEXT
+                Shift of horiz. and vert. fields [periods]
+        $VARIABLE
+                ELLSHFT
 $HELP
 The harmonic of the undulator is determined by the beam energy and
 the effective magnetic field Beff=Sqrt( Bhori**2 + Bvert**2).
@@ -3115,6 +3119,10 @@ PHRMENU
         $VARIABLE
                 B0ELLIPH
         $TEXT
+                Shift of horiz. and vert. fields [periods]
+        $VARIABLE
+                ELLSHFT
+        $TEXT
                 Number of periods
         $VARIABLE
                 PERELLIP
@@ -3130,10 +3138,6 @@ PHRMENU
 	        Energy of considered harmonic
         $VARIABLE
 	        HARMELL
-*        $TEXT
-*                Shift of horiz. and vert. fields [periods]
-*        $VARIABLE
-*                ELLSHFT
 $HELP
 The harmonic of the undulator is determined by the beam energy and
 the effective magnetic field Beff=Sqrt( Bhori**2 + Bvert**2).
@@ -3158,24 +3162,44 @@ $MENU
         Beam emittance and energy-spread
         $TEXT
 	Activate/deactivate folding procedure for the emittance
-	$MAPPING
-	        IFOLDM
-		2
-		IFOLD
-		1
-		IBUNCH
-		0
+	$TOGGLE
+	        IFOLD
+*	$MAPPING
+*	        IFOLDM
+*+self,if=ibuncht.
+*		3
+*+self,if=-ibuncht.
+*		2
+*+self.
+*		IFOLD
+*		1
+*		IBUNCH
+*		0
+*+self,if=ibuncht.
+*		IBUNCHT
+*		0
+*+self.
 	$COMMENT
 	not compatible with multi-particle beam, except for undulator mode 2
         $TEXT
 	Activate/deactivate folding procedure for the energy-spread
-	$MAPPING
-	        IEFOLDM
-		2
-		IEFOLD
-		1
-		IBUNCH
-		0
+	$TOGGLE
+	        IFOLD
+*	$MAPPING
+*	        IEFOLDM
+*+self,if=ibuncht.
+*		3
+*+self,if=-ibuncht.
+*		2
+*+self.
+*		IEFOLD
+*		1
+*		IBUNCH
+*		0
+*+self,if=ibuncht.
+*		IBUNCHT
+*		0
+*+self.
 	$COMMENT
 	not compatible with multi-particle beam, except for undulator mode 2
  	$TEXT
@@ -3269,23 +3293,20 @@ $HELP
 $ENDHELP
 $TRIGGER
         UNDUBM
-	SPECMODES
-$TRIGGER
-        UNDUBM
 	EMIT
 $TRIGGER
         UNDUFM
 	PHRMENU
 *************************************************************************
-$MENU
-        SPECCONT
-        SPEC
-        $TITLE
-        Spectrum calculations (continuation)
+*$MENU
+*        SPECCONT
+*        SPEC
+*        $TITLE
+*        Spectrum calculations (continuation)
 *************************************************************************
 $MENU
         SPECWRITE
-        SPECCONT
+        SPEC
         $TITLE
         Write spectrum calculations to ASCII-files
         $TEXT
@@ -3335,7 +3356,7 @@ FILESTO
 *************************************************************************
 $MENU
         SPECWRITEF
-        SPECCONT
+        SPEC
         $TITLE
         Write spectrum calculations with emittance to ASCII-files
         $TEXT
@@ -3385,7 +3406,7 @@ FILESTOF
 *************************************************************************
 $MENU
         SPECPOW
-        SPECCONT
+        SPEC
         $TITLE
         Write power calculations to ASCII-files
         $TEXT
@@ -3423,7 +3444,7 @@ FILEPOW
 *************************************************************************
 $MENU
         RAYPHASE
-        SPECCONT
+        SPEC
         $TITLE
         Interfaces to RAY and PHASE
         $TEXT
@@ -3559,7 +3580,7 @@ $VETO
 *************************************************************************
 $MENU
         FILTER
-        SPECCONT
+        SPEC
         $TITLE
         Filter options and radiation dose calculation
         $TEXT
@@ -3681,27 +3702,27 @@ $VETO
 $MENUALLVETO
         IFILTER
         0
-        SPECCONT
+        SPEC
 $MENUALLVETO
         IWFILSP0
         0
-        SPECCONT
+        SPEC
 $MENUALLVETO
         IWFILSPF
         0
-        SPECCONT
+        SPEC
 $MENUALLVETO
         IWFILSTO
         0
-        SPECCONT
+        SPEC
 $MENUALLVETO
         IWFLSTOF
         0
-        SPECCONT
+        SPEC
 $MENUALLVETO
         IWFILPOW
         0
-        SPECCONT
+        SPEC
 *************************************************************************
 $MENU
         TAPER
@@ -3887,7 +3908,7 @@ $MENU
 *************************************************************************
 $MENU
         PHASE
-        SPECCONT
+        SPEC
         $TITLE
         Field amplitude propagation
         $TEXT
@@ -3970,6 +3991,77 @@ IPHASE
 0
 PHASE
 *************************************************************************
+*************************************************************************
+$MENU
+        WIGNER
+        SPEC
+        $TITLE
+        Wigner Distributions of Propageted Fields
+        $TEXT
+                Mode [-4,-3,-2,-1,0,1]
+        $VARIABLE
+                IWIGNER
+        $COMMENT
+                -1: Wzz, -2: Wyy, -3: Wzy, -4: Wyz, 1: all
+        $TEXT
+                Central vert. angle  (rad)
+        $VARIABLE
+                WIGTHETAYCEN
+        $TEXT
+                Vertical ert. angle range (rad)
+        $VARIABLE
+                WIGTHETAY
+        $TEXT
+                Number of vert. angle steps
+        $VARIABLE
+                NWIGTHETAY
+        $TEXT
+                Central hori. angle  (rad)
+        $VARIABLE
+                WIGTHETAZCEN
+        $TEXT
+                Hori. radiation angle  (rad)
+        $VARIABLE
+                WIGTHETAZ
+        $TEXT
+                Number of hori. angle steps
+        $VARIABLE
+                NWIGTHETAZ
+        $TEXT
+                Beam energy spread
+        $VARIABLE
+                ESPREADW
+        $COMMENT
+                Overwrites beam parameters of other menues!
+        $TEXT
+                Number of beam energy steps
+        $VARIABLE
+                NWIGEFOLD
+$HELP
+Modes:
+
+-4: Wigner distribution Wyz
+-3: Wigner distribution Wzy
+-2: Wigner distribution Wyy
+-1: Wigner distribution Wzz
+
+0: Not activated
+
+1: All of  Wzz, Wyy, Wzy, Wyz
+
+The size of the considered plane is taken from the plane of the
+propagated fields (namelist $PHASE).
+
+If the number of beam energy steps is greater than one, WAVE runs in
+loop over a Gaussian beam energy distribution according to ESPREAD.
+
+For further features and variables refer to WAVE-inputfile file wave.in.
+$ENDHELP
+$MENUVETO
+IWIGNER
+0
+WIGNER
+*******************************************************************************
 $MENU
       	OPTFUN
       	MACHINE
@@ -5280,6 +5372,46 @@ $CALC
       1
       THEROT(16)
 $CALC
+      IWIGNER
+      .AND.
+      IONE
+      IPHASE
+$CALC
+      IWIGNER
+      .AND.
+      IONE
+      KWORK1
+$CALC
+      IPHASE
+      .AND.
+      IONE
+      KWORK2
+$CALC
+      KWORK1
+      .AND.
+      KWORK2
+      IPHASE
+$CALC
+      ESPREADW
+      *
+      KWORK1
+      WORK1
+$CALC
+      KWORK1
+      .NAND.
+      KWORK1
+      KWORK2
+$CALC
+      ESPREAD
+      *
+      KWORK2
+      WORK2
+$CALC
+      WORK1
+      +
+      WORK2
+      ESPREAD
+$CALC
       ESPREAD
       *
       1
@@ -5344,11 +5476,11 @@ $CALC
   *
   IONE
   IBFORCE
-$CALC
-  IPIN
-  *
-  IFOLDM
-  IFOLDM
+*$CALC
+*  IPIN
+*  *
+*  IFOLDM
+*  IFOLDM
 $CALC
   IPIN
   *
@@ -5357,7 +5489,8 @@ $CALC
 $VETO
   IPIN
   0
-  IFOLDM
+  IFOLD
+*  IFOLDM
 $CALC
   ISPEC
   .AND.
@@ -5376,3 +5509,6 @@ $CALC
   .AND.
   IHTRACKM
   IHTRACKM
+$TRIGGER
+  IWIGNER
+  PHASE

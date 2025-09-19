@@ -39,7 +39,7 @@
 !
 !******************************************************************************
  !
- ! VERSION 4.01/07
+ ! VERSION 4.02/00
  !
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
@@ -93,13 +93,14 @@
        !  IUNDULATOR=2   Like IUNDULATOR=1, but the radiation field is
        !                 calculated for a single period only and summed
        !                 with appropriate phase shift for the remaining
-       !                 periods, s.a. KAMPLI
+       !                 periods. The field is taken from $ELLIPN s.a. KAMPLI
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
          ! IBUNCH.EQ.0:
             ! whole trajectory is taken as source of
             ! synchroton light (ignoring input of
             ! parameters WGWINFC, collimators ...)
+	    ! KELLIP = 1
             ! ISPECMODE = 2
             ! IMAGSPLN = 0 for KBREC,KBUNDUMAG, etc.
             ! NLPOI = 0
@@ -114,6 +115,7 @@
             ! icluster = 0
 
          ! IBUNCH.NE.0:
+	    ! KELLIP = 1
             ! IBUNCH = -1
             ! ISPECMODE = 2
             ! IMAGSPLN = 0
@@ -1843,11 +1845,9 @@
 
                !     SIG_Y_10m = 81.3e-6 m
 
-      IBETBACK=0     ! BETAH, BETAHP, BETAV, BETAPV refere to exit rather than to entrance
+      IBETBACK=0  ! BETAH, BETAHP, BETAV, BETAPV refere to exit rather than to entrance
 
-      XBETFUN=9999. ! X, where BETAH,BETAV, etc. refer to
-                    ! 9999: XBETFUN = XSTART or XSTOP respectively (IBETBACK)
-             !       (compatibilty mode for old versions)
+      XBETFUN=0.0 ! X, where BETAH,BETAV, etc. refer to
 
       BETFUN=0.0  ! hori. beta-function in the center, where the
                   ! derivative is zero
@@ -3506,7 +3506,7 @@
                         !-9999: MPHASEY according to dgsigy(1) and the
                         ! sigma of the Gaussian
 
-	PHGSHIFT=0.0 .  !global phase shift [rad]
+	PHGSHIFT=0.0    !global phase shift [rad]
 	                !9999: Shift such, that the imaginary part of the on-axis horizontal field
 			!      becomes zero
         IWIGNER=0           ! calculate Wigner distribution function
@@ -3519,14 +3519,15 @@
 	NWIGEFOLD=15        ! number of beam energy steps
 	NOSPLINEWEF=0	    ! to use simple summation instead of spline integration
 	
-	WIGTHETAZ=-9999.0   ! Hori. opening angle of radiation cone [rad]
-	                    ! -9999: Estimated from device length and photon energy
+	WIGTHETAZ=0.05e-3   ! Hori. opening angle of radiation cone [rad]	                    ! -9999: Estimated from device length and photon energy
+	WIGTHETAZCEN=0.0    ! Center of the hori. angle range
 	NWIGTHETAZ=31       ! number of angles in z
-	WIGTHETAY=-9999.0   ! Vert. opening angle of radiation cone [rad]
-	                    ! -9999: Estimated from device length and photon energy
+	
+	WIGTHETAY=0.05e-3   ! Vert. opening angle of radiation cone [rad]
+	WIGTHETAYCEN=0.0    ! Center of the vert. angle range
 	NWIGTHETAY=31       ! number of angles in y
 	
-        IPHFOLD=1       !Folding of flux-density distribution according
+        IPHFOLD=0       !Folding of flux-density distribution according
                         !to beta functions PHBETH and PBETV, and the
                         !emittances EPS0H and ESP0V of namelist DEPOLA
                         !>0: use util_function_fold_gauss(...)
@@ -3953,4 +3954,12 @@
    KHYBRID=0
    KAPPLE=0
    IUNDU2=0
- $end
+   ESPREADW=0.0015
+   KYES=1
+   KNO=0
+   KWORK=0
+   KWORK1=1
+   KWORK2=0
+   WORK1=0.0015
+   WORK2=0.0
+$end

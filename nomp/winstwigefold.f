@@ -1,4 +1,4 @@
-*CMZ :          15/09/2025  19.23.52  by  Michael Scheer
+*CMZ :          19/09/2025  13.23.19  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.06.37  by  Michael Scheer
@@ -37,6 +37,12 @@
       include 'berror.cmn'
 *KEEP,ampli.
       include 'ampli.cmn'
+*KEEP,halbach.
+      include 'halbach.cmn'
+*KEEP,halbasy.
+      include 'halbasy.cmn'
+*KEEP,ellip.
+      include 'ellip.cmn'
 *KEEP,photon.
       include 'photon.cmn'
 *KEEP,wfoldf90.
@@ -62,7 +68,7 @@
       double precision, dimension (:), allocatable :: zw,yw
 
       double precision :: ebeam,ebeammin,ebeammax,debeam,deltae,ezr,ezi,eyr,eyi,wig,
-     &  g(nwigefold),gsum,be(1000),bw(1000)
+     &  g(nwigefold/2+1),gsum,be(1000),bw(1000)
 
       integer isystem
       external isystem
@@ -72,7 +78,7 @@
       equivalence (ibackspace,cbs)
 
       integer iwrun,ipos(2,nwigefold),kwigerr,npola,kpola,iz,iy,itz,ity,ifrq,kfrq,iwcode,
-     &  lz,ly,ltz,lty,lpola
+     &  lz,ly,ltz,lty,lpola,isour,nsource
 
       integer :: iline=0,kempty,iwig
       integer :: ihtracko,ihfreqo,lunin,lunout,nlast,nl,lunrun,nfirst,ni,l2,l1,k2,k1,istat,ipid,
@@ -83,7 +89,7 @@
 
       logical lexist
 
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -125,6 +131,30 @@
 !
 !******************************************************************************
 *KEND.
+
+      if (kellip.ne.0.and.nharmell.ne.0) then
+        write(6,*)
+        write(6,*)'*** WARNING IN WINSTWIGEFOLD: KELLIP.NE.0.AND.NHARMELL.NE.0!'
+        write(6,*)'*** This means that for all beam energies the undulator field is different!'
+        write(6,*)'*** This is only useful for test purposes!'
+        write(6,*)
+      endif
+
+      if (KHALBA.ne.0.and.NHHALBA.ne.0) then
+        write(6,*)
+        write(6,*)'*** WARNING IN WINSTWIGEFOLD: KHALBA.NE.0.AND.NHHALBA.NE.0!'
+        write(6,*)'*** This means that for all beam energies the undulator field is different!'
+        write(6,*)'*** This is only useful for test purposes!'
+        write(6,*)
+      endif
+
+      if (KHALBASY.ne.0.and.NHHALBASY.ne.0) then
+        write(6,*)
+        write(6,*)'*** WARNING IN WINSTWIGEFOLD: KHALBASY.NE.0.AND.NHHALBASY.NE.0!'
+        write(6,*)'*** This means that for all beam energies the undulator field is different!'
+        write(6,*)'*** This is only useful for test purposes!'
+        write(6,*)
+      endif
 
       open(newunit=lunwef,file="wigner.wef")
 
@@ -399,7 +429,7 @@ c        print*,trim(cline)
 
         open(newunit=lunrun,file=trim(cstage)//chpathsep//"wigner.wav",status='old')
         read(lunrun,'(a)') cline
-        read(cline(2:),*) iwcode,nfreq
+        read(cline(2:),*) nsource,nfreq
 
         if (iwigefold.eq.1) then
 
@@ -419,41 +449,43 @@ c        print*,trim(cline)
      &      esourz(mphasez,mphasey,nfreq,npola),
      &      esoury(mphasez,mphasey,nfreq,npola))
 
+          wigefold=0.0d0
+
         endif
 
-        wigefold=0.0d0
+        do isour=1,nsource
+          do ifrq=1,nfreq
 
-        do ifrq=1,nfreq
+            do kpola=1,npola
 
-          do kpola=1,npola
+              do ity=1,nwigthetay
+                do itz=1,nwigthetaz
+                  do iy=1,mphasey
+                    do iz=1,mphasez
 
-            do ity=1,nwigthetay
-              do itz=1,nwigthetaz
-                do iy=1,mphasey
-                  do iz=1,mphasez
+                      read(lunrun,*) lpola,lz,ly,ltz,lty,kfrq,
+     &                  freq(kfrq),zw(iz),yw(iy),thez(itz),they(ity),
+     &                  ezr,ezi,eyr,eyi,
+     &                  wig,fdwigzy(iz,iy),fdwigtzty(itz,ity)
 
-                    read(lunrun,*) lpola,lz,ly,ltz,lty,kfrq,
-     &                freq(kfrq),zw(iz),yw(iy),thez(itz),they(ity),
-     &                ezr,ezi,eyr,eyi,
-     &                wig,fdwigzy(iz,iy),fdwigtzty(itz,ity)
+                      esourz(iz,iy,ifrq,kpola)=dcmplx(ezr,ezi)
+                      esoury(iz,iy,ifrq,kpola)=dcmplx(eyr,eyi)
 
-                    esourz(iz,iy,ifrq,kpola)=dcmplx(ezr,ezi)
-                    esoury(iz,iy,ifrq,kpola)=dcmplx(eyr,eyi)
-
-                    if (nosplinewef.ne.0) then
-                      wigefold(iz,iy,itz,ity,ifrq,1,kpola)=wigefold(iz,iy,itz,ity,ifrq,1,kpola)
-     &                  +g(iwigefold)*debeam*wig
-                    else
-                      wigefold(iz,iy,itz,ity,ifrq,1,kpola)=wigefold(iz,iy,itz,ity,ifrq,1,kpola)
-     &                  +g(iwigefold)*wig
-                    endif
+                      if (nosplinewef.ne.0) then
+                        wigefold(iz,iy,itz,ity,ifrq,1,kpola)=wigefold(iz,iy,itz,ity,ifrq,1,kpola)
+     &                    +g(iwigefold)*debeam*wig
+                      else
+                        wigefold(iz,iy,itz,ity,ifrq,1,kpola)=wigefold(iz,iy,itz,ity,ifrq,1,kpola)
+     &                    +g(iwigefold)*wig
+                      endif
+                    enddo
                   enddo
                 enddo
               enddo
-            enddo
 
-          enddo !kpola
-        enddo !nfreq
+            enddo !kpola
+          enddo !nfreq
+        enddo !nsource
 
         close(lunrun)
 

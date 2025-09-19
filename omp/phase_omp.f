@@ -1,4 +1,4 @@
-*CMZ :          15/09/2025  18.52.13  by  Michael Scheer
+*CMZ :          19/09/2025  11.03.15  by  Michael Scheer
 *CMZ :  4.01/07 20/08/2024  17.20.56  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  18.40.00  by  Michael Scheer
 *CMZ :  4.01/04 28/11/2023  14.20.34  by  Michael Scheer
@@ -144,6 +144,7 @@
 *KEND.
 
       CHARACTER(8) OLDDIR
+      character(128) c128
       character(64) c64
 
       integer :: idebug=1
@@ -302,11 +303,13 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
       if (phwid.eq.-9999.0d0) then
         phwid=10.0d0*sqrt(sigr**2+
      &    ((phcenx-sourcen(1,1,1))*sigrp)**2)
+        if (iwigner.ne.0) phwid=phwid*2.0d0
       endif
 
       if (phhig.eq.-9999.0d0) then
         phhig=10.0d0*sqrt(sigr**2+
      &    ((phcenx-sourcen(1,1,1))*sigrp)**2)
+        if (iwigner.ne.0) phhig=phhig*2.0d0
       endif
 
       nphasez=(nphasez/2)*2+1
@@ -1799,6 +1802,12 @@ C--- APPLY MATRICES OF BEAMLINE
         call zeit(6)
         write(6,*)"     Calculating Wigner distributions"
 
+        if (nsource.gt.1) then
+          write(6,*)
+          write(6,*)'*** Warning in phase_omp: More than one source found ***'
+          write(6,*)
+        endif
+
         wigflux=0.0d0
 
         allocate(thez(nwigthetaz),they(nwigthetay),
@@ -1848,14 +1857,35 @@ C--- APPLY MATRICES OF BEAMLINE
           if (abs(they(i)).le.1.0e-12) they(i)=0.0d0
         enddo
 
-        if (nwigefold.le.1) then
-          open(newunit=lunwig,file='wigner.wav')
-        else
-          open(newunit=lunwig,file='wigner.' // c64(1:len_trim(c64)))
-        endif
+        open(newunit=lunwig,file='wigner.des')
+        write(lunwig,*) icode, trim(code)
+        write(lunwig,*) iwigner, '!Variables IWIGNER of wave.in'
+        write(lunwig,*) nsource, '!Number of sources'
+        write(lunwig,*) nfreq, '!Number of photon energies'
+        write(lunwig,*) mphasez, '!Number hori. grid points of source plane'
+        write(lunwig,*) mphasey, '!Number vert. grid points of source plane'
+        write(lunwig,*) nwigthetaz, '!Number hori. angles'
+        write(lunwig,*) nwigthetay, '!Number vertical. angles'
+        close(lunwig)
 
-        write(c64,*) icode, nfreq
-        write(lunwig,'(a)') '* ' // trim(c64) // " " // trim(code)
+        open(newunit=lunwig,file='wigner.wav')
+
+        c128=''
+        write(c64,*) nsource
+        c128=trim(c128) // ' ' // trim(adjustl(c64))
+        write(c64,*) nfreq
+        c128=trim(c128) // ' ' // trim(adjustl(c64))
+        write(c64,*) iwigner
+        c128=trim(c128) // ' ' // trim(adjustl(c64))
+        write(c64,*) mphasez
+        c128=trim(c128) // ' ' // trim(adjustl(c64))
+        write(c64,*) mphasey
+        c128=trim(c128) // ' ' // trim(adjustl(c64))
+        write(c64,*) nwigthetaz
+        c128=trim(c128) // ' ' // trim(adjustl(c64))
+        write(c64,*) nwigthetay
+        c128=trim(c128) // ' ' // trim(adjustl(c64))
+        write(lunwig,'(a)') '* ' // trim(c128) // " '" // trim(code) // "'"
 
         DO ifrq=1,NFREQ
 

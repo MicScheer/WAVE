@@ -1,4 +1,4 @@
-*CMZ :          11/03/2025  12.00.36  by  Michael Scheer
+*CMZ :          17/09/2025  09.38.07  by  Michael Scheer
 *CMZ :  4.01/02 14/05/2023  13.16.19  by  Michael Scheer
 *CMZ :  4.01/00 09/01/2023  20.53.38  by  Michael Scheer
 *CMZ :  4.00/15 08/04/2022  17.00.19  by  Michael Scheer
@@ -244,7 +244,10 @@ C--- INITIALIZES HBOOK
      &  'zab2',
      &  'ibri',
      &  'ibet',
-     &  'kamp'
+     &  'kamp',
+     &  'ipha',
+     &  'iwig',
+     &  'iwef'
      &  /
 
       IF (IHISINI_C.gt.0) RETURN
