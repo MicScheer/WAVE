@@ -1,5 +1,45 @@
+!******************************************************************************
+!
+!      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
+!      Hahn-Meitner-Platz 1
+!      D-14109 Berlin
+!      Germany
+!
+!      Author Michael Scheer, Michael.Scheer@Helmholtz-Berlin.de
+!
+! -----------------------------------------------------------------------
+!
+!    This program is free software: you can redistribute it and/or modify
+!    it under the terms of the GNU General Public License as published by
+!    the Free Software Foundation, either version 3 of the License, or
+!    (at your option) any later version.
+!
+!    This program is distributed in the hope that it will be useful,
+!    but WITHOUT ANY WARRANTY; without even the implied warranty of
+!    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!    GNU General Public License for more details.
+!
+!    You should have received a copy (wave_gpl.txt) of the GNU General Public
+!    License along with this program.
+!    If not, see <http://www.gnu.org/licenses/>.
+!
+!    Dieses Programm ist Freie Software: Sie koennen es unter den Bedingungen
+!    der GNU General Public License, wie von der Free Software Foundation,
+!    Version 3 der Lizenz oder (nach Ihrer Option) jeder spaeteren
+!    veroeffentlichten Version, weiterverbreiten und/oder modifizieren.
+!
+!    Dieses Programm wird in der Hoffnung, dass es nuetzlich sein wird, aber
+!    OHNE JEDE GEWAEHRLEISTUNG, bereitgestellt; sogar ohne die implizite
+!    Gewaehrleistung der MARKTFAEHIGKEIT oder EIGNUNG FueR EINEN BESTIMMTEN ZWECK.
+!    Siehe die GNU General Public License fuer weitere Details.
+!
+!    Sie sollten eine Kopie (wave_gpl.txt) der GNU General Public License
+!    zusammen mit diesem Programm erhalten haben. Wenn nicht,
+!    siehe <http://www.gnu.org/licenses/>.
+!
+!******************************************************************************
  !
- ! VERSION 4.01/06
+ ! VERSION 4.02/00
  !
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
@@ -53,13 +93,14 @@
        !  IUNDULATOR=2   Like IUNDULATOR=1, but the radiation field is
        !                 calculated for a single period only and summed
        !                 with appropriate phase shift for the remaining
-       !                 periods, s.a. KAMPLI
+       !                 periods. The field is taken from $ELLIPN s.a. KAMPLI
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
          ! IBUNCH.EQ.0:
             ! whole trajectory is taken as source of
             ! synchroton light (ignoring input of
             ! parameters WGWINFC, collimators ...)
+	    ! KELLIP = 1
             ! ISPECMODE = 2
             ! IMAGSPLN = 0 for KBREC,KBUNDUMAG, etc.
             ! NLPOI = 0
@@ -74,6 +115,7 @@
             ! icluster = 0
 
          ! IBUNCH.NE.0:
+	    ! KELLIP = 1
             ! IBUNCH = -1
             ! ISPECMODE = 2
             ! IMAGSPLN = 0
@@ -269,26 +311,54 @@
 
                 ! file format: *
                 ! 1th column (ASCII): dummy
-                ! 2th column (ASCII): magnet type (DI or QP)
-                !
-                ! for dipoles (BEND),
+                ! 2th column (ASCII): magnet type (DI, QP or ...)
+
+                ! for x,y,z,bx,by,bz field maps ('MAP')
+
+                !   3th column: bending radius [m]
+                !   4th column: x [m]
+                !   5th column: y [m]
+                !   6th column: z [m]
+		
+                ! for Fourier expanded fields ('FOUR')
+
+                !   3th column: bending radius [m]
+                !   4th column: x [m]
+                !   5th column: y [m]
+                !   6th column: z [m]
+                !   7th column: k of transversal gradient [1/m]
+		
+                ! for dipoles (Sector magnet SBEND, rectangular magnet RBEND),
                 !(see manual of tracking code elegant for CSBEND):
 
-                !   First line:
-                !   3th column: deflection angle [rad]
-                !   4th column: bending radius [m]
-                !   5th column: entrance edge [rad]
-                !   6th column: exit edge [rad]
-                !   7th column: Integral of fringe
-                !   8th column: Full gap of magnet
-                !   9th order of interpolation:
-                !                '1': linear
-                !                '3': cubic spline
-                !                '5': quintic spline
-                !
-                !   2nd line: x,y,z of magnet center
-                !   3rd line: x,y,z of entrance point, ex,ey,ez of nor. vec.
-                !   4th line: x,y,z of exit point, ex,ey,ez of normal vector
+                !   3th column: bending radius [m]
+                !   4th column: deflection angle [degree]
+                !   5th column: field integral of fringe field, relative fraction
+                !   6th column: gap [m]
+                !   7th column: fringe mode [hard-edge, linear, cubic-spline, quintic-spline]
+                !   8th column: x-position [m]
+                !   9th column: z-position [m]
+                !   10th column: positioning mode for x,z [entrance, zenith, exit]
+                !   11th column: rotation angle [degree]
+
+                ! for dipoles (SANDW, sandwich, i.e. field between two planes),
+
+                !   3th column: bending radius [m]
+                !   4th column: x of entrance plane [m]
+                !   5th column: y of entrance plane [m]
+                !   6th column: z of entrance plane [m]
+                !   7th column: x-component of normal vector of entrance plane
+                !   8th column: y-component of normal vector of entrance plane
+                !   9th column: z-component of normal vector of entrance plane
+                !   10th column: x of exit plane [m]
+                !   11th column: y of exit plane [m]
+                !   12th column: z of exit plane [m]
+                !   13th column: x-component of normal vector of exit plane
+                !   14th column: y-component of normal vector of exit plane
+                !   15th column: z-component of normal vector of exit plane
+                !   16th column: fringe mode [hard-edge, linear, cubic-spline, quintic-spline]
+                !   17th column: field integral of fringe field, relative fraction
+                !   18th column: gap [m]
 
                 ! for dipoles (DI):
                 !   3th column: deflection angle [rad]
@@ -298,6 +368,7 @@
                 !               f = 1/(1+exp(s*...))
                 !               infinit s means hard edge
                 !   the field is a product of two Fermi distributions
+		!   7th columne: Rotatation angle around vertical y-axis [deg.]
                 !
                 ! for dipoles with Fourier expanded field (DIF):
                 !   3th column: deflection angle [rad]
@@ -309,6 +380,7 @@
                 !   the field is a product of two Fermi distributions
                 !   7th column: k-value of transversal field gradient
                 !   8th column: number of Fourier coefficients
+		!   9th columne: Rotatation angle around vertical y-axis [deg.]
                 !
                 ! for dipoles with horizontal field (DH):
                 !   3th column: deflection angle [rad]
@@ -359,12 +431,12 @@
                 !               to take displacement of beam into
                 !               account (due to dipoles)
                 !   7th column: rotation angle of magnet in the orbit
-         !                      plane [rad] to take slope of trajectory into
+                !               plane [rad] to take slope of trajectory into
                 !               account (due to dipoles)
 
                 ! for sextupoles (SX):
                 !   3th column: length of magnet [m]
-                !   4th column: gradient g of quadrupole [1/m**3]
+                !   4th column: gradient g of sextopole [1/m**3]
                 !   5th column: x-position of magnet center [m]
                 !   6th column: z-position of magnet center [m]
                 !               to take displacement of beam into
@@ -377,8 +449,43 @@
                 ! for quadrupoles (QF): like QP, but with fringe field
 
                 ! magnetic field routine BMAGSEQ
+		
+		! Operations:
+		
+                ! 1th column (ASCII): rotate (rotation of magnet geometry)
+                ! 2th column (ASCII): magnet name
+                ! 3th column: x of rotation axis [m]
+                ! 4th column: y of rotation axis [m]
+                ! 5th column: z of rotation axis [m]
+                ! 6th column: x-component of rotation axis
+                ! 7th column: y-component of rotation axis
+                ! 8th column: z-component of rotation axis
+                ! 9th column: rotation angle [degree]
+		
+                ! 1th column (ASCII): shift (shift of magnet geometry)
+                ! 2th column (ASCII): magnet name
+                ! 3th column: x-shift [m]
+                ! 4th column: y-sifht [m]
+                ! 5th column: z-shift [m]
+		
+                ! 1th column (ASCII): brotate (rotation of magnet field)
+                ! 2th column (ASCII): magnet name
+                ! 3th column: x of rotation axis [m]
+                ! 4th column: y of rotation axis [m]
+                ! 5th column: z of rotation axis [m]
+                ! 6th column: x-component of rotation axis
+                ! 7th column: y-component of rotation axis
+                ! 8th column: z-component of rotation axis
+                ! 9th column: rotation angle [degree]
+		
 
-          KMAGCOR=1  ! flag to correct fringe field effects and slopes of
+                ! 1th column (ASCII): bscale (shift of magnet geometry)
+                ! 2th column (ASCII): magnet name
+                ! 3th column: scaling factor for Bx
+                ! 4th column: scaling factor for By
+                ! 5th column: scaling factor for Bz
+		
+          KMAGCOR=0  ! flag to correct fringe field effects and slopes of
                      ! trajectory on the deflection angle
                      ! Be aware of side-effects
                      ! KMAGCOR<0: Only the on-axis integral is corrected
@@ -467,7 +574,7 @@
 
       IRBTABXYZ=0 ! magnetic fields Bx,By and Bz on device axis are read
                   ! from data files FILETB, FILETBX, FILETBZ and interpolated
-                  ! by splines (some format as for IRBTAB>0)
+                  ! by splines (same format as for IRBTAB>0)
 
       IRFILB0=0   ! read 3D mag. field table from file FILEB0
                   ! format of routine BMESS
@@ -790,6 +897,8 @@
 
         IFREQ2P=3 ! =0 : spectrum is calculated for listed photon
                   !      energies on file FILEFR
+		  !      Each line contains a single photon energy
+		  !      or an intervall like Elow Ehigh Nephoton
                   ! =1 : spectrum is calculated for energy FREQLOW
                   !      in namelist FREQN
                   ! =-1: spectrum is calculated for energy
@@ -820,7 +929,7 @@
                 ! for the parameters of the pinhole see namelist PINHOLE
                 ! if negative integration over pinhole is skipped
                 ! [ OBSOLETE: IPIN = 2 (for ISPECMODE = 5) allows flux calculation with
-                ! only one mash point in pinhole (see ISPECMODE) ]
+                ! only one mesh point in pinhole (see ISPECMODE) ]
                 !
                 ! IPIN = 3, flux through pinhole by Monte-Carlo.
                 ! Only useful for IBUNCH set and NEINBUNCH = 1. For each electron
@@ -870,7 +979,7 @@
            ! IFOLD.LT.-2: use routine old precedure of WAVE
            ! parameter namelist WFOLDN
 
-          ISIGUSR=1  ! if flag is set sigmas for folding are taken from
+          ISIGUSR=0  ! if flag is set sigmas for folding are taken from
                      ! namelist WFOLDN, otherwise calculated from emittance
                      ! and beta functions BETAH, BETAHP, BETAV, BETAPV
                      ! in namelist DEPOLA (be careful, if distributions are
@@ -889,7 +998,7 @@
                      ! IPHASE.LT.0 means spline-integration used
                      ! ABS(IPHASE.GT.1) means additional application of
                      ! geometrical optic
-
+		
         IDOSE=0      ! To calculate absorbed energy dose
                      !IDOSE > 0: F(X)=AA*X**BB interpolation of coef.
                      !IDOSE < 0: linear interpolation of coef.
@@ -1736,11 +1845,9 @@
 
                !     SIG_Y_10m = 81.3e-6 m
 
-      IBETBACK=0     ! BETAH, BETAHP, BETAV, BETAPV refere to exit rather than to entrance
+      IBETBACK=0  ! BETAH, BETAHP, BETAV, BETAPV refere to exit rather than to entrance
 
-      XBETFUN=9999. ! X, where BETAH,BETAV, etc. refer to
-                    ! 9999: XBETFUN = XSTART or XSTOP respectively (IBETBACK)
-             !       (compatibilty mode for old versions)
+      XBETFUN=0.0 ! X, where BETAH,BETAV, etc. refer to
 
       BETFUN=0.0  ! hori. beta-function in the center, where the
                   ! derivative is zero
@@ -1795,7 +1902,7 @@
       DI4RING=0.0 ! I4
       DI5RING=0.0020588 ! I5
 
-      DELGAM=0.001
+      DELGAM=9999. ! 9999.: delgam = espread from namelist WFOLDN
 
       $END
 
@@ -2072,8 +2179,8 @@
         ! the phase space is defined by a collimator
         ! trajectories are written to file FILEO
 
-        ! for mash sizes of the grid i.e. e.g DZOPT=9999.
-        ! mash is fit do aperture according to number of mash points
+        ! for mesh sizes of the grid i.e. e.g DZOPT=9999.
+        ! mesh is fit do aperture according to number of mesh points
 
         NZOPT=8     !grid of horizontal displacement
         DZOPT=9999.  !grid of horizontal displacement
@@ -2393,6 +2500,7 @@
               ! Try 1./sqrt(sqrt(2.)) = 0.841
 
       ESPREAD=0.001  ! rel. energy spread of the beam (for energy folding)
+                     ! 9999.: espread = delgam from namelist DEPOLA
       NSIGE=3        ! number of sigmas for energy folding
 
       $END
@@ -3389,8 +3497,8 @@
                         !points. The other points given be MPHASEZ, MPHASEY
                         !serve as edge for the folding procedure
 
-        NPHASEZ=51      !number of horizontal mesh points
-        NPHASEY=51      !number of vertical mesh points
+        NPHASEZ=31      !number of horizontal mesh points
+        NPHASEY=31      !number of vertical mesh points
         MPHASEZ=-9999   !total number of horizontal mesh points
                         !-9999: MPHASEZ according to dgsigz(1) and the
                         ! sigma of the Gaussian
@@ -3398,7 +3506,28 @@
                         !-9999: MPHASEY according to dgsigy(1) and the
                         ! sigma of the Gaussian
 
-        IPHFOLD=1       !Folding of flux-density distribution according
+	PHGSHIFT=0.0    !global phase shift [rad]
+	                !9999: Shift such, that the imaginary part of the on-axis horizontal field
+			!      becomes zero
+        IWIGNER=0           ! calculate Wigner distribution function
+	                    !  1: All polarisations states, i.e. Wzz,Wyy,Wzy
+			    ! -1: Wzz only
+			    ! -2: Wyy only
+			    ! -3: Wzy only
+			    ! -4: Wyz only
+
+	NWIGEFOLD=15        ! number of beam energy steps
+	NOSPLINEWEF=0	    ! to use simple summation instead of spline integration
+	
+	WIGTHETAZ=0.05e-3   ! Hori. opening angle of radiation cone [rad]	                    ! -9999: Estimated from device length and photon energy
+	WIGTHETAZCEN=0.0    ! Center of the hori. angle range
+	NWIGTHETAZ=31       ! number of angles in z
+	
+	WIGTHETAY=0.05e-3   ! Vert. opening angle of radiation cone [rad]
+	WIGTHETAYCEN=0.0    ! Center of the vert. angle range
+	NWIGTHETAY=31       ! number of angles in y
+	
+        IPHFOLD=0       !Folding of flux-density distribution according
                         !to beta functions PHBETH and PBETV, and the
                         !emittances EPS0H and ESP0V of namelist DEPOLA
                         !>0: use util_function_fold_gauss(...)
@@ -3825,4 +3954,12 @@
    KHYBRID=0
    KAPPLE=0
    IUNDU2=0
- $end
+   ESPREADW=0.0015
+   KYES=1
+   KNO=0
+   KWORK=0
+   KWORK1=1
+   KWORK2=0
+   WORK1=0.0015
+   WORK2=0.0
+$end

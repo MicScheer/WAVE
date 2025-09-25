@@ -1,4 +1,4 @@
-*CMZ :          19/09/2025  14.59.24  by  Michael Scheer
+*CMZ :          19/09/2025  16.05.25  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  09.46.32  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
@@ -780,6 +780,17 @@ c     WRITE(6,*)'READING NAMELIST BFORCN'
         IF1DIM=1
       ENDIF
 
+      if (iwigner.ne.0.and.iphase.eq.0) then
+        write(LUNGFO,*)
+        write(LUNGFO,*)'--- Information: IPHASE set due to IWIGNER in namelist PHASEN  ---'
+        write(LUNGFO,*)
+        write(6,*)
+        write(6,*)'--- Information: IPHASE set due to IWIGNER in namelist PHASEN  ---'
+        write(6,*)
+
+        iphase=1
+      endif
+
       IF (IPHASE.NE.0) THEN
         DO IELEM=1,NPHELEMP
           PHELEM(1,1,IELEM)=1.0D0
@@ -879,17 +890,6 @@ C      CLOSE (LUNGFI)
         irbtabzy=0
       else if (irbtabzy.ne.0) then
         irbtab=0
-      endif
-
-      if (iwigner.ne.0.and.iphase.eq.0) then
-        write(LUNGFO,*)
-        write(LUNGFO,*)'--- Information: IPHASE set due to IWIGNER in namelist PHASEN  ---'
-        write(LUNGFO,*)
-        write(6,*)
-        write(6,*)'--- Information: IPHASE set due to IWIGNER in namelist PHASEN  ---'
-        write(6,*)
-
-        iphase=1
       endif
 
       IF (XABSORB   .EQ.9999.) XABSORB=XWALLE
@@ -2406,7 +2406,7 @@ C5.10.95 WARUM ISPEC ?? IN ABFRAGE?? BEOBACHTEN
         stop
       endif
 
-      IF (iphfold.ne.0.and.(phbeth.eq.-9999.0d0 .or. phbetav.eq.-9999.0d0)) THEN
+      IF (iphase.ne.0.and.iphfold.ne.0.and.(phbeth.eq.-9999.0d0 .or. phbetav.eq.-9999.0d0)) THEN
         print*,'--- IEMIT triggerd due to IPHFOLD and (IPHBETH=-9999 or IPHBETAV=-9999 ---'
         iemit=1
       ENDIF
