@@ -1,4 +1,5 @@
-*CMZ :          09/07/2025  12.24.04  by  Michael Scheer
+*CMZ :          27/09/2025  08.19.05  by  Michael Scheer
+*CMZ :  4.02/00 09/07/2025  12.24.04  by  Michael Scheer
 *CMZ :  4.00/16 09/08/2022  09.07.08  by  Michael Scheer
 *CMZ :  4.00/07 07/06/2020  15.15.28  by  Michael Scheer
 *CMZ :  3.05/05 13/07/2018  11.51.31  by  Michael Scheer
@@ -107,6 +108,14 @@ c     &  bmbxmin,bmbxmax,bmbymin,bmbymax,bmbzmin,bmbzmax,
       iwarnbmap=0
 
       if (ical.eq.0) then
+
+        if (irfilb0.ne.6) then
+          write(6,*)
+          write(6,*)'      First call to  BMAP:'
+          write(6,*)''
+          write(6,*)'      In case of trouble with interpolation, try IRFILB0=6'
+          write(6,*)
+        endif
 
         write(lungfo,*)
         write(lungfo,*)'      Subroutine BMAP:'
@@ -300,14 +309,16 @@ c     &  bmbxmin,bmbxmax,bmbymin,bmbymax,bmbzmin,bmbzmax,
         write(lungfo,*)' Bzmin, Bzmax of map:',sngl(bmbzmin),sngl(bmbzmax)
         write(lungfo,*)
 
-      endif
+        klo=1
+        khi=nx
+      endif !ical.eq.0
 
       if (bxout.eq.-9999.0d0) then
         xin=bmxmin
-        return
+        goto 9999
       else if (bxout.eq.9999.0d0) then
         xin=bmxmax
-        return
+        goto 9999
       endif
 
       x=xin
@@ -331,7 +342,7 @@ c     &  bmbxmin,bmbxmax,bmbymin,bmbymax,bmbzmin,bmbzmax,
         BYOUT=0.0D0
         BZOUT=0.0D0
         iwarnbmap=1
-        RETURN
+        goto 9999
       ENDIF
 
       IF (ny.gt.1.and.(Y.LT.BMYMIN-STEPy.OR.Y.GT.BMYMAX+STEPy)) THEN
@@ -350,7 +361,7 @@ c     &  bmbxmin,bmbxmax,bmbymin,bmbymax,bmbzmin,bmbzmax,
         BYOUT=0.0D0
         BZOUT=0.0D0
         iwarnbmap=1
-        RETURN
+        goto 9999
 c        STOP
       ENDIF
 
@@ -370,7 +381,7 @@ c        STOP
         BYOUT=0.0D0
         BZOUT=0.0D0
         iwarnbmap=1
-        RETURN
+        goto 9999
 c        STOP
       ENDIF
 
@@ -387,7 +398,6 @@ c        STOP
         endif
       endif
 
-      ical=1
 
       if (x.ge.bmxmin-step.and.x.le.bmxmin) then
         ix1=1
@@ -636,8 +646,12 @@ c        STOP
       byout=b(2)
       bzout=b(3)
 
+c      if (b(2).lt.0.0d0) call util_break
+
       klo=ix1
       khi=ix2
+
+9999  ical=1
 
       return
       end
