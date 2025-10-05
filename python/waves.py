@@ -165,7 +165,7 @@ def readint(s,default=-9999):
   else: return int(float(ans))
 #enddef
 
-def printnl(line):
+def printnl(line=''):
   print("\n",line,"\n")
 #enddef printnl()
 
@@ -190,7 +190,7 @@ def set_console_title(console='Python'):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -358,7 +358,7 @@ c--   workingspace: aa(n),bb(n),cc(n),c(n),cn(n)
 
   #enddo
 
-  # vorletzte zeile
+  # vorletzte Zeile
 
   bb[n2]=bb[n2]/aa[n2]
   cc[n2]=cc[n2]/aa[n2]
@@ -592,7 +592,7 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
   Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
   FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-  Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
   Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
   Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
   Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
@@ -991,13 +991,21 @@ def util_vnorm(v):
 
 def util_rotate(cen,vrot,phi,vin,eps=1.0e-10):
 
+
       istat=0
+      rm = [[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]]
+
+      if phi == 0.0:
+        vout=vin
+        return istat, vout,rm
+      #endif
+
       vlen=util_vnorm(vrot)
 
       if vlen == 0.0:
         vout=vin
         istat=1
-        return istat, vout
+        return istat, vout,rm
       #endif
 
       o = vrot/vlen
@@ -1202,7 +1210,7 @@ Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
 Fig1,Ax1,Fig6,Ax6,Fig2,Ax2,Fig7,Ax7,Fig3,Ax3,Fig8,Ax8,\
 Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
 FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
-Kfig, Kax, Ihist,Iprof, Imarker, Ierr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, \
+Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, \
 Kplots, Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Legend, CanButId, CanButIds, \
 Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Icmap, \
 MarkerSize, MarkerType, MarkerColor, \
@@ -1510,6 +1518,7 @@ Iclosed = 0
 Iboxes = 0
 Inoempty = 0
 Ierr = 0
+Inoerr = 0
 Isurf = 0
 Iline = 0
 Iinter = 0
@@ -1588,7 +1597,7 @@ Ninvveto,Nmap,Nvar,Iarr,Narr,Ntrigger,Ncalc,NULL,ONE,MONE,SNULL,SONE,SMONE,Lastv
 Nwavein,kWaveinRead, KWAVES,MMitem,Nmitem,Kmitem,Imenu,Ipmenu,\
 Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
 VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
-I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus
+I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, ClearCanvas
 # +PATCH,//WAVES/PYTHON
 # +KEEP,statusglobal,T=PYTHON.
 global Istatus, WarningText, ErrorText, Gdebug, Platform, System, Uname
@@ -1624,7 +1633,7 @@ def debug(kmenu=None,kitem=None):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   pass
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem,SMitem[kmenu])
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem)
@@ -1744,7 +1753,7 @@ def readwavein():
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   fo = open('wave.in.bck','w')
   Fwin = open(FWAVEIN)
@@ -1903,7 +1912,7 @@ def debug(kmenu=None,kitem=None):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   pass
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem,SMitem[kmenu])
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem)
@@ -1937,7 +1946,7 @@ def pmenu_update(kmenu):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   Imenu = kmenu
   if kmenu == -1:
     pass
@@ -1965,7 +1974,7 @@ def MenuKeyPress(event,kmenu):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   print("*** MenuKeyPress:",event,kmenu)
 
 def SelectButton(kselect,kmenu):
@@ -1980,7 +1989,7 @@ def SelectButton(kselect,kmenu):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
 
   #print("SelectButton: ",kselect," ",kmenu)
@@ -2052,7 +2061,7 @@ def MenuEnter(ev,kmenu):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   if kmenu < 0: return
 
   Nsitem = -1
@@ -2073,7 +2082,7 @@ def ToggleVar(kmenu,kitem,kvar):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
 
   Debug = 0
@@ -2291,7 +2300,7 @@ def DestroyMenu():
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   Pmenu[Imenu].destroy()
   SMitem[Imenu] = []
@@ -2321,7 +2330,7 @@ def pmenu(kmenu):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   global \
   T_color,Eb_color,F_color,Veto_color,Passiv_color,Bg_color,B_color,\
   Select_color,Select_color,Select_color,Deselect_color, \
@@ -3064,7 +3073,7 @@ def setup_input(event):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   Debug = 0
   if kWaveinRead == 0:
@@ -3094,7 +3103,7 @@ def Check_Array(iarr):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   arr = Arrays[iarr]
   nactrl = arr[2]
@@ -3269,7 +3278,7 @@ def AddMenu(nam,moth,tit,items):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   menu = []
 
@@ -3366,7 +3375,7 @@ def setspecvar():
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   for m in range(Nmap+1):
     M = Mapping[m]
@@ -3390,7 +3399,7 @@ def create_variable(varnam,vartype):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   ivar = -1
 
@@ -3446,7 +3455,7 @@ def GetVarNum(var):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   ivar = -1
 
@@ -3529,7 +3538,7 @@ def readwvs():
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
 
   Debug = 0
@@ -5028,7 +5037,7 @@ def Icheck_Array_Var(ivar):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   karr = -1
   for iarr in range(len(Arrays)):
     arr = Arrays[iarr]
@@ -5051,7 +5060,7 @@ def debug(kmenu=None,kitem=None):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   pass
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem,SMitem[kmenu])
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem)
@@ -5069,7 +5078,7 @@ def writewavein():
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   NL = "\n"
   Debug = 0
@@ -5364,7 +5373,7 @@ def runwave(ev=''):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   Wnfrq = 0
   Wispe = 0
@@ -5434,7 +5443,7 @@ def waveplot(ev):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   if not WAVECom:
 
@@ -5479,7 +5488,7 @@ def HelpText(kmenu):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   MSG = Toplevel()
 
@@ -5651,7 +5660,7 @@ def Calculate():
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
 
   i = 0
@@ -5784,7 +5793,7 @@ def CheckVetos():
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   i=0
   while i<=Nveto:
 
@@ -6005,7 +6014,7 @@ def CheckMapping(kmap=-1):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   for mm in range(Nmap+1):
 
@@ -6077,7 +6086,7 @@ def CheckAll(kmenu,kitem,kvar):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
 # Checks triggers, i.e. itrig set, and sets variables of mappings/bondings.
 # Then Calculate(), CheckVetos(), CheckButtons() are called.
@@ -6215,7 +6224,7 @@ def GetFocusWidget(kmenu):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   widget = None
   if kmenu >= 0 and kmenu < len(Pmenu):
     widget = Pmenu[kmenu].focus_get()
@@ -6233,7 +6242,7 @@ def CheckButtons():
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   global \
   T_color,Eb_color,F_color,Veto_color,Passiv_color,Bg_color,B_color,\
   Select_color,Select_color,Select_color,Deselect_color, \
@@ -6382,7 +6391,7 @@ def FocusIn(event,kmenu,kitem,kvar):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   global \
   T_color,Eb_color,F_color,Veto_color,Passiv_color,Bg_color,B_color,\
   Select_color,Select_color,Select_color,Deselect_color, \
@@ -6523,7 +6532,7 @@ def noFocusInArray(event,kmenu,kitem,kvar):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   global \
   T_color,Eb_color,F_color,Veto_color,Passiv_color,Bg_color,B_color,\
   Select_color,Select_color,Select_color,Deselect_color, \
@@ -6547,7 +6556,7 @@ def FocusOut(event,kmenu,kitem,kvar):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   global \
   T_color,Eb_color,F_color,Veto_color,Passiv_color,Bg_color,B_color,\
   Select_color,Select_color,Select_color,Deselect_color, \

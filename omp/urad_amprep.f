@@ -1,4 +1,5 @@
-*CMZ :          27/08/2025  14.45.47  by  Michael Scheer
+*CMZ :          26/09/2025  11.42.49  by  Michael Scheer
+*CMZ :  4.02/00 27/08/2025  14.45.47  by  Michael Scheer
 *CMZ :  4.01/07 18/10/2024  09.41.32  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  07.41.13  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  13.39.24  by  Michael Scheer
@@ -79,7 +80,9 @@ cc+seq,uservar.
       integer :: idebug=0, lbunch=0, ierr=0, ielec=0
       integer ibunch,ihbunch,mthreads,nobsv,nobsvo,iemit,noranone,iz,iy,ipz,ipy,nobsvz,nobsvy
       integer iobm,iobp,iobfrm,iobfrp
+      integer :: ical=0
 
+      save ical
 c      integer iuser
 c      iuser=user(3)
 
@@ -144,7 +147,7 @@ c     &    fpriv(3,npinzprop_u,npinyprop_u),
       endif
 
       if (modepin_u.ne.0) then
-        allocate(fieldbunch(7,npinzo_u,npinyo_u,nepho_u),stat=ierr)
+        if (ical.eq.0) allocate(fieldbunch(7,npinzo_u,npinyo_u,nepho_u),stat=ierr)
         if (ierr.ne.0) then
           print*,""
           print*,"*** Warning in urad_amprep: Could not allocate buffer for beam Ntuple ***"
@@ -405,7 +408,7 @@ c      dtim0=ds/beta
      &  curr_u ! Strom
      &  /echarge1/hbar1*clight1/PI1*EPS01
      &  *banwid_u !BW
-     &  /1.0d6 !mm**2 > m**2
+     &  /1.0d6 !m**2 > mm**2
 
       sbnor=specnor*bunnor
       speknor=specnor
@@ -650,17 +653,17 @@ c+self.
 
           om=frq(kfreq)/hbarev
 
-          if (modewave.eq.0) then
-            amp0=[
-     &        uampex(kfreq),uampey(kfreq),uampez(kfreq),
-     &        uampbx(kfreq),uampby(kfreq),uampbz(kfreq)
-     &        ]*1.0d3/sqrt(speknor/curr_u*0.10d0) !urad
-          else
+c          if (modewave.eq.0) then
+c            amp0=[
+c     &        uampex(kfreq),uampey(kfreq),uampez(kfreq),
+c     &        uampbx(kfreq),uampby(kfreq),uampbz(kfreq)
+c     &        ]*1.0d3/sqrt(speknor/curr_u*0.10d0) !urad
+c          else
             amp0=[
      &        uampex(kfreq),uampey(kfreq),uampez(kfreq),
      &        uampbx(kfreq),uampby(kfreq),uampbz(kfreq)
      &        ]*1.0d3/sqrt(speknor) !urad
-          endif
+c          endif
 
 c          call util_random(1,pran)
 c          amp0=amp0*dcmplx(0.0d0,dble(pran(1)*twopi1))
@@ -748,7 +751,7 @@ c25.4.2024     &          (1.0d0+parke**2/2.0d0)/2.0d0/gamma**2+
                     if (phgsh.eq.-9999.0d0) expsh=expsh*cdexp(dcmplx(0.0d0,-pi1/2.0d0))
                     amp=amp/expsh
                   else if (phgsh.ne.0.0d0) then
-                    expsh=cdexp(dcmplx(0.0d0,phgsh))*1.0d3
+                    expsh=cdexp(dcmplx(0.0d0,phgsh)) !*1.0d3
                     amp=amp/expsh
                   endif
 
@@ -761,7 +764,7 @@ c25.4.2024     &          (1.0d0+parke**2/2.0d0)/2.0d0/gamma**2+
                     expsh=rea(3)/abs(rea(3))*cdexp(dcmplx(0.0d0,-pi1/2.0d0))
                     amp=amp/expsh
                   else if (phgsh.ne.0.0d0) then
-                    expsh=cdexp(dcmplx(0.0d0,phgsh))*1.0d3
+                    expsh=cdexp(dcmplx(0.0d0,phgsh)) !*1.0d3
                     amp=amp/expsh
                   endif
 
@@ -788,7 +791,7 @@ c25.4.2024     &          (1.0d0+parke**2/2.0d0)/2.0d0/gamma**2+
 
           enddo !nper_u
 
-          if (ifix.eq.2) then
+          if (ifix.ne.0) then
             amp=amp*expphiran(ielec)
           endif
 
@@ -1098,5 +1101,6 @@ c      if (ifieldprop_u.eq.2) then
         stokesprop_u=stokesprop_u*specnor_si
       endif
 
+      ical=1
       return
       end

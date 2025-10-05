@@ -1,3 +1,4 @@
+*CMZ :          09/04/2025  10.59.38  by  Michael Scheer
 *CMZ :  4.00/15 07/04/2022  07.14.03  by  Michael Scheer
 *CMZ :  4.00/04 10/05/2019  16.57.06  by  Michael Scheer
 *CMZ :  3.03/04 03/08/2017  14.10.45  by  Michael Scheer
@@ -107,7 +108,7 @@ C--- SUBROUTINE READS FREQUENCES FOR WHICH PHOTON FLUX IS CALCULATED
       include 'phycon.cmn'
 *KEND.
 
-      INTEGER IFR,I,J
+      INTEGER IFR,I,J,ieof,nlines,nwords,ipos(2,3),istatus,nepho
 
 C260194 {
       DOUBLE PRECISION DFREQ,DUM
@@ -118,7 +119,9 @@ C24.394 {
       DOUBLE PRECISION WAVE,df
 C24.394 }
 
-      double precision frscaleo,freql,freqh
+      double precision frscaleo,freql,freqh,elow,ehig
+
+      character(128) cline
 
       frscaleo=frscale
       frscale=abs(frscale)
@@ -261,37 +264,75 @@ C- SPECIAL CASES (FREQUENCES ARE READ FROM NAMELIST FREQN)
       IF (IFREQ2P.EQ.0) THEN
 
         OPEN (UNIT=LUNFR,FILE=FILEFR,STATUS='OLD',FORM='FORMATTED',ERR=999)
-c        READ(LUNFR,*,ERR=99) NFREQ
+
+        nlines=0
+        do while (.true.)
+          call util_skip_comment_end(lunfr,ieof)
+          if (ieof.ne.0) exit
+          read(lunfr,*) cline
+          nlines=nlines+1
+        enddo
+
+        rewind(lunfr)
 
         nfreq=0
-1       continue
-        read(lunfr,*,end=9) freq(1)
-        nfreq=nfreq+1
-        goto 1
-9       rewind(lunfr)
 
-        IF(NFREQ.GT.NDFREQ) THEN
-          WRITE(LUNGFO,*)
-          WRITE(LUNGFO,*)'*** ERROR IN SR RFILFR ***'
-          WRITE(LUNGFO,*)'TOO MANY FREQUENCES ON FILEFR'
-          WRITE(LUNGFO,*)'INCREASE PARAMETER NDFREQP IN CMPARA.CMN'
-          WRITE(6,*)
-          WRITE(6,*)'*** ERROR IN SR RFILFR ***'
-          WRITE(6,*)'TOO MANY FREQUENCES ON FILEFR'
-          WRITE(6,*)'INCREASE PARAMETER NDFREQP IN CMPARA.CMN'
-          STOP
-        ENDIF
-
-        DO IFR=1,NFREQ
-          READ(LUNFR,*,ERR=99) DUM
-          IF (IUNIT.EQ.0) THEN    ! 260194
-            FREQ(IFR)=DUM
-          ELSE
-            FREQ(IFR)=WTOE1/DUM !260194
-          ENDIF
-        ENDDO
+        do i=1,nlines
+          call util_skip_comment_end(lunfr,ieof)
+          read(lunfr,'(a)') cline
+          call util_string_split(cline,3,nwords,ipos,istatus)
+          if (nwords.eq.1) then
+            nfreq=nfreq+1
+            IF(NFREQ.GT.NDFREQ) THEN
+              WRITE(LUNGFO,*)
+              WRITE(LUNGFO,*)'*** ERROR IN SR RFILFR ***'
+              WRITE(LUNGFO,*)'TOO MANY FREQUENCES ON FILEFR'
+              WRITE(LUNGFO,*)'INCREASE PARAMETER NDFREQP IN CMPARA.CMN'
+              WRITE(6,*)
+              WRITE(6,*)'*** ERROR IN SR RFILFR ***'
+              WRITE(6,*)'TOO MANY FREQUENCES ON FILEFR'
+              WRITE(6,*)'INCREASE PARAMETER NDFREQP IN CMPARA.CMN'
+              STOP
+            ENDIF
+            read(cline,*) freq(nfreq)
+          else
+            read(cline,*) elow,ehig,nepho
+            dfreq=(ehig-elow)/(nepho-1)
+            nfreq=nfreq+1
+            IF(NFREQ.GT.NDFREQ) THEN
+              WRITE(LUNGFO,*)
+              WRITE(LUNGFO,*)'*** ERROR IN SR RFILFR ***'
+              WRITE(LUNGFO,*)'TOO MANY FREQUENCES ON FILEFR'
+              WRITE(LUNGFO,*)'INCREASE PARAMETER NDFREQP IN CMPARA.CMN'
+              WRITE(6,*)
+              WRITE(6,*)'*** ERROR IN SR RFILFR ***'
+              WRITE(6,*)'TOO MANY FREQUENCES ON FILEFR'
+              WRITE(6,*)'INCREASE PARAMETER NDFREQP IN CMPARA.CMN'
+              STOP
+            ENDIF
+            freq(nfreq)=elow
+            do ifr=2,nepho
+              nfreq=nfreq+1
+              IF(NFREQ.GT.NDFREQ) THEN
+                WRITE(LUNGFO,*)
+                WRITE(LUNGFO,*)'*** ERROR IN SR RFILFR ***'
+                WRITE(LUNGFO,*)'TOO MANY FREQUENCES ON FILEFR'
+                WRITE(LUNGFO,*)'INCREASE PARAMETER NDFREQP IN CMPARA.CMN'
+                WRITE(6,*)
+                WRITE(6,*)'*** ERROR IN SR RFILFR ***'
+                WRITE(6,*)'TOO MANY FREQUENCES ON FILEFR'
+                WRITE(6,*)'INCREASE PARAMETER NDFREQP IN CMPARA.CMN'
+                STOP
+              ENDIF
+              freq(nfreq)=freq(nfreq-1)+dfreq
+              freq(nfreq)=freq(nfreq)
+            enddo
+          endif
+        enddo
 
         CLOSE(LUNFR)
+
+        freq=freq*frscale
 
         nintfreq=nfreq
         freqlow=freq(1)

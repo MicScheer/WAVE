@@ -1,4 +1,5 @@
-*CMZ :          10/09/2025  13.45.08  by  Michael Scheer
+*CMZ :          22/09/2025  10.53.54  by  Michael Scheer
+*CMZ :  4.02/00 10/09/2025  13.45.08  by  Michael Scheer
 *CMZ :  4.01/07 18/10/2024  14.11.15  by  Michael Scheer
 *CMZ :  4.01/05 15/04/2024  11.54.00  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  15.30.57  by  Michael Scheer
@@ -19,7 +20,7 @@
       complex*16 :: cph00,ci=(0.0d0,1.0d0)
       real*8 specnor_si
 
-      integer :: mthreads,ktime=1,kfreq,icbrill,iobfr,iobsv
+      integer :: mthreads,ktime=0,kfreq,icbrill,iobfr,iobsv
 
       if (ktime.eq.1) call util_zeit_kommentar_delta(6,'Entered urad_phase_prop',1)
 

@@ -1,4 +1,5 @@
-*CMZ :          13/09/2025  10.12.52  by  Michael Scheer
+*CMZ :          24/09/2025  12.48.34  by  Michael Scheer
+*CMZ :  4.02/00 13/09/2025  10.12.52  by  Michael Scheer
 *CMZ :  4.01/07 11/08/2024  15.26.17  by  Michael Scheer
 *CMZ :  4.01/05 15/04/2024  09.37.27  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  15.30.57  by  Michael Scheer
@@ -21,7 +22,7 @@
      &  dr,drred,da,x,xobs,yobs,zobs,rlambda1,ans,stok1,stok2,stok3,stok4,stoknor,enor,
      &  eabsmaxprop=-1.0d30
 
-      integer :: ktime=1,i,
+      integer :: ktime=0,i,
      &  mthreads,iy,iz,n,jy,jz,iobs,ieps,ifrq,iobfr,jobs,jobfr
 
 *KEEP,phyconparam.
@@ -72,6 +73,7 @@ c      aradprop_u=(0.0d0,0.0d0)
       enddo
 
       omc=epho_u(1)/(hbarev1*clight1)
+
       if(nepho_u.gt.1) then
         domc=(epho_u(2)-epho_u(1))/(hbarev1*clight1)
       endif

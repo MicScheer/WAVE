@@ -1,4 +1,4 @@
-*CMZ :          19/01/2025  09.27.21  by  Michael Scheer
+*CMZ :  4.01/07 19/01/2025  09.27.21  by  Michael Scheer
 *-- Author :    Michael Scheer   23/11/2024
       subroutine sbend(nmag,imag,cbmodel,rho,dbrho,angi,fint,hgap,
      &  cposmodel,xpos,zpos,angex,ebeam,b0,bmovecut,ds,icharge,fringe,fa,fb,fc,istatus)

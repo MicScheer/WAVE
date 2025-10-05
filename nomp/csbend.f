@@ -1,3 +1,4 @@
+*CMZ :  4.01/07 23/11/2024  14.57.16  by  Michael Scheer
 *CMZ :  4.00/13 28/10/2021  11.24.17  by  Michael Scheer
 *CMZ :  4.00/11 02/07/2021  10.12.35  by  Michael Scheer
 *CMZ :  3.06/00 11/02/2019  13.10.51  by  Michael Scheer
@@ -129,6 +130,7 @@
           bz2=0.0d0
 
           if (x2b.lt.fringe) then
+
             if (cbmodel.eq."linear") then
               bx2=y2b/fringe
               by2=x2b/fringe

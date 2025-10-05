@@ -1,4 +1,4 @@
-*CMZ :          31/07/2018  11.59.03  by  Michael Scheer
+*CMZ :  1.03/03 06/02/2025  11.01.47  by  Michael Scheer
 *CMZ :  1.01/00 24/09/2014  14.19.07  by  Michael Scheer
 *CMZ :  0.01/02 05/09/2014  15.42.16  by  Michael Scheer
 *CMZ :  0.01/01 27/08/2014  15.12.25  by  Michael Scheer
@@ -27,11 +27,17 @@
 
 
       lunbase=100000
+
       viewer_mshplt=''
       fileeps_mshplt='mshplt.eps'
       xsiz=-20.
       ysiz=-20.
       rescale_mshplt=1.
+      ibbxl=0
+      ibbyb=0
+      ibbxr=800
+      ibbyt=800
+
       inquire(file='.mshplt.cnf',exist=lexist)
       if (lexist) then
 c        call util_get_free_lun(lunbase)

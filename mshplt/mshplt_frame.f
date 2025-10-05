@@ -1,4 +1,3 @@
-*CMZ :          25/05/2025  11.41.22  by  Michael Scheer
 *CMZ :  1.04/00 12/02/2025  14.42.54  by  Michael Scheer
 *CMZ :  1.03/03 04/02/2025  11.54.06  by  Michael Scheer
 *CMZ :  1.03/02 25/04/2016  12.19.28  by  Michael Scheer
@@ -378,7 +377,7 @@ c     &      1,0,0.,ytitoff_ps*scaletxt_ps,ylaboff_ps*scaletxt_ps)
           ticlen=ticsiz_ps
           ticangrel=90.
           titsiz=tsiz_ps*(1-inolabs_ps)
-          titoff=xtitoff_ps
+          titoff=ytitoff_ps
           titangrel=0.
           titposrel=0.5
           call mshplt_axis_taylor(

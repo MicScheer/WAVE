@@ -1,3 +1,4 @@
+*CMZ :          19/01/2025  12.38.31  by  Michael Scheer
 *CMZ :  4.01/07 18/01/2025  16.41.01  by  Michael Scheer
 *CMZ :  4.00/11 26/07/2021  09.08.58  by  Michael Scheer
 *CMZ :  3.06/00 11/02/2019  12.49.34  by  Michael Scheer
@@ -97,7 +98,7 @@
       if (dist.ge.0.0d0) return
 
       modus=int(pmag(13,im))
-      strength=pmag(14,im)
+      strength=dbrho/pmag(14,im)
       fringe=pmag(15,im)
       fa=pmag(16,im)
       fb=pmag(17,im)

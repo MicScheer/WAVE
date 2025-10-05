@@ -1,4 +1,4 @@
-*CMZ :          29/11/2024  18.43.16  by  Michael Scheer
+*CMZ :  4.01/07 29/11/2024  18.43.16  by  Michael Scheer
 *CMZ :  4.01/05 31/10/2022  17.05.45  by  Michael Scheer
 *CMZ : 00.00/16 19/03/2014  12.30.26  by  Michael Scheer
 *CMZ : 00.00/15 03/09/2012  09.27.13  by  Michael Scheer
@@ -8,7 +8,7 @@
 *-- Author :
       SUBROUTINE UTIL_PARABEL(Xin,Yin,A,YP,XOPT,yopt,IFAIL)
 
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)

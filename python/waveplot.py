@@ -596,7 +596,7 @@ Ninvveto,Nmap,Nvar,Iarr,Narr,Ntrigger,Ncalc,NULL,ONE,MONE,SNULL,SONE,SMONE,Lastv
 Nwavein,kWaveinRead, KWAVES,MMitem,Nmitem,Kmitem,Imenu,Ipmenu,\
 Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
 VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
-I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus
+I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, ClearCanvas
 # +PATCH,//WAVES/PYTHON
 # +KEEP,statusglobal,T=PYTHON.
 global Istatus, WarningText, ErrorText, Gdebug, Platform, System, Uname
@@ -1790,7 +1790,7 @@ def debug(kmenu=None,kitem=None):
   Kmitemold, Iback, Istak, Tcolor, Vetocolor, SFrame, SComment, SMitem, \
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
-  ScreenW,ScreeH,WinX,WinY,CanW,CanH
+  ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
   pass
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem,SMitem[kmenu])
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem)
@@ -1812,6 +1812,9 @@ Backslash = '\\'
 global Narg,Argv
 Narg = len(sys.argv)
 Argv = sys.argv
+
+global ClearCanvas
+ClearCanvas = 0
 
 global Icallfromoverview, Krun
 global Foverview
@@ -3198,10 +3201,24 @@ def get_geo_all():
 #Elast
 
 #Internal functions {
-def _clearCanvas():
-  window_clear()
-  showplot(False)
+def _clearCanvas(kclear=0):
+  global ClearCanvas
+  #reakpoint()
+  if kclear or ClearCanvas:
+    window_clear()
+    showplot(False)
+    ClearCanvas = 0
 #enddef _clearCanvas()
+
+def set_ClearCanvas(kclear=0):
+  global ClearCanvas
+  ClearCanvas = kclear
+#enddef set_ClearCanvas()
+
+def get_ClearCanvas():
+  global ClearCanvas
+  return ClearCanvas
+#enddef set_ClearCanvas()
 
 def _delPlot():
     fig = plt.gcf()
@@ -3910,6 +3927,8 @@ def _setcolorbarpad(pad='!'):
   if pad == '!': pad = ColorbarPad
   Colorbarpad = pad
 #enddef
+
+def _getcolorbarpad(): return ColorbarPad
 
 #}Internal functions
 
@@ -9320,7 +9339,7 @@ def hbook2(idh=-1, tit='Histogram2D',
   #endif xmin >= xmax
 
   if ymin >= ymax:
-    print("*** Error in bhook2(...): ymin >= ymax ***")
+    print("*** Error in hbook2(...): ymin >= ymax ***")
     return -3
   #endif ymin >= ymax
 
@@ -15088,8 +15107,6 @@ def vstat(x='?',y=''):
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow,Sepp,Backslash
 
-  #nreakpoint()
-
   if type(x) == str:
     print("\nvstat(x,y) returns [xmin, xmax, xmean, xrms, xopt, yopt]")
     print("If y is missing, y is treated as unity.\n")
@@ -15102,9 +15119,14 @@ def vstat(x='?',y=''):
     y = x*0 + 1.
   #endif type(y) == str
 
-  ya = abs(y)
-  ny = len(y)
-  ly = len(y) - 1
+  #reakpoint()
+  try:
+    ya = abs(y)
+    ny = len(y)
+    ly = len(y) - 1
+  except:
+    return [0.0,0.0,0.0,0.0,0.0,0.0]
+  #endtry
 
   sumy = y.sum()
   ymaxa = abs(y).max()
@@ -15607,6 +15629,7 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
 
   if len(legend): Legend.append(legend)
 
+  #reakpoint()
   txyz(Tit,xTit,yTit)
   showplot()
 
@@ -16859,7 +16882,9 @@ def zone(nx=1, ny=1, kzone=1, isame='', projection='2d', visible=True):
   global Istatus, WarningText, ErrorText, Gdebug
 
 
-  global Tax2d, Tax3d, Debug
+  global Tax2d, Tax3d, Debug, ClearCanvas
+
+  ClearCanvas = 0
 
   if ny == 1: set_y_of_xlab(-0.1)
   if ny == 2: set_y_of_xlab(-0.2)
@@ -17080,6 +17105,10 @@ def window_close(win=-1):
   #endif
 
 #enddef window_close(win=None):
+
+def wca():
+  for i in range(Nwins): window_close()
+#enddef
 
 def window_clear(win=-1):
 
@@ -19915,27 +19944,31 @@ def vplxy(x='!',y='!',plopt='',label='',color='!',fillcolor='none'):
       sfs = StatFontSize
     #endif StatFontSize < 0
 
-    if Ispline:
-      xmin, xmax, xmean, xrms, xopt, yopt = vstat(xspl,yspl)
-    else:
-      xmin, xmax, xmean, xrms, xopt, yopt = vstat(x,y)
-    #endif
+    try:
 
-    tex = \
-    "N, Sum: " + str(int(len(x))) + ", " + '{:.4g}'.format(y.sum()) + \
-    "\n \n Mean: " + '{:.4g}'.format(xmean) + \
-    "\n \n RMS: " + '{:.4g}'.format(xrms)
+      if Ispline:
+        xmin, xmax, xmean, xrms, xopt, yopt = vstat(xspl,yspl)
+      else:
+        xmin, xmax, xmean, xrms, xopt, yopt = vstat(x,y)
+      #endif
 
-    if xopt != None and yopt != None:
-      tex += " \n \n xOpt: " + '{:.4g}'.format(xopt) + \
-      "\n\nyOpt: " + '{:.4g}'.format(yopt)
-    #endif
+      tex = \
+      "N, Sum: " + str(int(len(x))) + ", " + '{:.4g}'.format(y.sum()) + \
+      "\n \n Mean: " + '{:.4g}'.format(xmean) + \
+      "\n \n RMS: " + '{:.4g}'.format(xrms)
 
-    text(Xstat,Ystat,tex,halign='left')
-    # Latex makes trouble with exponents
-    #    latex(Xstat,Ystat,tex,color='black',fontsize=sfs,halign='left',valign='top', \
-    #    bbox='none',bbstyle='round',fc='white',ec='black',pad=0.2)
+      if xopt != None and yopt != None:
+        tex += " \n \n xOpt: " + '{:.4g}'.format(xopt) + \
+        "\n\nyOpt: " + '{:.4g}'.format(yopt)
+      #endif
 
+      text(Xstat,Ystat,tex,halign='left')
+
+      # Latex makes trouble with exponents
+      #    latex(Xstat,Ystat,tex,color='black',fontsize=sfs,halign='left',valign='top', \
+      #    bbox='none',bbstyle='round',fc='white',ec='black',pad=0.2)
+
+    except: pass
   #endif Kstat
 
   Kplots[Kzone-1] = 1
@@ -19974,7 +20007,7 @@ def vpllls(x='!',y='!',plopt='sameline',label='',color='l',fillcolor='none'):
 def vpllcs(x='!',y='!',plopt='sameline',label='',color='c',fillcolor='none'):
   vplxy(x,y,plopt,label,color,fillcolor)
 
-def pmark(x,y,z='!',plopt='isame'):
+def pmark(x,y,z='!',plopt='same'):
   if type(z) != str:
     vplxyz(x,y,z,plopt)
   else:
@@ -22590,6 +22623,9 @@ def getzone(projection=''):
 #*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
+
+  global ClearCanvas
+  if ClearCanvas: _clearCanvas(1)
 
   Fig = plt.gcf()
   Axes = Fig.get_axes()
@@ -27204,6 +27240,15 @@ def mhb_to_pylist(fmh = 'WAVE.mhb', Debug = 0):
   #endwhile 1:
 
   fmhb.close()
+
+  n222 = nget('n222')
+
+  if n222.ispe.max():
+    if n222.iwig.max():
+      nwig = ncread("nwig","kpol:iz:iy:itz:ity:iegam:egam:z:y:tz:ty:ezr:ezi:eyr:eyi:wig:fdzy:fdtzty",'wigner.wav')
+    if n222.iwef.max():
+      nwef = ncread("nwef","kpol:iz:iy:itz:ity:iegam:egam:z:y:tz:ty:ezr:ezi:eyr:eyi:wig:fdzy:fdtzty",'wigner.wef')
+  #endif
 
   wave_input_parameters()
 
@@ -35225,6 +35270,1049 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
   Lastwin = window_get_title()
 
 #enddef ndistphase()
+def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
+
+#+seq,mshimportsind.
+# +PATCH,//WAVES/PYTHON
+# +KEEP,statusglobind,T=PYTHON.
+  global Istatus, WarningText, ErrorText, Gdebug
+
+  # Histograms and Ntuples
+  global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
+  Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
+  H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
+  TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
+  H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+#+KEEP,plotglobind,T=PYTHON.
+#*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
+  global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
+  Fig1,Ax1,Fig6,Ax6,Fig2,Ax2,Fig7,Ax7,Fig3,Ax3,Fig8,Ax8, Figgeoms, \
+  Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
+  Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
+  FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
+  Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
+  Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
+  MarkerSize, MarkerType, MarkerColor, \
+  Markersize, Markertype, Markercolor, \
+  Fillstyle, FillStyle, \
+  Textcolor, WaveFilePrefix,WaveDump, \
+  LineStyle, LineWidth, LineColor, \
+  Linestyle, Linewidth, Linecolor, \
+  Author, \
+  Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
+  LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
+  Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
+  Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
+  LexpX,LexpY,LexpRot,LexpPow,\
+  GtitFontSize,Titfontsize,Atitfontsize,Axislabelsize,Textfontsize,Datefontsize,\
+  Statfontsize, Axislabeldist, Axislabeldist3d, Axisdist, Axisdist3d, \
+  XFit, YFit, Xfit, Yfit,Ystat, YStat, \
+  GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
+  StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
+  AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
+  Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
+  LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow,Sepp,Backslash
+#+PATCH,//WAVES/PYTHON
+#+KEEP,vecglobind,T=PYTHON.
+
+  global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
+  VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
+
+#+KEEP,nxyzglobind,T=PYTHON.
+#*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
+  global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
+
+
+  global Wdirs, Wfiles, Wfile, Wcode, Wrun \
+  ,Webea ,Wcurr ,Wipin ,Wcir ,Wpiny ,Wpinx ,Wpinz ,Wpinw ,Wpinh ,Wpinr \
+  ,Wmpiz ,Wmpiy ,Wmpir ,Wmpip ,Wicbr ,Wselx ,Wsely ,Wselz ,Wphax \
+  ,Wsigz ,Wsigy ,Wsgzp ,Wsgyp ,Wespr ,Wif2p ,Wnfrq ,Wflow ,Wfhig \
+  ,WflowExp, WfhigExp, WnfrqExp \
+  ,Wispe ,Wispm ,Widip ,Wnlpo ,Wbw ,Wibun ,Wnbun ,Wneib ,Wiamp \
+  ,Wielo ,Wifol ,Wiefo ,Wirun ,Widat ,Witim ,Wvers ,Wisto, Wbeta, Wibri, Koverview \
+  ,Wnoby ,Wnobz ,Wwal1 ,Wwal2 ,Wxabs ,Wzab1 ,Wzab2, KCode, Kebeam, Kcurr \
+  ,Wesel,Wener,Wfd,Wiesel, Vfd, IsameCanvas, TextIn, LastPlot,Lastwin \
+  ,FiggeoEph, Ioverview,WclipE, Icallfromoverview,Kpreload
+  global IzCut,IyCut
+
+
+  if nexist("n222"):
+    n222 = nget("n222")
+    iwigner = int(n222.iwig.max())
+    iwignefold = int(n222.iwig.max())
+  else:
+    iwigner = 0
+    iwignefold = 0
+  #endif
+
+  if getecho():
+    s = "ndistwigner(key='" + key + "', select='" + select + "', plopt='" + plopt +  "')"
+    print(s)
+  #endif
+
+  if iwigner == 0:
+    print('*** No Wigner data ***')
+    return
+  #endif
+
+  if not nexist("nwig"):
+    if not fexist(wfile):
+      print("*** Data file " + wfile +" not found ***")
+      return
+    else:
+      nwig = ncread("nwig","kpol:iz:iy:itz:ity:iegam:egam:z:y:tz:ty:ezr:ezi:eyr:eyi:wig:fdzy:fdtzty",wfile)
+    #endif
+  #endif
+
+  if nexist("nwig"):
+    nwig = nget("nwig")
+    pinx = Wphax
+    piny = nwig.y.mean()
+    pinz = nwig.z.mean()
+    ny = int(nwig.iy.max()+0.5)
+    ymin = nwig.y.min()*1000.
+    ymax = nwig.y.max()*1000.
+    nz = int(nwig.iz.max()+0.5)
+    zmin = nwig.z.min()*1000.
+    zmax = nwig.z.max()*1000.
+    if ny > 1: dy = (ymax-ymin)/(ny-1)
+    else: dy = (ymax-ymin)
+    if nz > 1: dz = (zmax-zmin)/(nz-1)
+    else: dz = (zmax-zmin)
+    nty = int(nwig.ity.max()+0.5)
+    tymin = nwig.ty.min()*1000.
+    tymax = nwig.ty.max()*1000.
+    ntz = int(nwig.itz.max()+0.5)
+    tzmin = nwig.tz.min()*1000.
+    tzmax = nwig.tz.max()*1000.
+    if nty > 1: dty = (tymax-tymin)/(nty-1)
+    else: dty = (tymax-tymin)
+    if ntz > 1: dtz = (tzmax-tzmin)/(ntz-1)
+    else: dtz = (tzmax-tzmin)
+  #endif
+
+  if dty == 0.0: dty = 1.0
+  if dtz == 0.0: dtz = 1.0
+
+  if getwin() == 'Eph Select': setwin(Lastwin)
+
+  bw = Wbw * 100.
+
+  key = key.upper()
+  ztit=''
+
+  a = ' and '
+  sizcut = "iz==" + str(int(nz/2)+1)
+  siycut = "iy==" + str(int(ny/2)+1)
+  sitzcut = "itz==" + str(int(ntz/2)+1)
+  sitycut = "ity==" + str(int(nty/2)+1)
+
+  plotopt(plopt)
+
+  #reakpoint()
+  ztz = 1
+
+  if key == 'WHHZ' or key == 'WZZZ':
+
+    his = hbook2('HWIGzzZ', 'Wzz in Z-Theta_Z Plane',
+                 nz,zmin-dz/2.,zmax+dz/2.,
+                 ntz,tzmin-dtz/2.,tzmax+dtz/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGzzZ')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = siycut + a + sitycut
+    else: sel = select + a +siycut + a + sitycut
+
+    sel = sel + a + "kpol==1"
+
+    istat = nproj2(nwig,'z:tz','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGzzZ')
+
+    tit = 'Wzz in Z-Theta_Z Plane'
+    xtit = 'z [mm]'
+    ytit = 'Theta_z [mrad]'
+
+  elif key == 'WHHY' or key == 'WZZY':
+
+    ztz = 0
+    his = hbook2('HWIGzzY', 'Wzz in Y-Theta_Y Plane',
+                 ny,ymin-dy/2.,ymax+dy/2.,
+                 nty,tymin-dty/2.,tymax+dty/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGzzY')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = sizcut + a + sitzcut
+    else: sel = select + a +sizcut + a + sitzcut
+
+    sel = sel + a + "kpol==1"
+
+    istat = nproj2(nwig,'y:ty','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGzzY')
+
+    tit = 'Wzz in Y-Theta_Y Plane'
+    xtit = 'y [mm]'
+    ytit = 'Theta_y [mrad]'
+
+  elif key == 'WVVH' or key == 'WYYZ':
+
+    his = hbook2('HWIGyyZ', 'Wyy in Z-Theta_Z Plane',
+                 nz,zmin-dz/2.,zmax+dz/2.,
+                 ntz,tzmin-dtz/2.,tzmax+dtz/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGyyZ')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = siycut + a + sitycut
+    else: sel = select + a +siycut + a + sitycut
+
+    sel = sel + a + "kpol==2"
+
+    istat = nproj2(nwig,'z:tz','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGyyZ')
+
+    tit = 'Wyy in Z-Theta_Z Plane'
+    xtit = 'z [mm]'
+    ytit = 'Theta_Z [mrad]'
+
+  elif key == 'WVVV' or key == 'WYYY':
+
+    ztz = 0
+    his = hbook2('HWIGyyY', 'Wzy in Y-Theta_Y Plane',
+                 ny,ymin-dy/2.,ymax+dy/2.,
+                 nty,tymin-dty/2.,tymax+dty/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGyyY')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = sizcut + a + sitzcut
+    else: sel = select + a +sizcut + a + sitzcut
+
+    sel = sel + a + "kpol==2"
+
+    istat = nproj2(nwig,'y:ty','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGyyY')
+
+    tit = 'Wyy in Y-Theta_Y Plane'
+    xtit = 'y [mm]'
+    ytit = 'Theta_y [mrad]'
+
+  elif key == 'WHVH' or key == 'WZYZ':
+
+    his = hbook2('HWIGzyZ', 'Wzy in Z-Theta_Z Plane',
+                 nz,zmin-dz/2.,zmax+dz/2.,
+                 ntz,tzmin-dtz/2.,tzmax+dtz/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGzyZ')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = siycut + a + sitycut
+    else: sel = select + a +siycut + a + sitycut
+
+    sel = sel + a + "kpol==3"
+
+    istat = nproj2(nwig,'z:tz','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGzyZ')
+
+    tit = 'Wzy in Z-Theta_Z Plane'
+    xtit = 'z [mm]'
+    ytit = 'Theta_Z [mrad]'
+
+  elif key == 'WHVV' or key == 'WZYY':
+
+    ztz = 0
+    his = hbook2('HWIGzyY', 'Wzy in Y-Theta_Y Plane',
+                 ny,ymin-dy/2.,ymax+dy/2.,
+                 nty,tymin-dty/2.,tymax+dty/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGzyY')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = sizcut + a + sitzcut
+    else: sel = select + a +sizcut + a + sitzcut
+
+    sel = sel + a + "kpol==3"
+
+    istat = nproj2(nwig,'y:ty','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGzyY')
+
+    tit = 'Wzy in Y-Theta_Y Plane'
+    xtit = 'y [mm]'
+    ytit = 'Theta_y [mrad]'
+
+  elif key == 'WVHH' or key == 'WYZZ':
+
+    his = hbook2('HWIGyzZ', 'Wyz in Z-Theta_Z Plane',
+                 nz,zmin-dz/2.,zmax+dz/2.,
+                 ntz,tzmin-dtz/2.,tzmax+dtz/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGyzZ')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = siycut + a + sitycut
+    else: sel = select + a +siycut + a + sitycut
+
+    sel = sel + a + "kpol==4"
+
+    istat = nproj2(nwig,'z:tz','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGyzZ')
+
+    tit = 'Wyz in Z-Theta_Z Plane'
+    xtit = 'z [mm]'
+    ytit = 'Theta_Z [mrad]'
+
+  elif key == 'WVHV' or key == 'WYZY':
+
+    ztz = 0
+    his = hbook2('HWIGyzY', 'Wyz in Y-Theta_Y Plane',
+                 ny,ymin-dy/2.,ymax+dy/2.,
+                 nty,tymin-dty/2.,tymax+dty/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGyzY')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = sizcut + a + sitzcut
+    else: sel = select + a +sizcut + a + sitzcut
+
+    sel = sel + a + "kpol==4"
+
+    istat = nproj2(nwig,'y:ty','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGyzY')
+
+    tit = 'Wyz in Y-Theta_Y Plane'
+    xtit = 'y [mm]'
+    ytit = 'Theta_y [mrad]'
+
+  else:
+
+    print('*** Error in ndistwigner: Keyword ',key, ' is unknown ***')
+    return -2
+
+  #endif key == 'F' or key = 'FD'
+
+  if istat: return
+
+  plotopt(plopt)
+
+  if key == 'WHHH' or key == 'WZZZ':
+    zone(2,1)
+    h = hget('HWIGzzZ')
+    iztz = 1
+    if h.y.min() < h.y.max():
+      iztz = 1
+      hplot2d('HWIGzzZ',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iztz = 0
+      null()
+      txyz(tit,xtit,ytit)
+    #endif
+  elif key == 'WHHV' or key == 'WZZY':
+    zone(2,1)
+    h = hget('HWIGzzY')
+    iyty = 1
+    if h.y.min() < h.y.max():
+      iyty = 1
+      hplot2d('HWIGzzY',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iyty = 0
+      null()
+      txyz(tit,xtit,ytit)
+    #endif
+  elif key == 'WVVH' or key == 'WYYZ':
+    zone(2,1)
+    h = hget('HWIGyyZ')
+    if h.y.min() < h.y.max():
+      iztz = 1
+      hplot2d('HWIGyyZ',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iztz = 0
+      null()
+      txyz(tit,xtit,ytit)
+  elif key == 'WVVV' or key == 'WYYY':
+    zone(2,1)
+    h = hget('HWIGyyY')
+    if h.y.min() < h.y.max():
+      iyty = 1
+      hplot2d('HWIGyyY',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iyty = 0
+      null()
+      txyz(tit,xtit,ytit)
+  elif key == 'WHVH' or key == 'WZYZ':
+    zone(2,1)
+    h = hget('HWIGzyZ')
+    if h.y.min() < h.y.max():
+      iztz = 1
+      hplot2d('HWIGzyZ',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iztz = 0
+      null()
+      txyz(tit,xtit,ytit)
+  elif key == 'WHVV' or key == 'WZYY':
+    zone(2,1)
+    h = hget('HWIGzyY')
+    if h.y.min() < h.y.max():
+      iyty = 1
+      hplot2d('HWIGzyY',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iyty = 0
+      null()
+      txyz(tit,xtit,ytit)
+  elif key == 'WVHH' or key == 'WYZZ':
+    zone(2,1)
+    h = hget('HWIGyzZ')
+    if h.y.min() < h.y.max():
+      iztz = 1
+      hplot2d('HWIGyzZ',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iztz = 0
+      null()
+      txyz(tit,xtit,ytit)
+  elif key == 'WVHV' or key == 'WYZY':
+    zone(2,1)
+    h = hget('HWIGyzY')
+    if h.y.min() < h.y.max():
+      iyty = 1
+      hplot2d('HWIGyzY',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iyty = 0
+      null()
+      txyz(tit,xtit,ytit)
+  #endif key
+
+  wave_title('default')
+
+  xpos = 'x =' + '{:.5g}'.format(pinx) + ' m'
+  epho = 'E =' + '{:.5g}'.format(Wesel) + str(" eV")
+  ephxpos = xpos + "\n" + epho
+
+  if Itrisurf != 1 and Isurf != 1 and Ihist != 1 and Icont3d != 1:
+
+    #txyz(tit,xtit,ytit)
+
+    ax = plt.gca()
+
+    #props = dict(boxstyle='round', facecolor='white', alpha=1.)
+    props = dict(facecolor='white', alpha=0.9)
+
+    ax.text(0.05,0.95,ephxpos,transform=ax.transAxes,
+            verticalalignment='top', bbox=props, fontsize=Axislabelsize)
+
+  else:
+
+    ax = Ax
+    props = dict(facecolor='white')
+    ax.text2D(0.1,0.85,ephxpos,transform=ax.transAxes, bbox=props,
+              fontsize=Axislabelsize)
+
+  #endif Isurf != 1 and Ihist != 1:
+
+  wtit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+
+  #reakpoint()
+  if ztz:
+    zone(2,2,2,'same')
+    npll(nwig,"z*1000.:wig*1.0e-12",sitzcut + a + sel)
+    txyz('Theta_Z = 0','z [mm]', wtit)
+    zone(2,2,4,'same')
+    if iztz:
+      npll(nwig,"tz*1000.:wig*1.0e-12",sizcut + a + sel)
+    else: null()
+    txyz('Z = 0','Theta_Z [mrad]', wtit)
+  else:
+    zone(2,2,2,'same')
+    npll(nwig,"y*1000.:wig*1.0e-12",sitzcut + a + sel)
+    txyz('Theta_Y = 0','y [mm]', wtit)
+    zone(2,2,4,'same')
+    if iyty:
+      npll(nwig,"ty*1000.:wig*1.0e-12",sizcut + a + sel)
+    else: null()
+    txyz('Y = 0','Theta_Z [mrad]', wtit)
+  #endif
+
+  LastPlot = ['ndistwigner',key,select,plopt]
+
+  showplot()
+
+  Lastwin = window_get_title()
+
+  global ClearCanvas
+  ClearCanvas = 1
+
+#enddef ndistwigner()
+def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
+
+#+seq,mshimportsind.
+# +PATCH,//WAVES/PYTHON
+# +KEEP,statusglobind,T=PYTHON.
+  global Istatus, WarningText, ErrorText, Gdebug
+
+  # Histograms and Ntuples
+  global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
+  Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
+  H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
+  TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
+  H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+#+KEEP,plotglobind,T=PYTHON.
+#*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
+  global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
+  Fig1,Ax1,Fig6,Ax6,Fig2,Ax2,Fig7,Ax7,Fig3,Ax3,Fig8,Ax8, Figgeoms, \
+  Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
+  Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
+  FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
+  Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
+  Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
+  MarkerSize, MarkerType, MarkerColor, \
+  Markersize, Markertype, Markercolor, \
+  Fillstyle, FillStyle, \
+  Textcolor, WaveFilePrefix,WaveDump, \
+  LineStyle, LineWidth, LineColor, \
+  Linestyle, Linewidth, Linecolor, \
+  Author, \
+  Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
+  LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
+  Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
+  Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
+  LexpX,LexpY,LexpRot,LexpPow,\
+  GtitFontSize,Titfontsize,Atitfontsize,Axislabelsize,Textfontsize,Datefontsize,\
+  Statfontsize, Axislabeldist, Axislabeldist3d, Axisdist, Axisdist3d, \
+  XFit, YFit, Xfit, Yfit,Ystat, YStat, \
+  GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
+  StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
+  AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
+  Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
+  LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow,Sepp,Backslash
+#+PATCH,//WAVES/PYTHON
+#+KEEP,vecglobind,T=PYTHON.
+
+  global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
+  VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
+
+#+KEEP,nxyzglobind,T=PYTHON.
+#*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
+  global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
+
+
+  global Wdirs, Wfiles, Wfile, Wcode, Wrun \
+  ,Webea ,Wcurr ,Wipin ,Wcir ,Wpiny ,Wpinx ,Wpinz ,Wpinw ,Wpinh ,Wpinr \
+  ,Wmpiz ,Wmpiy ,Wmpir ,Wmpip ,Wicbr ,Wselx ,Wsely ,Wselz ,Wphax \
+  ,Wsigz ,Wsigy ,Wsgzp ,Wsgyp ,Wespr ,Wif2p ,Wnfrq ,Wflow ,Wfhig \
+  ,WflowExp, WfhigExp, WnfrqExp \
+  ,Wispe ,Wispm ,Widip ,Wnlpo ,Wbw ,Wibun ,Wnbun ,Wneib ,Wiamp \
+  ,Wielo ,Wifol ,Wiefo ,Wirun ,Widat ,Witim ,Wvers ,Wisto, Wbeta, Wibri, Koverview \
+  ,Wnoby ,Wnobz ,Wwal1 ,Wwal2 ,Wxabs ,Wzab1 ,Wzab2, KCode, Kebeam, Kcurr \
+  ,Wesel,Wener,Wfd,Wiesel, Vfd, IsameCanvas, TextIn, LastPlot,Lastwin \
+  ,FiggeoEph, Ioverview,WclipE, Icallfromoverview,Kpreload
+  global IzCut,IyCut
+
+
+  #reakpoint()
+
+  if nexist("n222"):
+    n222 = nget("n222")
+    iwigner = int(n222.iwig.max())
+    iwignefold = int(n222.iwig.max())
+  else:
+    iwigner = 0
+    iwignefold = 0
+  #endif
+
+  if getecho():
+    s = "ndistwignere(key='" + key + "', select='" + select + "', plopt='" + plopt +  "')"
+    print(s)
+  #endif
+
+  if iwignefold == 0:
+    print('*** No beam energy folded Wigner data ***')
+    return
+  #endif
+
+  if not nexist("nwef"):
+    if not fexist(wfile):
+      print("*** Data file " + wfile + " not found ***")
+      return
+    else:
+      nwef = ncread("nwef","kpol:iz:iy:itz:ity:iegam:egam:z:y:tz:ty:ezr:ezi:eyr:eyi:wig:fdzy:fdtzty",wfile)
+    #endif
+  #endif
+
+  if nexist("nwef"):
+    nwef = nget("nwef")
+    pinx = Wphax
+    piny = nwef.y.mean()
+    pinz = nwef.z.mean()
+    ny = int(nwef.iy.max()+0.5)
+    ymin = nwef.y.min()*1000.
+    ymax = nwef.y.max()*1000.
+    nz = int(nwef.iz.max()+0.5)
+    zmin = nwef.z.min()*1000.
+    zmax = nwef.z.max()*1000.
+    if ny > 1: dy = (ymax-ymin)/(ny-1)
+    else: dy = (ymax-ymin)
+    if nz > 1: dz = (zmax-zmin)/(nz-1)
+    else: dz = (zmax-zmin)
+    nty = int(nwef.ity.max()+0.5)
+    tymin = nwef.ty.min()*1000.
+    tymax = nwef.ty.max()*1000.
+    ntz = int(nwef.itz.max()+0.5)
+    tzmin = nwef.tz.min()*1000.
+    tzmax = nwef.tz.max()*1000.
+    if nty > 1: dty = (tymax-tymin)/(nty-1)
+    else: dty = (tymax-tymin)
+    if ntz > 1: dtz = (tzmax-tzmin)/(ntz-1)
+    else: dtz = (tzmax-tzmin)
+  #endif
+
+  if dty == 0.0: dty = 1.0
+  if dtz == 0.0: dtz = 1.0
+
+  if getwin() == 'Eph Select': setwin(Lastwin)
+
+  bw = Wbw * 100.
+
+  key = key.upper()
+  ztit=''
+
+  a = ' and '
+  sizcut = "iz==" + str(int(nz/2)+1)
+  siycut = "iy==" + str(int(ny/2)+1)
+  sitzcut = "itz==" + str(int(ntz/2)+1)
+  sitycut = "ity==" + str(int(nty/2)+1)
+
+  plotopt(plopt)
+
+  #reakpoint()
+  ztz = 1
+
+  if key == 'WHHZ' or key == 'WZZZ':
+
+    his = hbook2('HWIGEzzZ', 'E-folded Wzz in Z-Theta_Z Plane',
+                 nz,zmin-dz/2.,zmax+dz/2.,
+                 ntz,tzmin-dtz/2.,tzmax+dtz/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGEzzZ')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = siycut + a + sitycut
+    else: sel = select + a +siycut + a + sitycut
+
+    sel = sel + a + "kpol==1"
+
+    istat = nproj2(nwef,'z:tz','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGEzzZ')
+
+    tit = 'E-folded Wzz in Z-Theta_Z Plane'
+    xtit = 'z [mm]'
+    ytit = 'Theta_z [mrad]'
+
+  elif key == 'WHHY' or key == 'WZZY':
+
+    ztz = 0
+    his = hbook2('HWIGEzzY', 'E-folded Wzz in Y-Theta_Y Plane',
+                 ny,ymin-dy/2.,ymax+dy/2.,
+                 nty,tymin-dty/2.,tymax+dty/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGEzzY')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = sizcut + a + sitzcut
+    else: sel = select + a +sizcut + a + sitzcut
+
+    sel = sel + a + "kpol==1"
+
+    istat = nproj2(nwef,'y:ty','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGEzzY')
+
+    tit = 'E-folded Wzz in Y-Theta_Y Plane'
+    xtit = 'y [mm]'
+    ytit = 'Theta_y [mrad]'
+
+  elif key == 'WVVH' or key == 'WYYZ':
+
+    his = hbook2('HWIGEyyZ', 'E-folded Wyy in Z-Theta_Z Plane',
+                 nz,zmin-dz/2.,zmax+dz/2.,
+                 ntz,tzmin-dtz/2.,tzmax+dtz/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGEyyZ')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = siycut + a + sitycut
+    else: sel = select + a +siycut + a + sitycut
+
+    sel = sel + a + "kpol==2"
+
+    istat = nproj2(nwef,'z:tz','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGEyyZ')
+
+    tit = 'E-folded Wyy in Z-Theta_Z Plane'
+    xtit = 'z [mm]'
+    ytit = 'Theta_Z [mrad]'
+
+  elif key == 'WVVV' or key == 'WYYY':
+
+    ztz = 0
+    his = hbook2('HWIGEyyY', 'E-folded Wzy in Y-Theta_Y Plane',
+                 ny,ymin-dy/2.,ymax+dy/2.,
+                 nty,tymin-dty/2.,tymax+dty/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGEyyY')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = sizcut + a + sitzcut
+    else: sel = select + a +sizcut + a + sitzcut
+
+    sel = sel + a + "kpol==2"
+
+    istat = nproj2(nwef,'y:ty','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGEyyY')
+
+    tit = 'E-folded Wyy in Y-Theta_Y Plane'
+    xtit = 'y [mm]'
+    ytit = 'Theta_y [mrad]'
+
+  elif key == 'WHVH' or key == 'WZYZ':
+
+    his = hbook2('HWIGEzyZ', 'E-folded Wzy in Z-Theta_Z Plane',
+                 nz,zmin-dz/2.,zmax+dz/2.,
+                 ntz,tzmin-dtz/2.,tzmax+dtz/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGEzyZ')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = siycut + a + sitycut
+    else: sel = select + a +siycut + a + sitycut
+
+    sel = sel + a + "kpol==3"
+
+    istat = nproj2(nwef,'z:tz','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGEzyZ')
+
+    tit = 'E-folded Wzy in Z-Theta_Z Plane'
+    xtit = 'z [mm]'
+    ytit = 'Theta_Z [mrad]'
+
+  elif key == 'WHVV' or key == 'WZYY':
+
+    ztz = 0
+    his = hbook2('HWIGEzyY', 'E-folded Wzy in Y-Theta_Y Plane',
+                 ny,ymin-dy/2.,ymax+dy/2.,
+                 nty,tymin-dty/2.,tymax+dty/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGEzyY')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = sizcut + a + sitzcut
+    else: sel = select + a +sizcut + a + sitzcut
+
+    sel = sel + a + "kpol==3"
+
+    istat = nproj2(nwef,'y:ty','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGEzyY')
+
+    tit = 'E-folded Wzy in Y-Theta_Y Plane'
+    xtit = 'y [mm]'
+    ytit = 'Theta_y [mrad]'
+
+  elif key == 'WVHH' or key == 'WYZZ':
+
+    his = hbook2('HWIGEyzZ', 'E-folded Wyz in Z-Theta_Z Plane',
+                 nz,zmin-dz/2.,zmax+dz/2.,
+                 ntz,tzmin-dtz/2.,tzmax+dtz/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGEyzZ')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = siycut + a + sitycut
+    else: sel = select + a +siycut + a + sitycut
+
+    sel = sel + a + "kpol==4"
+
+    istat = nproj2(nwef,'z:tz','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGEyzZ')
+
+    tit = 'E-folded Wyz in Z-Theta_Z Plane'
+    xtit = 'z [mm]'
+    ytit = 'Theta_Z [mrad]'
+
+  elif key == 'WVHV' or key == 'WYZY':
+
+    ztz = 0
+    his = hbook2('HWIGEyzY', 'E-folded Wyz in Y-Theta_Y Plane',
+                 ny,ymin-dy/2.,ymax+dy/2.,
+                 nty,tymin-dty/2.,tymax+dty/2.,
+                 overwrite=True)
+    idh = GetIndexH2('HWIGEyzY')
+
+    if select.strip() == '':
+      if Wesel <= 0: esel()
+      select = 'iegam == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iegam == ' + str(select)
+    #endif select != ''
+
+    if select.strip() == '': sel = sizcut + a + sitzcut
+    else: sel = select + a +sizcut + a + sitzcut
+
+    sel = sel + a + "kpol==4"
+
+    istat = nproj2(nwef,'y:ty','wig*1.0e-12',sel,1000.,1000.,1.0,0,0,'HWIGEyzY')
+
+    tit = 'E-folded Wyz in Y-Theta_Y Plane'
+    xtit = 'y [mm]'
+    ytit = 'Theta_y [mrad]'
+
+  else:
+
+    print('*** Error in ndistwignere: Keyword ',key, ' is unknown ***')
+    return -2
+
+  #endif key == 'F' or key = 'FD'
+
+  if istat: return
+
+  plotopt(plopt)
+
+  if key == 'WHHH' or key == 'WZZZ':
+    zone(2,1)
+    h = hget('HWIGEzzZ')
+    iztz = 1
+    if h.y.min() < h.y.max():
+      iztz = 1
+      hplot2d('HWIGEzzZ',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iztz = 0
+      null()
+      txyz(tit,xtit,ytit)
+    #endif
+  elif key == 'WHHV' or key == 'WZZY':
+    zone(2,1)
+    h = hget('HWIGEzzY')
+    iyty = 1
+    if h.y.min() < h.y.max():
+      iyty = 1
+      hplot2d('HWIGEzzY',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iyty = 0
+      null()
+      txyz(tit,xtit,ytit)
+    #endif
+  elif key == 'WVVH' or key == 'WYYZ':
+    zone(2,1)
+    h = hget('HWIGEyyZ')
+    if h.y.min() < h.y.max():
+      iztz = 1
+      hplot2d('HWIGEyyZ',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iztz = 0
+      null()
+      txyz(tit,xtit,ytit)
+  elif key == 'WVVV' or key == 'WYYY':
+    zone(2,1)
+    h = hget('HWIGEyyY')
+    if h.y.min() < h.y.max():
+      iyty = 1
+      hplot2d('HWIGEyyY',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iyty = 0
+      null()
+      txyz(tit,xtit,ytit)
+  elif key == 'WHVH' or key == 'WZYZ':
+    zone(2,1)
+    h = hget('HWIGEzyZ')
+    if h.y.min() < h.y.max():
+      iztz = 1
+      hplot2d('HWIGEzyZ',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iztz = 0
+      null()
+      txyz(tit,xtit,ytit)
+  elif key == 'WHVV' or key == 'WZYY':
+    zone(2,1)
+    h = hget('HWIGEzyY')
+    if h.y.min() < h.y.max():
+      iyty = 1
+      hplot2d('HWIGEzyY',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iyty = 0
+      null()
+      txyz(tit,xtit,ytit)
+  elif key == 'WVHH' or key == 'WYZZ':
+    zone(2,1)
+    h = hget('HWIGEyzZ')
+    if h.y.min() < h.y.max():
+      iztz = 1
+      hplot2d('HWIGEyzZ',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iztz = 0
+      null()
+      txyz(tit,xtit,ytit)
+  elif key == 'WVHV' or key == 'WYZY':
+    zone(2,1)
+    h = hget('HWIGEyzY')
+    if h.y.min() < h.y.max():
+      iyty = 1
+      hplot2d('HWIGEyzY',plopt,tit=tit,xtit=xtit,ytit=ytit,ztit=ztit)
+    else:
+      iyty = 0
+      null()
+      txyz(tit,xtit,ytit)
+  #endif key
+
+  wave_title('default')
+
+  xpos = 'x =' + '{:.5g}'.format(pinx) + ' m'
+  epho = 'E =' + '{:.5g}'.format(Wesel) + str(" eV")
+  ephxpos = xpos + "\n" + epho
+
+  if Itrisurf != 1 and Isurf != 1 and Ihist != 1 and Icont3d != 1:
+
+    #txyz(tit,xtit,ytit)
+
+    ax = plt.gca()
+
+    #props = dict(boxstyle='round', facecolor='white', alpha=1.)
+    props = dict(facecolor='white', alpha=0.9)
+
+    ax.text(0.05,0.95,ephxpos,transform=ax.transAxes,
+            verticalalignment='top', bbox=props, fontsize=Axislabelsize)
+
+  else:
+
+    ax = Ax
+    props = dict(facecolor='white')
+    ax.text2D(0.1,0.85,ephxpos,transform=ax.transAxes, bbox=props,
+              fontsize=Axislabelsize)
+
+  #endif Isurf != 1 and Ihist != 1:
+
+  wtit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+
+  #reakpoint()
+  if ztz:
+    zone(2,2,2,'same')
+    npll(nwef,"z*1000.:wig*1.0e-12",sitzcut + a + sel)
+    txyz('Theta_Z = 0','z [mm]', wtit)
+    zone(2,2,4,'same')
+    if iztz:
+      npll(nwef,"tz*1000.:wig*1.0e-12",sizcut + a + sel)
+    else: null()
+    txyz('Z = 0','Theta_Z [mrad]', wtit)
+  else:
+    zone(2,2,2,'same')
+    npll(nwef,"y*1000.:wig*1.0e-12",sitzcut + a + sel)
+    txyz('Theta_Y = 0','y [mm]', wtit)
+    zone(2,2,4,'same')
+    if iyty:
+      npll(nwef,"ty*1000.:wig*1.0e-12",sizcut + a + sel)
+    else: null()
+    txyz('Y = 0','Theta_Z [mrad]', wtit)
+  #endif
+
+  LastPlot = ['ndistwignere',key,select,plopt]
+
+  showplot()
+
+  Lastwin = window_get_title()
+
+  global ClearCanvas
+  ClearCanvas = 1
+
+#  print('\nHint: Use "Options/Clear Canvas" to reset zones \n')
+#enddef ndistwignere()
 
 def ndistpowh(key='pow', select='', plopt='2d', idh='HpinH'):
 
@@ -37100,6 +38188,8 @@ def wgui_key_press(ev):
 #enddef wgui_key_press(ev)
 
 def _fluxden(key): hcfluxden(key)
+def _ndistwigner(key):  ndistwigner(key)
+def _ndistwignere(key):  ndistwignere(key)
 def _ndistphase(key):  ndistphase(key)
 def _ndistphasev(key):  ndistphasev(key)
 def _ndistphaseh(key):  ndistphaseh(key)
@@ -37894,6 +38984,7 @@ def Mmenu_gray(fgcol='gray'):
   #endif not Wibri
 
   if not nexist("n6000"):
+    print('Kein n6000',fgcol)
     mDist.entryconfig(8,foreground=fgcol)
     for i in range(1,7):
       mDistAmpProp.entryconfig(i,foreground=fgcol)
@@ -37914,6 +39005,13 @@ def Mmenu_gray(fgcol='gray'):
       mDistAmpPropH.entryconfig(7,foreground=fgcol)
       mDistAmpPropV.entryconfig(7,foreground=fgcol)
     #endif
+  #endif
+
+  if not nexist('nwig'):
+    mDist.entryconfig(9,foreground=fgcol)
+    for i in range(1,16):
+      mDistWigner.entryconfig(i,foreground=fgcol)
+    #endfor
   #endif
 
   if not Wifol:
@@ -39610,6 +40708,7 @@ def _nPlot():
 
   global FillColor
 
+  print(WavesMode)
   if not len(Nhead):
     nError("  No Ntuple defined so far!  ")
     return
@@ -39978,7 +41077,8 @@ Gdebug = 0
 
 Waveplot = 1
 
-global Ical
+global Ical, ClearCanvas
+ClearCanvas = 0
 Ical = 0
 Krun = True
 Kcode = True
@@ -40048,8 +41148,11 @@ AtitFontSize = AtitFontSize
 
 read_window_geometry('waveplot.cfg')
 
+kro = get_run_on_figure()
+set_run_on_figure(False)
 window('WAVE Plot',getconsole=False)
 waveplotgpl()
+set_run_on_figure(kro)
 
 if Ioverview: WaveOverview()
 
@@ -40899,6 +42002,29 @@ mDistAmpProp.add_command(label="Az_Imag",  command= lambda key='AzI': _ndistphas
 mDistAmpProp.add_command(label="Flux-density",    command= lambda key='F': _ndistphase(key))
 mDistAmpProp.add_command(label="Flux-dens. with emit.",    command= lambda key='FF': _ndistphase(key))
 #}Propagated Field Amplitudes
+
+#{Wigner distributions
+#reakpoint()
+
+mDistWigner = Menu(mDist,tearoff=1,font=Myfont)
+mDist.add_cascade(label='Wigner Distributions',  menu=mDistWigner)
+mDistWigner.add_command(label="Wzz Z-Theta_Z",  command= lambda key='WzzZ': _ndistwigner(key))
+mDistWigner.add_command(label="Wzz Y-Theta_Y",  command= lambda key='WzzY': _ndistwigner(key))
+mDistWigner.add_command(label="Wyy Z-Theta_Z",  command= lambda key='WyyZ': _ndistwigner(key))
+mDistWigner.add_command(label="Wyy Y-Theta_Y",  command= lambda key='WyyY': _ndistwigner(key))
+mDistWigner.add_command(label="Wzy Z-Theta_Z",  command= lambda key='WzyZ': _ndistwigner(key))
+mDistWigner.add_command(label="Wzy Y-Theta_Y",  command= lambda key='WzyY': _ndistwigner(key))
+mDistWigner.add_command(label="Wyz Z-Theta_Z",  command= lambda key='WyzZ': _ndistwigner(key))
+mDistWigner.add_command(label="Wyz Y-Theta_Y",  command= lambda key='WyzY': _ndistwigner(key))
+
+mDistWigner.add_command(label="Wzz_E Z-Theta_Z",  command= lambda key='WzzZ': _ndistwignere(key))
+mDistWigner.add_command(label="Wzz_E Y-Theta_Y",  command= lambda key='WzzY': _ndistwignere(key))
+mDistWigner.add_command(label="Wyy_E Z-Theta_Z",  command= lambda key='WyyZ': _ndistwignere(key))
+mDistWigner.add_command(label="Wyy_E Y-Theta_Y",  command= lambda key='WyyY': _ndistwignere(key))
+mDistWigner.add_command(label="Wzy_E Z-Theta_Z",  command= lambda key='WzyZ': _ndistwignere(key))
+mDistWigner.add_command(label="Wzy_E Y-Theta_Y",  command= lambda key='WzyY': _ndistwignere(key))
+mDistWigner.add_command(label="WyzZ_E Z-Theta_Z",  command= lambda key='WyzZ': _ndistwignere(key))
+mDistWigner.add_command(label="WyzY_E Y-Theta_Y",  command= lambda key='WyzY': _ndistwignere(key))
 
 #} 2d Distributions
 

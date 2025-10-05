@@ -1,4 +1,5 @@
-*CMZ :          13/09/2025  10.16.17  by  Michael Scheer
+*CMZ :          29/09/2025  12.35.09  by  Michael Scheer
+*CMZ :  4.02/00 13/09/2025  10.16.17  by  Michael Scheer
 *CMZ :  4.01/07 13/08/2024  10.11.51  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.49.56  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  15.30.57  by  Michael Scheer
@@ -26,7 +27,7 @@
 *KEND.
 c+seq,uservar.
 
-      double complex :: rea(3),expsh
+      double complex :: rea(3),expsh,esour(max(npinz_u,npinzprop_u),max(npiny_u,npinyprop_u))
 
       double precision
      &  perlen,shift,ebeam,curr,step,banwid,
@@ -34,14 +35,16 @@ c+seq,uservar.
      &  ephmin,ephmax,beffv,beffh,pherror,phgshift,espread,emith,emitv,
      &  disph,dispph,dispv,disppv,y,z,dy,dz,ymin,zmin,bunchlen,bunchcharge,
      &  xbeta,df,xx,yy,zz,r,xn,yn,zn,h2
+     &  ,ajj,enor,fdmax,flux
 
-      integer
+      integer :: ktime=0,ical=0,
      &  npiny,npinz,nper,nepho,mthreads,nelec,icohere,ihbunch,i,nlpoi,
      &  modeph,modepin,modesphere,modebunch,iy,iz,iobsv,noranone,modewave,
      &  icbrill,iobs,iobfr,ifrq,kalloerr
 
-c      if (modewave.ne.0) call util_zeit_kommentar(6,'Entered urad_phase')
-      call util_zeit_kommentar_delta(6,'Entered urad_phase',1)
+      save ical
+
+      if (ktime.eq.1) call util_zeit_kommentar_delta(6,'Entered urad_phase',1)
 
       mthreads_u=mthreads
 
@@ -91,18 +94,20 @@ c      if (modewave.ne.0) call util_zeit_kommentar(6,'Entered urad_phase')
         nobsv_u=1
       endif
 
-      allocate(epho_u(nepho),obsv_u(3,nobsv_u),
-     &  arad_u(6,nobsv_u*nepho_u),
-     &  specpow_u(nobsv_u),
-     &  stokes_u(4,nobsv_u*nepho_u),pow_u(nobsv_u)
-     &  ,stat=kalloerr)
+      if (ical.eq.0) then
 
-      if (ihbunch_u.gt.0) then
-        allocate(fbunch_u(41,nelec_u/ihbunch_u*nepho_u))
-        fbunch_u=0.0d0
-      else if (ihbunch_u.lt.0) then
-        allocate(fbunch_u(41,nobsv_u*nelec_u/(-ihbunch_u)*nepho_u))
-        fbunch_u=0.0d0
+        allocate(epho_u(nepho),obsv_u(3,nobsv_u),
+     &    arad_u(6,nobsv_u*nepho_u),
+     &    specpow_u(nobsv_u),
+     &    stokes_u(4,nobsv_u*nepho_u),pow_u(nobsv_u))
+
+        if (ihbunch_u.gt.0) then
+          allocate(fbunch_u(41,nelec_u/ihbunch_u*nepho_u))
+          fbunch_u=0.0d0
+        else if (ihbunch_u.lt.0) then
+          allocate(fbunch_u(41,nobsv_u*nelec_u/(-ihbunch_u)*nepho_u))
+          fbunch_u=0.0d0
+        endif
       endif
 
       stokes_u=0.0d0
@@ -162,6 +167,7 @@ c              r=xx*(1.0d0+h2/2.0d0-h2**2/8.0d0)
       enddo
 
       nepho_u=max(1,nepho_u)
+
       if (nepho_u.gt.1) then
         df=(ephmax-ephmin)/(nepho_u-1)
         do i=1,nepho_u
@@ -199,6 +205,7 @@ c      else
 c      endif
 
       stokes_u=stokes_u/1.0d6 ! photons/mm**2
+
       if (ihbunch.ne.0) then
         fbunch_u(4:14,:)=fbunch_u(4:14,:)*1000.0d0 ! mm
         fbunch_u(17:19,:)=fbunch_u(17:19,:)*1000.0d0 ! mm
@@ -231,6 +238,7 @@ c      endif
       obsv_u=obsv_u*1000.0d0
 
 c      if (modewave.ne.0) call util_zeit_kommentar(6,'Leaving urad_phase')
-      call util_zeit_kommentar_delta(6,'Leaving urad_phase',0)
+      if (ktime.eq.1) call util_zeit_kommentar_delta(6,'Leaving urad_phase',0)
 
+      ical=1
       end

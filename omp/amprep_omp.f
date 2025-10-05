@@ -1,4 +1,5 @@
-*CMZ :          28/08/2025  11.50.10  by  Michael Scheer
+*CMZ :          20/09/2025  10.19.21  by  Michael Scheer
+*CMZ :  4.02/00 28/08/2025  11.50.10  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  13.26.19  by  Michael Scheer
 *CMZ :  4.01/02 12/05/2023  15.12.26  by  Michael Scheer
 *CMZ :  4.01/00 11/02/2023  16.38.29  by  Michael Scheer
@@ -74,7 +75,7 @@ c        modewave=user(2)
 c        print*,"modewave = USER(2)",modewave
 c      else
       modewave=1
-      ifixphase_u=2
+      ifixphase_u=1
 c      endif
 
       step=1.0d0/dble(myinum)*1000.0d0
