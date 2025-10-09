@@ -41077,8 +41077,8 @@ Gdebug = 0
 
 Waveplot = 1
 
-global Ical, ClearCanvas
 ClearCanvas = 0
+
 Ical = 0
 Krun = True
 Kcode = True
