@@ -17,4 +17,4 @@ $WAVE_INCL/bin/wave_debug.exe and use
 
 python3 $WAVE_INCL/python/make_wave.py
 
-To run WAVE, refor to wave_by_examples.pdf in $WAVE_INCL/doc.
+To run WAVE, refer to wave_by_examples.pdf in $WAVE_INCL/doc.

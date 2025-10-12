@@ -3128,11 +3128,17 @@ def set_frame_square(wf=0,window='!'):
 #enddef
 
 def get_geo_all():
-    global Wmaster,WinX,WinY,ScreenW,ScreenH,CanW,CanH
+    global Wmaster,WinX,WinY,ScreenW,ScreenH,CanW,CanH,MPLmaster,WavesMode,WAVESHOPmaster
 
     wid,h,WinX,WinY = getgeo()
-    ScreenW = Wmaster.winfo_screenwidth()
-    ScreenH = Wmaster.winfo_screenheight()
+
+    try:
+      ScreenW = Wmaster.winfo_screenwidth()
+      ScreenH = Wmaster.winfo_screenheight()
+    except:
+      ScreenW = WAVESHOPmaster.winfo_screenwidth()
+      ScreenH = WAVESHOPmaster.winfo_screenheight()
+    #endtry
 
     fig = plt.gcf()
     CanW,CanH = fig.canvas.get_width_height()
@@ -15938,7 +15944,7 @@ def window(title='', geom="!", block=False, projection = '2d',
   FillColor,WisLinux,Ishow,Sepp,Backslash
 
   global Tfig, Tax2d, Tax3d, IsameGlobal, ScreenWidth, ScreenHeight, Tdate, \
-  Figman, Wmaster
+  Figman, Wmaster,WAVESHOPmaster
 
   #nreakpoint()
 
@@ -15976,6 +15982,10 @@ def window(title='', geom="!", block=False, projection = '2d',
 
   MPLmain = Fig
   MPLmaster = MPLmain.canvas.toolbar.master
+
+  try: wshdum = WAVESHOPmaster
+  except: WAVESHOPmaster = MPLmaster
+
   Wmaster = MPLmaster
 
   plt_connect('key_press_event', gui_key_press)

@@ -2372,6 +2372,7 @@ def pmenu(kmenu):
 
     if not PMenuGeo[Imenu]:
       if WavesMode == 'WPLOT' or WavesMode == 'WSHOP':
+        print('************ holla')
         geodum = get_geo_all()
         dw = CanW / 10 * (depth - 1)
         wp = '+' + str(int(WinX+CanW/5+dw)) + '+' + str(WinY)

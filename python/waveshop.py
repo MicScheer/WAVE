@@ -3130,11 +3130,17 @@ def set_frame_square(wf=0,window='!'):
 #enddef
 
 def get_geo_all():
-    global Wmaster,WinX,WinY,ScreenW,ScreenH,CanW,CanH
+    global Wmaster,WinX,WinY,ScreenW,ScreenH,CanW,CanH,MPLmaster,WavesMode,WAVESHOPmaster
 
     wid,h,WinX,WinY = getgeo()
-    ScreenW = Wmaster.winfo_screenwidth()
-    ScreenH = Wmaster.winfo_screenheight()
+
+    try:
+      ScreenW = Wmaster.winfo_screenwidth()
+      ScreenH = Wmaster.winfo_screenheight()
+    except:
+      ScreenW = WAVESHOPmaster.winfo_screenwidth()
+      ScreenH = WAVESHOPmaster.winfo_screenheight()
+    #endtry
 
     fig = plt.gcf()
     CanW,CanH = fig.canvas.get_width_height()
@@ -15940,7 +15946,7 @@ def window(title='', geom="!", block=False, projection = '2d',
   FillColor,WisLinux,Ishow,Sepp,Backslash
 
   global Tfig, Tax2d, Tax3d, IsameGlobal, ScreenWidth, ScreenHeight, Tdate, \
-  Figman, Wmaster
+  Figman, Wmaster,WAVESHOPmaster
 
   #nreakpoint()
 
@@ -15978,6 +15984,10 @@ def window(title='', geom="!", block=False, projection = '2d',
 
   MPLmain = Fig
   MPLmaster = MPLmain.canvas.toolbar.master
+
+  try: wshdum = WAVESHOPmaster
+  except: WAVESHOPmaster = MPLmaster
+
   Wmaster = MPLmaster
 
   plt_connect('key_press_event', gui_key_press)
@@ -38942,7 +38952,7 @@ def Mmenu_gray(fgcol='gray'):
   #endif not Wibri
 
   if not nexist("n6000"):
-    print('Kein n6000',fgcol)
+    #print('Kein n6000',fgcol)
     mDist.entryconfig(8,foreground=fgcol)
     for i in range(1,7):
       mDistAmpProp.entryconfig(i,foreground=fgcol)
@@ -41710,6 +41720,7 @@ def pmenu(kmenu):
 
     if not PMenuGeo[Imenu]:
       if WavesMode == 'WPLOT' or WavesMode == 'WSHOP':
+        print('************ holla')
         geodum = get_geo_all()
         dw = CanW / 10 * (depth - 1)
         wp = '+' + str(int(WinX+CanW/5+dw)) + '+' + str(WinY)
@@ -44809,6 +44820,8 @@ FWVS = 'waves.wvs'
 #----------------------------------------------------------
 # Begin of WAVEPLOT
 #----------------------------------------------------------
+
+global WAVESHOPmaster
 
 Debug = 0
 Gdebug = 0

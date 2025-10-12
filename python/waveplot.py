@@ -3180,11 +3180,17 @@ def set_frame_square(wf=0,window='!'):
 #enddef
 
 def get_geo_all():
-    global Wmaster,WinX,WinY,ScreenW,ScreenH,CanW,CanH
+    global Wmaster,WinX,WinY,ScreenW,ScreenH,CanW,CanH,MPLmaster,WavesMode,WAVESHOPmaster
 
     wid,h,WinX,WinY = getgeo()
-    ScreenW = Wmaster.winfo_screenwidth()
-    ScreenH = Wmaster.winfo_screenheight()
+
+    try:
+      ScreenW = Wmaster.winfo_screenwidth()
+      ScreenH = Wmaster.winfo_screenheight()
+    except:
+      ScreenW = WAVESHOPmaster.winfo_screenwidth()
+      ScreenH = WAVESHOPmaster.winfo_screenheight()
+    #endtry
 
     fig = plt.gcf()
     CanW,CanH = fig.canvas.get_width_height()
@@ -15990,7 +15996,7 @@ def window(title='', geom="!", block=False, projection = '2d',
   FillColor,WisLinux,Ishow,Sepp,Backslash
 
   global Tfig, Tax2d, Tax3d, IsameGlobal, ScreenWidth, ScreenHeight, Tdate, \
-  Figman, Wmaster
+  Figman, Wmaster,WAVESHOPmaster
 
   #nreakpoint()
 
@@ -16028,6 +16034,10 @@ def window(title='', geom="!", block=False, projection = '2d',
 
   MPLmain = Fig
   MPLmaster = MPLmain.canvas.toolbar.master
+
+  try: wshdum = WAVESHOPmaster
+  except: WAVESHOPmaster = MPLmaster
+
   Wmaster = MPLmaster
 
   plt_connect('key_press_event', gui_key_press)
@@ -38984,7 +38994,7 @@ def Mmenu_gray(fgcol='gray'):
   #endif not Wibri
 
   if not nexist("n6000"):
-    print('Kein n6000',fgcol)
+    #print('Kein n6000',fgcol)
     mDist.entryconfig(8,foreground=fgcol)
     for i in range(1,7):
       mDistAmpProp.entryconfig(i,foreground=fgcol)
@@ -41160,6 +41170,7 @@ if Ioverview: WaveOverview()
 #Fig.canvas.mpl_disconnect(CanButId)
 
 Wmain = Fig
+print("*** Wmain, waveplot:",Wmain)
 Wmaster = Wmain.canvas.toolbar.master
 
 if type(TextIn) == str: t = TextIn;TextIn = StringVar(Wmaster); TextIn.set(t)
