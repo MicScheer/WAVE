@@ -1,4 +1,4 @@
-*CMZ :          19/09/2025  16.05.25  by  Michael Scheer
+*CMZ :          13/10/2025  10.42.02  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  09.46.32  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
@@ -790,6 +790,8 @@ c     WRITE(6,*)'READING NAMELIST BFORCN'
 
         iphase=1
       endif
+
+      if (iwigner.eq.0) NWIGEFOLD=0
 
       IF (IPHASE.NE.0) THEN
         DO IELEM=1,NPHELEMP

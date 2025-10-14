@@ -1756,7 +1756,7 @@ def readwavein():
   ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
   fo = open('wave.in.bck','w')
-  Fwin = open(FWAVEIN)
+  Fwin = open(FWAVEIN,'r')
 
   #Start
   Nwavein = 0
@@ -4619,7 +4619,7 @@ def readwvs():
 
       elif words[0].upper() == '$CALC':
 
-        Ncalc+= 1 #BreakCalc
+        Ncalc += 1 #BreakCalc
         Calc.append([-1,'CONST','oper',-1,'CONST',0,'CONST'])
 
         op1 = Getline(Fwvs)
@@ -4951,6 +4951,8 @@ def readwvs():
 
   Fwvs.close()
 
+  Calculate()
+
   Fwvs = open('waves_calculations.lis','w')
 
   for iv in range(len(Calc)):
@@ -5004,6 +5006,7 @@ def checkskip():
     except: pass
     i += 1
   #endfor
+
 def wiwrite(fo,s):
 
   global iemptyline
@@ -5066,7 +5069,8 @@ def debug(kmenu=None,kitem=None):
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem,SMitem[kmenu])
 #  print("\n\n debug::kmenu,kitem",kmenu,kitem)
 #enddef debug(kmenu,kitem)
-def writewavein():
+
+def writewavein(caller='default'):
 
   global \
   Wave, Root, WaveOut, Editor, WinGeo, \
@@ -5084,14 +5088,13 @@ def writewavein():
   NL = "\n"
   Debug = 0
 
-
   if kWaveinRead != 0:
 
     fo = open('wave.in','w')
 
 #{update variables in Wavein
     ivar=0
-    while ivar < Nvar:
+    while ivar <= Nvar:
       var = Variables[ivar][0]
       ifound = -1
       i = 0
@@ -5102,13 +5105,14 @@ def writewavein():
 #+self,if=trace.
           if Debug != 0 and ivar >= 240 and ivar <= 250:
             print("---------- ivar, var, line: ", ivar, " ", var,Variables[ivar][7])
-            #debug()
+          #endif()
 #+self.
           break
-        #endwhile
+        #endif
         i += 1
+      #endwhile i
       ivar+= 1
-    #endwhile ivar < Nvar
+    #endwhile ivar <= Nvar
 #}update variables in Wavein
 
     #Debug = 0
@@ -5119,8 +5123,6 @@ def writewavein():
     isend = 0
 
     while iline < Nwavein:
-
-      #if iline == 3008: #reakpoint()
 
       win = Wavein[iline]
 #+self,if=trace.
@@ -5388,7 +5390,7 @@ def runwave(ev=''):
 
   #print("runwave:",ev,kWaveinRead)
   if ev != 'RECOVER' and kWaveinRead !=0:
-    writewavein()
+    writewavein('runwave')
   #endif kWaveinRead !=0:
 
   print("\nStarting WAVE, i.e. executing:\n",WAVECom,"\n")
@@ -5645,8 +5647,9 @@ WGmain = 0
 # +KEEP,wgui,T=PYTHON.
 
 def debugcalc():
-  print("\n*** ISPEC: ",Variables[116])
-  print("\n*** ISPECM: ",Variables[284])
+  print("\n*** ISPEC: ",Variables[119])
+  print("\n*** ISTOKES: ",Variables[582])
+  print("\n*** IBRILL: ",Variables[583])
 #enddef
 
 def Calculate():
@@ -5664,7 +5667,9 @@ def Calculate():
   ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
 
 
+  #debugcalc()
   i = 0
+  #reakpoint()
   while i <= Ncalc:
 
     calc = Calc[i]
