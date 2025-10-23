@@ -1,0 +1,90 @@
+\section{Example: APPLE-II Undulator} \label{ex4}
+
+The most realistic undulator model
+\footnote{See also example \ref{ex11} ~ for an even better model by interfacing
+to \Ue. \U allows to take into account the interaction
+between the neighbouring magnets, while WAVE only consideres static
+magnets with $\mu = 1$. This interaction might affect especially the
+first and second integrals, i.e. the kick and off set at the end of
+the trajectory.}
+of \W is an undulator build of
+permanent magnet blocks (rare earth componds like NdFeB, shortly REC).
+The field of these blocks is calculated with the current sheet method.
+Due to the large number of blocks of an undulator the field
+calculations are rather slow, but the field is very realistic, and an
+undulator can be modelled with all its features like gap and shift
+changes.
+
+The namelist \scap{\$REC} holds the variables of the undulator. It also
+includes gap taper and field errors. To set up the input file \wie, enter:
+
+\cboxs{
+\senv\\ {\grau
+python3 ../python/wave\_example\_4.py\\
+cp \dw/input/wave\_example\_4.in wave.in}
+}
+
+After the \W run, you'll find a file named \gtis{rec\_plotm.eps}, which
+shows the set-up of the undulator (Fig. \ref{ex4fig1}). \\[-2cm]
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pictures/wave_example_4_recplotm_1.pdf}
+    \vspace{-1.5cm}
+    \caption{REC model of an undulator}
+    \label{ex4fig1}
+\end{figure}
+
+The figur shows the upper and lower rows of magnets as top views and a
+side view of both. To see details we
+click \gtis{Conf. Mag.} in the toolbar of \WSH and \\
+
+\witem{REC-undulator (Option KBREC)}
+{~}\\[-1.5cm]
+\witem{Options}
+{~}\\[-1.5cm]
+\witem{Plotting options}
+
+and set the plotting range
+
+\cboxss{RPLXMN = -920.\\
+RPLXMX = -850.
+}
+
+and rerun \W.\\
+
+\begin{figure}[ht]
+{~}\\[-2.5cm]
+    \centering
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pictures/wave_example_4_recplotm_2.pdf}
+    \vspace{-1.5cm}
+    \caption{Endpoles of the REC model}
+    \label{ex4fig2}
+\end{figure}
+
+Now, you see the details of the endpoles, the shift, and the
+magnetization of the blocks. More complex situtation can be handle by
+an input file containing arrays of magnet. This will be explained in
+one of the following examples.
+
+The overview of this run is shown in Fig. \ref{ex4fig3}. It shows the
+elliptical trajectory and the corresponding first harmonic.\\
+
+\begin{figure}[ht]
+    \centering
+    %\framebox(11.5,8){
+      \includegraphics[width=0.7\textwidth]
+      {/home/scheer/wav/doc/pp/wave_example_4_overview.pdf}
+    %}
+    \caption{Example of an APPLE-II undulator}
+    \label{ex4fig3}
+\end{figure}
+
+\newpage
+\underline{Proposed exercise:}
+
+In the option menu of the REC-Undulators is a menu to define errors of
+the magnetic blocks. Give it a try, and check also the magnetic field
+errors option in the menu of the global magnetic field options.

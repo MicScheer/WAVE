@@ -1,0 +1,130 @@
+\section{Example: Global Magnetic Field Options} \label{ex7}
+
+\W~offers in the namelist \scap{\$B0SCBLOBN} some options,
+e.g. shifting, scaling, and symmetry operations of the magnetic field.
+It also offers to repeat the set-up periodically. In this example, we make
+use of these options in order to
+calculate the spontanous synchrotron radiation of a very long
+undulator section including phase shifters. But first, we consider a
+single cell of this section (Fig. \ref{ex7fig1}). We enter:
+
+\cbox{\senv \grau \\
+python3 ../python/wave\_example\_7.py\\
+cp \$WAVE/input/wave\_example\_7.in wave.in\\
+wave\\
+wplot \\
+}
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(12,8){
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pp/wave_example_7_single_id.pdf}
+    %}
+    \caption{Field and 9th harmonic of a single undulator section}
+    \label{ex7fig1}
+\end{figure}
+
+The field is a superposition a planar undulator (namelist \scap{\$ELLIPN}) and
+a phase shifter (namelist \scap{\$HALBASY}). If \scap{IBSUPER=1}
+in \wie, \W~accepts several field selections . The undulator parameters are
+set such, that the 9th harmonic is at \gtis{150\,keV} for a beam energy of
+\gtis{17 \, GeV}. We now make use of a the periodic field option. Have a
+look on the corresponding variables in the namelist
+\scap{\$B0SCGLOBN}:\\
+
+\cboxss{IPERIODG=1\\
+PERIODG=3.\\
+PEROFFG=-1.5\\
+}
+
+This means, that the magnetic field is periodically repeated starting from
+\scap{X=-1.5} with a period-length of 3 meters.
+
+We set in \wie:
+
+\cboxss{XSTOP=88.5\\
+IHTRSMP=10}
+
+and run \W and get the results shown in Fig. \ref{ex7fig3}
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(12,8){
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pp/wave_example_7_long.pdf}
+    %}
+    \caption{Field and 9th harmonic of a long undulator section}
+    \label{ex7fig3}
+\end{figure}
+
+Passing a long undulator section an electron beam loses a significant
+amount of energy. Hence the K-parameter of the down-stream undulators
+does not match the beam energy anymore. This results in a broadening
+of the spectrum. This can be simulated by setting
+
+\cboxss{IENELOSS=1}
+
+in \wie. We run \W and get the results in Fig. \ref{ex7fig4}.
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(12,8){
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pp/wave_example_7_ieneloss.pdf}
+    %}
+    \caption{Field and 9th harmonic of a long undulator section
+    with continous energy loss of the beam}
+    \label{ex7fig4}
+\end{figure}
+
+To compensate it, we must adjust the field of each undulator
+accordingly. This can be achieved with the field option
+
+\cboxss{JBMASK=100}
+
+and by providing a file \gtis{wave.bmask}, which contains a number of
+$X$-Intervalls and a scaling factor for the magnetic field for
+each intervall. The last \wo gives the total and relative energy loss of the beam due to
+the 30 undulators. From this number we calculate the energy loss of a
+single undulator cell, and use the relation
+
+\begin{eqnarray*}
+   \frac{E_{beam}^2}{1+K^2/2} &=& const
+\end{eqnarray*}
+
+to calculate the correction factor for the undulator field, as it is
+done in the function \gtis{taper()}, which also writes the file \scap{wave.bmask}
+
+We use this function:
+
+\cboxss{wplot\\
+taper()\\
+Quit()
+}
+
+The default values of this function correspond to this example. Beside the
+relative energy loss the starting $K$-value is taken from \wo of the
+previous run as well (Look for ''deflection parameter'').
+
+In \wi we set
+
+\cboxss{JBMASK=100}
+
+Please, also read the comments of the corresponding namelist
+\scap{B0SCGLOBN} carefully and notice the difference between
+\scap{JBMASK} and \scap{IBMASK}.
+
+We run \W~again and see in Fig. \ref{ex7fig5} that the harmonic of the
+undulator recovers.
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(12,8){
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pp/wave_example_7_taper.pdf}
+    %}
+    \caption{Field and 9th harmonic of a long undulator section
+    with continous energy loss of the beam and corrected undulators}
+    \label{ex7fig5}
+\end{figure}

@@ -1,0 +1,33 @@
+%+PATCH,//WAVE/TEX
+%+DECK,introduction,T=LATEX.
+
+\renewcommand*\thesection{\Roman{section}}
+\section{Introduction}
+
+\W~has been developed at BESSY over the years to track electrons
+through magnetic fields and to calculate spontanous synchrotron radiation
+\cite{dok}.
+This document illustrates the usage of \W~and makes you
+familiar with it by following the given examples.
+
+\W is mainly controlled by an ASCII input file named \wie.
+For each example, there is a script \gtis{wave\_example\_n.sh} to
+create \wi from \wee, where \gtis{n}~is the number of the example. Once
+\wi is created by the corresponding script, you may compare
+\we and \wi to see, which variables have changed.
+
+There is a graphical user interface (GUI), a Python script called
+\WSH to setup \wie, to run \W, and to visualize the
+results. This is explained in the first example. However, not all
+options for \W are available in the GUI.
+
+Once \W is installed, you should have a \W directory and shell
+variable \W pointing to it. It is assumed, that the user knows to edit
+a file and how to open a terminal, e.g. \gtis{bash} under Linux  or powershell and under
+Windows. As an alternative one may run the Python shell \gtise{idle}.
+
+WAVE and the related software is published under the GNU General Public
+License. To get WAVE, please contact the author or get it from github:
+
+~~~~~\gtis{git clone https://github.com/MicScheer/wave.git wave}
+

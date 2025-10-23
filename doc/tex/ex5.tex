@@ -1,0 +1,126 @@
+\section{Example: Simple Build-In Optimization} \label{ex5}
+
+{~}\\[-0.5cm]
+A very common situation is, that you want to tune input parameters
+with respect to a figure of merit. \W has build in two simple
+procedures to accomplish that. The first is an iterativ estimation
+for the case of one parameter to adjust, the second a Monte-Carlo for more
+than one parameter.
+
+Consider example \ref{ex4} For the given gap, we want to find the
+shift such, that the vertical and horizontal field of the undulator are
+the same, i.e. the device acts as an circular undulator.
+
+In a terminal, we enter:\\
+
+\cboxs{
+\senv\\ \grau
+python3 ../python/wave\_example\_5.py\\
+cp ../input/wave\_example\_5.in wave.in\\
+wave\\
+}
+
+We see in \woe, that the max. vertical and horizontal fields \scap{BYMAX} and
+\scap{BZMAX} differ. Now, we
+adjust the shift parameter of the undulator. Enter:\\
+
+\cboxs{cp ../input/wave\_example\_5.adjust wave.adjust\\
+cp ../python/wave\_adjust\_example\_5.py wave\_adjust.py\\
+}
+
+Have a look on \gtis{wave.adjust} (Fig.\ref{ex5fig2}).
+When a file like this is passed as an argument to \We, \W will adjust the
+parameter \scap{URSHIFT(1)} of \wi by a Monte-Carlo search. Of course,
+this also works with other filenames and variables of \wie.  During
+the optimization
+procedure \W executes the script \gtis{wave\_adjust.sh}, which calls
+another instance of \W and \gtise{wave\_adjust.py}.\\
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pp/wave_example_5_wave_adjust.png}
+    \caption{Input file for the optimization procedure}
+    \label{ex5fig1}
+\end{figure}
+
+After the run of this instance,
+the command given in the last line of \gtis{wave.adjust} is executed by
+the master process.
+In our example, this is the python script  \gtis{wave\_adjust.py}.
+What does this script (Fig.\ref{ex5fig2}) do? \\
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pp/wave_example_5_wave_adjust_py.png}
+    \caption{Example of a program to calculate the figure of
+    merit}
+    \label{ex5fig2}
+\end{figure}
+
+It opens \woe, and looks for the lines containing the keywords like
+\scap{BYmin}. When a matching line is found,
+the program reads from the line the values of  \scap{By} or \scap{Bz},
+respectively,
+and calculates the \gtis{$\chi^2$} to be minimized. The resulting \gtis{$\chi^2$}
+is written to \gtis{wave\_adjust.dat} and evaluated by the
+master process.
+
+Let's try. Enter:
+
+\cboxs{cp wave.in wave\_adjust.in\\
+wave wave.adjust \\
+}
+
+
+\W loops and writes \gtis{wave\_adjust.out}.
+The data in this file show a minimum for the shift of about \gtis{19mm}
+(Fig.\ref{ex5fig3}). This minimum value found is also used to re-run
+WAVE.
+
+%\newpage
+Start the plotting GUI by entering:
+
+\cboxs{wplot}
+
+and enter in the python shell:\\
+
+\cboxs{adj = ncread("adj","sh:chi2","wave\_adjust.out")\\
+nplot(adj,"sh:chi2")\\
+txyz("wave\_adjust.out","Shift[mm]","Chi2")}
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(12,9){
+    \includegraphics[width=0.7\textwidth]
+    {/home/scheer/wav/doc/pp/wave_adjust_mc.pdf}
+    %}
+    \caption{Random variation of URSHIFT(1)}
+    \label{ex5fig3}
+\end{figure}
+
+The plot you get, might differ from that shown here, due to different
+seeds of the Monte-Carlo search.
+
+To get a precise value,
+we edit \gtis{wave.adjust}, and set the number of parameters to \gtis{-1}
+and the boundaries to \gtis{18.0} and \gtis{20.0}.
+Then we repeat
+
+\cboxs{cp wave.in wave\_adjust.in\\
+wave wave.adjust\\
+}
+
+and find now in \wi the best value of about \\
+
+\scap{URSHIFT(1)= 18.6}\\
+
+Since we have required a precision for the minimum
+\gtis{$\chi^2 \le 10^{-6}$}, the ratio of the vertical and horizontal field
+now agrees on the scale of \gtis{$\sqrt{10^{-6}}$}.
+
+The effort in this example might appear quite high for such a simple
+probleme, which could be solve sufficently by a quick interpolation.
+However, it shows the usage of scripts and the advantage of command
+line driven optimization procedures.

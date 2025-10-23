@@ -1,0 +1,237 @@
+\section{Example: The Concept of Source Points \label{ex3}}
+
+Synchroton radiation is mainly emitted into a narrow cone on the scale
+of $1/\gamma$. Consider a wave-length shifter (WLS) with a main pole and two
+endpoles. Such a device has a deflection angle that is usually much
+larger than $1/\gamma$. Therefore, an observer at point $P$ sees up to
+three sources of radiation from the WLS, namely the points of the
+trajectory, where the electron points to $P$ as sketched in Fig.
+\ref{ex3fig1}. These points, we call source points. Actually, they are
+not really points, but pieces of the trajectory due to the finite
+opening angle of the radiation cone.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pictures/gut-spect-1a.pdf}
+    \caption{Source points of a wave-length shifter for
+    observation point P}
+    \label{ex3fig1}
+\end{figure}
+
+Let's have a closer look. Enter in the terminal:
+
+\cboxs{
+. \$WAVE/shell/set\_wave\_environment.sh\\
+cp ../input/wave.example wave.in\\
+waveshop
+}\\
+
+\begin{itemize} \renewcommand\labelitemi{--}
+\item
+The GUI pops up, select in the upper menu bar \gti{Comment} and
+change the user title
+
+\vitemt{User title}{
+Example 3: The Concept of Source Points
+}
+
+\item
+Click \gtis{Track} in the toolbar
+
+and set
+\vitem{number of steps per meter}{100000}
+
+to increase the precision of the spectrum calculations in the
+undulator mode. Hit \scap{OK}.\\
+
+\item
+Click \gtis{Sel. Mag.} in the toolbar and in the menu
+
+\witem{Elliptical undulator}
+
+\witem{Halbach undulator/wiggler with end poles}
+
+{~}\\[0.5cm]
+and set the peak field to \gtis{6.0T}, the number of main poles to \gtis{1}, the
+period length \gtis{0.7m}. Hit \scap{OK}, again \scap{OK}.\\
+
+\item
+Click \gtis{Spectra} in the toolbar and in the menu
+
+\witem{Pinhole definition}
+\witem{single point}
+
+{~}\\[0.5cm]
+Click \scap{OK}.\\
+
+\item
+Click
+\witem{Spectral range}
+
+{~}\\[0.5cm]
+and set the lowest photon enery to \gtis{50.}, the highest to \gtis{25000.}, and
+the number of photon energies to \gtis{2001},  then hit \scap{OK}
+(Fig. \ref{ex3range}).
+
+\begin{center}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.7\textwidth]
+    {/home/scheer/wav/doc/pipy/wave_example_3_range_2.png}
+    \caption{Setting of the spectral range}
+    \label{ex3range}
+\end{figure}
+\end{center}
+
+\end{itemize}
+
+%\newpage
+Close the menu and click \gtis{Run} in the toolbar and plot the overview.\\
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(12,9){
+      \includegraphics[width=0.7\textwidth]
+      {/home/scheer/wdp/ex3_wls_undulatormode_overview.pdf}
+    %}
+    \caption{The spectrum of an WLS calculated in the
+    undulator mode}
+    \label{ex3fig2}
+\end{figure}
+
+%{~}\\[1cm]
+The spectrum (right plot in the overview Fig. \ref{ex3fig2}) looks a little
+weird. We leave the GUI, edit \wi and set
+
+\cboxss{FREQLOW=2000.\\FREQHIG=2010.\\NINTFREQ=201\\IEFOLD=3}
+
+To run \W, enter:
+
+~~~~~\gti{wave}
+
+%{~}\\[-0.5cm]
+
+When \W has finished,  enter
+
+~~~~~\gti{wplot}
+
+%\newpage
+
+We choose in the plotting GUI
+
+\cboxs{Plot/Spectra/Flux-density/Fd}\\
+
+The spectrum (red) in Fig. \ref{ex3fig3a}
+is not as smooth as we would expect from a wave-length shifter.
+The synchrotron radiation of a single electron is fully
+coherent, thus there are interferences between the radition of the different poles of
+the WLS. But the
+phase advance between the poles is so high, that the
+corresponding huge number of oszillations can not be resolved by the
+integration algorithm of \W. The observed spectrum
+is therefore a mixture
+of real interferences and a numerical noise depending on the
+integration parameters.
+
+However, the
+energy-spread of a real beam smears out the spectrum.
+To plot the smeared spectrum goto to the plot GUI and select:
+
+\cboxs{Options/Same Zone\\
+Options/Next Color\\
+Menu/Spectra/Flux-density/Fd with e-spread}
+
+The resulting spectrum (blue line) is smooth as would be expected from
+a wave-length shifter.
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(12,9){
+      \includegraphics[width=0.7\textwidth]
+      {/home/scheer/wav/doc/pipy/ex3_wls_undulatormode_a.png}
+    %}
+    \caption{\parbox[t]{10cm}{The spectrum of an WLS calculated in the
+    undulator mode. Red: Without e-spread, blue: with e-spread.}}
+    \label{ex3fig3a}
+\end{figure}
+
+Terminate the plotting and start the GUI \WSHE.
+
+In the toolbar hit \gtis{Spectra} and select in the menu "Spectrum calculations"
+
+\witem{Main modes} \witem{wiggler mode 2}
+
+Hit \scap{OK} and run \W.
+
+To plot the spectrum including the energy-spread, we choose in the plotting
+GUI
+
+\cboxs{Menu/Spectra/Flux-density/Fd with e-spread}
+
+or enter in the Python shell
+
+\cboxs{hcfluxden("fde")}
+
+\begin{figure}[th]
+    \centering
+    %\framebox(12,9){
+      \includegraphics[width=0.7\textwidth]
+      {/home/scheer/wav/doc/pipy/wave_example_3_wiggler.png}
+    %}
+    \caption{The spectrum of a WLS calculated in the wiggler
+    mode including the energy-spread of the beam}
+    \label{ex3fig5}
+\end{figure}
+
+Fig. \ref{ex3fig5} shows the same result, as in the previous run with the
+undulator mode. We conclude, that the interferences between the poles
+of the WLS are real, but can not be calculated correctly and can not be
+observed for real beams with a finite energy-spread.
+Hence, it is justified to neglect them, i.e. to calculate the radiation
+from each pole seperately and to sum up the contribution of all poles
+incoherently. This is what the wiggler mode of \W does. The decision,
+if the wiggler mode should be applied (and especially together with
+Schwinger's formular) depends on the  regime, where the spectrum is
+calculated. For a wiggler, this  means the undulator mode is needed in
+the spectral range of the lower harmonics. In doubt, try the different
+modes and have a look on the results.
+
+\begin{figure}[th]
+    \centering
+    %\framebox(12,9){
+      \includegraphics[width=0.7\textwidth]
+      {/home/scheer/wav/doc/pp/wave_example_3_sources.png}
+    %}
+    \caption{Source points of a WLS}
+    \label{ex3fig6}
+\end{figure}
+
+In the plotting GUI, choose:
+
+\cboxs{Menu / Fields and Trajectory / Sources / z(x)}
+
+As shown in Fig. \ref{ex3fig6}, \W has found three source points. How
+does it work? \W tracks first the electron and stores the trajectory.
+Then it checks for all steps of the trajectory, if a beam with a given
+opening angle passes at least partically a collimator.
+The first step satisfying this, is marked as the beginning of a
+source, the last as the end.
+
+%\newpage
+
+This procedure and the set-up of the collimator are controlled by the variables of the namelist
+\scap{\$COLLIN}. The main modes of \W namely the undulator and
+wiggler modes set default values for these variables, which
+should work in most cases. In addition, the main modes control
+the intergration method \scap{ISPECMODE} and the number of integration steps
+\scap{NLPOI} used to calculate the
+spectrum.
+
+\underline{Proposed exercise:}
+
+Try the expert mode, i.e.
+\scap{IUNDULATOR=0, IWIGGLER=0}
+and play with the variables
+\scap{WGWINFC, NLPOI} and the variables of the namelist
+\scap{\$COLLIN}.

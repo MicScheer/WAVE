@@ -1,0 +1,110 @@
+\section{Example: ''Real'' Beams, Part I} \label{ex6}
+
+Up to now, we have only considered single electron beams, except in example
+\ref{ex3}, where we have seen the effect of the energy-spread of the
+beam. In this example, we learn about the first of two methods how \W~takes the
+effects of real beams, i.e. emittance and enery-spread into account.\\
+
+In modern low emittance storage rings the spatial and spectral
+distribution of the synchrotron radiation does not vary very much for
+the different electrons in the beam phase-space. Thus, the shape of
+the radiation cone is more or less the same, it is only shifted
+according to the position and slope of the considered electron.
+Therefore, it is possible to take the beam emittance into account by
+folding the radiation cone of the reference electron with
+a distribution that reflects the phase-space. This distribution is
+usually a 2D-Gaussian with
+\begin{eqnarray*}
+\Sigma_y^2 &=& \sigma_y^2 + d^2 \times \sigma_y'^2   \\
+\Sigma_z^2 &=& \sigma_x^2 + d^2 \times \sigma_x'^2
+\end{eqnarray*}
+
+where $\sigma_y,\, \sigma_y', \sigma_z, \, \sigma_z'$ denote the
+vertical and horizontal sizes
+and divergences of the beam  and $d$ the distance between the source and the
+observation plane. Enter:\\
+
+\cboxs{\senv\\ \grau
+python3 ../python/wave\_example\_6.py\\
+cp ../input/wave\_example\_6.in wave.in\\
+wave\\
+wplot\\
+}
+
+Use the plotting GUI to produce the Fig. \ref{ex5fig4} or enter in the
+python shell:
+
+\cboxs{zone(1,2,1)\\
+ndistpinh()\\
+nextzone()\\
+ndistpinv()
+}
+
+If you want to change parameters for varies runs, but
+plot always the same, you can put these lines into a file
+
+\gtis{waveplot\_startup.py}
+
+The commands in this file are exceuted at the start of \wple, until the
+end of the file is reached, or a line with a key-word \gtis{EOF} is
+found.
+Of course, this can also handle the plotting zones by using the \gtis{Options} menu of
+\wple.
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(10,8){
+          \includegraphics[width=0.6\textwidth]
+	  {/home/scheer/wav/doc/pp/wave_example_6_hvcut.pdf}
+    %} % end framebox
+    \caption{Horizontal and vertical cuts through the
+    flux-density distribution}
+    \label{ex5fig4}
+\end{figure}
+
+The mean value of the histgrams agree with the position of the
+observation pinhole as given in \woe. We see, that the position of the
+pinhole is shifted. This has been achieved by setting\\
+
+\cboxss{YSTART=56.1e-6\\
+ZSTART=648.e-6\\
+VYIN=12.87e-6\\
+VZIN=74.4e-6\\
+PINCEN(2)=-9999.\\
+PINCEN(3)=-9999.\\
+}
+
+in \wie . The values for the start conditons of the electron correspond
+to three sigmas of the beam sizes and divergences as given in the
+namelist \scap{\$WFOLDN}. The values for the center of the pinhole
+trigger the shift of the pinhole, as is explained in the namelist
+\scap{\$PINHOLE}.
+
+%\newpage
+When we set in \wi\\
+
+\cboxss{YSTART=0.0\\
+YSTART=0.0\\
+ZSTART=0.0\\
+VYIN=0.0\\
+VZIN=0.0\\
+}
+
+as usual, we get nearly the same histograms, except that they centered
+on-axis. Hence, the ansatz of the folding procedure is verified.
+
+A similar folding procedure is applied for the spectrum to take into
+account the energy-spread of the beam (\scap{ESPREAD} in the namelist
+\scap{\$WFOLDN}). This procedure makes use of the fact, that the
+harmonics of a undulator depend on the square of the beam energy
+$E_{beam}$. Thus, the shift of the spectrum is in first order given
+by\\[-1.5cm]
+
+\begin{eqnarray*}
+\frac{\Delta E_{phot}}{E_{phot}}  &=&  2 \times \frac{\Delta E_{beam}}{E_{beam}}
+\end{eqnarray*}
+while the shape stays in a good approximation the same.
+
+\underline{Proposed exercise:}\\
+
+Try to verify the last statement by using \W.

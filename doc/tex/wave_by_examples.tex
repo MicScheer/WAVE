@@ -1,0 +1,130 @@
+%+PATCH,//WAVEDOC/TEX
+%+DECK,wave_by_examples,T=LATEX.
+\documentclass[11pt,ngerman,a4paper,twoside]{article}
+
+%\usepackage{epsfig,varioref,titlesec,latexsym,amssymb,amsmath,fancybox,graphicx}
+\usepackage{varioref,titlesec,latexsym,amssymb,amsmath,fancybox,graphicx}
+%\usepackage{babel}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  linkcolor=blue,
+  filecolor=blue,
+  urlcolor=blue,	
+  citecolor=blue,
+  plainpages=false,
+  hypertexnames=false,
+}
+
+\usepackage[nottoc]{tocbibind}
+\usepackage{soul}
+\usepackage{epstopdf}
+\epstopdfsetup{update} % only regenerate pdf files when eps file is newer
+
+\usepackage[scaled]{helvet} %Helvetica-Fonts z.B. phvb
+\renewcommand*\familydefault{\sfdefault} % sans serif as default
+\newfont{\myheadfont}{phvb scaled \magstep 4}
+
+\usepackage{fancyhdr}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{mytitlepage}
+\usepackage{relsize}
+
+% Die erste Zahl setzt die Schriftgröße, die zweite bedeutet baselinskip
+\titleformat{\section}
+  {\normalfont\fontsize{11}{15}\bfseries}{\thesection}{1em}{}
+
+\hyphenpenalty=500
+
+%\DeclareMathSizes{10}{8}{8}{7}   % For size 10 text
+%\DeclareMathSizes{12}{11}{10}{8}   % For size 10 text
+%\DeclareMathSizes{11}{19}{13}{9}   % For size 11 text
+%\DeclareMathSizes{12}{20}{14}{10}  % For size 12 text
+
+% Layout Seitenkopf
+%\addtolength{\headwidth}{\marginparsep}
+%\addtolength{\headwidth}{\marginparwidth}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+\newfont{\bss}{bessy scaled \magstep 4}
+
+\setlength{\unitlength}{1cm}
+
+\clubpenalty=10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+
+\textwidth 16. cm
+\topmargin .0 cm
+\textheight 22.5 cm
+\parskip 0.3 cm
+\sloppy %Gegenteil von \fussy
+\oddsidemargin 0.0 cm
+\evensidemargin 0.0 cm
+\parindent=0.cm
+
+\usepackage{xcolor}
+\definecolor{orange}{rgb}{1.,0.8,0.4} % rgb
+\definecolor{hellgrau}{gray}{0.9}
+\definecolor{schwachgrau}{gray}{0.95}
+\definecolor{grau}{gray}{0.4}
+\definecolor{dunkelgrau}{gray}{0.2}
+
+\begin{document}
+
+\thispagestyle{empty}
+
+\begin{center}
+\LARGE \textbf{WAVE by Examples} \\[1cm]
+
+\textbf{ \Large Michael Scheer} \\[0.cm]
+\textbf{ \Large Helmholtz-Zentrum Berlin} \\[0.75cm]
+
+\textbf{ \Large \today }\\
+\end{center}
+
+\newpage
+\thispagestyle{empty}
+{~}
+
+%\newpage
+
+\setcounter{page}{1}
+\tableofcontents
+
+%\newpage
+
+\pagestyle{fancy}
+
+%\lhead[\bfseries\thepage]{\bfseries\rightmark}
+\lhead[\textit \thepage]{\textit \rightmark}
+\chead[]{}
+%\rhead[\bfseries\leftmark]{\bfseries\thepage}
+\rhead[\textit \leftmark]{\textit \thepage}
+
+\lfoot[]{}
+\cfoot[
+Version 0.00/02
+]{}
+\rfoot[]{}
+
+%\large
+
+\include{hyphenation}
+\include{abbrevs}
+
+\include{introduction}
+\include{getting_started}
+\include{ex1} % Selecting a Magnetic Field Model
+\include{ex2} % Tracking through Magnetic Fields
+\include{ex3} % The Concept of Source Points
+\include{ex4} % An APPLE-II Undulator
+\include{ex5} % Build-in adjustments and optimizations
+\include{ex6} % Real Beams, Part 1
+\include{ex7} % Global Field Options
+\include{bibliography}
+\end{document}
