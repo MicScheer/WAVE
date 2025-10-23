@@ -2010,6 +2010,7 @@ def SelectButton(kselect,kmenu):
 
       if iselect == kselect:
 
+        #reakpoint()
         jitemv = i - 1
 
         if menu[i] == 'TOGGLE':
@@ -2342,6 +2343,7 @@ def pmenu(kmenu):
 
   Calculate()
   CheckVetos()
+  #reakpoint()
 
   #if Imenu == 39: Debug=2
   if Debug > 0:
@@ -6298,6 +6300,11 @@ def CheckButtons():
         vstate = NORMAL
         selcol = Select_color
 
+      if Variables[ivar][1]:
+        SMitem[M][i][0].configure(state=vstate,relief=SUNKEN)
+      else:
+        SMitem[M][i][0].configure(state=vstate,relief=RAISED)
+      #endif
     elif SMitem[M][i][1] == 'MAPPING' or SMitem[M][i][1] == 'BONDING':
 
       imap = SMitem[M][i][2]
@@ -6326,6 +6333,7 @@ def CheckButtons():
         vstate = 'normal'
       #if MappingVeto[imap] != 0:
 
+      SMitem[M][i][0].configure(relief=reli)
     #endif SMitem[M][i][1] == 'MENU':
 
     i+= 1

@@ -16766,12 +16766,18 @@ def samezone(isame=1):
   if not isame: Isame = 0
 #enddef samezone(isame=1)
 
-def nextzone(projection='2d', visible=True, isame=0):
+def nextzones(isilent=1):
+
+  global Nxzone, Nyzone, Kzone, Isame, Kplots, Kzone
+  if not isilent: print(Nxzone, Nyzone, Kzone, Isame, Kzone, Kplots[:Nxzone*Nyzone])
+  return Nxzone, Nyzone, Kzone, Isame, Kzone, Kplots[:Nxzone*Nyzone]
+
+def nextzone(projection='2d', visible=True, isame=0,caller=''):
 
   global Nxzone, Nyzone, Kzone, Isame, Kecho, Kplots, Kzone
 
   if Kecho:
-    print("nextzone(projection=" + projection + ", visible=" + str(visible) +")")
+    print("nextzone(projection=" + projection + ", visible=" + str(visible) + ", caller=" + caller +")")
 
   try:
     IsameGlobal.set(0)
@@ -16790,7 +16796,7 @@ def nextzone(projection='2d', visible=True, isame=0):
   ny = Nyzone
   kzone = Kzone
 
-  if kzone < nx * ny:
+  if kzone < (nx * ny):
     kzone += 1
     zone(nx,ny,kzone,'s',projection=projection,visible=visible)
   else:
@@ -16844,6 +16850,7 @@ def zone(nx=1, ny=1, kzone=1, isame='', projection='2d', visible=True):
 
   global Tax2d, Tax3d, Debug, ClearCanvas
 
+  #print('zone:',nx,ny,kzone,isame,projection,visible)
   ClearCanvas = 0
 
   if ny == 1: set_y_of_xlab(-0.1)
@@ -17724,6 +17731,8 @@ def null3d(xmin=-10., xmax=10., ymin=-10., ymax=10., zmin=-10., zmax=10.,elev=30
 
   set_view_3d(elev,azim,roll)
 
+  Kplots[Kzone-1] = 1
+
 #  showplot()
 #enddef null3d(xmin=-10., xmax=10., ymin=-10., ymax=10., zmin=-10., zmax=10.)
 
@@ -17777,7 +17786,7 @@ def null(xmin=-10., xmax=10., ymin=-10., ymax=10.):
 #enddef null(xmin=-10., xmax=10., ymin=-10., ymax=10.)
 
 def nnull(xmin=-10., xmax=10., ymin=-10., ymax=10.):
-  nextzone()
+  nextzone(caller='nnull')
   null(xmin, xmax, ymin, ymax)
 #enddef
 
@@ -19117,7 +19126,7 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
     lcol = color
   #endif color == 'default'
 
-  varliso =varlis
+  varliso = varlis
 
   if type(varlis) == str:
     varlis = nlistcolon(varlis)
@@ -19152,14 +19161,15 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
   idx = GetIndexH1(hist)
 
   if Kecho:
+    #reakpoint()
     if type(hist) == str: shis = "'" + hist + "'"
     elif type(hist) == int: shis = str(hist)
     else: shis = H1hh[1]
     if idn != -1:
-      s = "nplot('" + Nhead[idn][1] + "', '" + varlis + "', select='" + select + "', weights='" + weights + "', plopt='" + plopt + "', legend='" + \
+      s = "nplot('" + Nhead[idn][1] + "', '" + varliso + "', select='" + select + "', weights='" + weights + "', plopt='" + plopt + "', legend='" + \
       legend + "', scalex=" + str(scalex) + ", scaley=" + str(scaley) + ", scalez=" + str(scalez) + ", scalet=" + str(scalet) + ", cmap='" + cmap + "'," + shis + ")"
     else:
-      s = "nplot(nt, '" + varlis + "', select='" + select + "', weights='" + weights + "', plopt='" + plopt + "', legend='" + \
+      s = "nplot(nt, '" + varliso + "', select='" + select + "', weights='" + weights + "', plopt='" + plopt + "', legend='" + \
       legend + "', scalex=" + str(scalex) + ", scaley=" + str(scaley) + ", scalez=" + str(scalez) + ", scalet=" + str(scalet) + ", cmap='" + cmap + "'," + shis + ")"
     print(s)
   #endif Kecho
@@ -19542,7 +19552,7 @@ color='default',isort=0):
 def nnplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
           scalex=1., scaley=1., scalez=1., scalet=1., cmap='', hist='HnPlot',
          color='default',isort=0):
-  nextzone()
+  nextzone(caller='nnplot')
   nplot(nt,varlis,select,weights,plopt, legend,scalex, scaley, scalez, scalet,
         cmap, hist,color,isort)
 #enddef nnplot(
@@ -19577,7 +19587,7 @@ def nplt(nt='?',varlis='',select='',weights='',plopt='', legend='',
 def nnplt(nt='?',varlis='',select='',weights='',plopt='', legend='',
           scalex=1., scaley=1., scalez=1., scalet=1., cmap='', hist='HnPlot',
          color='default',isort=0):
-  nextzone()
+  nextzone(caller='nnplt')
   nplt(nt,varlis,select,weights,plopt, legend,scalex, scaley, scalez, scalet,
         cmap, hist,color,isort)
 #enddef nnplt
@@ -22585,11 +22595,15 @@ def getzone(projection=''):
 
 
   global ClearCanvas
+  #print("getzone:ClearCanvas,Nxzone,Nyzone,Kzone:",ClearCanvas,Nxzone,Nyzone,Kzone)
+
   if ClearCanvas: _clearCanvas(1)
 
+  #reakpoint()
   Fig = plt.gcf()
   Axes = Fig.get_axes()
-  #print("getzone 1:",Axes)
+  #print("\ngetzone:",len(Axes))
+  #nzret = nextzones(0)
 
   if not len(Axes):
     #print("getzone 2:",Axes)
@@ -22616,14 +22630,29 @@ def getzone(projection=''):
   Axes = Fig.axes
   Ax = plt.gca()
 
-  ifound = 0
+  try:
+    azones = Ax.get_label().split('_')
+    mx = int(azones[0])
+    my = int(azones[1])
+    mz = int(azones[2])
+#    if mx!=Nxzone or my!=Nyzone or mz!=Kzone:
+#      print(Nxzone,Nyzone,Kzone)
+#      zone(Nxzone,Nyzone,Kzone,'s')
+    #endif
+  except: mz = -9
 
+  #reakpoint()
+  ifound = 0
+  #print(Zones)
+
+  iz = 0
   for z in Zones:
+    iz += 1
     if z[0] == Fig:
       Nxzone = z[1]
       Nyzone = z[2]
       Kzone = z[3]
-      ifound = 1
+      ifound = iz
       break
   #endfor z in Zones:
 
@@ -22656,10 +22685,24 @@ def getzone(projection=''):
     i += 1
   #endfor ax in Axes
 
-  if iax >= 0 and iax < len(Axes)-1 and  hasattr(Axes[iax+1],'get_label'):
-    Fig.delaxes(Axes[iax+1])
-
-  Fig.delaxes(Ax)
+  #print("mz:",mz,iax,Isame)
+  #reakpoint()
+#  if iax >= 0 and iax < len(Axes)-1 and  hasattr(Axes[iax+1],'get_label'):
+#    Fig.delaxes(Axes[iax+1])
+#
+#  Fig.delaxes(Ax)
+  #reakpoint()
+#  print("AK:",Axes,len(Axes),Kzone)
+#  print(Kplots[:5])
+  if not Isame:
+#    idel = -1
+#    for ipl in range(Kzone):
+#      if Kplots[ipl] == 1: idel += 1
+#    #endfor
+    Fig.delaxes(Axes[-1])
+#    Fig.delaxes(Axes[Kzone-1])
+#    if idel > -1: Fig.delaxes(Axes[idel])
+#    print("Gelöscht")
   Legend = []
 
   label = str(Nxzone) + "_" + str(Nyzone) + "_" + str(Kzone)
@@ -27735,6 +27778,7 @@ def nby(xmin=1., xmax=-1., plopt='line'):
   #endif xmin < xmax
 
   LastPlot = ['nby',xmin,xmax,plopt]
+  #reakpoint()
   if getecho(): s = "nby(" + str(xmin) +"," + str(xmax) + ",'" + plopt + "')"; print(s)
 
   nplot('n10','x:by',select=sel,plopt=plopt,legend='By')
@@ -38162,7 +38206,7 @@ def _ndistphase(key):  ndistphase(key)
 def _ndistphasev(key):  ndistphasev(key)
 def _ndistphaseh(key):  ndistphaseh(key)
 def _ndistpin(key):  ndistpin(key)
-def _ndistpinv(key):  ndistpinv(key)
+def _ndistpinv(key): ndistpinv(key)
 def _ndistpinh(key):  ndistpinh(key)
 def _ndistpow(key):  ndistpow(key)
 def _ndistpowv(key):  ndistpowv(key)
@@ -40675,7 +40719,8 @@ def _nPlot():
 
 
   global FillColor
-
+  print("_Plot!")
+  breakpoint()
   print(WavesMode)
   if not len(Nhead):
     nError("  No Ntuple defined so far!  ")
@@ -41358,6 +41403,7 @@ def SelectButton(kselect,kmenu):
 
       if iselect == kselect:
 
+        #reakpoint()
         jitemv = i - 1
 
         if menu[i] == 'TOGGLE':
@@ -41690,6 +41736,7 @@ def pmenu(kmenu):
 
   Calculate()
   CheckVetos()
+  #reakpoint()
 
   #if Imenu == 39: Debug=2
   if Debug > 0:
@@ -46791,6 +46838,11 @@ def CheckButtons():
         vstate = NORMAL
         selcol = Select_color
 
+      if Variables[ivar][1]:
+        SMitem[M][i][0].configure(state=vstate,relief=SUNKEN)
+      else:
+        SMitem[M][i][0].configure(state=vstate,relief=RAISED)
+      #endif
     elif SMitem[M][i][1] == 'MAPPING' or SMitem[M][i][1] == 'BONDING':
 
       imap = SMitem[M][i][2]
@@ -46819,6 +46871,7 @@ def CheckButtons():
         vstate = 'normal'
       #if MappingVeto[imap] != 0:
 
+      SMitem[M][i][0].configure(relief=reli)
     #endif SMitem[M][i][1] == 'MENU':
 
     i+= 1
