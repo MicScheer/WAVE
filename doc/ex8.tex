@@ -1,0 +1,132 @@
+\section{Example: Magnetic Field Errors} \label{ex8}
+
+The quality of an undulator depends essentially on the errors of the
+magnetic field. Field errors not only effect the trajectory and hence e.g. the
+orbit of electrons in  storage rings, but also reduce the spectral
+brightness of the device, in particular for the higher harmonics.
+
+\W~offers some options to study these effects. We enter:
+
+\cboxs{\senv \grau \\
+python3 ../python/wave\_example\_8.py\\
+cp \$WAVE/input/wave\_example\_8.in wave.in\\
+wave\\
+wplot \\
+}
+
+We look at the spectrum of the flux-density. Click:
+
+\cboxs{Plot / Spectra / Flux-density / Fd}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pp/wave_example_8_no-errors.pdf}
+    \caption{Nineth harmonic of a planar undulator}
+    \label{ex8fig1}
+\end{figure}
+
+The main errors of permanent magnet undulators arise from fluctuations
+of the magnetization of the block. This can be a variation in the
+strength or the direction of the blocks. In \wi~we set\\
+
+\cboxss{BCRAN=0.001\\ UBANGERR(1)=0.2}
+
+In addition, feel free to modify the start of the random generator  by changing \scap{IRNMODE} in the
+namelist \scap{\$RANDOMN}. Of course, then you will reproduce the
+plots of this example{\ldots}
+
+Then we run \W again and look at the trajectory (Fig. \ref{ex8fig2})
+and the spectrum by plotting the overview.\\
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pp/wave_example_8_errors.pdf}
+    \caption{Horizontal, vertical trajectory , the nineth
+    harmonic of an undulator with field errors}
+    \label{ex8fig2}
+\end{figure}
+
+The field errors result in a spoilt trajectory with a remaining kick
+(to see it better, keep the left mouse button pressed on the 3d
+trajectory plot and move the mouse to rotate the plot).
+
+In addition the on-axis spectrum of the flux-density is ruined (Fig.
+\ref{ex8fig2}). But the later is mainly a consequence of the stearing of
+the undulator, i.e. we can move the position of the observer to take
+this into account by looking for the point the trajectory points to:\\
+
+\cboxss{OBS1Y=-8888.\\OBS1Z=-8888.\\}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.8\textwidth]
+    {/home/scheer/wav/doc/pp/wave_example_8_fd_obs.pdf}
+    \caption{Nineth harmonic at the shifted observation point}
+    \label{ex8fig3}
+\end{figure}
+
+This triggers a straight line fit of the trajectory in order to
+estimate the best obervation point. We run \W~and find the spectrum of
+Fig. \ref{ex8fig3}. The peak of the nineth harmonic is now higher; however, a
+significant reduction of the flux-density and a distorted shape remains due to
+the field errors.\\
+
+We have used Gaussian errors in this example so far. Normally, one
+would not accept magnets with errors above a certain limit, let's say
+one standard deviation. This can be done by setting
+
+\cboxss{BCRANSIG=1.0\\UBANSIG(1)=1.0\\}
+
+Run \W and enter in the plotting shell:
+
+\cboxss{~\\[-10pt]
+zone(2,2)\\
+nz()\\
+zone(2,2,3,'same')\\
+ny()\\
+zone(2,1,2,'same')\\
+hcfluxden()
+}
+%\newpage
+
+The result is shown in Fig. \ref{ex8fig5}. We see a ''realistic''
+trajectory and a good nineth harmonic.
+
+These options allow the user to estimate the required quality of the
+magnets and trajectory of the undulator. There is another option
+\scap{USIGOFFY(1)}, which limits the random walk of the trajectory due
+to angle errors of the magnets. This simulates the shimming procedure
+of the undulator and also allows to estimate the required quality of
+the trajectory.
+
+However, these tools are provided to produce
+''realistic'' trajectories and give hints about the impact of field
+errors. They do probably not replace a thoroughly analysis of the
+field measurement, analysis, and shimming of an undulator.
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(13,16){
+          \includegraphics[width=0.7\textwidth]
+	  {/home/scheer/wav/doc/pp/wave_example_8_lim_errors.pdf}
+    %} % end framebox
+    \caption{Hori. and vert. trajectories  and spectral flux-density
+    of an undulator with limited errors}
+    \label{ex8fig5}
+\end{figure}
+
+%\newpage
+\underline{Proposed exercises:}
+
+Check the option \scap{NURANMOD}. With \scap{NURANMOD=2}, the error
+\scap{BCRAN} can be applied to neighboring poles. This simulates a
+perfect shimming of the trajectory, while keeping the phase errors and
+there influence on the spectrum.
+
+Dump the magnets of the model using \scap{IKRESTOR}, change some magnet
+properties, and try to use the file to investigate the effects.\\
+
+Check the option \scap{IBERROR} and the namelist \scap{\$BERRORN} and
+try to use it.\\

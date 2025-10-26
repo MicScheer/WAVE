@@ -1,0 +1,166 @@
+\section{Example: Real Beams, Part II} \label{ex9}
+
+In example \ref{ex7}, we've made the aquaintance of a delicate set-up.
+Due to the huge number of undulator periods, we are very sensitive to the
+input parameters of the beam. Therefore, the assumption, that the
+spectral and spatial distributions of the radiation is more or less the
+same for all electrons, is not valid anymore. Hence the folding
+procedures to take the energy-spread and emittance into account would
+fail. To overcome this difficulties, we must track many electrons
+according to the beam phase space distribution.
+
+We consider a long beamline with $60$ undulators.
+To calculate the spectrum of the spontaneous synchrotron radiation, we enter
+
+\cboxs{\senv \grau \\
+python3 ../python/wave\_example\_9.py\\
+cp \$WAVE/input/wave\_example\_9.in wave.in\\
+cp \$WAVE/input/wave\_example\_9\_magseq.in magseq.in \\
+cp \$WAVE/input/wave\_example\_9\_wave.bmask wave.bmask\\
+wave\\
+wplot \\
+}
+
+This run takes some minutes, since for the considered $180\,m$ long undulator
+section we need about a million integration steps for the spectrum calculation.
+For this single electron beam, we get a sharp peak for the on-axis
+flux-density (Fig. \ref{ex9fig1}).
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(12,9){
+      \includegraphics[width=1\textwidth]
+      {/home/scheer/wav/doc/pp/wave_example_9_fig1.pdf}
+    %} % endframebox
+    \caption{
+      5th harmonic of a single electron beam for 30
+      undulator sections including continous energy-loss and tapering of
+      the undulators
+    }
+    \label{ex9fig1}
+\end{figure}
+
+The set-up of one six meter subsection section including two
+undulators is given in the file \scap{magseq.in}. In combination with\\
+
+\cboxss{XSTART=0.0\\
+XSTOP=180.\\
+IPERIODG=1\\
+PERIODG=6.\\}
+
+this results in a beamline of $180\,m$ length, where the field strength is
+corrected for the energy loss due to the spontaneous synchrotron radiation.
+Each section includes phase-shifters and quadrupoles to match the
+phase-advance and $\beta$-functions of the $30$ sections.
+
+Note, that for time reasons, only a quarter of flux is calculated,
+i.e. the pinhole is shifted, such that the lower left corner is
+on-axis. This is achieved by \\
+
+\cboxss{IPBRILL=1\\
+PINCEN(2)=9999.\\
+PINCEN(3)=9999.\\}
+
+Now, we come to the actual task to calculate the $5th$ harmonic for a
+real beam, including energy-spread, emittance, and an energy-loss with
+quantum fluctuations. We start step by step setting in \wi \\
+
+\cboxss{IENELOSS=-1\\
+IBUNCH=-1\\
+NBUNCH=1000\\
+NEINBUNCH=1\\
+IPIN=0\\
+}
+
+The variable \scap{IBUNCH} triggers the bunch mode, i.e. to track a
+given number of bunches and electrons per bunch (\scap{NBUNCH} and
+\scap{NEINBUNCH} respectively). The radiation of different bunches is
+added incoherently, while the contributions of electrons of the same
+bunch are treated coherently. Thus, the setting given above calculates
+the radiation of $1000$ electron, summed up incoherently. The
+resulting spectra are normalized to the beam current. Please, refer to
+the namelist \scap{BUNCHN} for further options.
+
+We run \W and get (after some minutes) the results shown in Fig. \ref{ex9fig2}. We see some
+phase-space distributions of the beam electrons and the corresponding
+flux-density spectrum of a single electron beam in the lower right
+corner together with the same spectrum for the real beam.
+
+We clearly see the flux-density reduced by the emittance and
+energy-spread. It reaches only about $0.5 \%$ of the original
+one.\\[3cm]
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(12,9){
+      \includegraphics[width=0.9\textwidth]
+      {/home/scheer/wav/doc/pp/wave_example_9_fig2.pdf}
+    %} % endframebox
+    \caption{
+      Flux-density of the 5th harmonic of $1000$ electrons beam for 30
+      undulator sections including energy-loss with quantum
+      fluctuations and tapering of
+      the undulators (lower right plot)
+    }
+    \label{ex9fig2}
+\end{figure}
+
+\vspace*{1cm}
+\underline{Flux through a pinhole}\\
+
+Since the calculation of radiation distributions in a pinhole are very
+time consuming, the mode \scap{IPIN=3} can be used. In this mode, the
+radiation is not calculated for all grid points of the pinhole, but
+only for one randomly chosen point for each electron track. The idea
+is, that the random phase-space coordinates of the electron and the
+random observation point are not correlated, thus, for large enough a
+number of tracks, the flux trough the pinhole can be calculated by
+sampling the phase-space and the observation point simultaneously.
+
+Edit \wi~and set:
+
+\cboxss{IPIN=3\\
+IPBRILL=0
+PINW=0.00014\\
+PINH=0.00014}
+
+and run \W and get Fig. \ref{ex9fig3}.
+
+\begin{figure}[htb]
+    \centering
+    %\framebox(12,9){
+      \includegraphics[width=0.9\textwidth]
+      {/home/scheer/wav/doc/pp/wave_example_9_fig3.pdf}
+    %} % endframebox
+    \caption{
+      Flux of the 5th harmonic of $1000$ electrons beam for 30
+      undulator sections including energy-loss with quantum
+      fluctuations and tapering of
+      the undulators (lower right plot)
+    }
+    \label{ex9fig3}
+\end{figure}
+
+The flux is also significantly reduced compared to that of zero
+emittance and energy spread beam (Fig. \ref{ex9fig1}).
+
+%\newpage
+\underline{Proposed exercises:}
+
+\begin{itemize}
+
+\item
+Copy \we to \wie, run \W, and plot the results. Store the results and try
+to run \W in the multi-particle mode to compare with the previous
+results.
+
+\item
+Check the namelist \scap{\$BUNCHN} in \wi and try to provide
+your own phasespace distribution.
+
+\item
+Check the namelist \scap{\$BUNCHN} in \wie, and try to
+calculate coherent radiation of electrons.
+
+\end{itemize}
+

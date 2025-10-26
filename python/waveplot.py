@@ -15954,6 +15954,7 @@ def window_set_title(Title='',fig=-1):
 
 def gui_key_press(ev):
   if ev.key in ['q', 'Q']: Quit()
+  elif ev.key in ['c','C']: window_close()
 #enddef
 
 def window(title='', geom="!", block=False, projection = '2d',
@@ -37883,43 +37884,70 @@ def WaveOverview():
 
       if Wipin == 3:
 
-        zone(4,2)
-        nbybz()
+        if Wneib > 1:
 
-        zone(4,2,2,'s')
-        Markersize = 1.
-        nbeam('zizpi',xTit='Position [mm]', yTit='slope [' + TeX_murad + ']')
-        smgreen()
-        nbeam('yiypi',plopt='same')
-        smred()
-        Markersize = mo
-        plt.legend(["z' vs z","y' vs y"])
+          zone(4,2)
+          nbybz()
 
-        zone(4,2,3,'s')
-        nbeam('xbun')
+          zone(4,2,2,'s')
+          Markersize = 1.
+          nbeam('zizpi',xTit='Position [mm]', yTit='slope [' + TeX_murad + ']')
+          smgreen()
+          nbeam('yiypi',plopt='same')
+          smred()
+          Markersize = mo
+          plt.legend(["z' vs z","y' vs y"])
 
-        zone(4,2,4,'s')
-        nbeam('ei')
+          zone(4,2,3,'s')
+          nbeam('xbun')
 
-        zone(4,2,5,'s')
-        ntrack()
+          zone(4,2,4,'s')
+          nbeam('ei')
 
-        zone(4,2,6,'s')
+          zone(4,2,5,'s')
+          ntrack()
 
-        nx = hcopy1d("h148000","h148")
-        nproj1(n30,"ener","spec/1.e6","nel==1",idh="h148")
-        h148 = hget("h148")
-        Ttit = "Flux-density\nat x={:,.2f}m, y={:,.1f}mm, z={:,.1f}mm".format(x,y,z)
-        hplot1d(h148)
-        xTit = 'Photon energy [eV]'
-        yTit = TeX_gamma + '/s/' + str(Wbw*100.) + ' %BW'
-        txyz(Ttit,xTit,yTit)
+          zone(4,2,6,'s')
 
-        zone(4,2,7,'s')
-        hcfluxden()
+          nx = hcopy1d("h148000","h148")
+          nproj1(n30,"ener","spec/1.e6","nel==1",idh="h148")
+          h148 = hget("h148")
+          Ttit = "Flux-density\nat x={:,.2f}m, y={:,.1f}mm, z={:,.1f}mm".format(x,y,z)
+          hplot1d(h148)
+          xTit = 'Photon energy [eV]'
+          yTit = TeX_gamma + '/s/' + str(Wbw*100.) + ' %BW'
+          txyz(Ttit,xTit,yTit)
 
-        zone(4,2,8,'s')
-        hflux()
+          zone(4,2,7,'s')
+          hcfluxden()
+
+          zone(4,2,8,'s')
+          hflux()
+
+        else:
+
+          zone(3,2)
+          nbybz()
+
+          zone(3,2,2,'s')
+          Markersize = 1.
+          nbeam('zizpi',xTit='Position [mm]', yTit='slope [' + TeX_murad + ']')
+          smgreen()
+          nbeam('yiypi',plopt='same')
+          smred()
+          Markersize = mo
+          plt.legend(["z' vs z","y' vs y"])
+
+          zone(3,2,5,'s')
+          nbeam('ei')
+
+          zone(3,2,4,'s')
+          ntrack()
+
+          zone(3,1,3,'s')
+          hflux()
+
+        #endif neinbunch
 
       elif Wipin == 1:
 
@@ -37945,39 +37973,79 @@ def WaveOverview():
 
     else: #Wipin == 0
 
-      zone(3,2)
-      nbybz()
-      zone(3,2,4,'s')
-      ntrack()
-      zone(3,2,2,'s')
-      mo = Markersize
-      Markersize = 1.
-      nbeam('zizpi',xTit='Position [mm]', yTit='slope [' + TeX_murad + ']')
-      smgreen()
-      nbeam('yiypi',plopt='same')
-      smred()
-      Markersize = mo
-      plt.legend(["z' vs z","y' vs y"])
-      zone(3,2,5,'s')
-      nbeam('xbun')
-      zone(3,2,3,'s')
-      nbeam('ei')
-      zone(3,2,6,'s')
-      nstat('n30','s0','nel==1',isilent=1)
-      nmx = Nmean
-      nstat('n30','s0','nel>1',isilent=1)
-      nave = Nmean
-      if (nmx / nave) > 10.:
-        lilo()
-        nbeam('fdfdf',Tit='Flux-density\n(multi-particle beam)')
-        #null(0.,10,1.,1000.)
-        hcfluxden('s0','same')
-        lili()
-        #return
+      if Wneib > 1:
+
+        zone(3,2)
+        nbybz()
+        zone(3,2,4,'s')
+        ntrack()
+        zone(3,2,2,'s')
+        mo = Markersize
+        Markersize = 1.
+        nbeam('zizpi',xTit='Position [mm]', yTit='slope [' + TeX_murad + ']')
+        smgreen()
+        nbeam('yiypi',plopt='same')
+        smred()
+        Markersize = mo
+        plt.legend(["z' vs z","y' vs y"])
+        zone(3,2,5,'s')
+        nbeam('xbun')
+        zone(3,2,3,'s')
+        nbeam('ei')
+        zone(3,2,6,'s')
+        nstat('n30','s0','nel==1',isilent=1)
+        nmx = Nmean
+        nstat('n30','s0','nel>1',isilent=1)
+        nave = Nmean
+        if (nmx / nave) > 10.:
+          lilo()
+          nbeam('fdfdf',Tit='Flux-density\n(multi-particle beam)')
+          #null(0.,10,1.,1000.)
+          hcfluxden('s0','same')
+          lili()
+          #return
+        else:
+          nbeam('fdfdf',Tit='Flux-density\n(multi-particle beam)')
+          hcfluxden('s0','same')
+        #endif hmx / nmax > 100.
+
       else:
-        nbeam('fdfdf',Tit='Flux-density\n(multi-particle beam)')
-        hcfluxden('s0','same')
-      #endif hmx / nmax > 100.
+
+        zone(3,2)
+        nbybz()
+
+        zone(3,2,4,'s')
+        ntrack()
+
+        zone(3,2,2,'s')
+        mo = Markersize
+        Markersize = 1.
+        nbeam('zizpi',xTit='Position [mm]', yTit='slope [' + TeX_murad + ']')
+        smgreen()
+        nbeam('yiypi',plopt='same')
+        smred()
+        Markersize = mo
+        plt.legend(["z' vs z","y' vs y"])
+
+        zone(3,2,5,'s')
+        nbeam('ei')
+
+        zone(3,1,3,'s')
+        nstat('n30','s0','nel==1',isilent=1)
+        nmx = Nmean
+        nstat('n30','s0','nel>1',isilent=1)
+        nave = Nmean
+        if (nmx / nave) > 10.:
+          lilo()
+          nbeam('fdfdf',Tit='Flux-density\n(multi-particle beam)')
+          #null(0.,10,1.,1000.)
+          hcfluxden('s0','same')
+          lili()
+          #return
+        else:
+          nbeam('fdfdf',Tit='Flux-density\n(multi-particle beam)')
+          hcfluxden('s0','same')
+        #endif hmx / nmax > 100.
 
     #endif Wipin
 

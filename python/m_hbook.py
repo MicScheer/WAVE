@@ -15902,6 +15902,7 @@ def window_set_title(Title='',fig=-1):
 
 def gui_key_press(ev):
   if ev.key in ['q', 'Q']: Quit()
+  elif ev.key in ['c','C']: window_close()
 #enddef
 
 def window(title='', geom="!", block=False, projection = '2d',

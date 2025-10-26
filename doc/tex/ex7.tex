@@ -8,7 +8,7 @@ calculate the spontanous synchrotron radiation of a very long
 undulator section including phase shifters. But first, we consider a
 single cell of this section (Fig. \ref{ex7fig1}). We enter:
 
-\cbox{\senv \grau \\
+\cboxs{\senv \grau \\
 python3 ../python/wave\_example\_7.py\\
 cp \$WAVE/input/wave\_example\_7.in wave.in\\
 wave\\
@@ -25,11 +25,12 @@ wplot \\
     \label{ex7fig1}
 \end{figure}
 
-The field is a superposition a planar undulator (namelist \scap{\$ELLIPN}) and
+As the overview shows,
+the field is a superposition a planar undulator (namelist \scap{\$ELLIPN}) and
 a phase shifter (namelist \scap{\$HALBASY}). If \scap{IBSUPER=1}
 in \wie, \W~accepts several field selections . The undulator parameters are
 set such, that the 9th harmonic is at \gtis{150\,keV} for a beam energy of
-\gtis{17 \, GeV}. We now make use of a the periodic field option. Have a
+\gtis{17\,GeV}. We now make use of a the periodic field option. Have a
 look on the corresponding variables in the namelist
 \scap{\$B0SCGLOBN}:\\
 

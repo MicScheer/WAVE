@@ -1,4 +1,5 @@
-*CMZ :          11/03/2025  13.14.19  by  Michael Scheer
+*CMZ :          26/10/2025  10.56.06  by  Michael Scheer
+*CMZ :  4.02/00 11/03/2025  13.14.19  by  Michael Scheer
 *CMZ :  4.01/07 02/05/2024  11.53.53  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.10.19  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.11.12  by  Michael Scheer
@@ -123,8 +124,10 @@
       include 'waveenv.cmn'
 *KEND.
 
+      double complex ef(3)
+
       double precision rmax2,rabs2,rea1,rea2,wpspecnoro,specnoro,bunnoro,
-     &  s1,s2,s3,s4,pow,powt,buno,dw
+     &  s1,s2,s3,s4,pow,powt,buno,dw,stok(4)
 
       real*8 corrins !NIDBUNCH
 
@@ -323,6 +326,20 @@
 
         if (nbunch.eq.1.and.neinbunch.ne.1) then
           reaima=reaima/sqrt(dble(nwgood))
+          do kfreq=1,nfreq
+            do iobsv=1,nobsv
+              iliobfr=nsource+nsource*(iobsv-1+nobsv*(kfreq-1))
+              ef=dcmplx(reaima(1:3,1,iliobfr),reaima(1:3,2,iliobfr))
+              call util_e_to_stokes(ef,wpspecnor,stok)
+              spec(iliobfr)=spec(iliobfr)+stok(1)*corrins
+              if (istokes.ne.0) then
+                stokes(1,iliobfr)=stokes(1,iliobfr)+stok(1)*corrins
+                stokes(2,iliobfr)=stokes(2,iliobfr)+stok(2)*corrins
+                stokes(3,iliobfr)=stokes(3,iliobfr)+stok(3)*corrins
+                stokes(4,iliobfr)=stokes(4,iliobfr)+stok(4)*corrins
+              endif
+            enddo !iobsv
+          enddo !kfreq
         else if (nbunch.gt.1) then
           spec=spec/nwgood
           if (istokes.ne.0) stokes=stokes/nwgood
