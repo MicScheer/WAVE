@@ -1,4 +1,5 @@
-*CMZ :          08/04/2025  09.11.40  by  Michael Scheer
+*CMZ :          28/10/2025  10.20.42  by  Michael Scheer
+*CMZ :  4.02/00 27/08/2025  15.28.58  by  Michael Scheer
 *CMZ :  4.01/07 30/09/2024  14.48.47  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.52.02  by  Michael Scheer
 *CMZ :  4.01/04 20/11/2023  18.32.01  by  Michael Scheer
@@ -160,7 +161,7 @@
 *CMZ : 00.00/00 28/04/94  16.11.39  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE SPECTRUM
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -297,6 +298,7 @@ C--- MAIN ROUTINE TO CALCULATE SYNCHROTRON RADIATION SPECTRA
       mbuncho=nbunch
       meinbuncho=neinbunch
       ihbuncho=ihbunch
+
       if (kampli.ne.0) then
         ibunch=0
         ihbunch=0
@@ -2707,6 +2709,12 @@ C maximum of spectot}
      &      ,SNGL(SPECPOWVHT)
           WRITE(LUNGFO,*)
         endif
+
+        write(lungfo,*)"     Single electron peak power-density in pinhole [W/m**2]:",sngl(maxval(specpowt))
+        if (ifold.ne.0) then
+          write(lungfo,*)"     Beam peak power-density in pinhole [W/m**2]:",sngl(maxval(specpowtf))
+        endif
+
 c        IF (IAMPLI.LT.0) THEN
 c          WRITE(LUNGFO,*)'     scaled according to IAMPLI:'
 c          WRITE(LUNGFO,*)'            '
