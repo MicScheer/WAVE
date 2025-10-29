@@ -1,4 +1,5 @@
-*CMZ :          11/03/2025  14.15.58  by  Michael Scheer
+*CMZ :          29/10/2025  08.27.08  by  Michael Scheer
+*CMZ :  4.02/00 11/03/2025  14.15.58  by  Michael Scheer
 *CMZ :  4.01/02 07/05/2023  12.03.20  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.06.37  by  Michael Scheer
 *CMZ :  4.00/16 23/07/2022  09.11.30  by  Michael Scheer
@@ -124,6 +125,19 @@
 
           else if (c32.eq.'kmapmode') then
             write(lunnam,'(a)')" kmapmode=1"
+
+          else if (c32.eq.'knomagmap') then
+            write(lunnam,'(a)')" knomagmap=1"
+
+          else if (c32.eq.'knopolmap') then
+            write(lunnam,'(a)')" knopolmap=1"
+
+          else if (c32.eq.'kresiron') then
+            if (kbundumag.eq.2) then
+              write(lunnam,'(a)')" kresiron=0"
+            else
+              write(lunnam,'(a)')" kresiron=1"
+            endif
 
           else if (c32.eq.'kmapnohead') then
             write(lunnam,'(a)')" kmapnohead=1"
@@ -1953,6 +1967,8 @@ c      stop "Ende in run_undumag"
         print*,"*** Error in run_undumag: Bad return status, check undumag.log ***"
         stop "*** Program WAVE aborted ***"
       endif
+
+      call sleep(3) !to make sure, undumag.stat is written
 
       open(newunit=lund,file="undumag.stat")
       read(lund,*)istat

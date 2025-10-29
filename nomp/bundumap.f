@@ -1,3 +1,4 @@
+*CMZ :          28/10/2025  15.34.24  by  Michael Scheer
 *CMZ :  4.01/03 01/06/2023  12.27.44  by  Michael Scheer
 *CMZ :  4.01/02 07/05/2023  10.14.22  by  Michael Scheer
 *CMZ :  4.00/16 09/08/2022  09.07.08  by  Michael Scheer
@@ -64,7 +65,7 @@ C**********************************************************************
       include 'undumagc.cmn'
 *KEND.
 
-      double precision, dimension (:,:), allocatable :: bmappe
+      double precision, dimension (:,:), allocatable :: bmappe,xyz
 
       double precision xin,yin,zin,x,y,z,bx,by,bz,step,stepy,xold,yold,
      &  bxout,byout,bzout,xsta,xsto,
@@ -144,69 +145,12 @@ C**********************************************************************
           ntot=ntot+1
           read(cline(1:last),*)x,y,z,bx,by,bz
 
-          x=x/1000.0d0
-          y=y/1000.0d0
-          z=z/1000.0d0
-
-          if (x.lt.bmxmin) bmxmin=x
-          if (x.gt.bmxmax) bmxmax=x
-          if (y.lt.bmymin) bmymin=y
-          if (y.gt.bmymax) bmymax=y
-          if (z.lt.bmzmin) bmzmin=z
-          if (z.gt.bmzmax) bmzmax=z
-          if (bx.lt.bmbxmin) bmbxmin=bx
-          if (bx.gt.bmbxmax) bmbxmax=bx
-          if (by.lt.bmbymin) bmbymin=by
-          if (by.gt.bmbymax) bmbymax=by
-          if (bz.lt.bmbzmin) bmbzmin=bz
-          if (bz.gt.bmbzmax) bmbzmax=bz
-
-          if (ntot.eq.1) then
-            xold=x
-            yold=y
-          endif
-
-          if (ntot.eq.2.and.abs(x-xold).gt.eps) then
-            write(6,*)'*** Error in BUNDUMAP: Bad file format! ***'
-            write(6,*)'*** x must run latest! ***'
-            write(6,*)'*** Is it a 3d map? ***'
-            write(lungfo,*)'*** Error in BUNDUMAP: Bad file format! ***'
-            write(lungfo,*)'*** x must run latest! ***'
-            write(lungfo,*)'*** Is it a 3d map? ***'
-            stop '*** WAVE aborted ***'
-          endif
-
-          if (nx.eq.-1) then
-            if (ny.eq.-1) then
-              if (abs(y-yold).le.eps) then
-                nz=nz+1
-              else
-                ny=nz+1
-              endif
-            else if (abs(x-xold).le.eps) then
-              ny=ny+1
-            else
-              ny=ny/nz
-              nx=0
-            endif !ny
-          endif !nx
-
         endif !line type
 
         goto 1
  9      rewind(lunm)
 
-        nx=ntot/(ny*nz)
-
-        if (nx.lt.3.and.kbundumap_c.eq.1.or.nx.lt.2.and.kbundumap_c.eq.2) then
-          write(lungfo,*)'*** Error in BMAP: Too few data for field map on undumag.map'
-          write(lungfo,*)'*** Program WAVE aborted ***'
-          write(6,*)'*** Error in BMAP: Too few data for field map on undumag.map'
-          write(6,*)'*** Program WAVE aborted ***'
-          stop
-        else
-          allocate(bmappe(6,ntot))
-        endif
+        allocate(bmappe(6,ntot),xyz(3,ntot))
 
         ntot=0
  11     read(lunm,'(a)',end=99) cline
@@ -236,9 +180,34 @@ C**********************************************************************
           bmappe(4,ntot)=bx
           bmappe(5,ntot)=by
           bmappe(6,ntot)=bz
+          bmbxmin=min(bx,bmbxmin)
+          bmbxmax=max(bx,bmbxmax)
+          bmbymin=min(by,bmbymin)
+          bmbymax=max(by,bmbymax)
+          bmbzmin=min(bz,bmbzmin)
+          bmbzmax=max(bz,bmbzmax)
+          xyz(1:3,ntot)=[x,y,z]
         endif
         goto 11
  99     close(lunm)
+
+        call util_check_grid_3d(ntot,xyz,nx,ny,nz,bmxmin,bmxmax,bmymin,bmymax,bmzmin,bmzmax)
+
+        if (nx.eq.-1.or.ny.eq.-1.or.nz.eq.-1) then
+          write(lungfo,*) ""
+          write(lungfo,*) "*** Error in bundmap: Field map not on equidistant grid ***"
+          write(lungfo,*) "*** Make sure KNOMAGMAP=1 and KNOPOLMAP=1 ***"
+          write(lungfo,*) "*** Program WAVE aborted ***"
+          stop "*** Program WAVE aborted ***"
+        endif
+
+        if (nx.lt.3.and.kbundumap_c.eq.1.or.nx.lt.2.and.kbundumap_c.eq.2) then
+          write(lungfo,*)'*** Error in BMAP: Too few data for field map on undumag.map'
+          write(lungfo,*)'*** Program WAVE aborted ***'
+          write(6,*)'*** Error in BMAP: Too few data for field map on undumag.map'
+          write(6,*)'*** Program WAVE aborted ***'
+          stop
+        endif
 
         step=1.0d0
         stepy=step/10.0d0
