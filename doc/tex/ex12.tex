@@ -1,0 +1,199 @@
+\section{Example: Accelerator Physics of Insertion Devices} \label{ex12}
+
+\W has some feature to investigate aspects of the accelerator physics
+of insertion devices. This chapter presents the most important ones.
+The results of this calculations really depend on the settings of the
+parameters. To get the right answers, check the input and the results
+thoroughly.
+
+\subsection{Linear Transfer-Matrix, Multipoles, and Field Maps} \label{ex12a}
+
+Starting point is the Python script \scap{12a}:
+
+\cboxs{\senv \grau \\
+python3 ../python/wave\_example\_12a.py\\
+cp \$WAVE/input/wave\_example\_12a.in wave.in\\
+}\\
+
+The script modifies the file \we \bsp and echos the changes. Please, open
+\wi \bsp and study the corresponding variables and their namelists.
+
+Run with this input \W performs three task for an REC-undulator
+defined in the namelist \scap{RECN}, see example \ref{ex4}:
+
+\begin{itemize}
+\item \underline {Field Map} \\
+
+The variable
+\scap{IWBMAP=6}
+makes \W writing a field map for later use.
+The parameters of the
+field map are defined in the namelist \scap{BMAPN}. \W can read and
+write field maps of the considered devices. This allows interfacing to
+other codes, i.e. importing and exporting magnetic field configurations
+between different programs. In the next subsections we will make use
+of this field map, mainly to reduce the computing time.
+
+Note: Different namelists might use different units, especially $mm$
+and $m$ or even different coordinate systems, respectively.
+
+\begin{figure}[ht]
+    \centering
+%    \framebox(12.5,8){
+      \includegraphics[width=0.65\textwidth]
+      {/home/scheer/wdp/wave_example_12a_fig1.pdf}
+%    }
+    \caption{Transversal distribution of the vertical field in
+    the center of the undulator.}
+    \label{ex12afig1}
+\end{figure}
+
+To visualize the field map, start the plotting GUI and enter in the
+Python shell:
+
+\cboxsl{nmap~=~ncread(~''nmap'',~''x:y:z:bx:by:bz'',~''wave\_example12a\_bmap.dat'',~skiphead=6~)\\
+nplot(~nmap,~"x:by",~"abs(x)$<$0.028~and~y==0~and~z==0"~)\\
+nscan(~nmap,~"x:by",~"abs(x)$<$0.028~and~by$>$1.0~and~y==0~and~z==0"~)\\
+nplot(~nmap,~"z*1000:by",~"abs(x+0.014)$<$0.0001"~)\\
+setlinecolor('blue')\\
+nplot(~nmap,~"z*1000:by",~"abs(x+0.014)$<$0.0001~and~abs(y-0.0052)$<$0.0001",~
+"",~"linesame"~)\\
+wave\_title()\\
+txyz(~"Vert.~Field~at~x~=~0~for~y~=~0/1/2/3/4/5~mm",~"z~[mm]",~~"By~[T]"~)\\
+}
+
+The first command creates a Ntuple and reads the field map, skipping
+the six header lines. Then the field in the center of the undulator is
+plotted. The scan command is used to locate the maximum of the on-axis
+field, which is used in the next command. Then the transversal field
+distribution is plotted (Fig.~\ref{ex12afig1}) for this corresponding longitudinal position
+\scap{x = -0.014 m}, which corresponds to a quarter of the period-length of
+the undulator.
+
+Note the dip in the middle, which is a consequence of the slit between
+the magnet rows, espacially for \scap{y = 5.2 mm} (blue line). This means that the transveral
+field gradients of the device depend on the transversal position of the beam electrons, thus
+complicating tracking calculations.
+
+\item \underline{Quadrupole- and Sextupole Terms} \\
+
+\scap{IWBTAB=1} triggers the calculation of the field and the integrals of
+the field, the quadrupole- and
+sextupole terms etc. along a straight line. For more details refer to the
+comments in \wie. In addition the sextupole terms are
+written to a \scap{wbtab\_sextupole.dat}\bsp. \scap{IWBTAB=100} does the same, but with respect to the trajectory rather
+than a straight line.
+
+By the way: If the field calculation is very
+time consuming, in many cases the file written due the
+setting of \scap{IWBTAB} is sufficient for later use, e.g. for spectrum
+caclulations. In such a case, the field can be determined from the
+file via a very fast spline interpolation, see \scap{IRBTAB} in \wi. This
+holds of course also for other tabulated fields \scap{B\_y(x)}, e.g. from
+measuements. It is also  possible to provide this way two field
+components \scap{B\_y(x)} and \scap{Bz(x)}, see \scap{IRBTABZY} in \wi.
+
+\item \underline{Linear Transfer Matrix} \\
+
+\scap{DELTAZ=0.0001} and the other variables of the namelist
+\scap{TRALINN} trigger the simple calculation of the linear
+transfer-matrix by tracking four principal trajectories through the
+device. The results are given in \woe\bsp. The matrix is also written to
+\gtis{tralin.wav}\bsp. We copy this file:
+
+\cboxs{cp tralin.wav tralin\_rec.wav}
+
+for the next subsection.
+
+\end{itemize}
+
+The second and third item of this run are not only excecuted for their
+results, but also to compare with the later runs, when the field map
+will be used. This way, one might get an impression of the accuracy and
+uncertaincies related to the use of a field map instead of the
+''true'' field.
+
+\subsection{The Linear Transfer-Matrix from the Field Map} \label{ex12b}
+
+We excute the Python script 12b:
+
+\cboxs{\senv \grau \\
+python3 ../python/wave\_example\_12b.py\\
+cp \$WAVE/input/wave\_example\_12b.in wave.in\\
+}\\
+
+and run \W. We compare \gtis{tralin.wav} with the file of the previous
+subsection \gtis{tralin\_rec.wav}. Have a look on the matrix terms
+
+\cboxs{m21 = -0.01166\\
+m21 = -0.00865}
+
+and
+
+\cboxs{m43 = -0.02564\\
+m43 = -0.02500},
+
+which represent the focal strength, i.e. the inverse of the
+focal-lenght of the horizontal and vertical focussing. If the required
+accuracy is not reached, the grid of the field map must be chosen
+finer, or the ''true'' field model must be used.
+
+\subsection{The Kick-Map and Generating Functions} \label{ex12c}
+
+Generating functions (GF) are a poweful tool for tracking calculations,
+since they allow symplectic tracking with very few steps through a
+whole insertion device. The GF take into account higher order effects,
+i.e. they represent the device much better than the linear
+transfer-matrix. To calculate a Taylor expansion of the GF $F_2$
+numerically, we excute the Python script 12c:
+
+\cboxs{\senv \grau \\
+python3 ../python/wave\_example\_12c.py\\
+cp \$WAVE/input/wave\_example\_12c.in wave.in\\
+}\\
+
+The GF is now calculated in two steps when \W is run. In the first step
+the variable \scap{IOPTIC = 1} triggers the subroutine \scap{OPTI}, wchich
+tracks a bundle of electrons as defined in the namelist \scap{\$OPTIK}
+through the devices. This step can be very time consuming.
+
+In the second step, the GF is calculated. This is triggered by the
+variable \scap{IGENFUN = 1} (see also namelist \scap{\$TRANPON}).
+
+Open \wo  and study the output of the
+subroutine \scap{TRANPOLY}, which fits the coefficients of the GF.
+Please compare the differences between the linear transfer matrices,
+quadrupole matrix derived from the GF and matrix calculated in the
+subsections above. For real tracking calculations using the GF, one
+must check, if the field map is good enough or the ''true'' field
+should be used.  And one also should
+vary the bunch of tracks, the phase-space etc. and study the
+effects on the GF carefully{\ldots} This is beyond the scope of this
+example.
+
+%\newpage
+We have a look on the tracks used for the GF:
+
+\cboxsl{wplot\\
+nlist()\\
+ninfo(''n501'')\\
+ndump(''n501'',''zi*1000:yi*1000:zpf*1000:ypf*1000'','''',''wave\_example\_12c\_kick-map.dat'')
+}\\
+
+The command \gti{nlist()} gives an overview of the Ntuples read from
+\scap{WAVE.mhb}.
+We note the Ntuple \gti{n501} and print the summary
+using the command \gti{ninfo}. Now, we can plot the variables or write
+them to a kick-map file using the \gti{ndump} function. The full syntax of
+this procedure can be seen by entering:
+
+\cboxs{ndump()}
+
+If no file name is given, the default \gti{ndump.dat} is chosen.
+
+This example also demonstrates a convient way, to extract and convert
+data from \scap{WAVE.mhb} for later use. However, since the Ntuples
+and histograms are nothing else then \gti{Pandas Dataframes}, you
+can directly use the commands provide by the Python package
+\gti{Pandas} and \gti{Matplotlib}.
+

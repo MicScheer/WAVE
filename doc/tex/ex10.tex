@@ -1,0 +1,35 @@
+\section{Example: Parallel Processing} \label{ex10}
+
+There are two ways to parallel processing in WAVE. The first is for the
+case of a single electron, i.e.
+
+\cboxs{IBUNCH=0}
+
+This mode makes use of the
+OpenMP features of the FORTRAN compiler. To activate is set
+
+\cboxs{MTHREADS= number of CPU cores to use}
+
+For
+
+\cboxs{MTHREADS $<$ 0 }
+
+all cores are used. You can explore this option e.g. by changing the
+setting of the \ref{ex4} example accordingly.
+
+The second way for the multi-particle mode, i.e.
+
+\cboxs{IBUNCH=1}
+
+or
+
+\cboxs{IBUNCH=-1}
+
+is to spawn several instances of WAVE by setting
+
+\cboxs{ICLUSTER=1}
+
+If this mode is active the maximum of \scap{ICLUSTER} and
+\scap{MTHREADS} gives the number of the spawned instances. Try
+it by modifying the \ref{ex9}~ example.\\
+

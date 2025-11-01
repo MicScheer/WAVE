@@ -1,0 +1,43 @@
+\section{Example: User Interfaces} \label{ex77}
+
+Although \W offers a variety of options, sometimes it's necessary to
+use some special input data, to write a user-defined output, to perform
+a complicated fit, or to provide some unusual field map, or {\ldots}
+
+There are some routines to be provided by the user:
+
+\begin{itemize}
+\item \gti{subroutine uname}
+
+This routine allows to provide user input stuff or access and modify
+the variables of \We.
+
+\item \gti{
+subroutine uout}
+
+You can use this routine to access the variables of WAVE at the end of
+the run and to use it for your own output.
+
+\item \gti{
+subroutine ustep(x,y,z,vx,vy,vz,vxp,vyp,vzp,dt,gamma,dgamma)}
+
+This routine is called during each tracking step. You can manipulate
+the given arguments.
+
+\item \gti{
+subroutine bextern(x,y,z,bx,by,bz,ax,ay,az)}
+
+If you want to provide your own magnetic field, set \scap(KBEXTERN=1).
+The routine must return the magnetic field and vector potential (if
+needed) for the point \gti{(x,y,z)}.
+
+\item \gti{
+subroutine ubmask(x,y,z,bxmask,bymask,bzmask)}
+
+This routine multiplies the magnetic field (\scap{IBMASK=-100}) or
+adds the masking field (\scap{IBMASK=-200}). Please check the namelist
+\scap{\$B0SCBLOBN} in \wie.
+
+\end{itemize}
+
+
