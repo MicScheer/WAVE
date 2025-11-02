@@ -1,0 +1,23 @@
+\contentsline {section}{\numberline {I}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {II}Getting Started}{4}{section.2}%
+\contentsline {subsection}{\numberline {II.1}Running WAVE}{4}{subsection.3}%
+\contentsline {subsection}{\numberline {II.2}Plotting with Python}{5}{subsection.5}%
+\contentsline {subsection}{\numberline {II.3}The Graphical User Interface {\textit {\color {grau}\textsmaller [2]{\textbf {WAVESHOP~}}}}}{5}{subsection.6}%
+\contentsline {subsection}{\numberline {II.4}The Input File \textbf {\color {grau}\textit {wave.in}} \color {black}}{6}{subsection.8}%
+\contentsline {section}{\numberline {1. \hspace {-4mm}}Example: Selecting a Magnetic Field Model}{9}{section.11}%
+\contentsline {section}{\numberline {2. \hspace {-4mm}}Example: Tracking through Magnetic Fields}{12}{section.15}%
+\contentsline {section}{\numberline {3. \hspace {-4mm}}Example: The Concept of Source Points }{16}{section.20}%
+\contentsline {section}{\numberline {4. \hspace {-4mm}}Example: APPLE-II Undulator}{22}{section.27}%
+\contentsline {section}{\numberline {5. \hspace {-4mm}}Example: Simple Build-In Optimization}{25}{section.32}%
+\contentsline {section}{\numberline {6. \hspace {-4mm}}Example: ''Real'' Beams, Part I}{29}{section.36}%
+\contentsline {section}{\numberline {7. \hspace {-4mm}}Example: Global Magnetic Field Options}{32}{section.38}%
+\contentsline {section}{\numberline {8. \hspace {-4mm}}Example: Magnetic Field Errors}{36}{section.43}%
+\contentsline {section}{\numberline {9. \hspace {-4mm}}Example: Real Beams, Part II}{40}{section.48}%
+\contentsline {section}{\numberline {10. \hspace {-4mm}}Example: Parallel Processing}{44}{section.52}%
+\contentsline {section}{\numberline {11. \hspace {-4mm}}Example: Interface to {UNDUMAG}}{45}{section.53}%
+\contentsline {section}{\numberline {12. \hspace {-4mm}}Example: Accelerator Physics of Insertion Devices}{48}{section.56}%
+\contentsline {subsection}{\numberline {12. \hspace {-4mm}.1}Linear Transfer-Matrix, Multipoles, and Field Maps}{48}{subsection.57}%
+\contentsline {subsection}{\numberline {12. \hspace {-4mm}.2}The Linear Transfer-Matrix from the Field Map}{50}{subsection.59}%
+\contentsline {subsection}{\numberline {12. \hspace {-4mm}.3}The Kick-Map and Generating Functions}{50}{subsection.60}%
+\contentsline {section}{\numberline {13. \hspace {-4mm}}Example: User Interfaces}{52}{section.61}%
+\contentsline {section}{References}{53}{section.61}%

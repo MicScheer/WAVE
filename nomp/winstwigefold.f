@@ -1,4 +1,5 @@
-*CMZ :          19/09/2025  13.23.19  by  Michael Scheer
+*CMZ :          02/11/2025  15.49.03  by  Michael Scheer
+*CMZ :  4.02/00 19/09/2025  13.23.19  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
 *CMZ :  4.00/17 15/11/2022  10.06.37  by  Michael Scheer
@@ -68,7 +69,7 @@
       double precision, dimension (:), allocatable :: zw,yw
 
       double precision :: ebeam,ebeammin,ebeammax,debeam,deltae,ezr,ezi,eyr,eyi,wig,
-     &  g(nwigefold/2+1),gsum,be(1000),bw(1000)
+     &  g(nwigefold+1),gsum,be(1000),bw(1000)
 
       integer isystem
       external isystem
