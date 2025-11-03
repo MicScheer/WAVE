@@ -1628,13 +1628,16 @@ except:
 #from pyhull.convex_hull import ConvexHull
 #from pyhull import qconvex, qdelaunay, qvoronoi
 
-if platform.system() == 'Windows':
-    import msh_tex_windows
-    from msh_tex_windows import *
-else:
-    import msh_tex_linux
-    from msh_tex_linux import *
-#endif
+#if platform.system() == 'Windows':
+#    import msh_tex_windows
+#    from msh_tex_windows import *
+#else:
+#    import msh_tex_linux
+#    from msh_tex_linux import *
+##endif
+
+import msh_tex
+from msh_tex import *
 
 
 global \

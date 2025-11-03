@@ -1630,13 +1630,16 @@ except:
 #from pyhull.convex_hull import ConvexHull
 #from pyhull import qconvex, qdelaunay, qvoronoi
 
-if platform.system() == 'Windows':
-    import msh_tex_windows
-    from msh_tex_windows import *
-else:
-    import msh_tex_linux
-    from msh_tex_linux import *
-#endif
+#if platform.system() == 'Windows':
+#    import msh_tex_windows
+#    from msh_tex_windows import *
+#else:
+#    import msh_tex_linux
+#    from msh_tex_linux import *
+##endif
+
+import msh_tex
+from msh_tex import *
 
 
 global \
@@ -35432,9 +35435,21 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
   plotopt(plopt)
 
   #reakpoint()
-  ztz = 1
+  zzz = 0
+  zzy = 0
+  yzy = 0
+  yzz = 0
+  zyy = 0
+  zyz = 0
+  yyy = 0
+  yyz = 0
+  zzy = 0
+  lz=0
+  ly=0
 
   if key == 'WHHZ' or key == 'WZZZ':
+    zzz = 1
+    lz=1
 
     his = hbook2('HWIGzzZ', 'Wzz in Z-Theta_Z Plane',
                  nz,zmin-dz/2.,zmax+dz/2.,
@@ -35462,7 +35477,9 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
 
   elif key == 'WHHY' or key == 'WZZY':
 
-    ztz = 0
+    zzy = 1
+    ly=1
+
     his = hbook2('HWIGzzY', 'Wzz in Y-Theta_Y Plane',
                  ny,ymin-dy/2.,ymax+dy/2.,
                  nty,tymin-dty/2.,tymax+dty/2.,
@@ -35488,6 +35505,9 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
     ytit = 'Theta_y [mrad]'
 
   elif key == 'WVVH' or key == 'WYYZ':
+
+    yyz = 1
+    lz=1
 
     his = hbook2('HWIGyyZ', 'Wyy in Z-Theta_Z Plane',
                  nz,zmin-dz/2.,zmax+dz/2.,
@@ -35515,7 +35535,10 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
 
   elif key == 'WVVV' or key == 'WYYY':
 
+    yyy = 1
     ztz = 0
+    ly=1
+
     his = hbook2('HWIGyyY', 'Wzy in Y-Theta_Y Plane',
                  ny,ymin-dy/2.,ymax+dy/2.,
                  nty,tymin-dty/2.,tymax+dty/2.,
@@ -35542,6 +35565,8 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
 
   elif key == 'WHVH' or key == 'WZYZ':
 
+    zyz = 1
+    lz=1
     his = hbook2('HWIGzyZ', 'Wzy in Z-Theta_Z Plane',
                  nz,zmin-dz/2.,zmax+dz/2.,
                  ntz,tzmin-dtz/2.,tzmax+dtz/2.,
@@ -35568,7 +35593,9 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
 
   elif key == 'WHVV' or key == 'WZYY':
 
-    ztz = 0
+    ly=1
+    zyy = 1
+
     his = hbook2('HWIGzyY', 'Wzy in Y-Theta_Y Plane',
                  ny,ymin-dy/2.,ymax+dy/2.,
                  nty,tymin-dty/2.,tymax+dty/2.,
@@ -35595,6 +35622,8 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
 
   elif key == 'WVHH' or key == 'WYZZ':
 
+    lz=1
+    yzz = 1
     his = hbook2('HWIGyzZ', 'Wyz in Z-Theta_Z Plane',
                  nz,zmin-dz/2.,zmax+dz/2.,
                  ntz,tzmin-dtz/2.,tzmax+dtz/2.,
@@ -35621,7 +35650,10 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
 
   elif key == 'WVHV' or key == 'WYZY':
 
+    yzy = 1
+    ly=1
     ztz = 0
+
     his = hbook2('HWIGyzY', 'Wyz in Y-Theta_Y Plane',
                  ny,ymin-dy/2.,ymax+dy/2.,
                  nty,tymin-dty/2.,tymax+dty/2.,
@@ -35773,7 +35805,7 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
   wtit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
 
   #reakpoint()
-  if ztz:
+  if lz == 1:
     zone(2,2,2,'same')
     npll(nwig,"z*1000.:wig*1.0e-12",sitzcut + a + sel)
     txyz('Theta_Z = 0','z [mm]', wtit)
@@ -35782,15 +35814,24 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
       npll(nwig,"tz*1000.:wig*1.0e-12",sizcut + a + sel)
     else: null()
     txyz('Z = 0','Theta_Z [mrad]', wtit)
-  else:
+  elif ly == 1:
     zone(2,2,2,'same')
-    npll(nwig,"y*1000.:wig*1.0e-12",sitzcut + a + sel)
+    npll(nwig,"y*1000.:wig*1.0e-12",sitycut + a + sel)
     txyz('Theta_Y = 0','y [mm]', wtit)
     zone(2,2,4,'same')
     if iyty:
-      npll(nwig,"ty*1000.:wig*1.0e-12",sizcut + a + sel)
+      npll(nwig,"ty*1000.:wig*1.0e-12",siycut + a + sel)
     else: null()
-    txyz('Y = 0','Theta_Z [mrad]', wtit)
+    txyz('Y = 0','Theta_Y [mrad]', wtit)
+#  else:
+#    zone(2,2,2,'same')
+#    npll(nwig,"y*1000.:wig*1.0e-12",sitzcut + a + sel)
+#    txyz('Theta_Y = 0','y [mm]', wtit)
+#    zone(2,2,4,'same')
+#    if iyty:
+#      npll(nwig,"ty*1000.:wig*1.0e-12",sizcut + a + sel)
+#    else: null()
+#    txyz('Y = 0','Theta_Z [mrad]', wtit)
   #endif
 
   LastPlot = ['ndistwigner',key,select,plopt]
@@ -39091,6 +39132,30 @@ def Mmenu_gray(fgcol='gray'):
     mDist.entryconfig(9,foreground=fgcol)
     for i in range(1,16):
       mDistWigner.entryconfig(i,foreground=fgcol)
+    #endfor
+  else:
+    nw = nget("nwig")
+    kpolmin = nw.kpol.min()
+    kpolmax = nw.kpol.max()
+    for i in range(5):
+      if i == kpolmin-1: continue
+      mDistWigner.entryconfig(2*i+1,foreground=fgcol)
+      mDistWigner.entryconfig(2*i+2,foreground=fgcol)
+    #endfor
+  #endif
+
+  if not nexist('nwef'):
+    for i in range(9,17):
+      mDistWigner.entryconfig(i,foreground=fgcol)
+    #endfor
+  else:
+    nw = nget("nwef")
+    kpolmin = nw.kpol.min()
+    kpolmax = nw.kpol.max()
+    for i in range(4):
+      if i == kpolmin-1: continue
+      mDistWigner.entryconfig(2*i+9,foreground=fgcol)
+      mDistWigner.entryconfig(2*i+10,foreground=fgcol)
     #endfor
   #endif
 
