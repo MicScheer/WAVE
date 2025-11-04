@@ -44,7 +44,7 @@
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
 
-      CODE='WAVE.EXAMPLE'
+      CODE='Example 2: Tracking through Magnetic Fields'
 
   !-------------------------- MAIN MODES -----------------------------
 
@@ -499,7 +499,7 @@
 		  ! magnetic field routine BHALBA
 		  ! KHALBA.lt.0 means zero field outside device
 
-      KHALBASY=0  ! simple WLS or undulator/wiggler model
+      KHALBASY=1  ! simple WLS or undulator/wiggler model
                   ! parameter namelist HALBASY
                   ! each pole described by HALBACH's formulas
 
@@ -513,7 +513,7 @@
                  ! at pole edges
                  ! magnetic field routine BUCROSS
 
-      KELLIP=1   ! helical undulator, parameter namelist ELLIPN
+      KELLIP=0   ! helical undulator, parameter namelist ELLIPN
 
       KELLANA=0  ! analytical field for helical undulator,
                  ! parameter namelist ELLANAN, SR BELLANA
@@ -808,7 +808,7 @@
 
  !-------------------------- SPECTRUM CALCULATIONS---------------------------
 
-      ISPEC=1 ! to activate spectrum calculations
+      ISPEC=0 ! to activate spectrum calculations
               ! parameter namelists :
               ! COLLIN
               ! SPECTN
@@ -1399,7 +1399,7 @@
                     ! works only for ispecmode = 1 or ispecmode = 2
                     ! IBMASKSP.NE.0 works only for IBMASK=0
 
-      BYGOFF=0.0     ! global offset for magnetic field
+      BYGOFF=0.00005     ! global offset for magnetic field
                      ! By is set to By+BYGOFF
       BZGOFF=0.0     ! global offset for magnetic field
                      ! Bz is set to Bz+BZGOFF
@@ -1594,7 +1594,7 @@
             ! standard of WAVE, HALBACH's convention used
             ! i.e. z is longitudinal device axis
             ! the system is internally converted to WAVE standard
-      B0HALBASY=2.    ! peak field [T]
+      B0HALBASY=1.    ! peak field [T]
       PKHALBASY=0.    ! Deflection parameter K, if not zero, B0HALBASY is overwritten
 
       XLHALBASY=0.    ! 2*pi/kx for global horizontal gradient [m]
@@ -1608,7 +1608,7 @@
                ! sign changes at ZLHALBASY/6.
                ! for FASYM=2.0+eps, cos(k*x)+cos(2*k*x) is used, i.e.
                ! sign changes at ZLHALBASY/4.
-      AHWPOL=21.      ! number of main poles, should be an odd number
+      AHWPOL=99.      ! number of main poles, should be an odd number
       IAHWFOUR=0      ! use field composed by Fourier superposition of
                       ! HALBACH devices; fourier coefficients A(1)...A(NFOUR)
                ! are calculated analytically

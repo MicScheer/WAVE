@@ -44,7 +44,7 @@
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
 
-      CODE='WAVE.EXAMPLE'
+      CODE='Example 12c: Acc. Phys.: Kick-Map and Generating Function'
 
   !-------------------------- MAIN MODES -----------------------------
 
@@ -53,10 +53,10 @@
       ! are taken (mainly in namelist COLLIN).
       ! Experienced users might prefere there own settings.
 
-      IUNDULATOR=1   ! UNDULATOR MODE:
+      IUNDULATOR=0   ! UNDULATOR MODE:
 
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-       !  IUNDULATOR=1   ! UNDULATOR MODE:
+       !  IUNDULATOR=0   ! UNDULATOR MODE:
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
          ! IBUNCH.EQ.0:
@@ -90,7 +90,7 @@
             ! IHTRACKM = 0
 
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-       !  IUNDULATOR=2   Like IUNDULATOR=1, but the radiation field is
+       !  IUNDULATOR=2   Like IUNDULATOR=0, but the radiation field is
        !                 calculated for a single period only and summed
        !                 with appropriate phase shift for the remaining
        !                 periods. The field is taken from $ELLIPN s.a. KAMPLI
@@ -203,14 +203,14 @@
            ! if NSTEPMX<0 then NSTEPMX is set to
            ! (XSTOP-XSTART)*MYINUM*1.1*(-NSTEPMX)
 
-      MYINUM=5000 ! number of steps per meter for the tracking
+      MYINUM=1000 ! number of steps per meter for the tracking
                   ! for more recent version of WAVE this parameter
            ! must be high enough for spectrum calculations
            ! (particularly for ISPECMODE =1)
 
       DMYENERGY=1.722   ! total electron energy [GeV]
 
-      IENELOSS=1 ! electron energy loss due to synchrotron radiation
+      IENELOSS=0 ! electron energy loss due to synchrotron radiation
                  ! is taken into account.
           ! -1: Quantum fluctuations are taken into account
           !     see namelist PHOTONN
@@ -287,7 +287,7 @@
 
       IRFILT0=0 ! calculate Bx(x),By(x),Bz(x) from the trajectory of file FILETR
 
-      IBSUPER=1 ! flag to allow superposition of magnetic field
+      IBSUPER=0 ! flag to allow superposition of magnetic field
                 ! configurations
 
       IBERROR=0 ! superimpose magnetic field errors (namelist BERRORN)
@@ -513,7 +513,7 @@
                  ! at pole edges
                  ! magnetic field routine BUCROSS
 
-      KELLIP=1   ! helical undulator, parameter namelist ELLIPN
+      KELLIP=0   ! helical undulator, parameter namelist ELLIPN
 
       KELLANA=0  ! analytical field for helical undulator,
                  ! parameter namelist ELLANAN, SR BELLANA
@@ -575,7 +575,7 @@
                   ! from data files FILETB, FILETBX, FILETBZ and interpolated
                   ! by splines (same format as for IRBTAB>0)
 
-      IRFILB0=0   ! read 3D mag. field table from file FILEB0
+      IRFILB0=-6   ! read 3D mag. field table from file FILEB0
                   ! format of routine BMESS
                   ! field is interpolated from equally spaced grid
                   ! IRFILB0=-1 means field is taken from grid point
@@ -808,7 +808,7 @@
 
  !-------------------------- SPECTRUM CALCULATIONS---------------------------
 
-      ISPEC=1 ! to activate spectrum calculations
+      ISPEC=0 ! to activate spectrum calculations
               ! parameter namelists :
               ! COLLIN
               ! SPECTN
@@ -970,7 +970,7 @@
           ISPECSUM=0 ! Integration of arrays SPEC and STOKES are additionally
                      ! performed by a simple summation (test purposes)
 
-          IFOLD=1 ! to invoke folding procedure to take emittance into
+          IFOLD=0 ! to invoke folding procedure to take emittance into
                   ! account (namelist WFOLDN)
            ! IFOLD.EQ.1: use routine UTIL_FOLD_FUNCTION_GAUSS
            ! IFOLD.EQ.2: use Monte-Carlo techniques (ISPECMODE = 5)
@@ -1179,7 +1179,7 @@
 
  !-------------------------- GENERATING FUNCTION  -------------------------
 
-      IOPTIC=0 ! to generate a set of trajectories
+      IOPTIC=1 ! to generate a set of trajectories
                ! for fitting of generating function
                ! trajectories are written to file FILEO
                ! parameter namelist OPTIK (IOPTIC.gt.0)
@@ -1188,7 +1188,7 @@
                ! EPS0H, BETAH, BETAPH, EPS0V, BETAV, BETAPV
                ! in namelist DEPOLA
 
-      IGENFUN=0  ! trajectories are read from file FILEO
+      IGENFUN=1  ! trajectories are read from file FILEO
                  ! to fit generating function
                  ! parameter namelist TRANPON
                  ! if negativ not generating function but
@@ -2002,7 +2002,7 @@
       FILEJ=      'wave_adjust.dat' ! scratch file for option IJUST
       LUNJ=    88
 
-      FILEB0=     'bmap.ntup' ! 3D table of B-field
+      FILEB0=     'wave_example12a_bmap.dat' ! 3D table of B-field
       LUNB0=      89
 
       FILEBE=     'wave_beta.dat'      ! obsolete
@@ -2138,10 +2138,10 @@
           ! the transfer matrix is also applied to the variables of namelist
           ! PHASETRACKN
 
-        DELTAZ= 0.0  !horizontal coordinate [m]
-        DELTAZP=0.0  !horizontal slope [radian]
-        DELTAY= 0.0  !vertical coordinate [m]
-        DELTAYP=0.0  !vertical slope [radian]
+        DELTAZ=0.0001  !horizontal coordinate [m]
+        DELTAZP=0.00005  !horizontal slope [radian]
+        DELTAY=0.0001  !vertical coordinate [m]
+        DELTAYP=0.00005  !vertical slope [radian]
 
         DELTAE=0.0  !rel. energy spread
 
@@ -2191,10 +2191,10 @@
         NYPOPT=8     !grid of vertical slope
         DYPOPT=9999. !grid of vertical slope
 
-        DLAPER=5.8    ! length of collimator, if eq. 9999. then DLAPER is device
+        DLAPER=3.8    ! length of collimator, if eq. 9999. then DLAPER is device
                       ! length, collimator is centered around reference orbit
         ZAPERT=0.03   ! horizontal apertur is +/- ZAPERT
-        YAPERT=0.0075 ! vertical apertur is +/- YAPERT
+        YAPERT=0.005 ! vertical apertur is +/- YAPERT
 
         IPHASPAC=0   ! aperture cut takes phase space according to
                      ! subsequent beta functions into account
@@ -2281,7 +2281,7 @@
                    ! XF(3:4,I)=XF(3:4,I)+XRAN(3:4)*DRAUSCHY
                    ! XRAN is normal random number
                    ! (test purposes, to simulate noise in tracking routine)
-      STRAILEN=5.8 ! full length of straigth section
+      STRAILEN=3.8 ! full length of straigth section
 
       $END
 

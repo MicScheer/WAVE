@@ -44,7 +44,7 @@
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
 
-      CODE='WAVE.EXAMPLE'
+      CODE='Example 6: Real Beams'
 
   !-------------------------- MAIN MODES -----------------------------
 
@@ -236,12 +236,12 @@
       XSTOP=9999.    ! final x of the trajectory [m]
                      ! 9999. means default is used if possible
 		     ! i.e. exit of the device
-      YSTART=0.0     ! initial y of the trajectory [m]
-      ZSTART=0.0     ! initial z of the trajectory [m]
+      YSTART=56.1e-6     ! initial y of the trajectory [m]
+      ZSTART=648.e-6     ! initial z of the trajectory [m]
 
       VXIN=1.0       ! initial x-component of velocity vector (relative)
-      VYIN=0.0       ! initial y-component of velocity vector (relative)
-      VZIN=0.0       ! initial z-component of velocity vector (relative)
+      VYIN=12.87e-6       ! initial y-component of velocity vector (relative)
+      VZIN=74.4e-6       ! initial z-component of velocity vector (relative)
 
       BMOVECUT=1.E-6  ! in tracking routines, mag. fields below BMOVECUT
                       ! are treated as zero. This cuts might crucially effect
@@ -499,7 +499,7 @@
 		  ! magnetic field routine BHALBA
 		  ! KHALBA.lt.0 means zero field outside device
 
-      KHALBASY=0  ! simple WLS or undulator/wiggler model
+      KHALBASY=1  ! simple WLS or undulator/wiggler model
                   ! parameter namelist HALBASY
                   ! each pole described by HALBACH's formulas
 
@@ -513,7 +513,7 @@
                  ! at pole edges
                  ! magnetic field routine BUCROSS
 
-      KELLIP=1   ! helical undulator, parameter namelist ELLIPN
+      KELLIP=0   ! helical undulator, parameter namelist ELLIPN
 
       KELLANA=0  ! analytical field for helical undulator,
                  ! parameter namelist ELLANAN, SR BELLANA
@@ -894,7 +894,7 @@
                      ! individuell step size; see namelist ROIN
                      ! Check also MYINUM (ISPECMODE.EQ.1)
 
-        IFREQ2P=3 ! =0 : spectrum is calculated for listed photon
+        IFREQ2P=1 ! =0 : spectrum is calculated for listed photon
                   !      energies on file FILEFR
 		  !      Each line contains a single photon energy
 		  !      or an intervall like Elow Ehigh Nephoton
@@ -964,13 +964,13 @@
 
           ISTOKES=1   ! to calculate Stokes vector for flux through pinhole
 
-          IBRILL=1 ! to calculate brilliance (spectral brightness)
+          IBRILL=0 ! to calculate brilliance (spectral brightness)
                    ! flag ISTOKES must be set
 
           ISPECSUM=0 ! Integration of arrays SPEC and STOKES are additionally
                      ! performed by a simple summation (test purposes)
 
-          IFOLD=1 ! to invoke folding procedure to take emittance into
+          IFOLD=0 ! to invoke folding procedure to take emittance into
                   ! account (namelist WFOLDN)
            ! IFOLD.EQ.1: use routine UTIL_FOLD_FUNCTION_GAUSS
            ! IFOLD.EQ.2: use Monte-Carlo techniques (ISPECMODE = 5)
@@ -1012,7 +1012,7 @@
                      ! STOKES-Vectors are not affected!!
                      ! (NAMELIST SPECTN)
 
-        IEFOLD=1     ! =1: fold spectrum with Gaussian to take energy spread
+        IEFOLD=0     ! =1: fold spectrum with Gaussian to take energy spread
                      ! of electrons into account (namelist WFOLDN)
               ! =-1: old algorithm
               ! of electrons into account (namelist WFOLDN)
@@ -1463,7 +1463,7 @@
              ! i.e. 1 meter:
              !    KHALBASY=1
              !    AHWPOLT=3
-             !    ZLHALBASY=0.2
+             !    ZLHALBASY=0.050
              !    IPERIODG=-1
              !    PERIODG=0.2
              !    PEROFFG=-0.1
@@ -1600,7 +1600,7 @@
       XLHALBASY=0.    ! 2*pi/kx for global horizontal gradient [m]
                       ! XLHALBASY=0 means YLHALBASY=ZLHALBASY (no gradient)
       YLHALBASY=9999. ! calculated from ky**2=kx**2+kz**2
-      ZLHALBASY=0.2   ! 2*pi/kz of main poles [m]
+      ZLHALBASY=0.050   ! 2*pi/kz of main poles [m]
       FASYM=2.0       ! asymmetry parameter, i.e.
                       ! absolute value of peak field ratio of main-
                ! and endpoles
@@ -1608,15 +1608,15 @@
                ! sign changes at ZLHALBASY/6.
                ! for FASYM=2.0+eps, cos(k*x)+cos(2*k*x) is used, i.e.
                ! sign changes at ZLHALBASY/4.
-      AHWPOL=21.      ! number of main poles, should be an odd number
+      AHWPOL=99.      ! number of main poles, should be an odd number
       IAHWFOUR=0      ! use field composed by Fourier superposition of
                       ! HALBACH devices; fourier coefficients A(1)...A(NFOUR)
                ! are calculated analytically
                ! parameter NFOUR in namelist FOURIER
-      NHHALBASY=0     ! if not zero, magnetic field is calculated such, that
+      NHHALBASY=3     ! if not zero, magnetic field is calculated such, that
                       ! the energy of the NHHALBASYth harmonic is HHALBASY
                       ! OVERWRITES PKHALBASY!
-      HHALBASY=1000.  ! photon energy of considered harmonic [eV]
+      HHALBASY=500.  ! photon energy of considered harmonic [eV]
                       !-9999.: HHALBASY=(FREQLOW+FREQHIG)/2 or
                ! or = FREQLOW for single photon energy
                ! other negative values: HHALBASY denotes wavelength [nm]
@@ -2619,7 +2619,7 @@
 
       PINCEN(1)=10.  ! x-center of pinhole [m]
 
-      PINCEN(2)=9999.   !y-center of pinhole [m]
+      PINCEN(2)=-9999.   !y-center of pinhole [m]
             !9999. means centered according to IPBRILL, such
             !that corner or center is on-axis
             !-8888. means centered according to
@@ -2630,7 +2630,7 @@
             !-9000. means estimate position by averaging
             ! y(x)+vy(x)/vx(x)*(x-pincen(1))
 
-      PINCEN(3)=9999. !z-center of pinhole [m]
+      PINCEN(3)=-9999. !z-center of pinhole [m]
             !9999. means centered according to IPBRILL, such
             !that corner or center is on-axis
             !-8888. means centered according to
@@ -2650,9 +2650,9 @@
                       ! if no pinhole specified first (IPBRILL=0)
                       ! or observation point IPBRILL is taken
 
-      MPINZ=21  ! number of horizontal grid points, if OBSVDZ is zero,
+      MPINZ=101  ! number of horizontal grid points, if OBSVDZ is zero,
                 ! otherwize calculated from PINW and OBSVDZ
-      MPINY=21  ! number of vertical grid points, if OBSVDY is zero,
+      MPINY=101  ! number of vertical grid points, if OBSVDY is zero,
                 ! otherwize calculated from PINH and OBSVDY
 
        ! for undulator radiation it might be useful to use
@@ -2677,12 +2677,12 @@
       OBSVDY=0.   ! vertical mesh width in pinhole
                   ! (is calculated from PINH and MPINY if zero)
 
-      PINW=0.003   ! width of pinhole [m]
+      PINW=0.002   ! width of pinhole [m]
                    ! 9999. means automatic calculation if flag
                    ! IUNDULATOR is not zero
       PINWSC=1.    ! to scale PINW
 
-      PINH=0.003   ! height of pinhole [m]
+      PINH=0.002   ! height of pinhole [m]
                    ! 9999. means automatic calculation if flag
                    ! IUNDULATOR is not zero
       PINHSC=1.    ! to scale PINH
@@ -2735,12 +2735,12 @@
 
  $FREQN     !photon energies in eV for spectrum calcualtions
 
-      FREQLOW=105. !lowest photon energy for spectrum calculations
+      FREQLOW=500. !lowest photon energy for spectrum calculations
             ! -9999. means automatic calculation if flag
             ! IUNDULATOR is not zero (estimation might fail,
             ! if mag. field is not strictly periodic)
 
-      FREQHIG=117. !highest photon energy for spectrum calculations
+      FREQHIG=505. !highest photon energy for spectrum calculations
             ! -9999. means automatic calculation if flag
             ! IUNDULATOR is not zero (estimation might fail,
             ! if mag. field is not strictly periodic)

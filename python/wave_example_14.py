@@ -1,7 +1,7 @@
 
 ReplList = [ \
 [" CODE='WAVE.EXAMPLE'"," CODE='Example 14: Effective Undulator Source'"], \
-[" IUNDULATOR=1"," IUNDULATOR=0"], \
+[" MYINUM=5000"," MYINUM=2000"], \
 [" KELLIP=1"," KELLIP=0"], \
 [" KHALBASY=0"," KHALBASY=1"], \
 [" IFREQ2P=3"," IFREQ2P=-1"], \
@@ -18,8 +18,11 @@ ReplList = [ \
 [" PINH=0.003"," PINH=0.005"], \
 [" FREQLOW=105."," FREQLOW=295."], \
 [" FREQHIG=117."," FREQHIG=305."], \
-[" IWIGNER=0"," IWIGNER=1"], \
-[" NWIGEFOLD=15"," NWIGEFOLD=0"], \
+[" NPHASEZ=31"," NPHASEZ=101"], \
+[" NPHASEY=31"," NPHASEY=101"], \
+[" IWIGNER=0"," IWIGNER=-1"], \
+["NWIGTHETAY=31","NWIGTHETAY=1"], \
+["NWIGEFOLD=15","NWIGEFOLD=0"], \
 ]
 
 Nexample = 14

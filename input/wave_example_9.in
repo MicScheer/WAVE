@@ -44,7 +44,7 @@
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
 
-      CODE='WAVE.EXAMPLE'
+      CODE='Example 9: Real Beams, Part II'
 
   !-------------------------- MAIN MODES -----------------------------
 
@@ -53,10 +53,10 @@
       ! are taken (mainly in namelist COLLIN).
       ! Experienced users might prefere there own settings.
 
-      IUNDULATOR=1   ! UNDULATOR MODE:
+      IUNDULATOR=0   ! UNDULATOR MODE:
 
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-       !  IUNDULATOR=1   ! UNDULATOR MODE:
+       !  IUNDULATOR=0   ! UNDULATOR MODE:
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
          ! IBUNCH.EQ.0:
@@ -90,7 +90,7 @@
             ! IHTRACKM = 0
 
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-       !  IUNDULATOR=2   Like IUNDULATOR=1, but the radiation field is
+       !  IUNDULATOR=2   Like IUNDULATOR=0, but the radiation field is
        !                 calculated for a single period only and summed
        !                 with appropriate phase shift for the remaining
        !                 periods. The field is taken from $ELLIPN s.a. KAMPLI
@@ -208,7 +208,7 @@
            ! must be high enough for spectrum calculations
            ! (particularly for ISPECMODE =1)
 
-      DMYENERGY=1.722   ! total electron energy [GeV]
+      DMYENERGY=17.   ! total electron energy [GeV]
 
       IENELOSS=1 ! electron energy loss due to synchrotron radiation
                  ! is taken into account.
@@ -223,7 +223,7 @@
 
       DMYCUR=0.1 ! current [A] of the ring
 
-      XSTART=9999.   ! initial x of the trajectory [m]
+      XSTART=0.   ! initial x of the trajectory [m]
                      ! 9999. means default is used if possible
 		     ! i.e. entrance of the device
       XINTER=-9999.  ! if XINTER not -9999. tracking starts at XINTER.
@@ -233,7 +233,7 @@
 		     ! 9999. means default is used if possible
 		     ! i.e. entrance of the device
 		     ! XINTER = XSTART = 9999. is allowed but makes no sense
-      XSTOP=9999.    ! final x of the trajectory [m]
+      XSTOP=180.    ! final x of the trajectory [m]
                      ! 9999. means default is used if possible
 		     ! i.e. exit of the device
       YSTART=0.0     ! initial y of the trajectory [m]
@@ -304,7 +304,7 @@
 
       IBGAUSS=0 ! instead of hard edge, use Gaussian field
 
-      KMAGSEQ=0 ! sequence of different magnets and undulators
+      KMAGSEQ=1 ! sequence of different magnets and undulators
                 ! the sequence is read from file FILEMG
                 ! if negative, magnets to not radiate for IBMASKSP.ne.0
 
@@ -513,7 +513,7 @@
                  ! at pole edges
                  ! magnetic field routine BUCROSS
 
-      KELLIP=1   ! helical undulator, parameter namelist ELLIPN
+      KELLIP=0   ! helical undulator, parameter namelist ELLIPN
 
       KELLANA=0  ! analytical field for helical undulator,
                  ! parameter namelist ELLANAN, SR BELLANA
@@ -783,7 +783,7 @@
 
                  !if IBERROR is set, phase error analysis is given
 
-      IHTRSMP=1 !every IHTRSMPth point is taken for NTuple 10
+      IHTRSMP=10 !every IHTRSMPth point is taken for NTuple 10
 
       XSTARTH=9999. !lower edge of histogram (9999. XSTARTH=XSTART)
       XSTOPH =9999. !upper edge of histogram (9999. XSTOPH=XSTOP)
@@ -865,7 +865,7 @@
                      ! one and only one of these flags must be set
               ! IWFILL0=1 is recommended
 
-        NLPOI=-9999  ! Maximal number of integration steps per source
+        NLPOI=0  ! Maximal number of integration steps per source
                      ! The accuracy of the integration depends on
                      ! this number. Check results of integration by
                      ! increasing NLPOI. For dipoles, wiggler, etc., i.e.
@@ -964,13 +964,13 @@
 
           ISTOKES=1   ! to calculate Stokes vector for flux through pinhole
 
-          IBRILL=1 ! to calculate brilliance (spectral brightness)
+          IBRILL=0 ! to calculate brilliance (spectral brightness)
                    ! flag ISTOKES must be set
 
           ISPECSUM=0 ! Integration of arrays SPEC and STOKES are additionally
                      ! performed by a simple summation (test purposes)
 
-          IFOLD=1 ! to invoke folding procedure to take emittance into
+          IFOLD=0 ! to invoke folding procedure to take emittance into
                   ! account (namelist WFOLDN)
            ! IFOLD.EQ.1: use routine UTIL_FOLD_FUNCTION_GAUSS
            ! IFOLD.EQ.2: use Monte-Carlo techniques (ISPECMODE = 5)
@@ -1012,7 +1012,7 @@
                      ! STOKES-Vectors are not affected!!
                      ! (NAMELIST SPECTN)
 
-        IEFOLD=1     ! =1: fold spectrum with Gaussian to take energy spread
+        IEFOLD=0     ! =1: fold spectrum with Gaussian to take energy spread
                      ! of electrons into account (namelist WFOLDN)
               ! =-1: old algorithm
               ! of electrons into account (namelist WFOLDN)
@@ -1440,7 +1440,7 @@
                     ! translation !!
                     ! before you use these options, please consult
                     ! the manual
-      IPERIODG=0    ! *** Attention: The options are applied in
+      IPERIODG=1    ! *** Attention: The options are applied in
                     ! the order:
                     ! XSHIFT..., IPERIODG, IBSYM...
                     !>0: magnetic field is taken periodically
@@ -1474,8 +1474,8 @@
                     !    periodically
       XPERWMX=0.    !    upper X, for which field is taken
                     !    periodically
-      PERIODG=0.8   ! period length of magnetic field
-      PEROFFG=-0.4  ! X-offset of magnetic field
+      PERIODG=6.   ! period length of magnetic field
+      PEROFFG=0.0  ! X-offset of magnetic field
                     ! B(X,Y,Z)=B(MOD(X-PEROFFG,PERIODG),Y,Z)
       SIGNG=1.D0    ! factor to scale or reverse (if negative)
                     ! field after half a period
@@ -1854,7 +1854,7 @@
                   ! -9999.: BETAH and BETAPH are calculated as periodic
                   !        solution from lineare Transfermatrix
 
-      BETAH=9999. ! hor. beta-function at XSTART
+      BETAH=20.2 ! hor. beta-function at XSTART
                   ! 9999.: calculated from BETFUN with parabolic ansatz
                   ! under the assuption, that the derivative is zero
                   ! where the hori. beta-function equals BETFUN
@@ -1862,7 +1862,7 @@
                   ! under the assuption, that the derivative is zero
                   ! where the hori. beta-function equals BETFUN
 
-      BETAPH=9999. ! derivative of hor. beta-function at XSTART
+      BETAPH=0.0 ! derivative of hor. beta-function at XSTART
                    ! 9999.: calculated from BETFUN with parabolic ansatz
                    ! under the assuption, that the derivative is zero
                    ! where the hor. beta-function equals BETFUN
@@ -1870,21 +1870,21 @@
                    ! under the assuption, that the derivative is zero
                    ! where the hori. beta-function equals BETFUN
 
-      EPS0H=7.70e-9  ! horizontal emittance
+      EPS0H=4.0e-11  ! horizontal emittance
 
       BETFUNV=0.0    ! vert. beta-function in the center
                      ! 0.: calculated from BSIGZ(1) in namelist WFOLDN
                      ! -9999.: BETAV and BETAPV are calculated as periodic
                      ! solution from lineare transfermatrix
 
-      BETAV=9999.    ! vert. beta-function at XSTART
+      BETAV=14.3    ! vert. beta-function at XSTART
                      ! 9999.: calculated from BETFUNV with parabolic ansatz
                      ! under the assuption, that the derivative is zero
                      ! where the vert. beta-function equals BETFUNV
                      ! -9999.: calculated analytically from BETFUNV
                      ! under the assuption, that the derivative is zero
                      ! where the vert. beta-function equals BETFUNV
-      BETAPV=9999.   ! derivative of vert. beta-function at XSTART
+      BETAPV=0.0   ! derivative of vert. beta-function at XSTART
                      ! 9999.: calculated from BETFUNV with parabolic ansatz
                      ! under the assuption, that the derivative is zero
                      ! where the vert. beta-function equals BETFUNV
@@ -1892,7 +1892,7 @@
                      ! under the assuption, that the derivative is zero
                      ! where the vert. beta-function equals BETFUNV
 
-      EPS0V=15.4e-11
+      EPS0V=4.0e-11
 
       DISP0=0.0   ! external dispersion [m]
       DDISP0=0.0   ! derivative of external dispersion [m]
@@ -2312,7 +2312,7 @@
       WID2=9999.  ! 9999. WID2=PINW+4.*PINW/MPINZ
       HIG2=9999.  ! 9999. HIG2=PINH+4.*PINW/MPINY
 
-      WGWINFC=9999.  ! defines source points; those parts of the trajectory
+      WGWINFC=100.  ! defines source points; those parts of the trajectory
             ! are taken into account for which the radiation cone of
             ! opening angle +/- WGWINFG/GAMMA passes the collimator
             ! 9999. means WGWINFC is calculated by SR SETWGWIN
@@ -2439,12 +2439,12 @@
 
             ! if not zero WSIGZ-values are overwritten!!
 
-      BSIGZ(1)=275.e-6  ! horizontal beam size [m]
-      BSIGZP(1)=28.1e-6 ! horizontal beam divergency [rad]
+      BSIGZ(1)=28.4e-6  ! horizontal beam size [m]
+      BSIGZP(1)=1.41e-6 ! horizontal beam divergency [rad]
 
                         ! if not zero WSIGY-values are overwritten!!
-      BSIGY(1)=22.5e-6  ! vertical beam size [m]
-      BSIGYP(1)=6.80e-6 ! vertical beam divergency [rad]
+      BSIGY(1)=23.9e-6  ! vertical beam size [m]
+      BSIGYP(1)=1.67e-6 ! vertical beam divergency [rad]
 
       WSIGZ(1)=329.e-6 ! sigmas of Gaussians for folding
              ! if ISIGUSR is set
@@ -2498,7 +2498,7 @@
 
               ! Try 1./sqrt(sqrt(2.)) = 0.841
 
-      ESPREAD=0.001  ! rel. energy spread of the beam (for energy folding)
+      ESPREAD=0.0001  ! rel. energy spread of the beam (for energy folding)
                      ! 9999.: espread = delgam from namelist DEPOLA
       NSIGE=3        ! number of sigmas for energy folding
 
@@ -2542,7 +2542,7 @@
               ! Please, be careful and watch the effects
               ! on the field amplitude and the flux-densities
 
-      IUBUNCH=0   ! to calculate phase space distribution of electrons
+      IUBUNCH=1   ! to calculate phase space distribution of electrons
                   ! *** The principle trajectory from XSTART
            ! etc. is taken as the center of the phase-space,
            ! i.e. the coordinates and velocity are added to the
@@ -2617,7 +2617,7 @@
       RPINSPH=0.0d0  ! use part of a sphere rather than plain pinhole
                      !-9999.: RPINSPH=PINCEN(1)
 
-      PINCEN(1)=10.  ! x-center of pinhole [m]
+      PINCEN(1)=250.  ! x-center of pinhole [m]
 
       PINCEN(2)=9999.   !y-center of pinhole [m]
             !9999. means centered according to IPBRILL, such
@@ -2641,7 +2641,7 @@
             !-9000. means estimate position by averaging
             ! z(x)+vz(x)/vx(x)*(x-pincen(1))
 
-      IPBRILL=0 ! observation point inside pinhole for brilliance calculations
+      IPBRILL=1 ! observation point inside pinhole for brilliance calculations
             ! =0 center of pinhole
             ! =1 lower left corner
             ! =2 lower right corner
@@ -2677,12 +2677,12 @@
       OBSVDY=0.   ! vertical mesh width in pinhole
                   ! (is calculated from PINH and MPINY if zero)
 
-      PINW=0.003   ! width of pinhole [m]
+      PINW=0.00007   ! width of pinhole [m]
                    ! 9999. means automatic calculation if flag
                    ! IUNDULATOR is not zero
       PINWSC=1.    ! to scale PINW
 
-      PINH=0.003   ! height of pinhole [m]
+      PINH=0.00007   ! height of pinhole [m]
                    ! 9999. means automatic calculation if flag
                    ! IUNDULATOR is not zero
       PINHSC=1.    ! to scale PINH
@@ -2735,19 +2735,19 @@
 
  $FREQN     !photon energies in eV for spectrum calcualtions
 
-      FREQLOW=105. !lowest photon energy for spectrum calculations
+      FREQLOW=84990. !lowest photon energy for spectrum calculations
             ! -9999. means automatic calculation if flag
             ! IUNDULATOR is not zero (estimation might fail,
             ! if mag. field is not strictly periodic)
 
-      FREQHIG=117. !highest photon energy for spectrum calculations
+      FREQHIG=85010. !highest photon energy for spectrum calculations
             ! -9999. means automatic calculation if flag
             ! IUNDULATOR is not zero (estimation might fail,
             ! if mag. field is not strictly periodic)
             ! for IFREQ2P=1, FREQHIG-FREQLOW is the bin size of
             ! the spectrum histograms
 
-      NINTFREQ=13  !number of photon energies for IFREQ2P>2 (namelist CONTRL)
+      NINTFREQ=21  !number of photon energies for IFREQ2P>2 (namelist CONTRL)
 
       FRSCALE=1.   !scaling factor for window [FREQLOW,FREQHIG]
                    !i.e. center and width are scaled to get higher

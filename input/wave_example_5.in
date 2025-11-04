@@ -44,7 +44,7 @@
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
 
-      CODE='WAVE.EXAMPLE'
+      CODE='Example 5: Simple Build-In Optimization'
 
   !-------------------------- MAIN MODES -----------------------------
 
@@ -513,12 +513,12 @@
                  ! at pole edges
                  ! magnetic field routine BUCROSS
 
-      KELLIP=1   ! helical undulator, parameter namelist ELLIPN
+      KELLIP=0   ! helical undulator, parameter namelist ELLIPN
 
       KELLANA=0  ! analytical field for helical undulator,
                  ! parameter namelist ELLANAN, SR BELLANA
 
-      KBREC=0    ! Magnetic field from REC-structure on file
+      KBREC=1    ! Magnetic field from REC-structure on file
                  ! FILEREC or according to parameter namelist RECN
                  ! SR BREC (rectangularly shaped magnets)
 
@@ -808,7 +808,7 @@
 
  !-------------------------- SPECTRUM CALCULATIONS---------------------------
 
-      ISPEC=1 ! to activate spectrum calculations
+      ISPEC=0 ! to activate spectrum calculations
               ! parameter namelists :
               ! COLLIN
               ! SPECTN

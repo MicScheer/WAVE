@@ -44,7 +44,7 @@
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
 
-      CODE='WAVE.EXAMPLE'
+      CODE='Example 8: Magnetic Field Errors'
 
   !-------------------------- MAIN MODES -----------------------------
 
@@ -513,12 +513,12 @@
                  ! at pole edges
                  ! magnetic field routine BUCROSS
 
-      KELLIP=1   ! helical undulator, parameter namelist ELLIPN
+      KELLIP=0   ! helical undulator, parameter namelist ELLIPN
 
       KELLANA=0  ! analytical field for helical undulator,
                  ! parameter namelist ELLANAN, SR BELLANA
 
-      KBREC=0    ! Magnetic field from REC-structure on file
+      KBREC=1    ! Magnetic field from REC-structure on file
                  ! FILEREC or according to parameter namelist RECN
                  ! SR BREC (rectangularly shaped magnets)
 
@@ -923,7 +923,7 @@
 
         ISPECINT=0   ! spectrum is integrated over photon energy range
 
-        IPIN=1  ! to calculate spectrum in pinhole rather
+        IPIN=0  ! to calculate spectrum in pinhole rather
                 ! than for list of observation points
                 ! for the parameters of the pinhole see namelist PINHOLE
                 ! if negative integration over pinhole is skipped
@@ -970,7 +970,7 @@
           ISPECSUM=0 ! Integration of arrays SPEC and STOKES are additionally
                      ! performed by a simple summation (test purposes)
 
-          IFOLD=1 ! to invoke folding procedure to take emittance into
+          IFOLD=0 ! to invoke folding procedure to take emittance into
                   ! account (namelist WFOLDN)
            ! IFOLD.EQ.1: use routine UTIL_FOLD_FUNCTION_GAUSS
            ! IFOLD.EQ.2: use Monte-Carlo techniques (ISPECMODE = 5)
@@ -1012,7 +1012,7 @@
                      ! STOKES-Vectors are not affected!!
                      ! (NAMELIST SPECTN)
 
-        IEFOLD=1     ! =1: fold spectrum with Gaussian to take energy spread
+        IEFOLD=0     ! =1: fold spectrum with Gaussian to take energy spread
                      ! of electrons into account (namelist WFOLDN)
               ! =-1: old algorithm
               ! of electrons into account (namelist WFOLDN)
@@ -2735,19 +2735,19 @@
 
  $FREQN     !photon energies in eV for spectrum calcualtions
 
-      FREQLOW=105. !lowest photon energy for spectrum calculations
+      FREQLOW=1100. !lowest photon energy for spectrum calculations
             ! -9999. means automatic calculation if flag
             ! IUNDULATOR is not zero (estimation might fail,
             ! if mag. field is not strictly periodic)
 
-      FREQHIG=117. !highest photon energy for spectrum calculations
+      FREQHIG=1110. !highest photon energy for spectrum calculations
             ! -9999. means automatic calculation if flag
             ! IUNDULATOR is not zero (estimation might fail,
             ! if mag. field is not strictly periodic)
             ! for IFREQ2P=1, FREQHIG-FREQLOW is the bin size of
             ! the spectrum histograms
 
-      NINTFREQ=13  !number of photon energies for IFREQ2P>2 (namelist CONTRL)
+      NINTFREQ=201  !number of photon energies for IFREQ2P>2 (namelist CONTRL)
 
       FRSCALE=1.   !scaling factor for window [FREQLOW,FREQHIG]
                    !i.e. center and width are scaled to get higher
@@ -2906,9 +2906,9 @@
                 ! 2. x-scale-factor, y-scaling-factor
                 ! 3. data lines
 
-      IRECU=0   ! IRECU is number of additional simple undulator
+      IRECU=1   ! IRECU is number of additional simple undulator
 
-      NURANMOD=1  ! modus for field error generation:
+      NURANMOD=0  ! modus for field error generation:
                   ! 0: BCRAN is applied as explained above, no special
                   !    treatment of additional undulators
                   ! 1: BCRAN is applied for additional undulators
@@ -2922,12 +2922,12 @@
                   ! 4: same as 3, but in addition offset is
                   !    compensated by first endpole
 
-      KRECPER(1)=30   ! number of periods
+      KRECPER(1)=100   ! number of periods
 
-      URECLX(1)=14.   ! length of magnets [mm]
+      URECLX(1)=7.5   ! length of magnets [mm]
       URECLY(1)=40.   ! height of magnets [mm]
-      URECLZ(1)=40.   ! width of magnets [mm]
-      URECGAP(1)=11.6 ! half gap of undulator [mm]
+      URECLZ(1)=80.   ! width of magnets [mm]
+      URECGAP(1)=2.5 ! half gap of undulator [mm]
       UTAPER(1)=0.    ! taper (dy/dx of half gap)
       URECCX(1)=0.    ! center in x of undulator [mm]
       URECCZ(1)=0.    ! center in z of undulator [mm]
@@ -2943,7 +2943,7 @@
                       ! to the orbit plane.
                       ! Set to 1.e30 if zero
 
-      IUHELI(1)=1     ! helical undulator
+      IUHELI(1)=0     ! helical undulator
                       ! positive value means S3 mode
                       ! negative value means S2 mode
       URSPLIT(1)=0.8  ! horizontal distance of rows for helical undulator [mm]

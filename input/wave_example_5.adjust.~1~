@@ -1,0 +1,11 @@
+! Input file for fitting with WAVE
+!
+! -1 !Iterative parabolic minimization for one parameter between the boundaries
+1 !Number of parameters to optimize via Monte-Carlo minimization
+!
+"URSHIFT(1)" 14. 20. ! variable and boundaries or start and step size resp.
+!
+!
+0.00001 ! tolerance for conversion
+10 ! max. number of iteration
+"python3 wave_adjust.py" ! command called by WAVE to calculate chi2 and write it to wave_adjust.dat

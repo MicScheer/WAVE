@@ -1,4 +1,4 @@
-*CMZ :          02/11/2025  15.49.03  by  Michael Scheer
+*CMZ :          04/11/2025  14.11.47  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  13.23.19  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
@@ -81,7 +81,7 @@
       integer iwrun,ipos(2,nwigefold),kwigerr,npola,kpola,iz,iy,itz,ity,ifrq,kfrq,iwcode,
      &  lz,ly,ltz,lty,lpola,isour,nsource
 
-      integer :: iline=0,kempty,iwig
+      integer :: iline=0,kempty,iwig,iwigdum
       integer :: ihtracko,ihfreqo,lunin,lunout,nlast,nl,lunrun,nfirst,ni,l2,l1,k2,k1,istat,ipid,
      &  iend,ianf,m1,m2,n1,n2,lunfis,ieof,lunwef
 
@@ -90,7 +90,7 @@
 
       logical lexist
 
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -430,7 +430,7 @@ c        print*,trim(cline)
 
         open(newunit=lunrun,file=trim(cstage)//chpathsep//"wigner.wav",status='old')
         read(lunrun,'(a)') cline
-        read(cline(2:),*) nsource,nfreq
+        read(cline(2:),*) nsource,nfreq,iwigdum,mphasez,mphasey,nwigthetaz,nwigthetay
 
         if (iwigefold.eq.1) then
 

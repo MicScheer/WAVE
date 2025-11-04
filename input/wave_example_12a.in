@@ -44,7 +44,7 @@
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
 
-      CODE='WAVE.EXAMPLE'
+      CODE='Ex. 12a: Acc. Phys.: Transfer-mat., Multipoles, B-Map'
 
   !-------------------------- MAIN MODES -----------------------------
 
@@ -53,10 +53,10 @@
       ! are taken (mainly in namelist COLLIN).
       ! Experienced users might prefere there own settings.
 
-      IUNDULATOR=1   ! UNDULATOR MODE:
+      IUNDULATOR=0   ! UNDULATOR MODE:
 
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-       !  IUNDULATOR=1   ! UNDULATOR MODE:
+       !  IUNDULATOR=0   ! UNDULATOR MODE:
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
          ! IBUNCH.EQ.0:
@@ -90,7 +90,7 @@
             ! IHTRACKM = 0
 
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-       !  IUNDULATOR=2   Like IUNDULATOR=1, but the radiation field is
+       !  IUNDULATOR=2   Like IUNDULATOR=0, but the radiation field is
        !                 calculated for a single period only and summed
        !                 with appropriate phase shift for the remaining
        !                 periods. The field is taken from $ELLIPN s.a. KAMPLI
@@ -203,14 +203,14 @@
            ! if NSTEPMX<0 then NSTEPMX is set to
            ! (XSTOP-XSTART)*MYINUM*1.1*(-NSTEPMX)
 
-      MYINUM=5000 ! number of steps per meter for the tracking
+      MYINUM=1000 ! number of steps per meter for the tracking
                   ! for more recent version of WAVE this parameter
            ! must be high enough for spectrum calculations
            ! (particularly for ISPECMODE =1)
 
       DMYENERGY=1.722   ! total electron energy [GeV]
 
-      IENELOSS=1 ! electron energy loss due to synchrotron radiation
+      IENELOSS=0 ! electron energy loss due to synchrotron radiation
                  ! is taken into account.
           ! -1: Quantum fluctuations are taken into account
           !     see namelist PHOTONN
@@ -223,7 +223,7 @@
 
       DMYCUR=0.1 ! current [A] of the ring
 
-      XSTART=9999.   ! initial x of the trajectory [m]
+      XSTART=-1.9   ! initial x of the trajectory [m]
                      ! 9999. means default is used if possible
 		     ! i.e. entrance of the device
       XINTER=-9999.  ! if XINTER not -9999. tracking starts at XINTER.
@@ -233,7 +233,7 @@
 		     ! 9999. means default is used if possible
 		     ! i.e. entrance of the device
 		     ! XINTER = XSTART = 9999. is allowed but makes no sense
-      XSTOP=9999.    ! final x of the trajectory [m]
+      XSTOP=1.9    ! final x of the trajectory [m]
                      ! 9999. means default is used if possible
 		     ! i.e. exit of the device
       YSTART=0.0     ! initial y of the trajectory [m]
@@ -287,7 +287,7 @@
 
       IRFILT0=0 ! calculate Bx(x),By(x),Bz(x) from the trajectory of file FILETR
 
-      IBSUPER=1 ! flag to allow superposition of magnetic field
+      IBSUPER=0 ! flag to allow superposition of magnetic field
                 ! configurations
 
       IBERROR=0 ! superimpose magnetic field errors (namelist BERRORN)
@@ -513,12 +513,12 @@
                  ! at pole edges
                  ! magnetic field routine BUCROSS
 
-      KELLIP=1   ! helical undulator, parameter namelist ELLIPN
+      KELLIP=0   ! helical undulator, parameter namelist ELLIPN
 
       KELLANA=0  ! analytical field for helical undulator,
                  ! parameter namelist ELLANAN, SR BELLANA
 
-      KBREC=0    ! Magnetic field from REC-structure on file
+      KBREC=1    ! Magnetic field from REC-structure on file
                  ! FILEREC or according to parameter namelist RECN
                  ! SR BREC (rectangularly shaped magnets)
 
@@ -694,7 +694,7 @@
                    ! IWSECTMAGS < 0: use sector magnets on files wave.smag
                    ! and wave.xmag as magnetic field for tracking
 
-      IWBTAB=0 ! to write By along straight line parallel to
+      IWBTAB=1 ! to write By along straight line parallel to
                ! device axis or along trajectory onto file
                ! FILEWBT
                ! for parameters and file formats see NAMELIST WBTABN
@@ -705,7 +705,7 @@
                ! if (IWBTAB.eq. 100) then trajectory is used
                ! rather than straight line
 
-      IWBMAP=0 ! to write 3D mag. field map to file FILEBMAP
+      IWBMAP=6 ! to write 3D mag. field map to file FILEBMAP
                ! according to namelist BMAPN
                !
                ! IWBMAP = 1 means field map in standard format
@@ -808,7 +808,7 @@
 
  !-------------------------- SPECTRUM CALCULATIONS---------------------------
 
-      ISPEC=1 ! to activate spectrum calculations
+      ISPEC=0 ! to activate spectrum calculations
               ! parameter namelists :
               ! COLLIN
               ! SPECTN
@@ -970,7 +970,7 @@
           ISPECSUM=0 ! Integration of arrays SPEC and STOKES are additionally
                      ! performed by a simple summation (test purposes)
 
-          IFOLD=1 ! to invoke folding procedure to take emittance into
+          IFOLD=0 ! to invoke folding procedure to take emittance into
                   ! account (namelist WFOLDN)
            ! IFOLD.EQ.1: use routine UTIL_FOLD_FUNCTION_GAUSS
            ! IFOLD.EQ.2: use Monte-Carlo techniques (ISPECMODE = 5)
@@ -2094,7 +2094,7 @@
       FILEREC= 'rec.par'           ! REC-structure
       LUNREC= 69
 
-      FILEBMAP= 'bmap.dat'        ! Magnetic field map
+      FILEBMAP= 'wave_example12a_bmap.dat'        ! Magnetic field map
       LUNBMAP= 67
 
       FILE3DCOE= 'bpoly3d.coef'          ! REDUCE coefficient file
@@ -2138,10 +2138,10 @@
           ! the transfer matrix is also applied to the variables of namelist
           ! PHASETRACKN
 
-        DELTAZ= 0.0  !horizontal coordinate [m]
-        DELTAZP=0.0  !horizontal slope [radian]
-        DELTAY= 0.0  !vertical coordinate [m]
-        DELTAYP=0.0  !vertical slope [radian]
+        DELTAZ=0.0001  !horizontal coordinate [m]
+        DELTAZP=0.00005  !horizontal slope [radian]
+        DELTAY=0.0001  !vertical coordinate [m]
+        DELTAYP=0.00005  !vertical slope [radian]
 
         DELTAE=0.0  !rel. energy spread
 
@@ -2191,7 +2191,7 @@
         NYPOPT=8     !grid of vertical slope
         DYPOPT=9999. !grid of vertical slope
 
-        DLAPER=5.8    ! length of collimator, if eq. 9999. then DLAPER is device
+        DLAPER=3.8    ! length of collimator, if eq. 9999. then DLAPER is device
                       ! length, collimator is centered around reference orbit
         ZAPERT=0.03   ! horizontal apertur is +/- ZAPERT
         YAPERT=0.0075 ! vertical apertur is +/- YAPERT
@@ -2906,9 +2906,9 @@
                 ! 2. x-scale-factor, y-scaling-factor
                 ! 3. data lines
 
-      IRECU=0   ! IRECU is number of additional simple undulator
+      IRECU=1   ! IRECU is number of additional simple undulator
 
-      NURANMOD=1  ! modus for field error generation:
+      NURANMOD=0  ! modus for field error generation:
                   ! 0: BCRAN is applied as explained above, no special
                   !    treatment of additional undulators
                   ! 1: BCRAN is applied for additional undulators
@@ -2927,11 +2927,11 @@
       URECLX(1)=14.   ! length of magnets [mm]
       URECLY(1)=40.   ! height of magnets [mm]
       URECLZ(1)=40.   ! width of magnets [mm]
-      URECGAP(1)=11.6 ! half gap of undulator [mm]
+      URECGAP(1)=5.7 ! half gap of undulator [mm]
       UTAPER(1)=0.    ! taper (dy/dx of half gap)
       URECCX(1)=0.    ! center in x of undulator [mm]
       URECCZ(1)=0.    ! center in z of undulator [mm]
-      URECBC(1)=1.22  ! remanence of magnets [T]
+      URECBC(1)=1.3  ! remanence of magnets [T]
       UBANGERR(1)=0.0 ! angle error of magnets [degree]
       UBANSIG(1)=1000.0  ! allowed max. for UBANGERR (in multiple of rms-value)
                          ! if generated error exceeds UBANSIG*UBANGERR it's
@@ -2947,7 +2947,7 @@
                       ! positive value means S3 mode
                       ! negative value means S2 mode
       URSPLIT(1)=0.8  ! horizontal distance of rows for helical undulator [mm]
-      URSHIFT(1)=10.  ! rowshift for helical undulator [mm]
+      URSHIFT(1)=0.0  ! rowshift for helical undulator [mm]
                       ! lower-left (+URSHIFT) and upper-right (-URSHIFT)
                       ! rows are shifted
       URSHADD(1)=0.   ! additional shift for lower rows [mm]
@@ -3309,13 +3309,13 @@
    NMAPX=-9999   ! number of data points in x
                  ! -9999 means: NMAXP=(XSTOP-XSTART)*MYINUM
                          !
-   YMAPMN=-0.007 ! ymin of map
-   YMAPMX=+0.007 ! ymax of map
-   NMAPY=3       ! number of data points in y
+   YMAPMN=-0.0052 ! ymin of map
+   YMAPMX=+0.0052 ! ymax of map
+   NMAPY=11       ! number of data points in y
                          !
    ZMAPMN=-0.03  ! zmin of map
    ZMAPMX=+0.03  ! zmax of map
-   NMAPZ=31      ! number of data points in z
+   NMAPZ=61      ! number of data points in z
 
    IWBMAPEXT=0   ! to extend fitted field map for IWBMAP = 4
 

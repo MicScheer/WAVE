@@ -44,7 +44,7 @@
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
 
-      CODE='WAVE.EXAMPLE'
+      CODE='Example 14: Effective Undulator Source'
 
   !-------------------------- MAIN MODES -----------------------------
 
@@ -203,7 +203,7 @@
            ! if NSTEPMX<0 then NSTEPMX is set to
            ! (XSTOP-XSTART)*MYINUM*1.1*(-NSTEPMX)
 
-      MYINUM=5000 ! number of steps per meter for the tracking
+      MYINUM=2000 ! number of steps per meter for the tracking
                   ! for more recent version of WAVE this parameter
            ! must be high enough for spectrum calculations
            ! (particularly for ISPECMODE =1)
@@ -499,7 +499,7 @@
 		  ! magnetic field routine BHALBA
 		  ! KHALBA.lt.0 means zero field outside device
 
-      KHALBASY=0  ! simple WLS or undulator/wiggler model
+      KHALBASY=1  ! simple WLS or undulator/wiggler model
                   ! parameter namelist HALBASY
                   ! each pole described by HALBACH's formulas
 
@@ -513,7 +513,7 @@
                  ! at pole edges
                  ! magnetic field routine BUCROSS
 
-      KELLIP=1   ! helical undulator, parameter namelist ELLIPN
+      KELLIP=0   ! helical undulator, parameter namelist ELLIPN
 
       KELLANA=0  ! analytical field for helical undulator,
                  ! parameter namelist ELLANAN, SR BELLANA
@@ -894,7 +894,7 @@
                      ! individuell step size; see namelist ROIN
                      ! Check also MYINUM (ISPECMODE.EQ.1)
 
-        IFREQ2P=3 ! =0 : spectrum is calculated for listed photon
+        IFREQ2P=-1 ! =0 : spectrum is calculated for listed photon
                   !      energies on file FILEFR
 		  !      Each line contains a single photon energy
 		  !      or an intervall like Elow Ehigh Nephoton
@@ -970,7 +970,7 @@
           ISPECSUM=0 ! Integration of arrays SPEC and STOKES are additionally
                      ! performed by a simple summation (test purposes)
 
-          IFOLD=1 ! to invoke folding procedure to take emittance into
+          IFOLD=0 ! to invoke folding procedure to take emittance into
                   ! account (namelist WFOLDN)
            ! IFOLD.EQ.1: use routine UTIL_FOLD_FUNCTION_GAUSS
            ! IFOLD.EQ.2: use Monte-Carlo techniques (ISPECMODE = 5)
@@ -990,7 +990,7 @@
                      ! be careful with biases.
                      ! See namelist BUNCHN
 
-        IPHASE=0     ! calculate complex amplitude in pinhole and
+        IPHASE=1     ! calculate complex amplitude in pinhole and
                      ! transform back to source plan and get
                      ! phase space distribution from geometrical
                      ! optic (namelist PHASEN)
@@ -1012,7 +1012,7 @@
                      ! STOKES-Vectors are not affected!!
                      ! (NAMELIST SPECTN)
 
-        IEFOLD=1     ! =1: fold spectrum with Gaussian to take energy spread
+        IEFOLD=0     ! =1: fold spectrum with Gaussian to take energy spread
                      ! of electrons into account (namelist WFOLDN)
               ! =-1: old algorithm
               ! of electrons into account (namelist WFOLDN)
@@ -1463,7 +1463,7 @@
              ! i.e. 1 meter:
              !    KHALBASY=1
              !    AHWPOLT=3
-             !    ZLHALBASY=0.2
+             !    ZLHALBASY=0.056
              !    IPERIODG=-1
              !    PERIODG=0.2
              !    PEROFFG=-0.1
@@ -1600,7 +1600,7 @@
       XLHALBASY=0.    ! 2*pi/kx for global horizontal gradient [m]
                       ! XLHALBASY=0 means YLHALBASY=ZLHALBASY (no gradient)
       YLHALBASY=9999. ! calculated from ky**2=kx**2+kz**2
-      ZLHALBASY=0.2   ! 2*pi/kz of main poles [m]
+      ZLHALBASY=0.056   ! 2*pi/kz of main poles [m]
       FASYM=2.0       ! asymmetry parameter, i.e.
                       ! absolute value of peak field ratio of main-
                ! and endpoles
@@ -1608,15 +1608,15 @@
                ! sign changes at ZLHALBASY/6.
                ! for FASYM=2.0+eps, cos(k*x)+cos(2*k*x) is used, i.e.
                ! sign changes at ZLHALBASY/4.
-      AHWPOL=21.      ! number of main poles, should be an odd number
+      AHWPOL=161.      ! number of main poles, should be an odd number
       IAHWFOUR=0      ! use field composed by Fourier superposition of
                       ! HALBACH devices; fourier coefficients A(1)...A(NFOUR)
                ! are calculated analytically
                ! parameter NFOUR in namelist FOURIER
-      NHHALBASY=0     ! if not zero, magnetic field is calculated such, that
+      NHHALBASY=1     ! if not zero, magnetic field is calculated such, that
                       ! the energy of the NHHALBASYth harmonic is HHALBASY
                       ! OVERWRITES PKHALBASY!
-      HHALBASY=1000.  ! photon energy of considered harmonic [eV]
+      HHALBASY=300.  ! photon energy of considered harmonic [eV]
                       !-9999.: HHALBASY=(FREQLOW+FREQHIG)/2 or
                ! or = FREQLOW for single photon energy
                ! other negative values: HHALBASY denotes wavelength [nm]
@@ -2650,9 +2650,9 @@
                       ! if no pinhole specified first (IPBRILL=0)
                       ! or observation point IPBRILL is taken
 
-      MPINZ=21  ! number of horizontal grid points, if OBSVDZ is zero,
+      MPINZ=151  ! number of horizontal grid points, if OBSVDZ is zero,
                 ! otherwize calculated from PINW and OBSVDZ
-      MPINY=21  ! number of vertical grid points, if OBSVDY is zero,
+      MPINY=151  ! number of vertical grid points, if OBSVDY is zero,
                 ! otherwize calculated from PINH and OBSVDY
 
        ! for undulator radiation it might be useful to use
@@ -2677,12 +2677,12 @@
       OBSVDY=0.   ! vertical mesh width in pinhole
                   ! (is calculated from PINH and MPINY if zero)
 
-      PINW=0.003   ! width of pinhole [m]
+      PINW=0.005   ! width of pinhole [m]
                    ! 9999. means automatic calculation if flag
                    ! IUNDULATOR is not zero
       PINWSC=1.    ! to scale PINW
 
-      PINH=0.003   ! height of pinhole [m]
+      PINH=0.005   ! height of pinhole [m]
                    ! 9999. means automatic calculation if flag
                    ! IUNDULATOR is not zero
       PINHSC=1.    ! to scale PINH
@@ -2735,12 +2735,12 @@
 
  $FREQN     !photon energies in eV for spectrum calcualtions
 
-      FREQLOW=105. !lowest photon energy for spectrum calculations
+      FREQLOW=295. !lowest photon energy for spectrum calculations
             ! -9999. means automatic calculation if flag
             ! IUNDULATOR is not zero (estimation might fail,
             ! if mag. field is not strictly periodic)
 
-      FREQHIG=117. !highest photon energy for spectrum calculations
+      FREQHIG=305. !highest photon energy for spectrum calculations
             ! -9999. means automatic calculation if flag
             ! IUNDULATOR is not zero (estimation might fail,
             ! if mag. field is not strictly periodic)
@@ -3496,8 +3496,8 @@
                         !points. The other points given be MPHASEZ, MPHASEY
                         !serve as edge for the folding procedure
 
-        NPHASEZ=31      !number of horizontal mesh points
-        NPHASEY=31      !number of vertical mesh points
+        NPHASEZ=101      !number of horizontal mesh points
+        NPHASEY=101      !number of vertical mesh points
         MPHASEZ=-9999   !total number of horizontal mesh points
                         !-9999: MPHASEZ according to dgsigz(1) and the
                         ! sigma of the Gaussian
@@ -3508,14 +3508,14 @@
 	PHGSHIFT=0.0    !global phase shift [rad]
 	                !9999: Shift such, that the imaginary part of the on-axis horizontal field
 			!      becomes zero
-        IWIGNER=0           ! calculate Wigner distribution function
+        IWIGNER=-1           ! calculate Wigner distribution function
 	                    !  1: All polarisations states, i.e. Wzz,Wyy,Wzy
 			    ! -1: Wzz only
 			    ! -2: Wyy only
 			    ! -3: Wzy only
 			    ! -4: Wyz only
 
-	NWIGEFOLD=15        ! number of beam energy steps
+	NWIGEFOLD=0        ! number of beam energy steps
 	NOSPLINEWEF=0	    ! to use simple summation instead of spline integration
 	
 	WIGTHETAZ=0.05e-3   ! Hori. opening angle of radiation cone [rad]	                    ! -9999: Estimated from device length and photon energy
@@ -3524,7 +3524,7 @@
 	
 	WIGTHETAY=0.05e-3   ! Vert. opening angle of radiation cone [rad]
 	WIGTHETAYCEN=0.0    ! Center of the vert. angle range
-	NWIGTHETAY=31       ! number of angles in y
+	NWIGTHETAY=1       ! number of angles in y
 	
         IPHFOLD=0       !Folding of flux-density distribution according
                         !to beta functions PHBETH and PBETV, and the

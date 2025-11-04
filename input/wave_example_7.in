@@ -44,7 +44,7 @@
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
 
-      CODE='WAVE.EXAMPLE'
+      CODE='Global Magnetic Field Options '
 
   !-------------------------- MAIN MODES -----------------------------
 
@@ -208,9 +208,9 @@
            ! must be high enough for spectrum calculations
            ! (particularly for ISPECMODE =1)
 
-      DMYENERGY=1.722   ! total electron energy [GeV]
+      DMYENERGY=17.   ! total electron energy [GeV]
 
-      IENELOSS=1 ! electron energy loss due to synchrotron radiation
+      IENELOSS=0 ! electron energy loss due to synchrotron radiation
                  ! is taken into account.
           ! -1: Quantum fluctuations are taken into account
           !     see namelist PHOTONN
@@ -223,7 +223,7 @@
 
       DMYCUR=0.1 ! current [A] of the ring
 
-      XSTART=9999.   ! initial x of the trajectory [m]
+      XSTART=-1.5   ! initial x of the trajectory [m]
                      ! 9999. means default is used if possible
 		     ! i.e. entrance of the device
       XINTER=-9999.  ! if XINTER not -9999. tracking starts at XINTER.
@@ -233,7 +233,7 @@
 		     ! 9999. means default is used if possible
 		     ! i.e. entrance of the device
 		     ! XINTER = XSTART = 9999. is allowed but makes no sense
-      XSTOP=9999.    ! final x of the trajectory [m]
+      XSTOP=1.5    ! final x of the trajectory [m]
                      ! 9999. means default is used if possible
 		     ! i.e. exit of the device
       YSTART=0.0     ! initial y of the trajectory [m]
@@ -499,7 +499,7 @@
 		  ! magnetic field routine BHALBA
 		  ! KHALBA.lt.0 means zero field outside device
 
-      KHALBASY=0  ! simple WLS or undulator/wiggler model
+      KHALBASY=1  ! simple WLS or undulator/wiggler model
                   ! parameter namelist HALBASY
                   ! each pole described by HALBACH's formulas
 
@@ -783,7 +783,7 @@
 
                  !if IBERROR is set, phase error analysis is given
 
-      IHTRSMP=1 !every IHTRSMPth point is taken for NTuple 10
+      IHTRSMP=10 !every IHTRSMPth point is taken for NTuple 10
 
       XSTARTH=9999. !lower edge of histogram (9999. XSTARTH=XSTART)
       XSTOPH =9999. !upper edge of histogram (9999. XSTOPH=XSTOP)
@@ -923,7 +923,7 @@
 
         ISPECINT=0   ! spectrum is integrated over photon energy range
 
-        IPIN=1  ! to calculate spectrum in pinhole rather
+        IPIN=0  ! to calculate spectrum in pinhole rather
                 ! than for list of observation points
                 ! for the parameters of the pinhole see namelist PINHOLE
                 ! if negative integration over pinhole is skipped
@@ -964,13 +964,13 @@
 
           ISTOKES=1   ! to calculate Stokes vector for flux through pinhole
 
-          IBRILL=1 ! to calculate brilliance (spectral brightness)
+          IBRILL=0 ! to calculate brilliance (spectral brightness)
                    ! flag ISTOKES must be set
 
           ISPECSUM=0 ! Integration of arrays SPEC and STOKES are additionally
                      ! performed by a simple summation (test purposes)
 
-          IFOLD=1 ! to invoke folding procedure to take emittance into
+          IFOLD=0 ! to invoke folding procedure to take emittance into
                   ! account (namelist WFOLDN)
            ! IFOLD.EQ.1: use routine UTIL_FOLD_FUNCTION_GAUSS
            ! IFOLD.EQ.2: use Monte-Carlo techniques (ISPECMODE = 5)
@@ -1012,7 +1012,7 @@
                      ! STOKES-Vectors are not affected!!
                      ! (NAMELIST SPECTN)
 
-        IEFOLD=1     ! =1: fold spectrum with Gaussian to take energy spread
+        IEFOLD=0     ! =1: fold spectrum with Gaussian to take energy spread
                      ! of electrons into account (namelist WFOLDN)
               ! =-1: old algorithm
               ! of electrons into account (namelist WFOLDN)
@@ -1440,7 +1440,7 @@
                     ! translation !!
                     ! before you use these options, please consult
                     ! the manual
-      IPERIODG=0    ! *** Attention: The options are applied in
+      IPERIODG=1    ! *** Attention: The options are applied in
                     ! the order:
                     ! XSHIFT..., IPERIODG, IBSYM...
                     !>0: magnetic field is taken periodically
@@ -1474,8 +1474,8 @@
                     !    periodically
       XPERWMX=0.    !    upper X, for which field is taken
                     !    periodically
-      PERIODG=0.8   ! period length of magnetic field
-      PEROFFG=-0.4  ! X-offset of magnetic field
+      PERIODG=3.   ! period length of magnetic field
+      PEROFFG=-1.5  ! X-offset of magnetic field
                     ! B(X,Y,Z)=B(MOD(X-PEROFFG,PERIODG),Y,Z)
       SIGNG=1.D0    ! factor to scale or reverse (if negative)
                     ! field after half a period
@@ -1594,7 +1594,7 @@
             ! standard of WAVE, HALBACH's convention used
             ! i.e. z is longitudinal device axis
             ! the system is internally converted to WAVE standard
-      B0HALBASY=2.    ! peak field [T]
+      B0HALBASY=4.0501305277737230D-02    ! peak field [T]
       PKHALBASY=0.    ! Deflection parameter K, if not zero, B0HALBASY is overwritten
 
       XLHALBASY=0.    ! 2*pi/kx for global horizontal gradient [m]
@@ -1608,7 +1608,7 @@
                ! sign changes at ZLHALBASY/6.
                ! for FASYM=2.0+eps, cos(k*x)+cos(2*k*x) is used, i.e.
                ! sign changes at ZLHALBASY/4.
-      AHWPOL=21.      ! number of main poles, should be an odd number
+      AHWPOL=1.      ! number of main poles, should be an odd number
       IAHWFOUR=0      ! use field composed by Fourier superposition of
                       ! HALBACH devices; fourier coefficients A(1)...A(NFOUR)
                ! are calculated analytically
@@ -1620,7 +1620,7 @@
                       !-9999.: HHALBASY=(FREQLOW+FREQHIG)/2 or
                ! or = FREQLOW for single photon energy
                ! other negative values: HHALBASY denotes wavelength [nm]
-      XCENHAL=0.0     ! longitudinal position of undulator center [m]
+      XCENHAL=1.4     ! longitudinal position of undulator center [m]
 
       $END
 
@@ -1701,11 +1701,11 @@
                   ! mag. fields B0ELLIPV and B0ELLIPH are adjusted
                   ! signs and ratio of B0ELLIPV and B0ELLIP are kept
 
-      B0ELLIPV=0.353553390593   ! vertical peak field   [T]
-      B0ELLIPH=0.353553390593   ! horizontal peak field   [T]
+      B0ELLIPV=0.45872917839670901d0   ! vertical peak field   [T]
+      B0ELLIPH=0.0   ! horizontal peak field   [T]
 
-      XLELLIP=0.056   ! period length [m]
-      PERELLIP=31.    ! number of periods
+      XLELLIP=0.05   ! period length [m]
+      PERELLIP=50.    ! number of periods
       ELLSHFT=0.25    ! shift of horiz. and vert. fields [periods]
 
       NHARMELL=0 ! if not zero, magnetic field is calculated such, that
@@ -2617,7 +2617,7 @@
       RPINSPH=0.0d0  ! use part of a sphere rather than plain pinhole
                      !-9999.: RPINSPH=PINCEN(1)
 
-      PINCEN(1)=10.  ! x-center of pinhole [m]
+      PINCEN(1)=250.  ! x-center of pinhole [m]
 
       PINCEN(2)=9999.   !y-center of pinhole [m]
             !9999. means centered according to IPBRILL, such
@@ -2735,19 +2735,19 @@
 
  $FREQN     !photon energies in eV for spectrum calcualtions
 
-      FREQLOW=105. !lowest photon energy for spectrum calculations
+      FREQLOW=149900. !lowest photon energy for spectrum calculations
             ! -9999. means automatic calculation if flag
             ! IUNDULATOR is not zero (estimation might fail,
             ! if mag. field is not strictly periodic)
 
-      FREQHIG=117. !highest photon energy for spectrum calculations
+      FREQHIG=150100. !highest photon energy for spectrum calculations
             ! -9999. means automatic calculation if flag
             ! IUNDULATOR is not zero (estimation might fail,
             ! if mag. field is not strictly periodic)
             ! for IFREQ2P=1, FREQHIG-FREQLOW is the bin size of
             ! the spectrum histograms
 
-      NINTFREQ=13  !number of photon energies for IFREQ2P>2 (namelist CONTRL)
+      NINTFREQ=201  !number of photon energies for IFREQ2P>2 (namelist CONTRL)
 
       FRSCALE=1.   !scaling factor for window [FREQLOW,FREQHIG]
                    !i.e. center and width are scaled to get higher

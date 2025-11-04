@@ -36036,10 +36036,13 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
 
   plotopt(plopt)
 
-  #reakpoint()
   ztz = 1
+  lz=0
+  ly=0
 
   if key == 'WHHZ' or key == 'WZZZ':
+
+    lz=1
 
     his = hbook2('HWIGEzzZ', 'E-folded Wzz in Z-Theta_Z Plane',
                  nz,zmin-dz/2.,zmax+dz/2.,
@@ -36066,6 +36069,8 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
     ytit = 'Theta_z [mrad]'
 
   elif key == 'WHHY' or key == 'WZZY':
+
+    ly=1
 
     ztz = 0
     his = hbook2('HWIGEzzY', 'E-folded Wzz in Y-Theta_Y Plane',
@@ -36094,6 +36099,8 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
 
   elif key == 'WVVH' or key == 'WYYZ':
 
+    lz=1
+
     his = hbook2('HWIGEyyZ', 'E-folded Wyy in Z-Theta_Z Plane',
                  nz,zmin-dz/2.,zmax+dz/2.,
                  ntz,tzmin-dtz/2.,tzmax+dtz/2.,
@@ -36119,6 +36126,8 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
     ytit = 'Theta_Z [mrad]'
 
   elif key == 'WVVV' or key == 'WYYY':
+
+    ly=1
 
     ztz = 0
     his = hbook2('HWIGEyyY', 'E-folded Wzy in Y-Theta_Y Plane',
@@ -36147,6 +36156,8 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
 
   elif key == 'WHVH' or key == 'WZYZ':
 
+    lz=1
+
     his = hbook2('HWIGEzyZ', 'E-folded Wzy in Z-Theta_Z Plane',
                  nz,zmin-dz/2.,zmax+dz/2.,
                  ntz,tzmin-dtz/2.,tzmax+dtz/2.,
@@ -36172,6 +36183,8 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
     ytit = 'Theta_Z [mrad]'
 
   elif key == 'WHVV' or key == 'WZYY':
+
+    ly=1
 
     ztz = 0
     his = hbook2('HWIGEzyY', 'E-folded Wzy in Y-Theta_Y Plane',
@@ -36200,6 +36213,8 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
 
   elif key == 'WVHH' or key == 'WYZZ':
 
+    lz=1
+
     his = hbook2('HWIGEyzZ', 'E-folded Wyz in Z-Theta_Z Plane',
                  nz,zmin-dz/2.,zmax+dz/2.,
                  ntz,tzmin-dtz/2.,tzmax+dtz/2.,
@@ -36225,6 +36240,8 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
     ytit = 'Theta_Z [mrad]'
 
   elif key == 'WVHV' or key == 'WYZY':
+
+    ly=1
 
     ztz = 0
     his = hbook2('HWIGEyzY', 'E-folded Wyz in Y-Theta_Y Plane',
@@ -36378,7 +36395,7 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
   wtit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
 
   #reakpoint()
-  if ztz:
+  if lz == 1:
     zone(2,2,2,'same')
     npll(nwef,"z*1000.:wig*1.0e-12",sitzcut + a + sel)
     txyz('Theta_Z = 0','z [mm]', wtit)
@@ -36387,15 +36404,15 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
       npll(nwef,"tz*1000.:wig*1.0e-12",sizcut + a + sel)
     else: null()
     txyz('Z = 0','Theta_Z [mrad]', wtit)
-  else:
+  elif ly == 1:
     zone(2,2,2,'same')
-    npll(nwef,"y*1000.:wig*1.0e-12",sitzcut + a + sel)
+    npll(nwef,"y*1000.:wig*1.0e-12",sitycut + a + sel)
     txyz('Theta_Y = 0','y [mm]', wtit)
     zone(2,2,4,'same')
     if iyty:
-      npll(nwef,"ty*1000.:wig*1.0e-12",sizcut + a + sel)
+      npll(nwef,"ty*1000.:wig*1.0e-12",siycut + a + sel)
     else: null()
-    txyz('Y = 0','Theta_Z [mrad]', wtit)
+    txyz('Y = 0','Theta_Y [mrad]', wtit)
   #endif
 
   LastPlot = ['ndistwignere',key,select,plopt]

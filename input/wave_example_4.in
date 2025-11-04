@@ -44,7 +44,7 @@
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
 
-      CODE='WAVE.EXAMPLE'
+      CODE='Example 4: APPLE-II Undulator'
 
   !-------------------------- MAIN MODES -----------------------------
 
@@ -513,12 +513,12 @@
                  ! at pole edges
                  ! magnetic field routine BUCROSS
 
-      KELLIP=1   ! helical undulator, parameter namelist ELLIPN
+      KELLIP=0   ! helical undulator, parameter namelist ELLIPN
 
       KELLANA=0  ! analytical field for helical undulator,
                  ! parameter namelist ELLANAN, SR BELLANA
 
-      KBREC=0    ! Magnetic field from REC-structure on file
+      KBREC=1    ! Magnetic field from REC-structure on file
                  ! FILEREC or according to parameter namelist RECN
                  ! SR BREC (rectangularly shaped magnets)
 
@@ -970,7 +970,7 @@
           ISPECSUM=0 ! Integration of arrays SPEC and STOKES are additionally
                      ! performed by a simple summation (test purposes)
 
-          IFOLD=1 ! to invoke folding procedure to take emittance into
+          IFOLD=0 ! to invoke folding procedure to take emittance into
                   ! account (namelist WFOLDN)
            ! IFOLD.EQ.1: use routine UTIL_FOLD_FUNCTION_GAUSS
            ! IFOLD.EQ.2: use Monte-Carlo techniques (ISPECMODE = 5)
@@ -2908,7 +2908,7 @@
 
       IRECU=0   ! IRECU is number of additional simple undulator
 
-      NURANMOD=1  ! modus for field error generation:
+      NURANMOD=0  ! modus for field error generation:
                   ! 0: BCRAN is applied as explained above, no special
                   !    treatment of additional undulators
                   ! 1: BCRAN is applied for additional undulators

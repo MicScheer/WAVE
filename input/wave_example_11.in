@@ -44,7 +44,7 @@
  $CONTRL
   !-------------------------- USER COMMENT ---------------------------
 
-      CODE='WAVE.EXAMPLE'
+      CODE='Example 11: APPLE-II with UNDUMAG'
 
   !-------------------------- MAIN MODES -----------------------------
 
@@ -53,10 +53,10 @@
       ! are taken (mainly in namelist COLLIN).
       ! Experienced users might prefere there own settings.
 
-      IUNDULATOR=1   ! UNDULATOR MODE:
+      IUNDULATOR=0   ! UNDULATOR MODE:
 
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-       !  IUNDULATOR=1   ! UNDULATOR MODE:
+       !  IUNDULATOR=0   ! UNDULATOR MODE:
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
          ! IBUNCH.EQ.0:
@@ -90,7 +90,7 @@
             ! IHTRACKM = 0
 
        !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-       !  IUNDULATOR=2   Like IUNDULATOR=1, but the radiation field is
+       !  IUNDULATOR=2   Like IUNDULATOR=0, but the radiation field is
        !                 calculated for a single period only and summed
        !                 with appropriate phase shift for the remaining
        !                 periods. The field is taken from $ELLIPN s.a. KAMPLI
@@ -513,7 +513,7 @@
                  ! at pole edges
                  ! magnetic field routine BUCROSS
 
-      KELLIP=1   ! helical undulator, parameter namelist ELLIPN
+      KELLIP=0   ! helical undulator, parameter namelist ELLIPN
 
       KELLANA=0  ! analytical field for helical undulator,
                  ! parameter namelist ELLANAN, SR BELLANA
@@ -522,7 +522,7 @@
                  ! FILEREC or according to parameter namelist RECN
                  ! SR BREC (rectangularly shaped magnets)
 
-      KBUNDUMAG=0     !  1:  Use field of an APPLE-II undulator calculated by
+      KBUNDUMAG=2     !  1:  Use field of an APPLE-II undulator calculated by
                       !      UNDUMAG
                       !  2:  like 1, but run UNDUMAG first (namelist UNDUMAGN)
                       !
@@ -808,7 +808,7 @@
 
  !-------------------------- SPECTRUM CALCULATIONS---------------------------
 
-      ISPEC=1 ! to activate spectrum calculations
+      ISPEC=0 ! to activate spectrum calculations
               ! parameter namelists :
               ! COLLIN
               ! SPECTN
