@@ -31705,7 +31705,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
 #}Merit
 #{Power
   elif key == 'POW':
-
+    #reakpoint()
     idx2000 = GetIndexN('n2000')
     n2000 = Ntup[idx2000]
 
@@ -33091,6 +33091,7 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
 
 #{Power
   elif key == 'POW':
+    #reakpoint()
     idx2000 = GetIndexN('n2000')
     n2000 = Ntup[idx2000]
 
@@ -33971,6 +33972,70 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2("n3700",'z:y','im_y',select,1000.,1000.,1.0,0,0,'Hpin')
     tit = 'Field ampl. Ay_Imag'
     ztit='Vs/m'
+
+  elif key == 'AZRF' or key == 'EZRF':
+    if Wifol:
+      if select == '':
+        if Wesel <= 0: esel()
+        select = 'iene == ' + str(Wiesel)
+      elif type(select) == int:
+        if select < 0: select = 0
+        elif select > len(Wener): select = len(Wener)
+        Wesel = Wener[select-1]
+        Wiesel = select
+        select = 'iene == ' + str(select)
+      #endif select != ''
+      istat = nproj2("n3701",'z:y','re_z',select,1000.,1000.,1.0,0,0,'Hpin')
+      tit = 'Field ampl. Az_Real with emit.'
+      ztit='Vs/m'
+
+  elif key == 'AZIF' or key == 'EZIF':
+    if Wifol:
+      if select == '':
+        if Wesel <= 0: esel()
+        select = 'iene == ' + str(Wiesel)
+      elif type(select) == int:
+        if select < 0: select = 0
+        elif select > len(Wener): select = len(Wener)
+        Wesel = Wener[select-1]
+        Wiesel = select
+        select = 'iene == ' + str(select)
+      #endif select != ''
+      istat = nproj2("n3701",'z:y','im_z',select,1000.,1000.,1.0,0,0,'Hpin')
+      tit = 'Field ampl. Az_Imag with emit.'
+      ztit='Vs/m'
+
+  elif key == 'AYRF' or key == 'EYRF':
+    if Wifol:
+      if select == '':
+        if Wesel <= 0: esel()
+        select = 'iene == ' + str(Wiesel)
+      elif type(select) == int:
+        if select < 0: select = 0
+        elif select > len(Wener): select = len(Wener)
+        Wesel = Wener[select-1]
+        Wiesel = select
+        select = 'iene == ' + str(select)
+      #endif select != ''
+      istat = nproj2("n3701",'z:y','re_y',select,1000.,1000.,1.0,0,0,'Hpin')
+      tit = 'Field ampl. Ay_Real with emit.'
+      ztit='Vs/m'
+
+  elif key == 'AYIF' or key == 'EYIF':
+    if Wifol:
+      if select == '':
+        if Wesel <= 0: esel()
+        select = 'iene == ' + str(Wiesel)
+      elif type(select) == int:
+        if select < 0: select = 0
+        elif select > len(Wener): select = len(Wener)
+        Wesel = Wener[select-1]
+        Wiesel = select
+        select = 'iene == ' + str(select)
+      #endif select != ''
+      istat = nproj2("n3701",'z:y','im_y',select,1000.,1000.,1.0,0,0,'Hpin')
+      tit = 'Field ampl. Ay_Imag with emit.'
+      ztit='Vs/m'
 
   elif key == 'APH':
     if select == '':
@@ -38895,9 +38960,9 @@ def Mmenu_gray(fgcol='gray'):
   global Mmenu, mTraj, mSources, mSpectra, mFluxden, mStokden, mPoladen,mOptics, \
   mMeriden, mBrill, mFlux, mStok, mPola, mMeri, mDist, mDistStokes, mDistPola,\
   mDistMeri, mDistPower, mEsel, mBunch, mBunchSpec, mBunchPhaseSpace, mBunchDist
-
   if not Wfile:
     for i in range(1,Mmenu.index('end')+1):
+      if i>1: return
       try:
         Mmenu.entryconfig(i,foreground=fgcol)
       except: pass
@@ -39201,7 +39266,7 @@ def Mmenu_gray(fgcol='gray'):
     mDistH.entryconfig(2,foreground=fgcol)
     mDistHPower.entryconfig(2,foreground=fgcol)
 
-    mDistV.entryconfig(2,foreground=fgcol)
+    if not Wifol: mDistV.entryconfig(2,foreground=fgcol)
     mDistVPower.entryconfig(2,foreground=fgcol)
 
     for i in range(5,11):
@@ -39268,14 +39333,15 @@ def Mmenu_gray(fgcol='gray'):
 
     mEsel.config(foreground=fgcol)
 
-    mDistV.entryconfig(2,foreground=fgcol)
+    if not Wifol: mDistV.entryconfig(2,foreground=fgcol)
 
     for i in range(11,21):
       mDistVStokes.entryconfig(i,foreground=fgcol)
       mDistVPola.entryconfig(i,foreground=fgcol)
       mDistVMeri.entryconfig(i,foreground=fgcol)
+    #endfor
 
-    mDist.entryconfig(2,foreground=fgcol)
+    if not Wifol: mDist.entryconfig(2,foreground=fgcol)
 
     for i in range(11,21):
       mDistStokes.entryconfig(i,foreground=fgcol)
@@ -41490,6 +41556,7 @@ def pmenu_update(kmenu):
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
   ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
+  print("*** putrace: Entered pmenu_update:: kmenu:",kmenu)
   Imenu = kmenu
   if kmenu == -1:
     pass
@@ -44940,6 +45007,8 @@ def runwave(ev=''):
 
   print("\nStarting WAVE, i.e. executing:\n",WAVECom,"\n")
 
+  WAVECom=''
+
   if not WAVECom:
 
     Fwvs = open(FWVS,'r')
@@ -45736,11 +45805,11 @@ mDistH.add_cascade(label='Fig of Merit S0*P**2',  menu=mDistHMeri)
 
 #{ Power
 mDistHPower = Menu(mDistH,tearoff=1,font=Myfont)
-mDistHPower.add_command(label="Total power",  command= lambda key='pow': _ndistpowv(key))
-mDistHPower.add_command(label="Total power with emittance",  command= lambda key='powf': _ndistpowv(key))
-mDistHPower.add_command(label="Total pow. vert. integrated",  command= lambda key='power': _ndistpowvint(key))
-mDistHPower.add_command(label="Power within spectral range",  command= lambda key='specpow': _ndistpowv(key))
-mDistHPower.add_command(label="Spec. pow. vert. integrated",  command= lambda key='specpow': _ndistpowvint(key))
+mDistHPower.add_command(label="Total power",  command= lambda key='pow': _ndistpowh(key))
+mDistHPower.add_command(label="Total power with emittance",  command= lambda key='powf': _ndistpowh(key))
+mDistHPower.add_command(label="Total pow. vert. integrated",  command= lambda key='power': _ndistpowhint(key))
+mDistHPower.add_command(label="Power within spectral range",  command= lambda key='specpow': _ndistpowh(key))
+mDistHPower.add_command(label="Spec. pow. vert. integrated",  command= lambda key='specpow': _ndistpowhint(key))
 
 mDistH.add_cascade(label='Power',  menu=mDistHPower)
 #} Power
@@ -45752,16 +45821,24 @@ mDistAmpH.add_command(label="Ay_Real",  command= lambda key='AyR': _ndistpinh(ke
 mDistAmpH.add_command(label="Ay_Imag",  command= lambda key='AyI': _ndistpinh(key))
 mDistAmpH.add_command(label="Az_Real",  command= lambda key='AzR': _ndistpinh(key))
 mDistAmpH.add_command(label="Az_Imag",  command= lambda key='AzI': _ndistpinh(key))
+mDistAmpH.add_command(label="Ay_Real with emit.",  command= lambda key='AyRF': _ndistpinh(key))
+mDistAmpH.add_command(label="Ay_Imag with emit.",  command= lambda key='AyIF': _ndistpinh(key))
+mDistAmpH.add_command(label="Az_Real with emit.",  command= lambda key='AzRF': _ndistpinh(key))
+mDistAmpH.add_command(label="Az_Imag with emit.",  command= lambda key='AzIF': _ndistpinh(key))
 mDistAmpH.add_command(label="Phase Advance",    command= lambda key='APH': _ndistpinh(key))
 #}Field Amplitudes
 
 #{Propagated Field Amplitudes
 mDistAmpPropH = Menu(mDistH,tearoff=1,font=Myfont)
 mDistH.add_cascade(label='Propagated Fields',  menu=mDistAmpPropH)
-mDistAmpPropH.add_command(label="Ay_Real",  command= lambda key='AyR': _ndistphasev(key))
-mDistAmpPropH.add_command(label="Ay_Imag",  command= lambda key='AyI': _ndistphasev(key))
-mDistAmpPropH.add_command(label="Az_Real",  command= lambda key='AzR': _ndistphasev(key))
+mDistAmpPropH.add_command(label="Ay_Real",  command= lambda key='AyR': _ndistphaseh(key))
+mDistAmpPropH.add_command(label="Ay_Imag",  command= lambda key='AyI': _ndistphaseh(key))
+mDistAmpPropH.add_command(label="Az_Real",  command= lambda key='AzR': _ndistphaseh(key))
 mDistAmpPropH.add_command(label="Az_Imag",  command= lambda key='AzI': _ndistphaseh(key))
+mDistAmpPropH.add_command(label="Ay_Real with emit.",  command= lambda key='AyRF': _ndistphaseh(key))
+mDistAmpPropH.add_command(label="Ay_Imag with emit.",  command= lambda key='AyIF': _ndistphaseh(key))
+mDistAmpPropH.add_command(label="Az_Real with emit.",  command= lambda key='AzRF': _ndistphaseh(key))
+mDistAmpPropH.add_command(label="Az_Imag with emit.",  command= lambda key='AzIF': _ndistphaseh(key))
 mDistAmpPropH.add_command(label="Flux-density",    command= lambda key='F': _ndistphaseh(key))
 mDistAmpPropH.add_command(label="Flux-dens.y with emit.",    command= lambda key='FF': _ndistphaseh(key))
 #}Propagated Field Amplitudes
@@ -45860,6 +45937,10 @@ mDistAmpV.add_command(label="Ay_Real",  command= lambda key='AyR': _ndistpinv(ke
 mDistAmpV.add_command(label="Ay_Imag",  command= lambda key='AyI': _ndistpinv(key))
 mDistAmpV.add_command(label="Az_Real",  command= lambda key='AzR': _ndistpinv(key))
 mDistAmpV.add_command(label="Az_Imag",  command= lambda key='AzI': _ndistpinv(key))
+mDistAmpV.add_command(label="Ay_Real with emit.",  command= lambda key='AyRF': _ndistpinv(key))
+mDistAmpV.add_command(label="Ay_Imag with emit.",  command= lambda key='AyIF': _ndistpinv(key))
+mDistAmpV.add_command(label="Az_Real with emit.",  command= lambda key='AzRF': _ndistpinv(key))
+mDistAmpV.add_command(label="Az_Imag with emit.",  command= lambda key='AzIF': _ndistpinv(key))
 mDistAmpV.add_command(label="Phase Advance",    command= lambda key='APH': _ndistpinv(key))
 #}Field Amplitudes
 
@@ -45870,6 +45951,10 @@ mDistAmpPropV.add_command(label="Ay_Real",  command= lambda key='AyR': _ndistpha
 mDistAmpPropV.add_command(label="Ay_Imag",  command= lambda key='AyI': _ndistphasev(key))
 mDistAmpPropV.add_command(label="Az_Real",  command= lambda key='AzR': _ndistphasev(key))
 mDistAmpPropV.add_command(label="Az_Imag",  command= lambda key='AzI': _ndistphasev(key))
+mDistAmpPropV.add_command(label="Ay_Real with emit.",  command= lambda key='AyRF': _ndistphasev(key))
+mDistAmpPropV.add_command(label="Ay_Imag with emit.",  command= lambda key='AyIF': _ndistphasev(key))
+mDistAmpPropV.add_command(label="Az_Real with emit.",  command= lambda key='AzRF': _ndistphasev(key))
+mDistAmpPropV.add_command(label="Az_Imag with emit.",  command= lambda key='AzIF': _ndistphasev(key))
 mDistAmpPropV.add_command(label="Flux-density",    command= lambda key='F': _ndistphasev(key))
 mDistAmpPropV.add_command(label="Flux-dens. with emit.",    command= lambda key='FF': _ndistphasev(key))
 #}Propagated Field Amplitudes
@@ -45978,6 +46063,12 @@ mDistAmp.add_command(label="Ay_Real",  command= lambda key='AyR': _ndistpin(key)
 mDistAmp.add_command(label="Ay_Imag",  command= lambda key='AyI': _ndistpin(key))
 mDistAmp.add_command(label="Az_Real",  command= lambda key='AzR': _ndistpin(key))
 mDistAmp.add_command(label="Az_Imag",  command= lambda key='AzI': _ndistpin(key))
+
+mDistAmp.add_command(label="Ay_Real with emit.",  command= lambda key='AyRF': _ndistpin(key))
+mDistAmp.add_command(label="Ay_Imag with emit.",  command= lambda key='AyIF': _ndistpin(key))
+mDistAmp.add_command(label="Az_Real with emit.",  command= lambda key='AzRF': _ndistpin(key))
+mDistAmp.add_command(label="Az_Imag with emit.",  command= lambda key='AzIF': _ndistpin(key))
+
 mDistAmp.add_command(label="Phase Advance",    command= lambda key='APH': _ndistpin(key))
 #}Field Amplitudes
 
@@ -45988,6 +46079,10 @@ mDistAmpProp.add_command(label="Ay_Real",  command= lambda key='AyR': _ndistphas
 mDistAmpProp.add_command(label="Ay_Imag",  command= lambda key='AyI': _ndistphase(key))
 mDistAmpProp.add_command(label="Az_Real",  command= lambda key='AzR': _ndistphase(key))
 mDistAmpProp.add_command(label="Az_Imag",  command= lambda key='AzI': _ndistphase(key))
+mDistAmpProp.add_command(label="Ay_Real with emit.",  command= lambda key='AyRF': _ndistphase(key))
+mDistAmpProp.add_command(label="Ay_Imag with emit.",  command= lambda key='AyIF': _ndistphase(key))
+mDistAmpProp.add_command(label="Az_Real with emit.",  command= lambda key='AzRF': _ndistphase(key))
+mDistAmpProp.add_command(label="Az_Imag with emit.",  command= lambda key='AzIF': _ndistphase(key))
 mDistAmpProp.add_command(label="Flux-density",    command= lambda key='F': _ndistphase(key))
 mDistAmpProp.add_command(label="Flux-dens. with emit.",    command= lambda key='FF': _ndistphase(key))
 #}Propagated Field Amplitudes

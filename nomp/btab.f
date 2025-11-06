@@ -1,3 +1,4 @@
+*CMZ :          06/11/2025  12.04.52  by  Michael Scheer
 *CMZ :  4.00/16 22/07/2022  10.31.35  by  Michael Scheer
 *CMZ :  4.00/15 28/03/2022  12.44.37  by  Michael Scheer
 *CMZ :  4.00/11 17/05/2021  11.34.14  by  Michael Scheer
@@ -95,6 +96,10 @@ C     BTAB LIEST B-FELD TABELLE UND BERECHNET DURCH SPLINE-INTERPOLATION B-FELD
       DOUBLE PRECISION XSCALE,BYSCALE,X,Y,Z,BX,BY,BZ,XIN,TOTLEN,TOTLEN2
       DOUBLE PRECISION AX,AY,AZ,apl,aph,x0l,x0h
 
+      double precision xx,bb
+      integer kstat,khead
+      character(2048) cline
+
       COMMON/BTABC/XA,BYA,Y2A
 
       DATA ISYM/0/,ICAL/0/
@@ -106,14 +111,39 @@ C     BTAB LIEST B-FELD TABELLE UND BERECHNET DURCH SPLINE-INTERPOLATION B-FELD
 
         OPEN (UNIT=LUNTB,FILE = FILETB,STATUS = 'OLD',FORM = 'FORMATTED')
 
-        if (irbtab.gt.0.or.irbtabzy.gt.0.or.irbtabxyz.gt.0) then
-          call util_skip_comment_end(luntb,ieof)
+        ! check header
+        read(luntb,'(a)') cline
+        read(luntb,'(a)') cline
+        read(luntb,'(a)') cline
+
+        khead=-9
+        kstat=0
+
+        read(cline,*,iostat=kstat) xx,bb
+        if (kstat.eq.0) then
+          khead=0
+        else
+          read(cline,*,iostat=kstat) npoint
+          if (kstat.eq.0) then
+            khead=1
+          endif
+        endif
+
+        if (khead.eq.-9) then
+          stop "*** Bad data on file "//trim(filetb)//' ***'
+        else
+          rewind(luntb)
+        endif
+
+c        if (irbtab.gt.0.or.irbtabzy.gt.0.or.irbtabxyz.gt.0) then
+        if (khead.gt.0) then
+c          call util_skip_comment_end(luntb,ieof)
           READ(LUNTB,'(1A60)') BTABCOM
-          call util_skip_comment_end(luntb,ieof)
+c          call util_skip_comment_end(luntb,ieof)
           READ(LUNTB,*) XSCALE,BYSCALE
-          call util_skip_comment_end(luntb,ieof)
+c          call util_skip_comment_end(luntb,ieof)
           READ(LUNTB,*) NPOINT
-          call util_skip_comment_end(luntb,ieof)
+c          call util_skip_comment_end(luntb,ieof)
         else
           npoint=0
           btabcom=filetb(1:60)

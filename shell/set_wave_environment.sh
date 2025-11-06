@@ -44,13 +44,14 @@ echo " "
    done
 
    no_wave='no'
-   for f in 'bin/wave.exe' 'python/waveplot.py' 'python/waves.py' 'python/waveshop.py' 'stage/wave.in' 'stage/wave' 'stage/undumag'; do
+   #for f in 'bin/wave.exe' 'python/waveplot.py' 'python/waves.py' 'python/waveshop.py' 'stage/wave.in' 'stage/wave' 'stage/undumag'; do
+   for f in 'bin/wave.exe' 'python/waveplot.py' 'python/waveshop.py' 'stage/wave.in' 'stage/wave' 'stage/undumag'; do
      ls -la $WAVE/$f > /dev/null || no_wave='yes'
      if test x$no_wave = xyes; then
        echo "'*** missing' $f  '***'"
        return
      else
-       echo "'--- found ' $f  '---'"
+       echo "--- found $f  ---"
      fi
    done
 
@@ -62,7 +63,8 @@ echo " "
   alias ss='. $WAVE/shell/set_wave_environment.sh'
   alias cdwave='. $WAVE/shell/set_wave_environment.sh'
 
-  alias wplot='cd $WAVE/stage; python3 -i $WAVE/python/waveplot.py'
+  alias wplot='cd $WAVE/stage; ipython3 -i $WAVE/python/waveplot.py'
+  alias waveplot='cd $WAVE/stage; ipython3 -i $WAVE/python/waveplot.py'
 
   unalias r 2>/dev/null
 
@@ -73,10 +75,10 @@ echo " "
   alias wave='. $WAVE/stage/wave'
   alias undumag='. $WAVE/stage/undumag'
   #alias waves='cd $WAVE/stage; python3 -i $WAVE/python/waves.py'
-  alias waveshop='cd $WAVE/stage; python3 -i $WAVE/python/waveshop.py'
+  alias waveshop='cd $WAVE/stage; ipython3 -i $WAVE/python/waveshop.py'
   alias wave
   alias undumag
-  alias waves
+  #alias waves
   alias wplot
   echo
 
