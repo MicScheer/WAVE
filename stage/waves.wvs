@@ -278,53 +278,47 @@ $MENU
 		                3D field map
 		$TOGGLE
 		                IRBMAP2
-*************************************************************************
-$MENU
-        RECIDS
-	MAGSEL
-	$TITLE
-        IDs based on Finite Element Codes
-	    $TEXT
-                REC-Undulators (program REC)
-            $TOGGLE
-	        KBREC
-	    $TEXT
-                Apple II undulator (program UNDUMAG)
-            $MAPPING
-	        KAPPLEM
-		3
-		KBUNDUMAG
-		2
-		KAPPLE
-		1
-		KHYBRID
-		0
-	    $TEXT
-                Planar hybrid undulator (program UNDUMAG)
-            $MAPPING
-	        KHYBRIDM
-		3
-		KBUNDUMAG
-		4
-		KAPPLE
-		0
-		KHYBRID
-		1
-	    $TEXT
-	        Use field from file undumag.wav
-            $MAPPING
-	        KUNDUWAM
-		3
-		KBUNDUMAG
-		-1
-		KAPPLE
-		0
-		KHYBRID
-		0
+		$TEXT
+                                REC-Undulators (program REC)
+                $TOGGLE
+		   KBREC
+		$TEXT
+                   Apple II undulator (program UNDUMAG)
+		$MAPPING
+	           KAPPLEM
+		     3
+		     KBUNDUMAG
+		     2
+		     KAPPLE
+		     1
+		     KHYBRID
+		     0
+		$TEXT
+                   Planar hybrid undulator (program UNDUMAG)
+		$MAPPING
+	           KHYBRIDM
+		   3
+		   KBUNDUMAG
+		   4
+		   KAPPLE
+		   0
+		   KHYBRID
+		   1
+		$TEXT
+	           Use field from file undumag.wav
+		$MAPPING
+	           KUNDUWAM
+		   3
+		   KBUNDUMAG
+		   -1
+		   KAPPLE
+		   0
+		   KHYBRID
+		   0
 *************************************************************************
 $MENU
       BESSY
-      RECIDS
+      MAGSEL
       $TITLE
       BESSY-IDs
 *************************************************************************
@@ -622,10 +616,6 @@ $HELP
  due to incompatible libc on linux
 
 $ENDHELP
-$MENUALLVETO
-	KBREC
-	0
-	RECIDS
 $MENUVETO
 	IUE46
 	0
@@ -1990,6 +1980,10 @@ RECERR
 $TRIGGER
         KHYBRIDM
 	UNDUHYBRID
+$MENUVETO
+        KHYBRIDM
+	0
+	UNDUHYBRID
 $TRIGGER
         KAPPLEM
 	UNDUAPPLE
@@ -2012,7 +2006,7 @@ $TRIGGER
 	IRBTABZY
 	BTABZY
 $TRIGGER
-	KBRECM
+        KBREC
 	BREC
 $TRIGGER
 	KBPOLYMAG
@@ -2054,7 +2048,11 @@ $MENUVETO
         0
 	BTABZY
 $MENUVETO
-	KBRECM
+        KAPPLEM
+	0
+	UNDUAPPLE
+$MENUVETO
+	KBREC
         0
 	BREC
 $MENUVETO
@@ -2077,10 +2075,6 @@ $MENUVETO
 	KELLIP
         0
 	ELLIP
-$MENUVETO
-	KBRECM
-        0
-	BREC
 $MENUVETO
 	IRFILB0
         0
@@ -2340,19 +2334,12 @@ $MENU
         Spectrum calculations
                 $TEXT
                         Spectrum calc. on/off (flux, Stokes...) [0/1]
-                $MAPPING
-                        ISPECM
-                        3
-                        ISPEC
-                        1
-                        ISTOKES
-                        1
-                        IBRILL
-                        1
+                 $TOGGLE
+		        ISPEC
 *                $COMMENT
 *                incl. STOKES vectors and spectral brightness
 $MENUVETO
-	ISPECM
+	ISPEC
 	0
 	SPEC
 *************************************************************************
@@ -2667,7 +2654,7 @@ Mag. field is pure By-field i.e. vertical field.
 $ENDHELP
 **********************************************************************
 $MENUVETO
-        ISPECM
+        ISPEC
         0
         INTSPEC
 $INVERSMENUVETO
@@ -2988,7 +2975,7 @@ multi-particle mode is selected in the beam parameters menu.
 $ENDHELP
 
 $MENUVETO
-        ISPECM
+        ISPEC
         0
         PINHOLE
 *************************************************************************
@@ -3023,7 +3010,7 @@ Mode 3: Equally spacing from lowest to highest value
 $ENDHELP
 
 $MENUVETO
-        ISPECM
+        ISPEC
         0
         FREQ
 $VETO
@@ -3184,7 +3171,7 @@ $MENU
         $TEXT
 	Activate/deactivate folding procedure for the energy-spread
 	$TOGGLE
-	        IFOLD
+	        IEFOLD
 *	$MAPPING
 *	        IEFOLDM
 *+self,if=ibuncht.
@@ -3297,6 +3284,10 @@ $TRIGGER
 $TRIGGER
         UNDUFM
 	PHRMENU
+$MENUVETO
+        UNDUFM
+	0
+	PHRMENU
 *************************************************************************
 *$MENU
 *        SPECCONT
@@ -3326,7 +3317,7 @@ $MENU
         $VARIABLE
                 FILESTO
 $MENUVETO
-ISPECM
+ISPEC
 0
 SPECWRITE
 $MENUALLVETO
@@ -3338,7 +3329,7 @@ IWFILSTO
 0
 SPECWRITE
 $VETO
-ISPECM
+ISPEC
 0
 IWFILSP0
 $VETO
@@ -3346,7 +3337,7 @@ IWFILSP0
 0
 FILESP0
 $VETO
-ISPECM
+ISPEC
 0
 IWFILSTO
 $VETO
@@ -3376,7 +3367,7 @@ $MENU
         $VARIABLE
                 FILESTOF
 $MENUVETO
-ISPECM
+ISPEC
 0
 SPECWRITEF
 $MENUALLVETO
@@ -3388,7 +3379,7 @@ IWFLSTOF
 0
 SPECWRITEF
 $VETO
-ISPECM
+ISPEC
 0
 IWFILSPF
 $VETO
@@ -3396,7 +3387,7 @@ IWFILSPF
 0
 FILESPF
 $VETO
-ISPECM
+ISPEC
 0
 IWFLSTOF
 $VETO
@@ -3430,11 +3421,11 @@ repetition!
 Unit: mm and W/mm^2
 $ENDHELP
 $MENUVETO
-ISPECM
+ISPEC
 0
 SPECPOW
 $VETO
-ISPECM
+ISPEC
 0
 IWFILPOW
 $VETO
@@ -3477,7 +3468,7 @@ $MENUALLVETO
 	0
 	RAYPHASE
 $MENUVETO
-        ISPECM
+        ISPEC
         0
         RAYPHASE
 *************************************************************************
@@ -3494,7 +3485,7 @@ $MENUALLVETO
 	0
 	EMIT
 $MENUVETO
-	ISPECM
+	ISPEC
 	0
 	EMIT
 $VETO
@@ -3664,7 +3655,7 @@ STOKES-Vectors are not affected!
 Example right handed: (1.,0.) horizontal and (0.,-1.) vertical
 $ENDHELP
 $MENUVETO
-	ISPECM
+	ISPEC
 	0
 	FILTER
 $MENUALLVETO
@@ -5491,11 +5482,6 @@ $VETO
   0
   IFOLD
 *  IFOLDM
-$CALC
-  ISPEC
-  .AND.
-  ISPEC
-  ISPECM
 $MENUACTIVE
   RECIDS
   KBREC, KBPOLYMAG
@@ -5512,3 +5498,13 @@ $CALC
 $TRIGGER
   IWIGNER
   PHASE
+$CALC
+ISPEC
+*
+IONE
+ISTOKES
+$CALC
+ISPEC
+*
+IONE
+IBRILL
