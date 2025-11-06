@@ -14095,15 +14095,15 @@ def nproj2n(nt='?', xy='', weight=1., select='',
   h = pd.DataFrame([x,y,hz,hz2,hn]).T
   h.columns=['x','y','z','z2','n']
 
-  h.z[np.isnan(h.z)] = 0.0
-  h.z2[np.isnan(h.z2)] = 0.0
-  h.n[np.isnan(h.n)] = 0.0
+  h.loc[np.isnan(h.z),"z"] = 0.0
+  h.loc[np.isnan(h.z2),"z2"] = 0.0
+  h.loc[np.isnan(h.n),"n"] = 0.0
 
   h['ave'] = h.z/h.n
-  h.ave[np.isnan(h.ave)] = 0.0
+  h.loc[np.isnan(h.ave),"ave"] = 0.0
 
   h['ez'] = (h.z2/h.n-h.ave**2)**0.5
-  h.ez[np.isnan(h.ez)] = 0.0
+  h.loc[np.isnan(h.ez),"ez"] = 0.0
 
   head2 = H2head[idx]
 
@@ -14425,12 +14425,12 @@ def nproj1(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
 
   h.columns=['x','y','y2','n']
 
-  h.y[np.isnan(h.y)] = 0.0
-  h.y2[np.isnan(h.y2)] = 0.0
-  h.n[np.isnan(h.n)] = 0.0
+  h.loc[np.isnan(h.y),"y"] = 0.0
+  h.loc[np.isnan(h.y2),"y2"] = 0.0
+  h.loc[np.isnan(h.n),"n"] = 0.0
 
   h['ave'] = h.y/h.n
-  h.ave[np.isnan(h.ave)] = 0.0
+  h.loc[np.isnan(h.ave),"ave"] = 0.0
 
   if w.min() == w.max() and w.min() == 1.:
     h['ey'] = h.n**0.5
@@ -14438,7 +14438,7 @@ def nproj1(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
     h['ey'] = (h.y2/h.n-h.ave**2)**0.5
   #endif
 
-  h.ey[np.isnan(h.ey)] = 0.0
+  h.loc[np.isnan(h.ey),"ey"] = 0.0
 
   H1h = h
   H1[idx] = h
@@ -14735,12 +14735,12 @@ def nproj1n(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
 
   h.columns=['x','y','y2','n']
 
-  h.y[np.isnan(h.y)] = 0.0
-  h.y2[np.isnan(h.y2)] = 0.0
-  h.n[np.isnan(h.n)] = 0.0
+  h.loc[np.isnan(h.y),"y"] = 0.0
+  h.loc[np.isnan(h.y2),"y2"] = 0.0
+  h.loc[np.isnan(h.n),"n"] = 0.0
 
   h['ave'] = h.y/h.n
-  h.ave[np.isnan(h.ave)] = 0.0
+  h.loc[np.isnan(h.ave),"ave"] = 0.0
 
   if w.min() == w.max() and w.min() == 1.:
     h['ey'] = h.n**0.5
