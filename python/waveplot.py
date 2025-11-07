@@ -18496,6 +18496,8 @@ def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0, overwrite=True):
   ymin = H1hh[7] * scaley
   ymax = H1hh[8] * scaley
 
+  #reakpoint()
+
   hret = hbook1(idnew,tit,nx,xmin,xmax,overwrite=overwrite)
 
   idxnew = GetIndexH1(idnew)
@@ -18518,11 +18520,15 @@ def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0, overwrite=True):
   head1[10] *= scaley
 
   H1[idxnew] = deepcopy(H1[idx])
+#  print(H1[idx])
+#  print(H1[idxnew])
   H1[idxnew].y *= scaley
   H1[idxnew].ey *= scaley
   H1[idxnew].y2 *= scaley**2
 
   H1head[idxnew] = head1
+
+#  print(H1[idxnew].y)
 
   return idxnew
 #def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0)
@@ -36492,6 +36498,123 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
 #  print('\nHint: Use "Options/Clear Canvas" to reset zones \n')
 #enddef ndistwignere()
 
+def hbeampow(key='WALL1'):
+
+#+seq,mshimportsind.
+# +PATCH,//WAVES/PYTHON
+# +KEEP,statusglobind,T=PYTHON.
+  global Istatus, WarningText, ErrorText, Gdebug
+
+  # Histograms and Ntuples
+  global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
+  Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
+  H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
+  TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
+  H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+#+KEEP,plotglobind,T=PYTHON.
+#*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
+  global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
+  Fig1,Ax1,Fig6,Ax6,Fig2,Ax2,Fig7,Ax7,Fig3,Ax3,Fig8,Ax8, Figgeoms, \
+  Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
+  Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
+  FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
+  Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
+  Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
+  MarkerSize, MarkerType, MarkerColor, \
+  Markersize, Markertype, Markercolor, \
+  Fillstyle, FillStyle, \
+  Textcolor, WaveFilePrefix,WaveDump, \
+  LineStyle, LineWidth, LineColor, \
+  Linestyle, Linewidth, Linecolor, \
+  Author, \
+  Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
+  LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
+  Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Ifill1d, TitPad, Xtitle, Ytitle, \
+  Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
+  LexpX,LexpY,LexpRot,LexpPow,\
+  GtitFontSize,Titfontsize,Atitfontsize,Axislabelsize,Textfontsize,Datefontsize,\
+  Statfontsize, Axislabeldist, Axislabeldist3d, Axisdist, Axisdist3d, \
+  XFit, YFit, Xfit, Yfit,Ystat, YStat, \
+  GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
+  StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
+  AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
+  Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
+  LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow,Sepp,Backslash
+#+PATCH,//WAVES/PYTHON
+#+KEEP,vecglobind,T=PYTHON.
+
+  global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
+  VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
+
+#+KEEP,nxyzglobind,T=PYTHON.
+#*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
+  global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
+
+
+  global Wdirs, Wfiles, Wfile, Wcode, Wrun \
+  ,Webea ,Wcurr ,Wipin ,Wcir ,Wpiny ,Wpinx ,Wpinz ,Wpinw ,Wpinh ,Wpinr \
+  ,Wmpiz ,Wmpiy ,Wmpir ,Wmpip ,Wicbr ,Wselx ,Wsely ,Wselz ,Wphax \
+  ,Wsigz ,Wsigy ,Wsgzp ,Wsgyp ,Wespr ,Wif2p ,Wnfrq ,Wflow ,Wfhig \
+  ,WflowExp, WfhigExp, WnfrqExp \
+  ,Wispe ,Wispm ,Widip ,Wnlpo ,Wbw ,Wibun ,Wnbun ,Wneib ,Wiamp \
+  ,Wielo ,Wifol ,Wiefo ,Wirun ,Widat ,Witim ,Wvers ,Wisto, Wbeta, Wibri, Koverview \
+  ,Wnoby ,Wnobz ,Wwal1 ,Wwal2 ,Wxabs ,Wzab1 ,Wzab2, KCode, Kebeam, Kcurr \
+  ,Wesel,Wener,Wfd,Wiesel, Vfd, IsameCanvas, TextIn, LastPlot,Lastwin \
+  ,FiggeoEph, Ioverview,WclipE, Icallfromoverview,Kpreload
+  global IzCut,IyCut
+
+
+  key = key.upper()
+
+  n222=nget("n222")
+  z1=n222.wal1.max()
+  z2=n222.wal2.max()
+  x=n222.xabs.max()
+
+  if key == 'WALL1':
+    idx = hindex1("h40001")
+    idh41 = hcopy1d("h40001","h41",tit='',scalex=1.,scaley=1.0e-6, reset=0, overwrite=True)
+    h41 = hget("h41")
+    hplot(h41,Tit=H1head[idx][1] + "z = " + str(z1) + " [m]",xTit="x [m]",yTit="Power density [W/mm$^2$]")
+  elif key == 'WALL2':
+    idx = hindex1("h40002")
+    idh42 = hcopy1d("h40002","h42",tit='',scalex=1.,scaley=1.0e-6, reset=0, overwrite=True)
+    h42 = hget("h42")
+    hplot(h42,Tit=H1head[idx][1] + "z = " + str(z2) + " [m]",xTit="x [m]",yTit="Power density [W/mm$^2$]")
+  elif key == 'WALL1N':
+    idx = hindex1("h41001")
+    idh41n = hcopy1d("h41001","h41n",tit='',scalex=1.,scaley=1.0e-3, reset=0, overwrite=True)
+    h41n = hget("h41n")
+    hplot(h41n,Tit=H1head[idx][1] + "z = " + str(z1) + " [m]",xTit="x [m]",yTit="Power density [W/mm$]")
+  elif key == 'WALL2N':
+    idx = hindex1("h41002")
+    idh42n = hcopy1d("h41002","h42n",tit='',scalex=1.,scaley=1.0e-3, reset=0, overwrite=True)
+    h42n = hget("h42n")
+    hplot(h42n,Tit=H1head[idx][1] + "z = " + str(z2) + " [m]",xTit="x [m]",yTit="Power density [W/mm$^2$]")
+  elif key == 'ABSORB':
+    idx = hindex1("h45001")
+    idh451 = hcopy1d("h45001","h451",tit='',scalex=1000.,scaley=1.0e-6, reset=0, overwrite=True)
+    h451 = hget("h451")
+    hplot(h451,Tit=H1head[idx][1] + "x = " + str(x) + " [m]",xTit="z [mm]",yTit="Power density [W/mm$^2$]")
+  elif key == 'ABSORBVI':
+    idx = hindex1("h45003")
+    idh453 = hcopy1d("h45003","h453",tit='',scalex=1000.,scaley=1.0e-3, reset=0, overwrite=True)
+    h453 = hget("h453")
+    hplot(h453,Tit=H1head[idx][1] + "x = " + str(x) + " [m]",xTit="z [mm]",yTit="Power density [W/mm]")
+  else:
+    print("\n*** Error in hbeampow: Unknown key " + key)
+  #endif
+#enddef hbeampow(key='wall1')
+
 def ndistpowh(key='pow', select='', plopt='2d', idh='HpinH'):
 
 #+seq,mshimportsind.
@@ -42268,6 +42391,22 @@ Mmenu.add_cascade(label='Hori. cut of 2d dist.',  menu=mDistH)
 
 NMmenu += 1
 Mmenu.add_cascade(label='Vert. cut of 2d dist.',  menu=mDistV)
+
+if hexist("h40001"):
+  mBeamPow = Menu(Mmenu,tearoff=1,font=Myfont)
+
+  NMmenu += 1
+  Mmenu.add_cascade(label='Power on beamline walls',  menu=mBeamPow)
+  mBeamPow.add_command(label="Power on first wall",  command= lambda key='wall1': hbeampow(key))
+  mBeamPow.add_command(label="Power on second wall",  command= lambda key='wall2': hbeampow(key))
+  mBeamPow.add_command(label="Power on first wall, normal incidence",  command= lambda key='wall1n': hbeampow(key))
+  mBeamPow.add_command(label="Power on second wall, normal incidence",  command= lambda key='wall2n': hbeampow(key))
+  mBeamPow.add_command(label="Power on first wall, vert. integrated",  command= lambda key='wall1vi': hbeampow(key))
+  mBeamPow.add_command(label="Power on second wall, vert. integrated",  command= lambda key='wall2vi': hbeampow(key))
+  mBeamPow.add_command(label="Power on absorber",  command= lambda key='absorb': hbeampow(key))
+  mBeamPow.add_command(label="Power on absorber, vert. integrated",  command= lambda key='absorbvi': hbeampow(key))
+
+#endif
 
 #{Field Amplitudes
 mDistAmp = Menu(mDist,tearoff=1,font=Myfont)
