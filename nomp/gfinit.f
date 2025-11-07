@@ -1,4 +1,4 @@
-*CMZ :          13/10/2025  10.42.02  by  Michael Scheer
+*CMZ :          07/11/2025  14.29.11  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  09.46.32  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
@@ -246,7 +246,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -745,7 +745,7 @@ c        endif
         if (neinbunch.le.0) neinbunch=1
       endif
 
-      if (iemit.ne.0.or.ibunch.ne.0) imagspln=0
+      if (iemit.ne.0.or.ibunch.ne.0.or.iwbmap.ne.0.or.iwbtab.ne.0) imagspln=0
 
 C--- USER MAY OVERWRITE HERE VARIABLES OF NAMELISTS
 
@@ -2242,22 +2242,7 @@ C5.10.95 WARUM ISPEC ?? IN ABFRAGE?? BEOBACHTEN
         STOP '*** PROGRAM WAVE ABORTED ***'
       ENDIF
 
-      IF (IMAGSPLN.NE.0.AND.IWBMAP.NE.0
-     &    .OR.
-     &    IMAGSPLN.NE.0.AND.IWBTAB.NE.0
-     &    ) THEN
-        WRITE(LUNGFO,*)
-        WRITE(LUNGFO,*)'*** ERROR IN GFINIT ***'
-        WRITE(LUNGFO,*)'BOTH FLAGS IMAGSPLN AND IWBMAP/IWBTAB ARE SET'
-        WRITE(LUNGFO,*)'TURN OFF IMAGSPLN, IF YOU USE IWBMAP/IWBTAB'
-        WRITE(LUNGFO,*)
-        WRITE(6,*)
-        WRITE(6,*)'*** ERROR IN GFINIT ***'
-        WRITE(6,*)'BOTH FLAGS IMAGSPLN AND IWBMAP/IWBTAB ARE SET'
-        WRITE(6,*)'TURN OFF IMAGSPLN, IF YOU USE IWBMAP/IWBTAB'
-        WRITE(6,*)
-        STOP '*** PROGRAM WAVE ABORTED ***'
-      ENDIF
+!+self,if=-20220316.
 
       IF (ISPEC.NE.0) THEN
 
