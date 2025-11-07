@@ -41556,7 +41556,6 @@ def pmenu_update(kmenu):
   VarToWaveIn, PosX, PosY, WinPos, Nsitem,Pmenu,PadX,PadY,SMexist, \
   I,ZONE,ZNULL,Ical,Lmitem,FIOitem,PMenuGeo, Nfocus, MyWavesFont,Ifocus, \
   ScreenW,ScreeH,WinX,WinY,CanW,CanH,ClearCanvas
-  print("*** putrace: Entered pmenu_update:: kmenu:",kmenu)
   Imenu = kmenu
   if kmenu == -1:
     pass
@@ -41976,7 +41975,7 @@ def pmenu(kmenu):
     #endif Pmenu[Imenu].winfo_exists()
   #endif Pmenu[Imenu] != None
   if iexist == 0:
-
+    #reakpoint()
     Pmenu[Imenu] = Toplevel()
     Pmenu[Imenu].attributes('-topmost', 1)
 
@@ -42575,6 +42574,8 @@ def pmenu(kmenu):
 
   #endwhile item
 
+  #reakpoint()
+
   nsframe = Nsitem
 
   BottomFrame = Frame(Pmenu[Imenu], bd=ReliefBd)
@@ -42670,6 +42671,7 @@ def pmenu(kmenu):
   #endif SMexist[Imenu] == 0
 
   #CheckButtons()
+  #reakpoint()
 
 #---------------------------------------- end pmenu
 
@@ -47043,6 +47045,8 @@ def CheckButtons():
   M = Imenu
   i = 1
 
+  #if M == 57: breakpoint()
+
   if len(SMitem[M]) == 0: return
 
   Nsitem = SMitem[M][0]
@@ -47083,7 +47087,7 @@ def CheckButtons():
         vstate = NORMAL
         selcol = Select_color
 
-      if Variables[ivar][1]:
+      if int(Variables[ivar][1]) == 1:
         SMitem[M][i][0].configure(state=vstate,relief=SUNKEN)
       else:
         SMitem[M][i][0].configure(state=vstate,relief=RAISED)

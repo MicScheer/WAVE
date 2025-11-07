@@ -278,53 +278,47 @@ $MENU
 		                3D field map
 		$TOGGLE
 		                IRBMAP2
-*************************************************************************
-$MENU
-        RECIDS
-	MAGSEL
-	$TITLE
-        IDs based on Finite Element Codes
-	    $TEXT
-                REC-Undulators (program REC)
-            $TOGGLE
-	        KBREC
-	    $TEXT
-                Apple II undulator (program UNDUMAG)
-            $MAPPING
-	        KAPPLEM
-		3
-		KBUNDUMAG
-		2
-		KAPPLE
-		1
-		KHYBRID
-		0
-	    $TEXT
-                Planar hybrid undulator (program UNDUMAG)
-            $MAPPING
-	        KHYBRIDM
-		3
-		KBUNDUMAG
-		4
-		KAPPLE
-		0
-		KHYBRID
-		1
-	    $TEXT
-	        Use field from file undumag.wav
-            $MAPPING
-	        KUNDUWAM
-		3
-		KBUNDUMAG
-		-1
-		KAPPLE
-		0
-		KHYBRID
-		0
+		$TEXT
+                                REC-Undulators (program REC)
+                $TOGGLE
+		   KBREC
+		$TEXT
+                   Apple II undulator (program UNDUMAG)
+		$MAPPING
+	           KAPPLEM
+		     3
+		     KBUNDUMAG
+		     2
+		     KAPPLE
+		     1
+		     KHYBRID
+		     0
+		$TEXT
+                   Planar hybrid undulator (program UNDUMAG)
+		$MAPPING
+	           KHYBRIDM
+		   3
+		   KBUNDUMAG
+		   4
+		   KAPPLE
+		   0
+		   KHYBRID
+		   1
+		$TEXT
+	           Use field from file undumag.wav
+		$MAPPING
+	           KUNDUWAM
+		   3
+		   KBUNDUMAG
+		   -1
+		   KAPPLE
+		   0
+		   KHYBRID
+		   0
 *************************************************************************
 $MENU
       BESSY
-      RECIDS
+      MAGSEL
       $TITLE
       BESSY-IDs
 *************************************************************************
@@ -622,10 +616,6 @@ $HELP
  due to incompatible libc on linux
 
 $ENDHELP
-$MENUALLVETO
-	KBREC
-	0
-	RECIDS
 $MENUVETO
 	IUE46
 	0
@@ -1990,6 +1980,10 @@ RECERR
 $TRIGGER
         KHYBRIDM
 	UNDUHYBRID
+$MENUVETO
+        KHYBRIDM
+	0
+	UNDUHYBRID
 $TRIGGER
         KAPPLEM
 	UNDUAPPLE
@@ -2012,7 +2006,7 @@ $TRIGGER
 	IRBTABZY
 	BTABZY
 $TRIGGER
-	KBRECM
+        KBREC
 	BREC
 $TRIGGER
 	KBPOLYMAG
@@ -2054,7 +2048,11 @@ $MENUVETO
         0
 	BTABZY
 $MENUVETO
-	KBRECM
+        KAPPLEM
+	0
+	UNDUAPPLE
+$MENUVETO
+	KBREC
         0
 	BREC
 $MENUVETO
@@ -2077,10 +2075,6 @@ $MENUVETO
 	KELLIP
         0
 	ELLIP
-$MENUVETO
-	KBRECM
-        0
-	BREC
 $MENUVETO
 	IRFILB0
         0
@@ -3177,7 +3171,7 @@ $MENU
         $TEXT
 	Activate/deactivate folding procedure for the energy-spread
 	$TOGGLE
-	        IFOLD
+	        IEFOLD
 *	$MAPPING
 *	        IEFOLDM
 *+self,if=ibuncht.
@@ -3289,6 +3283,10 @@ $TRIGGER
 	EMIT
 $TRIGGER
         UNDUFM
+	PHRMENU
+$MENUVETO
+        UNDUFM
+	0
 	PHRMENU
 *************************************************************************
 *$MENU
