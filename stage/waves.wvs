@@ -2094,7 +2094,7 @@ $MENU
         FOURIER
         MANMAG
         $TITLE
-        Calculate FOURIER expansion of magnetic field
+        Write FOURIER expansion of magnetic field to file
         $TEXT
                 Activate FOURIER expansion [0/1]
         $TOGGLE
@@ -3089,6 +3089,65 @@ $MENU
                         ISPECINT
 *************************************************************************
 $MENU
+        BPOW
+        SPEC
+        $TITLE
+        Power on beamline walls
+                $TEXT
+                        Toggle power calculations on beamline walls
+                $TOGGLE
+                        IPOWER
+                $TEXT
+		        Xmin of beamline  [m]
+		$VARIABLE
+		        XWALLI
+                $TEXT
+		        Xmax of beamline  [m]
+		$VARIABLE
+		        XWALLE
+                $TEXT
+		        Zmin of beamline  [m]
+		$VARIABLE
+		        WALL(1)
+                $TEXT
+		        Zmax of beamline  [m]
+		$VARIABLE
+		        WALL(2)
+                $TEXT
+		        Number of histogram channels
+		$VARIABLE
+		        NPWALL
+                $TEXT
+		        Threashold of mag. field to define poles [T]
+		$VARIABLE
+		        POWBCUT
+$HELP
+The threashold should not be too small to avoid problems.
+The product of the number of tracking steps (MYINUM) and the
+threashold (POWBCUT) is a criterion. Maybe MYINUM * POWBCUT > 25 works
+for you.
+If the threashold is negative, the corresponding parts of the
+trajectory are ignored.For more details refer to name $SPECN in wave.in.
+$ENDHELP
+
+$CALC
+IONE
+*
+R9999
+XABSORB
+$CALC
+IONE
+*
+R9999
+ZABSORB(1)
+$CALC
+IONE
+*
+R9999
+ZABSORB(2)
+
+*************************************************************************
+$MENU
 PHRMENU
         MAGNET
         $TITLE
@@ -3288,6 +3347,10 @@ $MENUVETO
         UNDUFM
 	0
 	PHRMENU
+$MENUVETO
+        IPOWER
+	0
+	BPOW
 *************************************************************************
 *$MENU
 *        SPECCONT
@@ -4504,6 +4567,31 @@ $MENUALLVETO
 	     0
 	     GENFUN
 *-------------------------------------------------------------------
+
+$CALC$
+IWFILF
+.AND.
+IONE
+IWFILF
+
+$CALC$
+IRFILF
+.AND.
+IONE
+IRFILF
+
+$CALC$
+IONE
+-
+IRFILF
+KWORK
+
+$CALC
+IWFILF
+*
+KWORK
+IWFILF
+
 $MENUVETO
 	IWFILF
 	0

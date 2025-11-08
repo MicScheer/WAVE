@@ -47834,6 +47834,7 @@ MenuBar.add_command(label='  Beam  ',command = lambda menu='BEAM': _setup_menu(m
 MenuBar.add_command(label='  Track  ',command = lambda menu='TRACKING': _setup_menu(menu))
 MenuBar.add_command(label='  Sel. Mag.  ',command = lambda menu='MAGSEL': _setup_menu(menu))
 MenuBar.add_command(label='  Conf. Mag.  ',command = lambda menu='MAGNET': _setup_menu(menu))
+MenuBar.add_command(label='  Man. Mag.  ',command = lambda menu='MANMAG': _setup_menu(menu))
 MenuBar.add_command(label='  Mag. Opt.  ',command = lambda menu='MAGOPT': _setup_menu(menu))
 MenuBar.add_command(label='  Spectra  ',command = lambda menu='SPEC': _setup_menu(menu))
 MenuBar.add_command(label='  Acc. Phys.  ',command = lambda menu='MACHINE': _setup_menu(menu))
