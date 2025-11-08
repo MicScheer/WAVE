@@ -36573,6 +36573,11 @@ def hbeampow(key='WALL1'):
   global IzCut,IyCut
 
 
+  if not hexist("h40001"):
+    print('*** No data found. Rerun WAVE with IPOWER=1 ***')
+    return
+  #endif
+
   key = key.upper()
 
   n222=nget("n222")
@@ -39147,7 +39152,7 @@ def Mmenu_gray(fgcol='gray'):
     Mmenu.entryconfig(4,foreground=fgcol)
     Mmenu.entryconfig(5,foreground=fgcol)
     Mmenu.entryconfig(6,foreground=fgcol)
-    Mmenu.entryconfig(7,foreground=fgcol)
+    Mmenu.entryconfig(8,foreground=fgcol)
 
     mTraj.entryconfig(12,foreground=fgcol)
 
@@ -39258,7 +39263,7 @@ def Mmenu_gray(fgcol='gray'):
 
   if not Wibun:
 
-    Mmenu.entryconfig(8,foreground=fgcol)
+    Mmenu.entryconfig(9,foreground=fgcol)
 
     mBunch.config(foreground=fgcol)
     for i in range(1,mBunch.index('end')+1):
@@ -39337,7 +39342,7 @@ def Mmenu_gray(fgcol='gray'):
     for i in range(1,mOptics.index('end')+1):
       mOptics.entryconfig(i,foreground=fgcol)
     #endfor
-    Mmenu.entryconfig(9,foreground=fgcol)
+    Mmenu.entryconfig(10,foreground=fgcol)
 
   #endif not Wbeta
 
@@ -39373,6 +39378,13 @@ def Mmenu_gray(fgcol='gray'):
       mDistAmpPropH.entryconfig(7,foreground=fgcol)
       mDistAmpPropV.entryconfig(7,foreground=fgcol)
     #endif
+  #endif
+
+  if not hexist('h40001'):
+    Mmenu.entryconfig(7,foreground=fgcol)
+    for i in range(1,9):
+      mBeamPow.entryconfig(i,foreground=fgcol)
+    #endfor
   #endif
 
   if not nexist('nwig'):
@@ -39528,7 +39540,7 @@ def Mmenu_gray(fgcol='gray'):
     Mmenu.entryconfig(4,foreground=fgcol)
     Mmenu.entryconfig(5,foreground=fgcol)
     Mmenu.entryconfig(6,foreground=fgcol)
-    Mmenu.entryconfig(7,foreground=fgcol)
+    Mmenu.entryconfig(8,foreground=fgcol)
 
     mEsel.config(foreground=fgcol)
 
@@ -42392,21 +42404,18 @@ Mmenu.add_cascade(label='Hori. cut of 2d dist.',  menu=mDistH)
 NMmenu += 1
 Mmenu.add_cascade(label='Vert. cut of 2d dist.',  menu=mDistV)
 
-if hexist("h40001"):
-  mBeamPow = Menu(Mmenu,tearoff=1,font=Myfont)
+mBeamPow = Menu(Mmenu,tearoff=1,font=Myfont)
 
-  NMmenu += 1
-  Mmenu.add_cascade(label='Power on beamline walls',  menu=mBeamPow)
-  mBeamPow.add_command(label="Power on first wall",  command= lambda key='wall1': hbeampow(key))
-  mBeamPow.add_command(label="Power on second wall",  command= lambda key='wall2': hbeampow(key))
-  mBeamPow.add_command(label="Power on first wall, normal incidence",  command= lambda key='wall1n': hbeampow(key))
-  mBeamPow.add_command(label="Power on second wall, normal incidence",  command= lambda key='wall2n': hbeampow(key))
-  mBeamPow.add_command(label="Power on first wall, vert. integrated",  command= lambda key='wall1vi': hbeampow(key))
-  mBeamPow.add_command(label="Power on second wall, vert. integrated",  command= lambda key='wall2vi': hbeampow(key))
-  mBeamPow.add_command(label="Power on absorber",  command= lambda key='absorb': hbeampow(key))
-  mBeamPow.add_command(label="Power on absorber, vert. integrated",  command= lambda key='absorbvi': hbeampow(key))
-
-#endif
+NMmenu += 1
+Mmenu.add_cascade(label='Power on beamline walls',  menu=mBeamPow)
+mBeamPow.add_command(label="Power on first wall",  command= lambda key='wall1': hbeampow(key))
+mBeamPow.add_command(label="Power on second wall",  command= lambda key='wall2': hbeampow(key))
+mBeamPow.add_command(label="Power on first wall, normal incidence",  command= lambda key='wall1n': hbeampow(key))
+mBeamPow.add_command(label="Power on second wall, normal incidence",  command= lambda key='wall2n': hbeampow(key))
+mBeamPow.add_command(label="Power on first wall, vert. integrated",  command= lambda key='wall1vi': hbeampow(key))
+mBeamPow.add_command(label="Power on second wall, vert. integrated",  command= lambda key='wall2vi': hbeampow(key))
+mBeamPow.add_command(label="Power on absorber",  command= lambda key='absorb': hbeampow(key))
+mBeamPow.add_command(label="Power on absorber, vert. integrated",  command= lambda key='absorbvi': hbeampow(key))
 
 #{Field Amplitudes
 mDistAmp = Menu(mDist,tearoff=1,font=Myfont)
