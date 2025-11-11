@@ -1,3 +1,4 @@
+*CMZ :          11/11/2025  14.41.10  by  Michael Scheer
 *CMZ :  4.00/15 28/03/2022  12.42.45  by  Michael Scheer
 *CMZ :  4.00/11 17/05/2021  11.34.33  by  Michael Scheer
 *CMZ :  3.01/04 21/03/2014  14.02.03  by  Michael Scheer
@@ -81,10 +82,13 @@ C     BTAB-Version for horizontal field Bz
       DOUBLE PRECISION XA(NBTABP),BYA(NBTABP),Y2A(NBTABP)
       DOUBLE PRECISION XSCALE,BYSCALE,X,Y,Z,BX,BY,BZ,XIN,TOTLEN,TOTLEN2
       DOUBLE PRECISION AL(3),AH(3),AX,AY,AZ
-      DOUBLE PRECISION XS,XE,ZDUM
+      DOUBLE PRECISION XS,XE,ZDUM,xx,bb
+
+      integer khead,kstat
 
       COMMON/BTABCz/XA,BYA,Y2A
 
+      character(128) cline
 
       DATA ILOW/0/
       DATA IHIGH/0/
@@ -96,18 +100,49 @@ C     BTAB-Version for horizontal field Bz
 
         OPEN (UNIT=LUNTBz,FILE = FILETBz,STATUS = 'OLD',FORM = 'FORMATTED')
 
-        if (irbtabzy.gt.0.or.irbtabxyz.gt.0) then
-          READ(LUNTBZ,'(1A60)') BTABCOM
-          READ(LUNTBZ,*) XSCALE,BYSCALE
-          READ(LUNTBZ,*) NPOINT
+        ! check header
+        read(luntbz,'(a)') cline
+        read(luntbz,'(a)') cline
+        read(luntbz,'(a)') cline
+
+        khead=-9
+        kstat=0
+
+        read(cline,*,iostat=kstat) xx,bb
+        if (kstat.eq.0) then
+          khead=0
         else
+          read(cline,*,iostat=kstat) npoint
+          if (kstat.eq.0) then
+            khead=1
+          endif
+        endif
+
+        if (khead.eq.-9) then
+          stop "*** Bad data on file "//trim(filetbz)//' ***'
+        else
+          rewind(luntbz)
+        endif
+
+        if (khead.gt.0) then
+
+          READ(LUNTB,'(1A60)') BTABCOM
+          READ(LUNTB,*) XSCALE,BYSCALE
+          READ(LUNTB,*) NPOINT
+
+        else
+
           btabcom=trim(filetbz)
           xscale=1.0d0
+
           if (irbtabzy.eq.-2.or.irbtabxyz.eq.-2) xscale=0.001d0
+
           byscale=1.0d0
           npoint=0
+
           do while (ieof.eq.0)
             call util_skip_comment_end(luntbz,ieof)
+            if (ieof.ne.0) exit
             read(luntbz,*)x,by
             if (ieof.ne.0) then
               rewind(luntbz)
@@ -158,7 +193,10 @@ C     BTAB-Version for horizontal field Bz
           NPOINT=-NPOINT
         ENDIF
 
+        rewind(luntbz)
+
         DO I=1,NPOINT
+          call util_skip_comment_end(luntbz,ieof)
           READ(LUNTBZ,*)XA(I),BYA(I)
           XA(I)=XA(I)*XSCALE-XSHBTAB
           BYA(I)=BYA(I)*BYSCALE

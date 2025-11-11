@@ -1,3 +1,4 @@
+*CMZ :          11/11/2025  10.36.27  by  Michael Scheer
 *CMZ :  4.00/11 18/05/2021  19.13.31  by  Michael Scheer
 *-- Author : Michael Scheer
 C-----------------------------------------------------------
@@ -30,13 +31,22 @@ C-----------------------------------------------------------
       double precision xby1old,xbynold,by1old,bynold,
      &  xbz1old,xbznold,bz1old,bznold,dx,b,x,xi,xe,xc
 
+      integer :: ical=0, idoit=1
+
       save
 
-      if (inifbt.ne.0.or.nfourzyold.ne.nfourzy.or.
+      if (ical.ne.0) then
+        idoit=0
+        if (inifbt.ne.0.or.nfourzyold.ne.nfourzy.or.
      &    nxbyfbt.ne.nxbyfbtold.or.xbyfbt(1).ne.xby1old.or.xbyfbt(nxbyfbt).ne.xbynold.or.
      &    nxbzfbt.ne.nxbzfbtold.or.xbzfbt(1).ne.xbz1old.or.xbzfbt(nxbzfbt).ne.xbznold.or.
      &    klinearfbt.ne.klinold
      &    ) then
+          idoit=1
+        endif
+      endif
+
+      if (idoit.eq.1) then
 
         xi=xstart
         xc=xinter
@@ -221,6 +231,8 @@ C-----------------------------------------------------------
         ayout=byout+azf
         azout=bzout+ayf
       endif
+
+      ical=1
 
       return
       end

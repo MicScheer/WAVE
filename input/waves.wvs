@@ -271,6 +271,10 @@ $MENU
 		$TOGGLE
                                 IRBTABZY
                 $TEXT
+                                Use Fourier-expansion of Tabulated fields BY(X) and BZ(X)
+		$TOGGLE
+                                IFOURBTABZY
+                $TEXT
                                 3D field from Fourier expansion
 		$TOGGLE
 		       		IRFILF
@@ -662,7 +666,7 @@ $MENU
                         UE56 chicane-mode (200 mu-rad)
 		$MAPPING
                         UE56CHIC
-                        27
+                        28
                 	KBREC
                         1
 			 	IRFILF
@@ -682,6 +686,8 @@ $MENU
                                 IRBTAB
                                 0
                                 IRBTABZY
+                                0
+                                IFOURBTABZY
                                 0
                                 IRFILB0
                                 0
@@ -723,7 +729,7 @@ $MENU
                         UE56 modulator-mode
 		$MAPPING
                         UE56MODU
-                        22
+                        23
                 	KBREC
                         1
 			 	IRFILF
@@ -739,6 +745,8 @@ $MENU
                 		KELLIP
                                 0
                                 IRBTAB
+                                0
+                                IFOURBTABZY
                                 0
                                 IRBTABZY
                                 0
@@ -1591,6 +1599,57 @@ File formats:
 $ENDHELP
 *************************************************************************
 $MENU
+        BFOURTABZY
+        MAGNET
+        $TITLE
+        Fourier-expanded tabulated fields BY(X) and BZ(X)
+                $TEXT
+                File name of BY(X)
+                $VARIABLE
+                FILETB
+                $TEXT
+                File name of BZ(X)
+                $VARIABLE
+                FILETBZ
+                $TEXT
+                Long. shift for BY(X)
+                $VARIABLE
+                FOURYSH
+                $TEXT
+                Long. shift for BZ(X)
+                $VARIABLE
+                FOURZSH
+                $TEXT
+                Number of coefficients
+                $VARIABLE
+                NFOURZY
+                $TOGGLE
+                Suppress field offsets
+                $VARIABLE
+                IFOURZY0
+		$TEXT
+		Use linear interpolation, not splines
+		$TOGGLE
+		KLINEARFBT
+$HELP
+The fields BY(X) and BZ(X) are given on formatted ascii files.
+(One file for BY(X) and one file BZ(X))
+X-values of both files may differ.
+Constant X-intervalls are not required, since field is splined.
+
+File formats:
+
+1. line: Comment to appear on WAVE output
+2. line: Scaling factors for X and BY.
+         Factors equal 1. means X in meter and BY in Tesla.
+3. line: Nummer of data points
+        (if negativ, the field is expanded symmetrically in the long. direction)
+
+1. Column: X
+2. Column: BY(X) or BZ(X)
+$ENDHELP
+*************************************************************************
+$MENU
         BMAPP
         MAGNET
         $TITLE
@@ -2003,6 +2062,9 @@ $TRIGGER
 	IRBTAB
 	BTAB
 $TRIGGER
+	IFOURBTABZY
+	BFOURTABZY
+$TRIGGER
 	IRBTABZY
 	BTABZY
 $TRIGGER
@@ -2047,6 +2109,10 @@ $MENUVETO
 	IRBTABZY
         0
 	BTABZY
+$MENUVETO
+	IFOURBTABZY
+        0
+	BFOURTABZY
 $MENUVETO
         KAPPLEM
 	0
@@ -2396,7 +2462,7 @@ $SELECT
                 undulator mode 2 (fast)
         $MAPPING
                 UNDUFM
-		29
+		30
 		IUNDU2
 		1
 		KBFELD
@@ -2418,6 +2484,8 @@ $SELECT
 		KELLIP
 		1
 		IRBTAB
+		0
+		IFOURBTABZY
 		0
 		IRBTABZY
 		0
