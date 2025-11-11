@@ -4636,19 +4636,19 @@ $MENUALLVETO
 	     GENFUN
 *-------------------------------------------------------------------
 
-$CALC$
+$CALC
 IWFILF
 .AND.
 IONE
 IWFILF
 
-$CALC$
+$CALC
 IRFILF
 .AND.
 IONE
 IRFILF
 
-$CALC$
+$CALC
 IONE
 -
 IRFILF
