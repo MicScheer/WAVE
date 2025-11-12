@@ -3,18 +3,14 @@
 rem +PATCH,//WAVE/BAT
 rem +DECK,set_wave_environment,T=BAT.
 
-rem echo %0
-
-
-if defined WAVE (cd %WAVE%\stage) else (
+if defined WAVE (
+  cd %WAVE%\stage
+) else (
 
   set WAVE=%CD%
-
   cd bat
-
-  extend_path.bat %WAVE%\bat
-  extend_path.bat %WAVE%\bin
-
+  extend_path.bat %cd%\bat
+  extend_path.bat %cd%\bin
   cd ..\stage
 )
 

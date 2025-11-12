@@ -1,4 +1,4 @@
-$PWD/wave
+wave
 ipython3 -i ../python/waveplot.py
 $EDITOR wave.out
 $EDITOR
@@ -6,9 +6,6 @@ $EDITOR
 *===================================================================
 * Version: 1.32/15
 *===================================================================
-*
-*  Trouble: Error in combination with mycommg.kumac: Reason:
-*  Sub-directory paw is missing, path in pawlogon.kumac wrong.
 *
 * Note:
 *------------------------------------------------------------------
@@ -243,7 +240,7 @@ $MENU
 		$TOGGLE
                         KBFELD
 		$TEXT
-                        Sequence of soft edge magnets
+                        Sequence of various magnets from file
 		$TOGGLE
                         KMAGSEQ
 		$TEXT
