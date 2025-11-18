@@ -1,4 +1,4 @@
-*CMZ :          07/11/2025  14.29.11  by  Michael Scheer
+*CMZ :          18/11/2025  15.25.55  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  09.46.32  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
@@ -333,7 +333,7 @@
 
       DOUBLE PRECISION ZP,YP,VXINO,VYINO,VZINO,YSTARTO,ZSTARTO
      &  ,GAMMAL,gamma1,omegac,emom1,rho1,vxi,vyi,vzi,
-     &  wlen1,rhv,park,b0eff
+     &  wlen1,rhv,park,b0eff,parkh,parkv,ypampell,zpampell
 
       COMPLEX*16 VPOLAN
       DOUBLE PRECISION VSTO
@@ -1082,20 +1082,14 @@ c        phperl=xlellip
 c        phshift=ellshft*phperl
 c      endif
 
+      EMOM=EMASSE1*DSQRT((DMYGAMMA-1.0d0)*(DMYGAMMA+1.0d0))
+
       if (iundulator.eq.2) then
 
 c        iundulator=0
         kampli=nint(perellip)
         xcenell=0.0d0
 c        perellip=5.0d0
-
-        if (xstart.eq.9999.0d0.and.xinter.eq.-9999.0d0
-     &      .and.xstop.eq.9999.0d0) then
-c          xstart=-(perellip*xlellip+ellshft*xlellip)/2.0d0+xcenell
-c          xstart=-(5.0d0*xlellip+ellshft*xlellip)/2.0d0+xcenell
-          xstart=-(xlellip+ellshft*xlellip)/2.0d0+xcenell
-          xstop=xstart+xlellip
-        endif
 
         park=parkell
 
@@ -1140,6 +1134,33 @@ c            endif
             b0elliph=b0eff/sqrt(1.0d0+1.0d0/rhv**2)*b0elliph/abs(b0elliph)
             b0ellipv=b0elliph/rhv
           endif
+        endif
+
+        if (xstart.eq.9999.0d0.and.xinter.eq.-9999.0d0
+     &      .and.xstop.eq.9999.0d0) then
+c          xstart=-(perellip*xlellip+ellshft*xlellip)/2.0d0+xcenell
+c          xstart=-(5.0d0*xlellip+ellshft*xlellip)/2.0d0+xcenell
+c          xstart=-(xlellip+ellshft*xlellip)/2.0d0+xcenell
+c          xstop=xstart+xlellip
+
+           parkh=b0ellipv*(echarge1*XLELLIP/(2.*PI1*EMASSKG1*CLIGHT1))
+           parkv=b0elliph*(echarge1*XLELLIP/(2.*PI1*EMASSKG1*CLIGHT1))
+
+           XKELLIP=2.D0*PI1/XLELLIP
+           zampell=b0ellipv*clight1/emom/xkellip**2
+           yampell=b0elliph*clight1/emom/xkellip**2
+           zpampell=parkh/dmygamma
+           ypampell=parkv/dmygamma
+
+           xstart=-xlellip/2.0d0
+           xstop=xlellip/2.0d0
+
+           zstart=-zampell*cos(ellshft/2.0d0*twopi1)
+           vxin=1.0d0
+           vzin=zpampell*sin(ellshft/2.0d0*twopi1)
+           ystart=-yampell*cos(ellshft/2.0d0*twopi1)
+           vyin=-ypampell*sin(ellshft/2.0d0*twopi1)
+
         endif
 
         if (phrb0h.eq.9999.0d0) phrb0h=B0ELLIPh
@@ -1208,8 +1229,6 @@ c            endif
         ieneloss=0
         !imagspln=0
 
-        gamma=dmygamma
-
         DTIM=1.0D0/(CLIGHT1*dmybetap*MYINUM)   !TIME INTERVALLS FOR TRACKING
         BSHIFT=0.5D0          !DONT WORRY
 
@@ -1217,7 +1236,6 @@ c            endif
         GAMMA=DMYGAMMA
         ENERGV=GAMMA*EMASSE1
         GMOM=EMASSG1*DSQRT((GAMMA-1.0d0)*(GAMMA+1.0d0))
-        EMOM=EMASSE1*DSQRT((GAMMA-1.0d0)*(GAMMA+1.0d0))
         DBRHO=ICHARGE*EMOM/CLIGHT1
         BETA=DSQRT((1.0D0-1.0D0/GAMMA)*(1.0D0+1.0D0/GAMMA))
         DMYBETA=BETA

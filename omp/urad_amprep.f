@@ -1,4 +1,4 @@
-*CMZ :          26/09/2025  11.42.49  by  Michael Scheer
+*CMZ :          17/11/2025  15.48.57  by  Michael Scheer
 *CMZ :  4.02/00 27/08/2025  14.45.47  by  Michael Scheer
 *CMZ :  4.01/07 18/10/2024  09.41.32  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  07.41.13  by  Michael Scheer
@@ -166,20 +166,21 @@ c     &    fpriv(3,npinzprop_u,npinyprop_u),
         parkv=echarge1*dabs(beffv_u)*perlen_u/(twopi1*emasskg1*clight1)
 
         if (modewave.eq.0) then
-c*** OBSOLITE, SEE z0= further down
+c*** OBSOLeTE, SEE z0= further down
           zampell=beffv_u*clight1/emom/xkellip**2
           yampell=beffh_u*clight1/emom/xkellip**2
 c        zampell=zmx
 c        yampell=ymx
 c        print*,zpampell
-c        ypampell=parkh/gamma_u
+          zpampell=parkh/gamma_u
+          ypampell=parkv/gamma_u
 c        zpampell=tan(phimx)
 c        print*,zpampell
 c        stop
         else
-          call util_break
-          yampell=ymx-ymn
-          zampell=zmx-zmn
+c          !all util_break
+          yampell=(ymx-ymn)/2.0d0
+          zampell=(zmx-zmn)/2.0d0
         endif
       else
         print*,''
