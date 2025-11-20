@@ -2457,9 +2457,15 @@ $SELECT
 		0
         $TEXT
                 undulator mode 2 (fast)
+	$COMMENT
+	Overwrites XSTART, XSTOP etc.!
         $MAPPING
                 UNDUFM
-		30
+		32
+		XSTART
+		9999.
+		XSTOP
+		9999.
 		IUNDU2
 		1
 		KBFELD

@@ -55,6 +55,14 @@ echo " "
      fi
    done
 
+if ! echo $PATH | grep -q $WAVE/stage; then
+  export PATH=$WAVE/bin:$WAVE/shell:$WAVE/python:$WAVE/stage:$PATH
+  echo " "
+  echo "Setting PATH variable:"
+  echo $PATH
+  echo " "
+fi
+
 echo " "
 echo "Setting command aliases"
 echo " "

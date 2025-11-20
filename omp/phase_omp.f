@@ -1,4 +1,5 @@
-*CMZ :          19/09/2025  11.03.15  by  Michael Scheer
+*CMZ :          20/11/2025  12.46.45  by  Michael Scheer
+*CMZ :  4.02/00 19/09/2025  11.03.15  by  Michael Scheer
 *CMZ :  4.01/07 20/08/2024  17.20.56  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  18.40.00  by  Michael Scheer
 *CMZ :  4.01/04 28/11/2023  14.20.34  by  Michael Scheer
@@ -153,10 +154,10 @@
       INTEGER NIDGEO1,ISTAT,NIDGEO2,NBEAM_P,J,IELEM,NSIZE_P
       INTEGER IOBSY,IOBSZ,K,ix,is,mthreadso,lunwig,kpola
 
-      complex*16 efc(3),bfc(3),expsh,rea(3)
+      complex*16 efc(3),bfc(3),expsh,rea(5)
 
       integer
-     &  mphasey_omp,mphasez_omp,nphasey_omp,nphasez_omp,iphfold_omp,
+     &  mphasey_omp,mphasez_omp,nphasey_omp,nphasez_omp,iphfold_omp,ifold_omp,
      &  nphelem_omp,ihsel_omp,ith,nfreq_omp,iphase_omp
 
       integer ic,kobs
@@ -166,7 +167,7 @@
      &  phaperym_omp,phaperyp_omp,phaperypm_omp,phaperypp_omp,
      &  phelem_omp(5,4,nphelemp),dgsigz_omp,dgsigy_omp,r(3),ef(3) !,bf(3)
 
-      PARAMETER(NTUP_P=24,NGEO_P=16,NBEAM_P=16,NSIZE_P=4)
+      PARAMETER(NTUP_P=28,NGEO_P=16,NBEAM_P=16,NSIZE_P=4)
 
       CHARACTER(5) CHTAGS(NTUP_P),CHGEO(NGEO_P),CHBEAM(NBEAM_P)
       CHARACTER(5) CHSIZE(NSIZE_P)
@@ -191,16 +192,20 @@
      &  ,YAI1(NDOBSVZP)
      &  ,YAI2(NDOBSVZP)
      &  ,YAI3(NDOBSVZP)
-     &  ,RESULT(6,2)
+     &  ,RESULT(8,2)
 
       DOUBLE PRECISION xay(ndobsvzp)
      &  ,YAR4(NDOBSVZP)
      &  ,YAR5(NDOBSVZP)
      &  ,YAR6(NDOBSVZP)
+     &  ,YAR7(NDOBSVZP)
+     &  ,YAR8(NDOBSVZP)
      &  ,YAI4(NDOBSVZP)
      &  ,YAI5(NDOBSVZP)
      &  ,YAI6(NDOBSVZP)
-     &  ,RESULTY(6,2)
+     &  ,YAI7(NDOBSVZP)
+     &  ,YAI8(NDOBSVZP)
+     &  ,RESULTY(8,2)
 
       DOUBLE PRECISION
      &  YAR1Y(NDOBSVYP)
@@ -212,9 +217,13 @@
      &  ,YAR4Y(NDOBSVYP)
      &  ,YAR5Y(NDOBSVYP)
      &  ,YAR6Y(NDOBSVYP)
+     &  ,YAR7Y(NDOBSVYP)
+     &  ,YAR8Y(NDOBSVYP)
      &  ,YAI4Y(NDOBSVYP)
      &  ,YAI5Y(NDOBSVYP)
      &  ,YAI6Y(NDOBSVYP)
+     &  ,YAI7Y(NDOBSVYP)
+     &  ,YAI8Y(NDOBSVYP)
 
       complex*16, dimension (:,:), allocatable :: esourz,esoury
       complex*16, dimension (:,:,:), allocatable :: esourzy
@@ -240,7 +249,8 @@
      &  /'x','y','z','e','ie','iy','iz',
      &  're_x','im_x','re_y','im_y','re_z','im_z','spec','specf',
      &  'rb_x','ib_x','rb_y','ib_y','rb_z','ib_z',
-     &  'nx','ny','nz'
+     &  'nx','ny','nz',
+     &  'ref_y','imf_y','ref_z','imf_z'
      &  /
 
       data chgeo
@@ -264,6 +274,8 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
 
       mthreadso=mthreads
       mthreads=max(1,mthreads)
+c      mthreads=1
+c      print*,"*** MTHREADS!!!"
 
       if (mhbookp.eq.0) then
         chphase='//PHASE'
@@ -391,7 +403,7 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
       ALLOCATE(PHSIGZ(NSOURCE*NFREQ))
       ALLOCATE(PHSIGY(NSOURCE*NFREQ))
       ALLOCATE(PHSHIFT(NOBSV))
-      ALLOCATE(AMPLI(6,mphasez,mphasey,NFREQ))
+      ALLOCATE(AMPLI(8,mphasez,mphasey,NFREQ))
       ALLOCATE(phspec3(mphasez,mphasey,nfreq))
       ALLOCATE(phspec3f(mphasez,mphasey,nfreq))
       ALLOCATE(phspec3fy(mphasez,mphasey,nfreq))
@@ -441,6 +453,8 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
       PHSIGZ=0.0d0
       PHSIGY=0.0d0
 
+      ifold_omp=ifold
+
       CALL hbookm(NIDPHASE,'PHASE',NTUP_P,chphase(1:lenchphase),
      &  mphasez*mphasey*nfreq,CHTAGS)
 
@@ -452,14 +466,6 @@ c      print*,"*** Vorzeichen von Imag(B) noch korrekt??"
      &    nobsv*nfreq,CHTAGS)
       endif
 
-c      if (user(1).eq.1.0d0) then
-c        rea(1:2)=(0.0d0,0.0d0)
-c        rea(3)=dcmplx(reaima(3,1,icbrill),reaima(3,2,icbrill))
-c        reaima=0.0d0
-c        reaima(3,1,icbrill)=dreal(rea(3))
-c        reaima(3,2,icbrill)=dimag(rea(3))
-c      endif
-
       if (abs(phgshift).eq.9999.0d0) then
         do ifrq=1,nfreq
           iobfr=icbrill+nobsv*(ifrq-1)
@@ -469,9 +475,9 @@ c      endif
           if (phgshift.eq.-9999.0d0) expsh=expsh*cdexp(dcmplx(0.0d0,-pi1/2.0d0))
           DO iobs=1,nobsv
             iobfr=iobs+nobsv*(ifrq-1)
-            rea=dcmplx(reaima(1:3,1,iobfr),reaima(1:3,2,iobfr))/expsh
-            reaima(1:3,1,iobfr)=dreal(rea)
-            reaima(1:3,2,iobfr)=dimag(rea)
+            rea=dcmplx(reaima(1:5,1,iobfr),reaima(1:5,2,iobfr))/expsh
+            reaima(1:5,1,iobfr)=dreal(rea)
+            reaima(1:5,2,iobfr)=dimag(rea)
           enddo
         enddo
       else if (phgshift.ne.0.0d0) then
@@ -479,9 +485,9 @@ c      endif
         do ifrq=1,nfreq
           DO iobs=1,nobsv
             iobfr=iobs+nobsv*(ifrq-1)
-            rea=dcmplx(reaima(1:3,1,iobfr),reaima(1:3,2,iobfr))/expsh
-            reaima(1:3,1,iobfr)=dreal(rea)
-            reaima(1:3,2,iobfr)=dimag(rea)
+            rea=dcmplx(reaima(1:5,1,iobfr),reaima(1:5,2,iobfr))/expsh
+            reaima(1:5,1,iobfr)=dreal(rea)
+            reaima(1:5,2,iobfr)=dimag(rea)
           enddo
         enddo
       endif
@@ -501,7 +507,12 @@ c      endif
         enddo
       enddo
 
-      reanor=sqrt(smax/reanor)
+      SPECNOR_SI= !merke/synchrotron_radiation.txt
+     &  dmycur ! Strom
+     &  /echarge1/hbar1*clight1/PI1*EPS01
+     &  *banwid !BW
+
+      reanor=sqrt(smax/reanor/specnor_si)
 
       do ifrq=1,nfreq
         DO iobs=1,nobsv
@@ -529,7 +540,7 @@ c          bf(1:3)=reanor*reaima(6:8,1,iobfr)
           TUP(12)=ef(3)
           TUP(13)=reanor*reaima(3,2,iobfr)
           TUP(14)=spec(iobfr)
-          if (ifold.ne.0) then
+          if (ifold_omp.ne.0) then
             TUP(15)=specf(iobfr)
           else
             tup(15)=0.0d0
@@ -551,6 +562,10 @@ c          rnz=ef(1)*bf(2)-ef(2)*bf(1)
           tup(22)=rnx/rn
           tup(23)=rny/rn
           tup(24)=rnz/rn
+          TUP(25)=reanor*reaima(4,1,iobfr)
+          TUP(26)=reanor*reaima(4,2,iobfr)
+          TUP(27)=reanor*reaima(5,1,iobfr)
+          TUP(28)=reanor*reaima(5,2,iobfr)
           CALL hfm(NIDPHASE+1,TUP)
         ENDDO !iobs
       enddo !nfreq
@@ -585,7 +600,6 @@ c          rnz=ef(1)*bf(2)-ef(2)*bf(1)
       mphasez_omp=mphasez
       nphasey_omp=nphasey
       nphasez_omp=nphasez
-      iphfold_omp=iphfold
       nphelem_omp=nphelem
       ihsel_omp=ihsel
       nfreq_omp=nfreq
@@ -610,7 +624,7 @@ c          rnz=ef(1)*bf(2)-ef(2)*bf(1)
       dgsigz_omp=dgsigz(1)
 
 !$OMP PARALLEL NUM_THREADS(mthreads) DEFAULT(PRIVATE)
-!$OMp& SHARED(mphasey_omp,mphasez_omp,nphasey_omp,nphasez_omp,iphfold_omp)
+!$OMp& SHARED(mphasey_omp,mphasez_omp,nphasey_omp,nphasez_omp,iphfold_omp,ifold_omp)
 !$OMp& SHARED(nphelem_omp,ihsel_omp,nfreq_omp,freq_omp,wtoe1,iphase_omp)
 !$OMP& SHARED(phaperzm_omp,phaperzp_omp,phaperzpm_omp,phaperzpp_omp)
 !$OMP& SHARED(phaperym_omp,phaperyp_omp,phaperypm_omp,phaperypp_omp)
@@ -705,6 +719,7 @@ c              STOP
             ELSE
               EXPOM(IOBS)=1.0D0
             ENDIF
+            print*,iobs,expom(iobs)
 
             DEXPOM(IOBS)=CDEXP(DCMPLX(0.0d0,DRRED*DOMC))
 c            print*,ith,iobs,expom(iobs)
@@ -723,10 +738,11 @@ c+seq,dum2.
 
                 IF (ifrq.EQ.1) THEN
                   PHSHIFT(IOBS)=EXPOM(IOBFR)
+c                  print*,iobs,phshift(iobs)
                 ELSE
                   PHSHIFT(IOBS)=PHSHIFT(IOBS)*DEXPOM(IOBS)
                 ENDIF   !(ifrq.EQ.1)
-c                print*,iobfr,iobs,expom(iobfr),phshift(iobs)
+                print*,iobfr,iobs,expom(iobfr),phshift(iobs)
 c                stop
                 IF (DX.GE.0) THEN
 
@@ -750,6 +766,16 @@ c                stop
      &              DCMPLX(reaima(8,1,IOBFR),reaima(8,2,IOBFR))
      &              *PHSHIFT(IOBS)
 
+                  if (ifold_omp.ne.0) then
+                    ampli(7,iphz,iphy,ifrq)=ampli(7,iphz,iphy,ifrq)+
+     &                DCMPLX(REAIMA(4,1,IOBFR),REAIMA(4,2,IOBFR))
+     &                *PHSHIFT(IOBS)
+                    ampli(8,iphz,iphy,ifrq)=ampli(8,iphz,iphy,ifrq)+
+     &                DCMPLX(REAIMA(5,1,IOBFR),REAIMA(5,2,IOBFR))
+     &                *PHSHIFT(IOBS)
+c                    print*,iphz,iphy,iobs,ampli(8,iphz,iphy,ifrq)
+                  endif
+
                 ELSE
 
                   ampli(1,iphz,iphy,ifrq)=ampli(1,iphz,iphy,ifrq)+
@@ -772,11 +798,21 @@ c                stop
      &              DCMPLX(reaima(8,1,IOBFR),-reaima(8,2,IOBFR))
      &              *PHSHIFT(IOBS)
 
+c                  call util_break
+                  if (ifold_omp.ne.0) then
+                    ampli(7,iphz,iphy,ifrq)=ampli(7,iphz,iphy,ifrq)+
+     &                DCMPLX(REAIMA(4,1,IOBFR),-REAIMA(4,2,IOBFR))
+     &                *PHSHIFT(IOBS)
+                    ampli(8,iphz,iphy,ifrq)=ampli(8,iphz,iphy,ifrq)+
+     &                DCMPLX(REAIMA(5,1,IOBFR),-REAIMA(5,2,IOBFR))
+     &                *PHSHIFT(IOBS)
+                  endif
+
                 ENDIF !(DX.GE.0)
 
               ENDDO  !NOBSV
 
-              ampli(1:6,iphz,iphy,ifrq)=ampli(1:6,iphz,iphy,ifrq)*DA*RLAMBDA1
+              ampli(1:8,iphz,iphy,ifrq)=ampli(1:8,iphz,iphy,ifrq)*DA*RLAMBDA1
 
             ELSE  !IPHASE_omp.GT.0
 
@@ -815,6 +851,15 @@ c+seq,dummy.
      &                DCMPLX(reaima(8,1,IOBFR),-reaima(8,2,IOBFR))
      &                *PHSHIFT(IOBS)
 
+                    if (ifold_omp.ne.0) then
+                      ampli(8,iphz,iphy,ifrq)=ampli(8,iphz,iphy,ifrq)+
+     &                  DCMPLX(REAIMA(4,1,IOBFR),REAIMA(4,2,IOBFR))
+     &                  *PHSHIFT(IOBS)
+                      ampli(9,iphz,iphy,ifrq)=ampli(9,iphz,iphy,ifrq)+
+     &                  DCMPLX(REAIMA(5,1,IOBFR),REAIMA(5,2,IOBFR))
+     &                  *PHSHIFT(IOBS)
+                    endif
+
                   ELSE
 
                     ampli(1,iphz,iphy,ifrq)=
@@ -837,6 +882,15 @@ c+seq,dummy.
      &                DCMPLX(reaima(8,1,IOBFR),+reaima(8,2,IOBFR))
      &                *PHSHIFT(IOBS)
 
+                    if (ifold_omp.ne.0) then
+                      ampli(8,iphz,iphy,ifrq)=ampli(8,iphz,iphy,ifrq)+
+     &                  DCMPLX(REAIMA(4,1,IOBFR),-REAIMA(4,2,IOBFR))
+     &                  *PHSHIFT(IOBS)
+                      ampli(9,iphz,iphy,ifrq)=ampli(9,iphz,iphy,ifrq)+
+     &                  DCMPLX(REAIMA(5,1,IOBFR),-REAIMA(5,2,IOBFR))
+     &                  *PHSHIFT(IOBS)
+                    endif
+
                   ENDIF !(DX.GE.0)
 
                   X_th(IOBSZ)=OBSVZ(IOBSZ)
@@ -856,6 +910,13 @@ c+seq,dummy.
                   YAI4(IOBSZ)=DIMAG(ampli(4,iphz,iphy,ifrq))
                   YAI5(IOBSZ)=DIMAG(ampli(5,iphz,iphy,ifrq))
                   YAI6(IOBSZ)=DIMAG(ampli(6,iphz,iphy,ifrq))
+
+                  if (ifold_omp.ne.0) then
+                    YAR7(IOBSZ)=DREAL(ampli(7,iphz,iphy,ifrq))
+                    YAR8(IOBSZ)=DREAL(ampli(8,iphz,iphy,ifrq))
+                    YAI7(IOBSZ)=DIMAG(ampli(7,iphz,iphy,ifrq))
+                    YAI8(IOBSZ)=DIMAG(ampli(8,iphz,iphy,ifrq))
+                  endif
 
                 ENDDO   !NOBSVZ
 
@@ -904,6 +965,17 @@ c+seq,dummy.
                 YAR6Y(IOBSY)=RESULT(6,1)
                 YAI6Y(IOBSY)=RESULT(6,2)
 
+                if (ifold_omp.ne.0) then
+                  wobsv1_th(1:nobsvz)=yar7(1:nobsvz)
+                  CALL UTIL_SPLINE_integral_omp(nobsvz,RESULT(7,1))
+                  YAR7Y(IOBSY)=RESULT(7,1)
+                  YAI7Y(IOBSY)=RESULT(7,2)
+                  wobsv1_th(1:nobsvz)=yai6(1:nobsvz)
+                  CALL UTIL_SPLINE_integral_omp(nobsvz,RESULT(8,2))
+                  YAR7Y(IOBSY)=RESULT(8,1)
+                  YAI7Y(IOBSY)=RESULT(8,2)
+                endif
+
               ENDDO !NOBSVY
 
               x_th(1:nobsvy)=xay(1:nobsvy)
@@ -946,6 +1018,19 @@ c+seq,dummy.
               ampli(5,iphz,iphy,ifrq)=DCMPLX(RESULTY(5,1),RESULTY(5,2))*RLAMBDA1
               ampli(6,iphz,iphy,ifrq)=DCMPLX(RESULTY(6,1),RESULTY(6,2))*RLAMBDA1
 
+              if (ifold_omp.ne.0) then
+                wobsv1_th(1:nobsvy)=yar6y(1:nobsvy)
+                CALL UTIL_SPLINE_integral_omp(NOBSVY,RESULTY(7,1))
+                wobsv1_th(1:nobsvy)=yai6y(1:nobsvy)
+                CALL UTIL_SPLINE_integral_omp(NOBSVY,RESULTY(7,2))
+                ampli(7,iphz,iphy,ifrq)=DCMPLX(RESULTY(7,1),RESULTY(7,2))*RLAMBDA1
+                wobsv1_th(1:nobsvy)=yar6y(1:nobsvy)
+                CALL UTIL_SPLINE_integral_omp(NOBSVY,RESULTY(8,1))
+                wobsv1_th(1:nobsvy)=yai6y(1:nobsvy)
+                CALL UTIL_SPLINE_integral_omp(NOBSVY,RESULTY(8,2))
+                ampli(8,iphz,iphy,ifrq)=DCMPLX(RESULTY(8,1),RESULTY(8,2))*RLAMBDA1
+              endif
+
             ENDIF !IPHASE.GT.0
 
           ENDDO   !NFREQ
@@ -977,7 +1062,7 @@ c+seq,dummy.
       smax=-1.0d30
 
 !$OMP PARALLEL NUM_THREADS(mthreads) DEFAULT(PRIVATE)
-!$OMp& SHARED(mphasey_omp,mphasez_omp,nphasey_omp,nphasez_omp,iphfold_omp)
+!$OMp& SHARED(mphasey_omp,mphasez_omp,nphasey_omp,nphasez_omp,iphfold_omp,ifold_omp)
 !$OMp& SHARED(nphelem_omp,ihsel_omp,nfreq_omp,freq_omp,wtoe1,iphase_omp)
 !$OMP& SHARED(phaperzm_omp,phaperzp_omp,phaperzpm_omp,phaperzpp_omp)
 !$OMP& SHARED(phaperym_omp,phaperyp_omp,phaperypm_omp,phaperypp_omp)
@@ -1081,11 +1166,6 @@ c     &            phws1,phws2,phws3,phws4)
 
 !$OMP END PARALLEL
 
-      SPECNOR_SI= !merke/synchrotron_radiation.txt
-     &  dmycur ! Strom
-     &  /echarge1/hbar1*clight1/PI1*EPS01
-     &  *banwid !BW
-
       ampli=ampli/sqrt(specnor_si)
       sfmax=-1.0d30
 
@@ -1131,6 +1211,12 @@ c            rnz=ef(1)*bf(2)-ef(2)*bf(1)
             tup(23)=rny/rn
             tup(24)=rnz/rn
             if (phspec3f(iphz,iphy,ifrq).gt.sfmax) sfmax=phspec3f(iphz,iphy,ifrq)
+            if (ifold_omp.ne.0) then
+              TUP(25)=DIMAG(ampli(7,iphz,iphy,ifrq))
+              TUP(26)=DREAL(ampli(7,iphz,iphy,ifrq))
+              TUP(27)=DIMAG(ampli(8,iphz,iphy,ifrq))
+              TUP(28)=DREAL(ampli(8,iphz,iphy,ifrq))
+            endif
             CALL hfm(NIDPHASE,TUP)
           ENDDO   !mPHASez_omp
         ENDDO  !MPHASey_omp
