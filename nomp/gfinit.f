@@ -1,4 +1,4 @@
-*CMZ :          18/11/2025  15.25.55  by  Michael Scheer
+*CMZ :          21/11/2025  14.26.21  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  09.46.32  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
@@ -246,7 +246,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -805,8 +805,9 @@ c     WRITE(6,*)'READING NAMELIST BFORCN'
           PHELEM(5,4,IELEM)=+1.0D30
         ENDDO
 c     WRITE(6,*)'READING NAMELIST PHASEN'
-        READ(LUNGFI,PHASEN)
       ENDIF
+
+      READ(LUNGFI,PHASEN) !wg pghshift
 
       if (ibunch.ne.0.and.neinbunch.gt.1.and.icluster.gt.0) then
         if (neinbunch.ne.(neinbunch/nwgood)*nwgood) then

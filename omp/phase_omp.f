@@ -1,4 +1,4 @@
-*CMZ :          20/11/2025  12.46.45  by  Michael Scheer
+*CMZ :          21/11/2025  16.58.37  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  11.03.15  by  Michael Scheer
 *CMZ :  4.01/07 20/08/2024  17.20.56  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  18.40.00  by  Michael Scheer
@@ -492,27 +492,29 @@ c      print*,"*** MTHREADS!!!"
         enddo
       endif
 
-      isour=1
-      smax=0.0d0
-      do ifrq=1,nfreq
-        DO iobs=1,nobsv
-          iobfr=iobs+nobsv*(ifrq-1)
-          if (spec(iobfr).gt.smax) then
-            smax=spec(iobfr)
-            reanor=
-     &        reaima(1,1,iobfr)**2+reaima(1,2,iobfr)**2+
-     &        reaima(2,1,iobfr)**2+reaima(2,2,iobfr)**2+
-     &        reaima(3,1,iobfr)**2+reaima(3,2,iobfr)**2
-          endif
-        enddo
-      enddo
+c      isour=1
+c      smax=0.0d0
+c      do ifrq=1,nfreq
+c        DO iobs=1,nobsv
+c          iobfr=iobs+nobsv*(ifrq-1)
+c          if (spec(iobfr).gt.smax) then
+c            smax=spec(iobfr)
+c            reanor=
+c     &        reaima(1,1,iobfr)**2+reaima(1,2,iobfr)**2+
+c     &        reaima(2,1,iobfr)**2+reaima(2,2,iobfr)**2+
+c     &        reaima(3,1,iobfr)**2+reaima(3,2,iobfr)**2
+c          endif
+c        enddo
+c      enddo
+
+      reanor=1.0d0
 
       SPECNOR_SI= !merke/synchrotron_radiation.txt
      &  dmycur ! Strom
      &  /echarge1/hbar1*clight1/PI1*EPS01
      &  *banwid !BW
 
-      reanor=sqrt(smax/reanor/specnor_si)
+c      reanor=sqrt(smax/reanor/specnor_si)
 
       do ifrq=1,nfreq
         DO iobs=1,nobsv
@@ -719,7 +721,7 @@ c              STOP
             ELSE
               EXPOM(IOBS)=1.0D0
             ENDIF
-            print*,iobs,expom(iobs)
+c            print*,iobs,expom(iobs)
 
             DEXPOM(IOBS)=CDEXP(DCMPLX(0.0d0,DRRED*DOMC))
 c            print*,ith,iobs,expom(iobs)
@@ -742,7 +744,7 @@ c                  print*,iobs,phshift(iobs)
                 ELSE
                   PHSHIFT(IOBS)=PHSHIFT(IOBS)*DEXPOM(IOBS)
                 ENDIF   !(ifrq.EQ.1)
-                print*,iobfr,iobs,expom(iobfr),phshift(iobs)
+c                print*,iobfr,iobs,expom(iobfr),phshift(iobs)
 c                stop
                 IF (DX.GE.0) THEN
 

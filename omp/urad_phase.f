@@ -1,4 +1,4 @@
-*CMZ :          29/09/2025  12.35.09  by  Michael Scheer
+*CMZ :          20/11/2025  17.24.32  by  Michael Scheer
 *CMZ :  4.02/00 13/09/2025  10.16.17  by  Michael Scheer
 *CMZ :  4.01/07 13/08/2024  10.11.51  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.49.56  by  Michael Scheer
@@ -194,15 +194,7 @@ c              r=xx*(1.0d0+h2/2.0d0-h2**2/8.0d0)
       pherror_u=pherror
       phgshift_u=phgshift
 
-c      call urad_spline(modewave)
-c      stop
-c      if (modewave.eq.2) then
-c        call urad_nnb(modewave)
-c      else if (modewave.eq.3) then
-c        call urad_spline(modewave)
-c      else
       call urad_amprep(modewave)
-c      endif
 
       stokes_u=stokes_u/1.0d6 ! photons/mm**2
 

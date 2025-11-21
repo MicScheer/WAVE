@@ -1,4 +1,4 @@
-*CMZ :          28/10/2025  10.20.42  by  Michael Scheer
+*CMZ :          21/11/2025  16.17.23  by  Michael Scheer
 *CMZ :  4.02/00 27/08/2025  15.28.58  by  Michael Scheer
 *CMZ :  4.01/07 30/09/2024  14.48.47  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.52.02  by  Michael Scheer
@@ -161,7 +161,7 @@
 *CMZ : 00.00/00 28/04/94  16.11.39  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE SPECTRUM
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -283,7 +283,7 @@ C--- MAIN ROUTINE TO CALCULATE SYNCHROTRON RADIATION SPECTRA
       REAL*4 POL,rr(2)
       REAL*4 THERAY,PHIRAY,RAY,ZRAY,YRAY,DRAY,RAY1,RAY2,RAY3,RAY1N,RAY2N,RAY3N
 
-      DOUBLE PRECISION ENEDOSMX,S1,S2,S3,S4,DUM1,DUM2,RMS
+      DOUBLE PRECISION ENEDOSMX,S1,S2,S3,S4,DUM1,DUM2,RMS,specnor_si
       DOUBLE PRECISION WSNOBFR1(NDFREQP),WSNOBFR2(NDFREQP),SPECBUFF(NDFREQP)
 
       character(7) :: ch6000h='[mGy/6000h]'
@@ -1430,6 +1430,7 @@ C SOURCEA IS RECALCULATED IN SR TRACKS
 
           pow_u=pow_u*1.0d6
           stokes_u=stokes_u*1.0d6
+
           if(ihbunch.ne.0) then
             fbunch_u(4:14,:)=fbunch_u(4:14,:)/1000.0d0
             fbunch_u(17:19,:)=fbunch_u(17:19,:)/1000.0d0
@@ -1437,7 +1438,12 @@ C SOURCEA IS RECALCULATED IN SR TRACKS
             fbunch_u(30:41,:)=fbunch_u(30:41,:)*1.0d3
           endif
 
-          arad_u=arad_u*1000.0d0
+          SPECNOR_SI= !merke/synchrotron_radiation.txt
+     &      curr_u ! Strom
+     &      /echarge1/hbar1*clight1/PI1*EPS01
+     &      *banwid_u !BW
+
+          arad_u=arad_u*sqrt(specnor_si)
 
           specpow=pow_u
           spec(:)=stokes_u(1,:)

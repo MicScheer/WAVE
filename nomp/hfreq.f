@@ -1,4 +1,5 @@
-*CMZ :          12/08/2025  12.50.49  by  Michael Scheer
+*CMZ :          21/11/2025  08.49.04  by  Michael Scheer
+*CMZ :  4.02/00 12/08/2025  12.50.49  by  Michael Scheer
 *CMZ :  4.01/07 29/10/2024  16.01.45  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  13.30.35  by  Michael Scheer
 *CMZ :  4.01/04 15/11/2023  18.07.40  by  Michael Scheer
@@ -2047,59 +2048,59 @@ C--- NTUPLE
             IOBFR=IOBSV+NOBSV*(ifrq-1)
 c            IF (ISPECMODE.EQ.3) THEN
 
-              FSPEC(11)=reanor*reaIMA(1,1,IOBFR)
-              FSPEC(12)=reanor*reaIMA(1,2,IOBFR)
-              FSPEC(13)=reanor*reaIMA(2,1,IOBFR)
-              FSPEC(14)=reanor*reaIMA(2,2,IOBFR)
-              FSPEC(15)=reanor*reaIMA(3,1,IOBFR)
-              FSPEC(16)=reanor*reaIMA(3,2,IOBFR)
+            FSPEC(11)=reanor*reaIMA(1,1,IOBFR)
+            FSPEC(12)=reanor*reaIMA(1,2,IOBFR)
+            FSPEC(13)=reanor*reaIMA(2,1,IOBFR)
+            FSPEC(14)=reanor*reaIMA(2,2,IOBFR)
+            FSPEC(15)=reanor*reaIMA(3,1,IOBFR)
+            FSPEC(16)=reanor*reaIMA(3,2,IOBFR)
 
-              FSPEC(17)=reanor*reaIMA(4,1,IOBFR)
-              FSPEC(18)=reanor*reaIMA(4,2,IOBFR)
-              FSPEC(19)=reanor*reaIMA(5,1,IOBFR)
-              FSPEC(20)=reanor*reaIMA(5,2,IOBFR)
+            FSPEC(17)=reanor*reaIMA(4,1,IOBFR)
+            FSPEC(18)=reanor*reaIMA(4,2,IOBFR)
+            FSPEC(19)=reanor*reaIMA(5,1,IOBFR)
+            FSPEC(20)=reanor*reaIMA(5,2,IOBFR)
 
-              e(1)=dcmplx(fspec(11),fspec(12))
-              e(2)=dcmplx(fspec(13),fspec(14))
-              e(3)=dcmplx(fspec(15),fspec(16))
+            e(1)=dcmplx(fspec(11),fspec(12))
+            e(2)=dcmplx(fspec(13),fspec(14))
+            e(3)=dcmplx(fspec(15),fspec(16))
 
-              FSPEC(21)=reanor*reaIMA(6,1,IOBFR)
-              FSPEC(22)=reanor*reaIMA(6,2,IOBFR)
-              FSPEC(23)=reanor*reaIMA(7,1,IOBFR)
-              FSPEC(24)=reanor*reaIMA(7,2,IOBFR)
-              FSPEC(25)=reanor*reaIMA(8,1,IOBFR)
-              FSPEC(26)=reanor*reaIMA(8,2,IOBFR)
+            FSPEC(21)=reanor*reaIMA(6,1,IOBFR)
+            FSPEC(22)=reanor*reaIMA(6,2,IOBFR)
+            FSPEC(23)=reanor*reaIMA(7,1,IOBFR)
+            FSPEC(24)=reanor*reaIMA(7,2,IOBFR)
+            FSPEC(25)=reanor*reaIMA(8,1,IOBFR)
+            FSPEC(26)=reanor*reaIMA(8,2,IOBFR)
 
-              b(1)=dcmplx(fspec(21),fspec(22))
-              b(2)=dcmplx(fspec(23),fspec(24))
-              b(3)=dcmplx(fspec(25),fspec(26))
+            b(1)=dcmplx(fspec(21),fspec(22))
+            b(2)=dcmplx(fspec(23),fspec(24))
+            b(3)=dcmplx(fspec(25),fspec(26))
 
-              FSPEC(27)=reanor*reaIMA(9,1,IOBFR)
-              FSPEC(28)=reanor*reaIMA(9,2,IOBFR)
-              FSPEC(29)=reanor*reaIMA(10,1,IOBFR)
-              FSPEC(30)=reanor*reaIMA(10,2,IOBFR)
+            FSPEC(27)=reanor*reaIMA(9,1,IOBFR)
+            FSPEC(28)=reanor*reaIMA(9,2,IOBFR)
+            FSPEC(29)=reanor*reaIMA(10,1,IOBFR)
+            FSPEC(30)=reanor*reaIMA(10,2,IOBFR)
 
-              rn(1)=real(e(2)*conjg(b(3))-e(3)*conjg(b(2)))
-              rn(2)=real(e(3)*conjg(b(1))-e(1)*conjg(b(3)))
-              rn(3)=real(e(1)*conjg(b(2))-e(2)*conjg(b(1)))
+            rn(1)=real(e(2)*conjg(b(3))-e(3)*conjg(b(2)))
+            rn(2)=real(e(3)*conjg(b(1))-e(1)*conjg(b(3)))
+            rn(3)=real(e(1)*conjg(b(2))-e(2)*conjg(b(1)))
 
-              rn=rn/norm2(rn)
-              fspec(32:34)=rn(1:3)
+            rn=rn/norm2(rn)
+            fspec(32:34)=rn(1:3)
 
-              dist=sqrt(
+            dist=sqrt(
      &          ((obsv(3,iobsv)-censouz)**2+
-     &          (obsv(2,iobsv)-censouy)**2)+
-     &          (obsv(1,iobsv)-censoux)**2)
+     &        (obsv(2,iobsv)-censouy)**2)+
+     &        (obsv(1,iobsv)-censoux)**2)
 
-              ddist=dist-dist0
+            ddist=dist-dist0
 
-              wlen=clight1*hbarev1*twopi1/freq(ifrq)
-              waves=ddist/wlen
-              dphase=waves*twopi1
+            wlen=clight1*hbarev1*twopi1/freq(ifrq)
+            waves=ddist/wlen
+            dphase=waves*twopi1
 
-              FSPEC(31)=dphase
+            FSPEC(31)=dphase
 
-              CALL hfm(NIDSPEC,FSPEC)
+            CALL hfm(NIDSPEC,FSPEC)
 
           ENDDO   !NFREQ
         ENDDO   !IOBSV

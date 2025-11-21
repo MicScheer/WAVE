@@ -1,4 +1,4 @@
-*CMZ :          20/09/2025  10.19.21  by  Michael Scheer
+*CMZ :          21/11/2025  16.28.26  by  Michael Scheer
 *CMZ :  4.02/00 28/08/2025  11.50.10  by  Michael Scheer
 *CMZ :  4.01/04 28/12/2023  13.26.19  by  Michael Scheer
 *CMZ :  4.01/02 12/05/2023  15.12.26  by  Michael Scheer
@@ -57,6 +57,8 @@
       include 'b0scglob.cmn'
 *KEEP,depola.
       include 'depola.cmn'
+*KEEP,phasef90.
+      include 'phasef90.cmn'
 *KEEP,phycon.
       include 'phycon.cmn'
 *KEEP,uservar.
@@ -70,13 +72,9 @@
       integer :: modewave=1,icohere,nelec,noranone,modebunch,npinz,npiny,
      &  modepin,modesphere,nper,nepho
 
-c      if (user(2).ne.0) then
-c        modewave=user(2)
-c        print*,"modewave = USER(2)",modewave
-c      else
       modewave=1
       ifixphase_u=1
-c      endif
+      phgshift_u=phgshift
 
       step=1.0d0/dble(myinum)*1000.0d0
 
@@ -182,7 +180,7 @@ c      endif
      &  nepho,ephmin,ephmax,banwid,
      &  xbeta,beth,alphh,betv,alphv,de,phremith,phremitv,
      &  disph,dispph,dispv,disppv,
-     &  modeph,pherror,phrshift,modewave
+     &  modeph,pherror,phgshift,modewave
      &  )
 
       return
