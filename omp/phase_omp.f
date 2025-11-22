@@ -1,4 +1,4 @@
-*CMZ :          22/11/2025  14.16.20  by  Michael Scheer
+*CMZ :          22/11/2025  18.04.22  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  11.03.15  by  Michael Scheer
 *CMZ :  4.01/07 20/08/2024  17.20.56  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  18.40.00  by  Michael Scheer
@@ -454,6 +454,7 @@ c      print*,"*** MTHREADS!!!"
       PHSIGY=0.0d0
 
       ifold_omp=ifold
+      reanor=1.0d0
 
       CALL hbookm(NIDPHASE,'PHASE',NTUP_P,chphase(1:lenchphase),
      &  mphasez*mphasey*nfreq,CHTAGS)
@@ -491,23 +492,6 @@ c      print*,"*** MTHREADS!!!"
           enddo
         enddo
       endif
-
-c      isour=1
-c      smax=0.0d0
-c      do ifrq=1,nfreq
-c        DO iobs=1,nobsv
-c          iobfr=iobs+nobsv*(ifrq-1)
-c          if (spec(iobfr).gt.smax) then
-c            smax=spec(iobfr)
-c            reanor=
-c     &        reaima(1,1,iobfr)**2+reaima(1,2,iobfr)**2+
-c     &        reaima(2,1,iobfr)**2+reaima(2,2,iobfr)**2+
-c     &        reaima(3,1,iobfr)**2+reaima(3,2,iobfr)**2
-c          endif
-c        enddo
-c      enddo
-
-      reanor=1.0d0
 
       SPECNOR_SI= !merke/synchrotron_radiation.txt
      &  dmycur ! Strom
@@ -1168,9 +1152,9 @@ c     &            phws1,phws2,phws3,phws4)
 
 !$OMP END PARALLEL
 
-      if (iundulator.eq.2.or.kampli.ne.0) then
-        ampli=ampli/sqrt(specnor_si)
-      endif
+c      if (iundulator.eq.2.or.kampli.ne.0) then
+c        ampli=ampli/sqrt(specnor_si)
+c      endif
 
       sfmax=-1.0d30
 
