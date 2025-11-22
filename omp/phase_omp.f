@@ -1,4 +1,4 @@
-*CMZ :          21/11/2025  16.58.37  by  Michael Scheer
+*CMZ :          22/11/2025  14.16.20  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  11.03.15  by  Michael Scheer
 *CMZ :  4.01/07 20/08/2024  17.20.56  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  18.40.00  by  Michael Scheer
@@ -39,7 +39,7 @@
 *CMZ :  1.03/06 29/09/98  14.43.55  by  Michael Scheer
 *-- Author :    Michael Scheer   18/09/98
       SUBROUTINE PHASE_omp
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -1068,7 +1068,7 @@ c+seq,dummy.
 !$OMp& SHARED(nphelem_omp,ihsel_omp,nfreq_omp,freq_omp,wtoe1,iphase_omp)
 !$OMP& SHARED(phaperzm_omp,phaperzp_omp,phaperzpm_omp,phaperzpp_omp)
 !$OMP& SHARED(phaperym_omp,phaperyp_omp,phaperypm_omp,phaperypp_omp)
-!$OMP& SHARED(phelem_omp,dmeshy,dmeshz,obsv,phlowy,phlowz,dx,dx2)
+!$OMP& SHARED(phelem_omp,dmeshy,dmeshz,obsv,phlowy,phlowz,dx,dx2,specnor_si)
 !$OMP& SHARED(ampli,reaima,phshift,domc,omc,da,obsvz,obsvy,yphw,zphw)
 !$OMP& SHARED(smax,phspec3,sfmax,phspec3fy,phspec3f,dgsigz_omp,dgsigy_omp,phgsigz,phgsigy)
 
@@ -1090,13 +1090,13 @@ c+seq,dummy.
           iphy=iy+iy1
           DO iz=1,nphasez_omp
             iphz=iz+iz1
-            phspec3(iphz,iphy,ifrq)=
+            phspec3(iphz,iphy,ifrq)=(
      &        DREAL(ampli(1,iphz,iphy,ifrq))*DREAL(ampli(1,iphz,iphy,ifrq))+
      &        DIMAG(ampli(1,iphz,iphy,ifrq))*DIMAG(ampli(1,iphz,iphy,ifrq))+
      &        DREAL(ampli(2,iphz,iphy,ifrq))*DREAL(ampli(2,iphz,iphy,ifrq))+
      &        DIMAG(ampli(2,iphz,iphy,ifrq))*DIMAG(ampli(2,iphz,iphy,ifrq))+
      &        DREAL(ampli(3,iphz,iphy,ifrq))*DREAL(ampli(3,iphz,iphy,ifrq))+
-     &        DIMAG(ampli(3,iphz,iphy,ifrq))*DIMAG(ampli(3,iphz,iphy,ifrq))
+     &        DIMAG(ampli(3,iphz,iphy,ifrq))*DIMAG(ampli(3,iphz,iphy,ifrq)))*specnor_si
             if (phspec3(iphz,iphy,ifrq).gt.smax) smax=phspec3(iphz,iphy,ifrq)
           ENDDO   !NPHASez_omp
         ENDDO  !NPHAZey_omp
@@ -1168,7 +1168,10 @@ c     &            phws1,phws2,phws3,phws4)
 
 !$OMP END PARALLEL
 
-      ampli=ampli/sqrt(specnor_si)
+      if (iundulator.eq.2.or.kampli.ne.0) then
+        ampli=ampli/sqrt(specnor_si)
+      endif
+
       sfmax=-1.0d30
 
       do ifrq=1,nfreq

@@ -1,4 +1,4 @@
-*CMZ :          21/11/2025  16.17.23  by  Michael Scheer
+*CMZ :          22/11/2025  10.59.33  by  Michael Scheer
 *CMZ :  4.02/00 27/08/2025  15.28.58  by  Michael Scheer
 *CMZ :  4.01/07 30/09/2024  14.48.47  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.52.02  by  Michael Scheer
@@ -161,7 +161,7 @@
 *CMZ : 00.00/00 28/04/94  16.11.39  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE SPECTRUM
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -1316,6 +1316,7 @@ c          CALL UTIL_WAIT_1
               else
                 CALL SOUINTALL_omp(ISOUR)
               endif
+              call reaima_norm
             endif
             IF (ISPECMODE.EQ.2) THEN
               deALLOCATE(WSOU)
@@ -1405,6 +1406,8 @@ C SOURCEA IS RECALCULATED IN SR TRACKS
             ISOURO=ISOUR
 
           ENDDO   !IBUFF
+
+          call reaima_norm
 
 1357    CONTINUE
 
