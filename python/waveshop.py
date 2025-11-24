@@ -9724,27 +9724,34 @@ def nscan(nt='?',varlis='',select='',isilent=0,ifirst=0,ilast=0):
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
-  if type(nt) == str and nt == '?':
-    print("\nUsage: nscan(nt,varlis,select='',isilent=0,ifirst=0,ilast=0))")
-    return
-  #if type(nt) == str and nt == '?'
+  try:
 
-  if type(nt) == int and nt < 0:
-    pass
-  else:
-    ind = GetIndexN(nt)
-    nupdate_header(Ntup[ind])
-    if ind == -1: return -1
-  #endif type(nt) == int and nt < 0
+    if type(nt) == str and nt == '?':
+      print("\nUsage: nscan(nt,varlis,select='',isilent=0,ifirst=0,ilast=0))")
+      return
+    #endif type(nt) == str and nt == '?'
 
-  if type(varlis) == str:
-    if varlis == '':
-      varlis = list(N.columns)
-      Ncolon = len(varlis) - 1
+    if type(nt) == int and nt < 0:
+      pass
     else:
-      varlis = nlistcolon(varlis)
-    #endif varlis == ''
-  #endif type(varlis) == str
+      ind = GetIndexN(nt)
+      nupdate_header(Ntup[ind])
+      if ind == -1: return -1
+    #endif type(nt) == int and nt < 0
+
+    if type(varlis) == str:
+      if varlis == '':
+        varlis = list(N.columns)
+        Ncolon = len(varlis) - 1
+      else:
+        varlis = nlistcolon(varlis)
+      #endif varlis == ''
+    #endif type(varlis) == str
+
+  except:
+    print("*** Error: Bad Ntuple-ID or variables ***")
+    return
+  #endtry
 
   nhead = Nhead[ind]
 
@@ -27151,13 +27158,14 @@ def mhb_to_pylist(fmh = 'WAVE.mhb', Debug = 0):
     elif kind == 3:
 
       name = "n"+str(idh)
+      #if idh == 3702: #reakpoint()
 
       headnt = [Nntup,name]
 
       line = fmhb.readline() # title length
       line = fmhb.readline() # title
       line = line.strip()
-      line = line[0:len(line)-1] # strip trailing $
+      if line[-1] == '$': line = line[:-1] # strip trailing $
       headnt.append(line)
       line = fmhb.readline()
       items = line.split()
@@ -30652,6 +30660,80 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     else:
       ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
+
+  elif key == 'AYRF' or key == 'EYRF':
+    idx37 = GetIndexN('n3701')
+    n37 = Ntup[idx37]
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' iene == ' + str(Wiesel)
+    elif type(select) == int:
+      if select < 0: select = 0
+      elif select > len(Wener): select = len(Wener)
+      Wesel = Wener[select-1]
+      Wiesel = select
+      select = 'iene == ' + str(select)
+    #endif select != ''
+    select = selcut + select
+    istat = nproj1(idx37,'z','re_y',select,1000.,1.,0,'HpinH')
+    tit = 'Hori. cut of Ay_Real with emit..'
+    ztit = 'Vs/m'
+
+  elif key == 'AYIF' or key == 'EYIF':
+    idx37 = GetIndexN('n3701')
+    n37 = Ntup[idx37]
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' iene == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'iene == ' + str(select)
+      if select < 0: select = 0
+      elif select > len(Wener): select = len(Wener)
+      Wesel = Wener[select-1]
+      Wiesel = select
+      select = 'iene == ' + str(select)
+    #endif select != ''
+    select = selcut + select
+    istat = nproj1(idx37,'z','im_y',select,1000.,1.,0,'HpinH')
+    tit = 'Hori. cut of Ay_Imag with emit.'
+    ztit = 'Vs/m'
+
+  elif key == 'AZRF' or key == 'EZRF':
+    idx37 = GetIndexN('n3701')
+    n37 = Ntup[idx37]
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' iene == ' + str(Wiesel)
+    elif type(select) == int:
+      if select < 0: select = 0
+      elif select > len(Wener): select = len(Wener)
+      Wesel = Wener[select-1]
+      Wiesel = select
+      select = 'iene == ' + str(select)
+    #endif select != ''
+    select = selcut + select
+    istat = nproj1(idx37,'z','re_z',select,1000.,1.,0,'HpinH')
+    tit = 'Hori. cut of Az_Real with emit.'
+    ztit = 'Vs/m'
+
+  elif key == 'AZIF' or key == 'EZIF':
+    idx37 = GetIndexN('n3701')
+    n37 = Ntup[idx37]
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' iene == ' + str(Wiesel)
+    elif type(select) == int:
+      if select < 0: select = 0
+      elif select > len(Wener): select = len(Wener)
+      Wesel = Wener[select-1]
+      Wiesel = select
+      select = 'iene == ' + str(select)
+    #endif select != ''
+    select = selcut + select
+    istat = nproj1(idx37,'z','im_z',select,1000.,1.,0,'HpinH')
+    tit = 'Hori. cut of Az_Imag with emit.'
+    ztit = 'Vs/m'
+
   elif key == 'AYR' or key == 'EYR':
     idx37 = GetIndexN('n3700')
     n37 = Ntup[idx37]
@@ -30667,7 +30749,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     #endif select != ''
     select = selcut + select
     istat = nproj1(idx37,'z','re_y',select,1000.,1.,0,'HpinH')
-    tit = 'Hori. cut of Ay_Real.'
+    tit = 'Hori. cut of Ay_Real'
     ztit = 'Vs/m'
 
   elif key == 'AYI' or key == 'EYI':
@@ -30686,7 +30768,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     #endif select != ''
     select = selcut + select
     istat = nproj1(idx37,'z','im_y',select,1000.,1.,0,'HpinH')
-    tit = 'Hori. cut of Ay_Imag.'
+    tit = 'Hori. cut of Ay_Imag'
     ztit = 'Vs/m'
 
   elif key == 'AZR' or key == 'EZR':
@@ -30704,7 +30786,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     #endif select != ''
     select = selcut + select
     istat = nproj1(idx37,'z','re_z',select,1000.,1.,0,'HpinH')
-    tit = 'Hori. cut of Az_Real.'
+    tit = 'Hori. cut of Az_Real'
     ztit = 'Vs/m'
 
   elif key == 'AZI' or key == 'EZI':
@@ -30722,7 +30804,7 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     #endif select != ''
     select = selcut + select
     istat = nproj1(idx37,'z','im_z',select,1000.,1.,0,'HpinH')
-    tit = 'Hori. cut of Az_Imag.'
+    tit = 'Hori. cut of Az_Imag'
     ztit = 'Vs/m'
 
   elif key == 'APH':
@@ -32017,6 +32099,78 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
       ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
       ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+
+  elif key == 'AYRF' or key == 'EYRF':
+    idx37 = GetIndexN('n3701')
+    n37 = Ntup[idx37]
+    if select == '':
+      if Wesel <= 0: esel()
+      select = 'iene == ' + str(Wiesel)
+    elif type(select) == int:
+      if select < 0: select = 0
+      elif select > len(Wener): select = len(Wener)
+      Wesel = Wener[select-1]
+      Wiesel = select
+      select = 'iene == ' + str(select)
+    #endif
+    select = selcut + select
+    istat = nproj1(idx37,'y','re_y',select,1000.,1.0,0,'HpinV')
+    tit = 'Vert. cut of Ay_Real'
+    ztit='Vs/m'
+
+  elif key == 'AZRF' or key == 'EZRF':
+    idx37 = GetIndexN('n3701')
+    n37 = Ntup[idx37]
+    if select == '':
+      if Wesel <= 0: esel()
+      select = 'iene == ' + str(Wiesel)
+    elif type(select) == int:
+      if select < 0: select = 0
+      elif select > len(Wener): select = len(Wener)
+      Wesel = Wener[select-1]
+      Wiesel = select
+      select = 'iene == ' + str(select)
+    #endif
+    select = selcut + select
+    istat = nproj1(idx37,'y','re_z',select,1000.,1.0,0,'HpinV')
+    tit = 'Vert. cut of Az_Real'
+    ztit='Vs/m'
+
+  elif key == 'AYIF' or key == 'EYIF':
+    idx37 = GetIndexN('n3701')
+    n37 = Ntup[idx37]
+    if select == '':
+      if Wesel <= 0: esel()
+      select = 'iene == ' + str(Wiesel)
+    elif type(select) == int:
+      if select < 0: select = 0
+      elif select > len(Wener): select = len(Wener)
+      Wesel = Wener[select-1]
+      Wiesel = select
+      select = 'iene == ' + str(select)
+    #endif
+    select = selcut + select
+    istat = nproj1(idx37,'y','im_y',select,1000.,1.0,0,'HpinV')
+    tit = 'Vert. cut of Ay_Imag'
+    ztit='Vs/m'
+
+  elif key == 'AZIF' or key == 'EZIF':
+    idx37 = GetIndexN('n3701')
+    n37 = Ntup[idx37]
+    if select == '':
+      if Wesel <= 0: esel()
+      select = 'iene == ' + str(Wiesel)
+    elif type(select) == int:
+      if select < 0: select = 0
+      elif select > len(Wener): select = len(Wener)
+      Wesel = Wener[select-1]
+      Wiesel = select
+      select = 'iene == ' + str(select)
+    #endif
+    select = selcut + select
+    istat = nproj1(idx37,'y','im_z',select,1000.,1.0,0,'HpinV')
+    tit = 'Vert. cut of Az_Imag'
+    ztit='Vs/m'
 
   elif key == 'AYR' or key == 'EYR':
     idx37 = GetIndexN('n3700')

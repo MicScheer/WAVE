@@ -9722,27 +9722,34 @@ def nscan(nt='?',varlis='',select='',isilent=0,ifirst=0,ilast=0):
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
-  if type(nt) == str and nt == '?':
-    print("\nUsage: nscan(nt,varlis,select='',isilent=0,ifirst=0,ilast=0))")
-    return
-  #if type(nt) == str and nt == '?'
+  try:
 
-  if type(nt) == int and nt < 0:
-    pass
-  else:
-    ind = GetIndexN(nt)
-    nupdate_header(Ntup[ind])
-    if ind == -1: return -1
-  #endif type(nt) == int and nt < 0
+    if type(nt) == str and nt == '?':
+      print("\nUsage: nscan(nt,varlis,select='',isilent=0,ifirst=0,ilast=0))")
+      return
+    #endif type(nt) == str and nt == '?'
 
-  if type(varlis) == str:
-    if varlis == '':
-      varlis = list(N.columns)
-      Ncolon = len(varlis) - 1
+    if type(nt) == int and nt < 0:
+      pass
     else:
-      varlis = nlistcolon(varlis)
-    #endif varlis == ''
-  #endif type(varlis) == str
+      ind = GetIndexN(nt)
+      nupdate_header(Ntup[ind])
+      if ind == -1: return -1
+    #endif type(nt) == int and nt < 0
+
+    if type(varlis) == str:
+      if varlis == '':
+        varlis = list(N.columns)
+        Ncolon = len(varlis) - 1
+      else:
+        varlis = nlistcolon(varlis)
+      #endif varlis == ''
+    #endif type(varlis) == str
+
+  except:
+    print("*** Error: Bad Ntuple-ID or variables ***")
+    return
+  #endtry
 
   nhead = Nhead[ind]
 
@@ -18444,6 +18451,8 @@ def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0, overwrite=True):
   ymin = H1hh[7] * scaley
   ymax = H1hh[8] * scaley
 
+  #reakpoint()
+
   hret = hbook1(idnew,tit,nx,xmin,xmax,overwrite=overwrite)
 
   idxnew = GetIndexH1(idnew)
@@ -18466,11 +18475,15 @@ def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0, overwrite=True):
   head1[10] *= scaley
 
   H1[idxnew] = deepcopy(H1[idx])
+#  print(H1[idx])
+#  print(H1[idxnew])
   H1[idxnew].y *= scaley
   H1[idxnew].ey *= scaley
   H1[idxnew].y2 *= scaley**2
 
   H1head[idxnew] = head1
+
+#  print(H1[idxnew].y)
 
   return idxnew
 #def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0)

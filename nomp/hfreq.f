@@ -1,4 +1,4 @@
-*CMZ :          21/11/2025  08.49.04  by  Michael Scheer
+*CMZ :          24/11/2025  18.56.51  by  Michael Scheer
 *CMZ :  4.02/00 12/08/2025  12.50.49  by  Michael Scheer
 *CMZ :  4.01/07 29/10/2024  16.01.45  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  13.30.35  by  Michael Scheer
@@ -1984,26 +1984,28 @@ C--- NTUPLE
 
        ENDIF !I47
 
-      smax=0.0d0
-      do ifrq=1,nfreq
-        DO iobsv=1,nobsv
-          iobfr=iobsv+nobsv*(ifrq-1)
-          if (spec(iobfr).gt.smax) then
-            smax=spec(iobfr)
-            reanor=
-     &        reaima(1,1,iobfr)**2+reaima(1,2,iobfr)**2+
-     &        reaima(2,1,iobfr)**2+reaima(2,2,iobfr)**2+
-     &        reaima(3,1,iobfr)**2+reaima(3,2,iobfr)**2
-          endif
-        enddo
-      enddo
+c      smax=0.0d0
+c      do ifrq=1,nfreq
+c        DO iobsv=1,nobsv
+c          iobfr=iobsv+nobsv*(ifrq-1)
+c          if (spec(iobfr).gt.smax) then
+c            smax=spec(iobfr)
+c            reanor=
+c     &        reaima(1,1,iobfr)**2+reaima(1,2,iobfr)**2+
+c     &        reaima(2,1,iobfr)**2+reaima(2,2,iobfr)**2+
+c     &        reaima(3,1,iobfr)**2+reaima(3,2,iobfr)**2
+c          endif
+c        enddo
+c      enddo
+
+      reanor=1.0d0
 
       SPECNOR_SI= !merke/synchrotron_radiation.txt
      &  dmycur ! Strom
      &  /echarge1/hbar1*clight1/PI1*EPS01
      &  *banwid !BW
 
-      reanor=sqrt(smax/reanor/specnor_si)
+c      reanor=sqrt(smax/reanor/specnor_si)
 
       DO ISOUR=1,NSOURCE
 

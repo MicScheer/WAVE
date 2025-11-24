@@ -1,4 +1,4 @@
-*CMZ :          22/11/2025  13.40.01  by  Michael Scheer
+*CMZ :          24/11/2025  18.42.31  by  Michael Scheer
 *-- Author :    Michael Scheer   22/11/2025
 *CMZ :  4.01/04 14/11/2023  11.45.54  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  13.01.26  by  Michael Scheer
@@ -115,50 +115,42 @@
       include 'myfiles.cmn'
 *KEND.
 
-      integer isour,iobsv,kfreq,kmax
+      integer isour,iobsv,kfreq,kmax,ks,kr
 
-      double precision :: smax,rmax,r,specnor_si,s
+      double precision :: smax,rmax,r,specnor_si,s,r1,r2,r3
+
+      if (nsource.gt.1) then
+        write(lungfo,*)''
+        write(lungfo,*)'*** Warning in reaima_norm: More then one source points:'
+        write(lungfo,*)'*** Will probably result in unreliable field amplitudes, but flux-densities etc. will be ok ***'
+        write(lungfo,*)''
+        write(6,*)''
+        write(6,*)'*** Warning in reaima_norm: More then one source points:'
+        write(6,*)'*** Will probably result in unreliable field amplitudes, but flux-densities etc. will be ok ***'
+        write(6,*)''
+        return
+      endif
 
       specnor_si= !merke/synchrotron_radiation.txt
      &  dmycur ! strom
      &  /echarge1/hbar1*clight1/PI1*EPS01
      &  *banwid !BW
 
-      smax=-1.0d30
-      rmax=-1.0d30
-
       do iobsv=1,nobsv
         do kfreq=1,nfreq
-          s=0.0d0
-          do isour=1,nsource
-            iliobfr=isour+nsource*(iobsv-1+nobsv*(kfreq-1))
-            iobfr=iobsv+nobsv*(kfreq-1)
-            s=s+spec(iliobfr)
-          enddo
-          if (s.gt.smax) then
-            smax=s
-          endif
-        enddo
-      enddo
-
-      do iobsv=1,nobsv
-        do kfreq=1,nfreq
+          iliobfr=1+nsource*(iobsv-1+nobsv*(kfreq-1))
           iobfr=iobsv+nobsv*(kfreq-1)
-          r=
-     &      reaima(1,1,iobfr)**2+reaima(1,2,iobfr)**2+
-     &      reaima(2,1,iobfr)**2+reaima(2,2,iobfr)**2+
-     &      reaima(3,1,iobfr)**2+reaima(3,2,iobfr)**2
-          if (r.gt.rmax) then
-            rmax=r
-            kmax=iobfr
+          s=spec(iliobfr)
+          if (s.gt.0.0d0) then
+            r=
+     &        reaima(1,1,iobfr)**2+reaima(1,2,iobfr)**2+
+     &        reaima(2,1,iobfr)**2+reaima(2,2,iobfr)**2+
+     &        reaima(3,1,iobfr)**2+reaima(3,2,iobfr)**2
+            r=sqrt(r/s*specnor_si)
+            reaima=reaima/dcmplx(r,1.0d0)
+            return
           endif
         enddo
       enddo
 
-      if (rmax.eq.0.0d0) return
-
-      r=sqrt(rmax/smax*specnor_si)
-      reaima=reaima/dcmplx(r,0.0d0)
-
-      return
       end

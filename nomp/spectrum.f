@@ -1,4 +1,4 @@
-*CMZ :          22/11/2025  10.59.33  by  Michael Scheer
+*CMZ :          23/11/2025  21.11.21  by  Michael Scheer
 *CMZ :  4.02/00 27/08/2025  15.28.58  by  Michael Scheer
 *CMZ :  4.01/07 30/09/2024  14.48.47  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.52.02  by  Michael Scheer
@@ -161,7 +161,7 @@
 *CMZ : 00.00/00 28/04/94  16.11.39  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE SPECTRUM
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -1316,7 +1316,6 @@ c          CALL UTIL_WAIT_1
               else
                 CALL SOUINTALL_omp(ISOUR)
               endif
-              call reaima_norm
             endif
             IF (ISPECMODE.EQ.2) THEN
               deALLOCATE(WSOU)
@@ -1407,8 +1406,6 @@ C SOURCEA IS RECALCULATED IN SR TRACKS
 
           ENDDO   !IBUFF
 
-          call reaima_norm
-
 1357    CONTINUE
 
         if (kampli.ne.0) then
@@ -1446,7 +1443,7 @@ C SOURCEA IS RECALCULATED IN SR TRACKS
      &      /echarge1/hbar1*clight1/PI1*EPS01
      &      *banwid_u !BW
 
-          arad_u=arad_u*sqrt(specnor_si)
+c          arad_u=arad_u*sqrt(specnor_si)
 
           specpow=pow_u
           spec(:)=stokes_u(1,:)
@@ -1499,8 +1496,9 @@ c        CALL APHASE(ISOUR)
 2000      FORMAT(10X,I4,' of',I4,2X,A,':',A,':',A)
         ENDIF
 
-
       ENDDO !LOOP OVER SOURCES
+
+      call reaima_norm
 
       if (abs(ifold).eq.1) CALL AMPFOLD
 
