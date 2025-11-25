@@ -1,4 +1,4 @@
-*CMZ :          24/11/2025  18.42.31  by  Michael Scheer
+*CMZ :          25/11/2025  13.03.07  by  Michael Scheer
 *-- Author :    Michael Scheer   22/11/2025
 *CMZ :  4.01/04 14/11/2023  11.45.54  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  13.01.26  by  Michael Scheer
@@ -121,13 +121,16 @@
 
       if (nsource.gt.1) then
         write(lungfo,*)''
-        write(lungfo,*)'*** Warning in reaima_norm: More then one source points:'
-        write(lungfo,*)'*** Will probably result in unreliable field amplitudes, but flux-densities etc. will be ok ***'
+        write(lungfo,*)'        *** Warning in reaima_norm: More then one source points:'
+        write(lungfo,*)'        *** Field amplitudes are not correctly calculated due to incoherent ***'
+        write(lungfo,*)'        *** treatment of source points, but flux-densities etc. will be ok ***'
         write(lungfo,*)''
         write(6,*)''
-        write(6,*)'*** Warning in reaima_norm: More then one source points:'
-        write(6,*)'*** Will probably result in unreliable field amplitudes, but flux-densities etc. will be ok ***'
+        write(6,*)'        *** Warning in reaima_norm: More then one source points:'
+        write(6,*)'        *** Field amplitudes are not correctly calculated due to incoherent ***'
+        write(6,*)'        *** treatment of source points, but flux-densities etc. will be ok ***'
         write(6,*)''
+
         return
       endif
 

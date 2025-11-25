@@ -1,4 +1,4 @@
-*CMZ :          24/11/2025  18.56.51  by  Michael Scheer
+*CMZ :          25/11/2025  12.59.06  by  Michael Scheer
 *CMZ :  4.02/00 12/08/2025  12.50.49  by  Michael Scheer
 *CMZ :  4.01/07 29/10/2024  16.01.45  by  Michael Scheer
 *CMZ :  4.01/05 11/03/2024  13.30.35  by  Michael Scheer
@@ -83,7 +83,7 @@
 *CMZ : 00.00/00 28/04/94  16.12.39  by  Michael Scheer
 *-- Author :  Michael Scheer
       SUBROUTINE HFREQ
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -255,6 +255,13 @@ C--- HISTOGRAMS FOR SPECTRA OF SINGLE OBSERVATION POINTS OR PINHOLE
       NDIMPH=MPHASEZ*MPHASEY
       allocate(PHFILL(NDIMPH))
       phfill=0.0d0
+
+
+       if (nsource.eq.1) then
+         reanor=1.0d0
+       else
+         reanor=0.0d0
+       endif
 
       if (ipin.eq.3) then
         call hfreq3
@@ -1997,8 +2004,6 @@ c     &        reaima(3,1,iobfr)**2+reaima(3,2,iobfr)**2
 c          endif
 c        enddo
 c      enddo
-
-      reanor=1.0d0
 
       SPECNOR_SI= !merke/synchrotron_radiation.txt
      &  dmycur ! Strom

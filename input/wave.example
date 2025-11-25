@@ -994,6 +994,7 @@
                      ! transform back to source plan and get
                      ! phase space distribution from geometrical
                      ! optic (namelist PHASEN)
+		     ! THIS IS ONLY CORRECT FOR A SINGLE SOURCE POINT!!
                      ! IPHASE.LT.0 means spline-integration used
                      ! ABS(IPHASE.GT.1) means additional application of
                      ! geometrical optic
@@ -1053,6 +1054,7 @@
         IAMPLI=0   ! IAMPLI>0:
                    ! reads or writes amplitudes of integration
 		   ! to file FILEAMPLI (array REAIMA).
+		   ! THIS IS ONLY CORRECT FOR A SINGLE SOURCE POINT!!
 		   ! Treatment of data is done in SR ADDAMPLI and
 		   ! controlled by namelist AMPLIN
 		   ! IAMPLI<0:
@@ -3508,12 +3510,12 @@
 	PHGSHIFT=0.0    !global phase shift [rad]
 	                !9999: Shift such, that the imaginary part of the on-axis horizontal field
 			!      becomes zero
-        IWIGNER=0           ! calculate Wigner distribution function
-	                    !  1: All polarisations states, i.e. Wzz,Wyy,Wzy
-			    ! -1: Wzz only
-			    ! -2: Wyy only
-			    ! -3: Wzy only
-			    ! -4: Wyz only
+        IWIGNER=0       ! calculate Wigner distribution function
+	                !  1: All polarisations states, i.e. Wzz,Wyy,Wzy
+			! -1: Wzz only
+			! -2: Wyy only
+			! -3: Wzy only
+			! -4: Wyz only
 
 	NWIGEFOLD=15        ! number of beam energy steps
 	NOSPLINEWEF=0	    ! to use simple summation instead of spline integration
