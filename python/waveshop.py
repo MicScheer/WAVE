@@ -33506,17 +33506,6 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
       ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 
-  elif key == 'AYR' or key == 'EYR':
-    if select == '':
-      if Wesel <= 0: esel()
-      select = ' ie == ' + str(Wiesel)
-    elif type(select) == int:
-      select = 'ie == ' + str(select)
-    #endif select != ''
-    istat = nproj1(n6000,'z','re_y',selcut + select,1000.,1.0,0,'HpinPhH')
-    tit = 'Hori. cut of Ay_Real'
-    ztit='Vs/m'
-
   elif key == 'APH':
     if select == '':
       if Wesel <= 0: esel()
@@ -33527,6 +33516,17 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
     istat = nproj1(n6000,'z','phi0',selcut + select,1000.,1.0,0,'HpinPhH')
     tit = 'Hori. cut of Phase Advance'
     ztit=''
+
+  elif key == 'AYR' or key == 'EYR':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj1(n6000,'z','re_y',selcut + select,1000.,1.0,0,'HpinPhH')
+    tit = 'Hori. cut of Ay_Real'
+    ztit='Vs/m'
 
   elif key == 'AZR' or key == 'EZR':
     if select == '':
@@ -33559,6 +33559,50 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
     #endif select != ''
     istat = nproj1(n6000,'z','im_z',selcut + select,1000.,1.0,0,'HpinPhH')
     tit = 'Hori. cut of Az_Imag'
+    ztit='Vs/m'
+
+  elif key == 'AYRF' or key == 'EYRF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj1(n6000,'z','ref_y',selcut + select,1000.,1.0,0,'HpinPhH')
+    tit = 'Hori. cut of Ay_Real with emit.'
+    ztit='Vs/m'
+
+  elif key == 'AZRF' or key == 'EZRF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj1(n6000,'z','ref_z',selcut + select,1000.,1.0,0,'HpinPhH')
+    tit = 'Hori. cut of Az_Real with emit.'
+    ztit='Vs/m'
+
+  elif key == 'AYIF' or key == 'EYIF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj1(n6000,'z','imf_y',selcut + select,1000.,1.0,0,'HpinPhH')
+    tit = 'Hori. cut of Ay_Imag with emit.'
+    ztit='Vs/m'
+
+  elif key == 'AZIF' or key == 'EZIF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj1(n6000,'z','imf_z',selcut + select,1000.,1.0,0,'HpinPhH')
+    tit = 'Hori. cut of Az_Imag with emit.'
     ztit='Vs/m'
 
   elif key == 'FF' or key == 'FDF':
@@ -33767,6 +33811,17 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
       ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 
+  elif key == 'APH':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj1(n6000,'y','phi0',selcut + select,1000.,1.0,0,'HpinPhV')
+    tit = 'Vert. cut of Phase Advance'
+    ztit=''
+
   elif key == 'AYR' or key == 'EYR':
     if select == '':
       if Wesel <= 0: esel()
@@ -33789,17 +33844,6 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
     tit = 'Vert. cut of Az_Real'
     ztit='Vs/m'
 
-  elif key == 'APH':
-    if select == '':
-      if Wesel <= 0: esel()
-      select = ' ie == ' + str(Wiesel)
-    elif type(select) == int:
-      select = 'ie == ' + str(select)
-    #endif select != ''
-    istat = nproj1(n6000,'y','phi0',selcut + select,1000.,1.0,0,'HpinPhV')
-    tit = 'Vert. cut of Phase Advance'
-    ztit=''
-
   elif key == 'AYI' or key == 'EYI':
     if select == '':
       if Wesel <= 0: esel()
@@ -33820,6 +33864,50 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
     #endif select != ''
     istat = nproj1(n6000,'y','im_z',selcut + select,1000.,1.0,0,'HpinPhV')
     tit = 'Vert. cut of Az_Imag'
+    ztit='Vs/m'
+
+  elif key == 'AYRF' or key == 'EYRF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj1(n6000,'y','ref_y',selcut + select,1000.,1.0,0,'HpinPhV')
+    tit = 'Vert. cut of Ay_Real with emit.'
+    ztit='Vs/m'
+
+  elif key == 'AZRF' or key == 'EZRF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj1(n6000,'y','ref_z',selcut + select,1000.,1.0,0,'HpinPhV')
+    tit = 'Vert. cut of Az_Real with emit.'
+    ztit='Vs/m'
+
+  elif key == 'AYIF' or key == 'EYIF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj1(n6000,'y','imf_y',selcut + select,1000.,1.0,0,'HpinPhV')
+    tit = 'Vert. cut of Ay_Imag with emit.'
+    ztit='Vs/m'
+
+  elif key == 'AZIF' or key == 'EZIF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = ' ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj1(n6000,'y','imf_z',selcut + select,1000.,1.0,0,'HpinPhV')
+    tit = 'Vert. cut of Az_Imag with emit.'
     ztit='Vs/m'
 
   elif key == 'FF' or key == 'FDF':
@@ -35420,6 +35508,50 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
     tit = 'Field amplitude Az_Imag'
     ztit = 'Vs/m'
 
+  elif key == 'AYRF' or key == 'EYRF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = 'ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj2(n6000,'z:y','ref_y',select,1000.,1000.,1.0,0,0,'HpinPh')
+    tit = 'Field ampl. Ay_Real with. emit.'
+    ztit = 'Vs/m'
+
+  elif key == 'AZRF' or key == 'EZRF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = 'ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj2(n6000,'z:y','ref_z',select,1000.,1000.,1.0,0,0,'HpinPh')
+    tit = 'Field ampl. Az_Real with. emit.'
+    ztit = 'Vs/m'
+
+  elif key == 'AYIF' or key == 'EYIF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = 'ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj2(n6000,'z:y','imf_y',select,1000.,1000.,1.0,0,0,'HpinPh')
+    tit = 'Field ampl. Ay_Imag with. emit.'
+    ztit = 'Vs/m'
+
+  elif key == 'AZIF' or key == 'EZIF':
+    if select == '':
+      if Wesel <= 0: esel()
+      select = 'ie == ' + str(Wiesel)
+    elif type(select) == int:
+      select = 'ie == ' + str(select)
+    #endif select != ''
+    istat = nproj2(n6000,'z:y','imf_z',select,1000.,1000.,1.0,0,0,'HpinPh')
+    tit = 'Field ampl. Az_Imag with. emit.'
+    ztit = 'Vs/m'
+
   elif key == 'F':
     if select == '':
       if Wesel <= 0: esel()
@@ -35443,7 +35575,7 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
     elif type(select) == int:
       select = 'ie == ' + str(select)
     #endif select != ''
-    istat = nproj2(n6000,'z:y','spec',select,1000.,1000.,1.0e-6,0,0,'HpinPh')
+    istat = nproj2(n6000,'z:y','specf',select,1000.,1000.,1.0e-6,0,0,'HpinPh')
     tit = 'Flux-density with emittance'
     if Kcurr == 0:
       ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
@@ -39485,10 +39617,17 @@ def Mmenu_gray(fgcol='gray'):
       mDistAmpPropV.entryconfig(i,foreground=fgcol)
     #endfor
   else:
-    if not Wifol:
-      mDistAmpProp.entryconfig(7,foreground=fgcol)
-      mDistAmpPropH.entryconfig(7,foreground=fgcol)
-      mDistAmpPropV.entryconfig(7,foreground=fgcol)
+    n60 = nget("n6000")
+    if n60.specf.max() == 0.0:
+      for i in range(5,9):
+        mDistAmpProp.entryconfig(i,foreground=fgcol)
+        mDistAmpPropH.entryconfig(i,foreground=fgcol)
+        mDistAmpPropV.entryconfig(i,foreground=fgcol)
+      #endfor
+      i=10
+      mDistAmpProp.entryconfig(i,foreground=fgcol)
+      mDistAmpPropH.entryconfig(i,foreground=fgcol)
+      mDistAmpPropV.entryconfig(i,foreground=fgcol)
     #endif
   #endif
 
@@ -39531,6 +39670,21 @@ def Mmenu_gray(fgcol='gray'):
   #endif
 
   if not Wifol:
+
+    mDistAmpH.entryconfig(5,foreground=fgcol)
+    mDistAmpH.entryconfig(6,foreground=fgcol)
+    mDistAmpH.entryconfig(7,foreground=fgcol)
+    mDistAmpH.entryconfig(8,foreground=fgcol)
+
+    mDistAmpV.entryconfig(5,foreground=fgcol)
+    mDistAmpV.entryconfig(6,foreground=fgcol)
+    mDistAmpV.entryconfig(7,foreground=fgcol)
+    mDistAmpV.entryconfig(8,foreground=fgcol)
+
+    mDistAmp.entryconfig(5,foreground=fgcol)
+    mDistAmp.entryconfig(6,foreground=fgcol)
+    mDistAmp.entryconfig(7,foreground=fgcol)
+    mDistAmp.entryconfig(8,foreground=fgcol)
 
     mDistH.entryconfig(2,foreground=fgcol)
 

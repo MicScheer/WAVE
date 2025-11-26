@@ -1,4 +1,4 @@
-*CMZ :          25/11/2025  13.03.07  by  Michael Scheer
+*CMZ :          26/11/2025  12.10.39  by  Michael Scheer
 *-- Author :    Michael Scheer   22/11/2025
 *CMZ :  4.01/04 14/11/2023  11.45.54  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  13.01.26  by  Michael Scheer
@@ -111,6 +111,8 @@
       include 'ampli.cmn'
 *KEEP,observf90.
       include 'observf90.cmn'
+*KEEP,phasef90.
+      include 'phasef90.cmn'
 *KEEP,myfiles.
       include 'myfiles.cmn'
 *KEND.
@@ -118,6 +120,7 @@
       integer isour,iobsv,kfreq,kmax,ks,kr
 
       double precision :: smax,rmax,r,specnor_si,s,r1,r2,r3
+      double complex :: rea(5),expsh
 
       if (nsource.gt.1) then
         write(lungfo,*)''
@@ -139,8 +142,30 @@
      &  /echarge1/hbar1*clight1/PI1*EPS01
      &  *banwid !BW
 
-      do iobsv=1,nobsv
-        do kfreq=1,nfreq
+      expsh=dcmplx(1.0d0,0.0d0)
+
+      do kfreq=1,nfreq
+
+        iobsv=icbrill
+        iliobfr=1+nsource*(iobsv-1+nobsv*(kfreq-1))
+        iobfr=iobsv+nobsv*(kfreq-1)
+        s=spec(iliobfr)
+        if (s.gt.0.0d0) then
+          if (abs(phgshift).eq.9999.0d0) then
+            rea(1:2)=(0.0d0,0.0d0)
+            rea(3)=dcmplx(reaima(3,1,iobfr),reaima(3,2,iobfr))
+            expsh=rea(3)/abs(rea(3))
+            if (phgshift.eq.-9999.0d0) expsh=expsh*cdexp(dcmplx(0.0d0,-pi1/2.0d0))
+            do iobsv=1,nobsv
+              iobfr=iobsv+nobsv*(kfreq-1)
+              rea=dcmplx(reaima(1:5,1,iobfr),reaima(1:5,2,iobfr))/expsh
+              reaima(1:5,1,iobfr)=dreal(rea)
+              reaima(1:5,2,iobfr)=dimag(rea)
+            enddo
+          endif
+        endif
+
+        do iobsv=1,nobsv
           iliobfr=1+nsource*(iobsv-1+nobsv*(kfreq-1))
           iobfr=iobsv+nobsv*(kfreq-1)
           s=spec(iliobfr)
