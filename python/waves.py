@@ -217,7 +217,7 @@ def set_console_title(console='Python'):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow,Sepp,Backslash
+  FillColor,WisLinux,Ishow,Sepp,Backslash,Kcolorbar
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -619,7 +619,7 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
-  FillColor,WisLinux,Ishow,Sepp,Backslash
+  FillColor,WisLinux,Ishow,Sepp,Backslash,Kcolorbar
 #+PATCH,//WAVES/PYTHON
 #+KEEP,vecglobind,T=PYTHON.
 
@@ -1232,7 +1232,7 @@ AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles, Dummy
 ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax, ZoomZmin,ZoomZmax,Tdate, TdateOv, Trun, TrunOv, \
 LogX, LogY, LogZ, NxbBinMax, Khdeleted,WisLinux, Waveplot, \
 Mrun, Mcomment, Mdate, ROFx, ROFy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid,KyAxis,KxAxis,KzAxis,Kbox, \
-FillColor,Ishow
+FillColor,Ishow,Kcolorbar
 
 
 FillColor = 'none'
@@ -1564,6 +1564,7 @@ Hull3DList = []
 THull3D = type(Hull3D)
 Ishow = 1
 
+Kcolorbar = 0
 #+PATCH,//WAVES/PYTHON
 #+KEEP,nxyzglobal,T=PYTHON.
 global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv,Nx,Nxy,Nxyz
@@ -2366,7 +2367,7 @@ def pmenu(kmenu):
     #endif Pmenu[Imenu].winfo_exists()
   #endif Pmenu[Imenu] != None
   if iexist == 0:
-
+    #reakpoint()
     Pmenu[Imenu] = Toplevel()
     Pmenu[Imenu].attributes('-topmost', 1)
 
@@ -2965,6 +2966,8 @@ def pmenu(kmenu):
 
   #endwhile item
 
+  #reakpoint()
+
   nsframe = Nsitem
 
   BottomFrame = Frame(Pmenu[Imenu], bd=ReliefBd)
@@ -3060,6 +3063,7 @@ def pmenu(kmenu):
   #endif SMexist[Imenu] == 0
 
   #CheckButtons()
+  #reakpoint()
 
 #---------------------------------------- end pmenu
 
@@ -5397,6 +5401,8 @@ def runwave(ev=''):
 
   print("\nStarting WAVE, i.e. executing:\n",WAVECom,"\n")
 
+  WAVECom=''
+
   if not WAVECom:
 
     Fwvs = open(FWVS,'r')
@@ -6260,6 +6266,8 @@ def CheckButtons():
   M = Imenu
   i = 1
 
+  #if M == 57: #reakpoint()
+
   if len(SMitem[M]) == 0: return
 
   Nsitem = SMitem[M][0]
@@ -6300,7 +6308,7 @@ def CheckButtons():
         vstate = NORMAL
         selcol = Select_color
 
-      if Variables[ivar][1]:
+      if int(Variables[ivar][1]) == 1:
         SMitem[M][i][0].configure(state=vstate,relief=SUNKEN)
       else:
         SMitem[M][i][0].configure(state=vstate,relief=RAISED)
