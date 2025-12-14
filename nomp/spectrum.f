@@ -1,4 +1,4 @@
-*CMZ :          23/11/2025  21.11.21  by  Michael Scheer
+*CMZ :          11/12/2025  16.49.02  by  Michael Scheer
 *CMZ :  4.02/00 27/08/2025  15.28.58  by  Michael Scheer
 *CMZ :  4.01/07 30/09/2024  14.48.47  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.52.02  by  Michael Scheer
@@ -161,7 +161,7 @@
 *CMZ : 00.00/00 28/04/94  16.11.39  by  Michael Scheer
 *-- Author : Michael Scheer
       SUBROUTINE SPECTRUM
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -776,10 +776,15 @@ C----   OBSERVATION POINTS TO BE TREATED
 
        IF (IPIN.NE.0) THEN
 
-         if (ipin.eq.3) then
-           call pinin3
+         if (iundulator.ne.2) then
+           if (ipin.eq.3) then
+             call pinin3
+           else
+             CALL PININ
+           endif
          else
            CALL PININ
+           call hisini3
          endif
 
        ELSE !ipin
@@ -2083,6 +2088,8 @@ C--- OUTPUT RESULTS
       WRITE(LUNGFO,*)
       WRITE(LUNGFO,*)'     Results of spectrum calculations'
       WRITE(LUNGFO,*)'     ================================'
+      WRITE(LUNGFO,*)
+      WRITE(LUNGFO,*)"     Number of threads used: ",mthreads
       WRITE(LUNGFO,*)
       IF (IPOLA.NE.0) THEN
         WRITE(LUNGFO,*)

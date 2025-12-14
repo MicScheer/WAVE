@@ -1,3 +1,4 @@
+*CMZ :          11/12/2025  22.03.18  by  Michael Scheer
 *CMZ :  4.01/05 18/04/2024  13.59.40  by  Michael Scheer
 *CMZ :  4.00/15 07/04/2022  07.14.03  by  Michael Scheer
 *CMZ :  4.00/14 30/12/2021  15.41.22  by  Michael Scheer
@@ -144,6 +145,7 @@
         fstuple(2)=wfluxt(ifreq)
         call hfm(nidfreqp,fstuple)
       enddo   !nfreq
+      call mhrout(nidfreqp,icycle,' ')
 
       if (istokes.ne.0) then
 
@@ -223,14 +225,16 @@
         enddo   !nfreq
         call mhrout(id,icycle,' ')
 
+        id=4600
         do ifreq=1,nfreq
           fstuple(1)=freq(ifreq)
           fstuple(2)=wstokes(1,ifreq)
           fstuple(3)=wstokes(2,ifreq)
           fstuple(4)=wstokes(3,ifreq)
           fstuple(5)=wstokes(4,ifreq)
-          call hfm(4600,fstuple)
+          call hfm(id,fstuple)
         enddo   !nfreq
+        call mhrout(id,icycle,' ')
       endif !istokes
 
       return

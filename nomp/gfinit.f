@@ -1,4 +1,4 @@
-*CMZ :          21/11/2025  14.26.21  by  Michael Scheer
+*CMZ :          11/12/2025  17.00.00  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  09.46.32  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
@@ -246,7 +246,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -2076,9 +2076,10 @@ C         IWFILL0=1
         ENDDO   !IROI
       ENDIF
 
+      mpinyorig=mpiny
+      mpinzorig=mpinz
+
       IF (IPIN.EQ.2) THEN
-        mpinyorig=mpiny
-        mpinzorig=mpinz
         MPINZ=1
         MPINY=1
       ENDIF
@@ -2549,12 +2550,12 @@ c        write(6,*)"*** Or consider IUNDULATOR=2 ***"
 c        write(6,*)""
 c      endif
 
-      if (ipin.ne.3.and.ipin.ne.0) then
-        call omp_ini(lungfo,mthreads,1)
-      else
-        mthreads=0
-        iomp=0
-      endif
+c      if (ipin.ne.3.and.ipin.ne.0) then
+      if (mthreads.lt.0) call omp_ini(lungfo,mthreads,1)
+c      else
+c        mthreads=0
+c        iomp=0
+c      endif
 
       WRITE(LUNGFO,*)
       WRITE(LUNGFO,*)
