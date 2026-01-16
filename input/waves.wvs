@@ -2457,8 +2457,6 @@ $SELECT
 		0
         $TEXT
                 undulator mode 2 (fast)
-	$COMMENT
-	Overwrites XSTART, XSTOP etc.!
         $MAPPING
                 UNDUFM
 		32
@@ -2528,6 +2526,8 @@ $SELECT
 		    0
 		  IPHELLIP
 		    0		
+	$COMMENT
+	Overwrites XSTART, XSTOP etc.!
 ***********************************************************************
         $TEXT
                 wiggler mode 1

@@ -28080,8 +28080,8 @@ def mhb_to_pylist(fmh = 'WAVE.mhb', Debug = 0):
   if n222.ispe.max():
     if n222.iwig.max():
       nwig = ncread("nwig","kpol:iz:iy:itz:ity:iegam:egam:z:y:tz:ty:ezr:ezi:eyr:eyi:wig:fdzy:fdtzty",'wigner.wav')
-    if n222.iwef.max():
-      nwef = ncread("nwef","kpol:iz:iy:itz:ity:iegam:egam:z:y:tz:ty:ezr:ezi:eyr:eyi:wig:fdzy:fdtzty",'wigner.wef')
+      if n222.iwef.max():
+        nwef = ncread("nwef","kpol:iz:iy:itz:ity:iegam:egam:z:y:tz:ty:ezr:ezi:eyr:eyi:wig:fdzy:fdtzty",'wigner.wef')
   #endif
 
   wave_input_parameters()
