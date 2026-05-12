@@ -1,3 +1,4 @@
+*CMZ :          12/05/2026  08.28.47  by  Michael Scheer
 *CMZ :  4.00/11 28/05/2021  09.17.01  by  Michael Scheer
 *CMZ :  3.05/05 12/07/2018  13.12.16  by  Michael Scheer
 *CMZ :  3.02/00 24/09/2014  13.51.08  by  Michael Scheer
@@ -102,7 +103,7 @@ c      save klold,nold,xa1old,xanold
 
         IF(XX.LT.XA(1).OR.XX.GT.XA(N)) THEN
           WRITE(6,*)'XA(1), XA(N):',XA(1), XA(N)
-          WRITE(6,*)'X:'
+          WRITE(6,*)'X:',x
           WRITE(6 ,*)'***ERROR IN UTIL_SPLINE_INTER: X OUT OF RANGE ***'
           STOP
         ENDIF

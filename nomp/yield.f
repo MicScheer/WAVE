@@ -1,3 +1,4 @@
+*CMZ :          12/05/2026  08.10.39  by  Michael Scheer
 *CMZ :  2.70/12 01/03/2013  16.28.24  by  Michael Scheer
 *CMZ :  2.63/03 02/05/2008  14.41.00  by  Michael Scheer
 *CMZ :  2.52/13 15/03/2007  11.13.54  by  Michael Scheer
@@ -69,119 +70,132 @@ C    GIVEN FREQUENCY
       include 'myfiles.cmn'
 *KEND.
 
-      INTEGER I,ICAL,NCOEF,NDAFRQP,IERR,MODE,IEFFI
+      DOUBLE PRECISION, dimension(:), allocatable ::  AFREQ,ABSCO,Y2,AA,BB,CC,C
 
-      PARAMETER(NDAFRQP=10000)
+      INTEGER :: I,NCOEF,NDAFRQP,IERR,MODE,IEFFI,ical=0,icomment,istat
 
-      CHARACTER(65) ABSCOM
-      DOUBLE PRECISION AFREQ(NDAFRQP),ABSCO(NDAFRQP),FREQ,ABSMU
-      DOUBLE PRECISION Y2(NDAFRQP),AA(NDAFRQP),BB(NDAFRQP),CC(NDAFRQP)
-     &                ,C(NDAFRQP)
+      CHARACTER(65) ABSCOM, cline
 
-      DATA ICAL/0/
+      DOUBLE PRECISION FREQ,ABSMU,x
+
+      SAVE
 
 C--- READ DATA FILE
-
 
       IERR=0
 
       IF (ICAL.EQ.0) THEN
-      OPEN(UNIT=LUNEFF,FILE=FILEFF,STATUS='OLD',FORM='FORMATTED')
 
-      READ(LUNABS,'(A65)') ABSCOM
-      READ(LUNABS,*) NCOEF
+        OPEN(UNIT=LUNEFF,FILE=FILEFF,STATUS='OLD',FORM='FORMATTED')
 
-      IF (NCOEF.GT.NDAFRQP) THEN
-          WRITE(LUNGFO,*)
-          WRITE(LUNGFO,*)'*** ERROR IN YIELD ***'
-          WRITE(LUNGFO,*)'DIMENSION EXCEEDED'
-          WRITE(LUNGFO,*)'INCREASE PARAMETER NDAFRQP IN THIS ROUTINE'
-          WRITE(LUNGFO,*)
-          WRITE(6,*)
-          WRITE(6,*)'*** ERROR IN YIELD ***'
-          WRITE(6,*)'DIMENSION EXCEEDED'
-          WRITE(6,*)'INCREASE PARAMETER NDAFRQP IN THIS ROUTINE'
-          WRITE(6,*)
-          STOP
-      ENDIF !NCOEF
+        READ(LUNABS,'(A65)') ABSCOM
+        READ(LUNABS,'(A65)') cline
 
-      DO I=1,NCOEF
+        icomment=1
+
+        do i=1,65
+          if (cline(i:i).eq.'.') then
+            icomment=0
+            exit
+          endif
+        enddo
+
+        if (icomment.eq.1) then
+          backspace(lunabs)
+          READ(LUNABS,*) NCOEF
+        else
+          abscom='No Commment on file ' // trim(fileff)
+          rewind(lunabs)
+          ncoef=0
+          do while(.true.)
+            read(lunabs,*,iostat=istat) x
+            if (istat.ne.0) exit
+            ncoef=ncoef+1
+          enddo
+          rewind(lunabs)
+        endif
+
+        allocate(AFREQ(ncoef),ABSCO(ncoef),
+     &  Y2(ncoef),AA(ncoef),BB(ncoef),CC(ncoef),C(ncoef))
+
+        DO I=1,NCOEF
           READ(LUNABS,*) AFREQ(I),ABSCO(I)
-      ENDDO !I
+        ENDDO !I
 
-      CLOSE(LUNABS)
+        CLOSE(LUNABS)
 
-      IF (IEFFI.GT.0) THEN
-        CALL UTIL_SPLINE_COEF(AFREQ,ABSCO,NCOEF,-9999.0d0,-9999.0d0,
-     &    Y2,AA,BB,CC,C)
-      ENDIF   !IEFFI
+        IF (IEFFI.GT.0) THEN
+          CALL UTIL_SPLINE_COEF(AFREQ,ABSCO,NCOEF,-9999.0d0,-9999.0d0,
+     &      Y2,AA,BB,CC,C)
+        ENDIF   !IEFFI
 
       ENDIF !ICAL
 
       IF (IEFFI.GT.0) THEN
 
-      IF (ICAL.EQ.0) THEN
+        IF (ICAL.EQ.0) THEN
           MODE=-1
-      ELSE
+        ELSE
           MODE=0
-      ENDIF
+        ENDIF
 
-      CALL UTIL_SPLINE_INTER(AFREQ,ABSCO,Y2,NCOEF,FREQ,ABSMU,MODE)
+        CALL UTIL_SPLINE_INTER(AFREQ,ABSCO,Y2,NCOEF,FREQ,ABSMU,MODE)
 
-          IF (IERR.NE.0) THEN
+        IF (IERR.NE.0) THEN
 
-            WRITE(LUNGFO,*)
-            WRITE(LUNGFO,*)'*** ERROR IN YIELD ***'
-            WRITE(LUNGFO,*)'CALL TO SR UTIL_SPLINE_INTER FAILED'
-            WRITE(LUNGFO,*)'CHECK PHOTONENERGIES IN NAMELIST FREQN AND FILE'
-            WRITE(LUNGFO,*)FILEFF
-            WRITE(LUNGFO,*)
-            WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'*** ERROR IN YIELD ***'
+          WRITE(LUNGFO,*)'CALL TO SR UTIL_SPLINE_INTER FAILED'
+          WRITE(LUNGFO,*)'CHECK PHOTONENERGIES IN NAMELIST FREQN AND FILE'
+          WRITE(LUNGFO,*)FILEFF
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)
 
-            WRITE(6,*)
-            WRITE(6,*)'*** ERROR IN YIELD ***'
-            WRITE(6,*)'CALL TO SR UTIL_SPLINE_INTER FAILED'
-            WRITE(6,*)'CHECK PHOTONENERGIES IN NAMELIST FREQN AND FILE'
-            WRITE(6,*)FILEFF
-            WRITE(6,*)
-            WRITE(6,*)
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN YIELD ***'
+          WRITE(6,*)'CALL TO SR UTIL_SPLINE_INTER FAILED'
+          WRITE(6,*)'CHECK PHOTONENERGIES IN NAMELIST FREQN AND FILE'
+          WRITE(6,*)FILEFF
+          WRITE(6,*)
+          WRITE(6,*)
 
-            STOP
+          STOP
 
-          ENDIF   !IERR
+        ENDIF   !IERR
 
       ELSE    !IEFFI
 
-           IF (IEFFI.EQ.-1) THEN  !IEFFI
-               CALL ABSNOSPLI(AFREQ,ABSCO,NCOEF,FREQ,ABSMU,IERR,1)
+        IF (IEFFI.EQ.-1) THEN  !IEFFI
+          CALL ABSNOSPLI(AFREQ,ABSCO,NCOEF,FREQ,ABSMU,IERR,1)
         ELSE   !IEFFI
-               CALL ABSNOSPLI(AFREQ,ABSCO,NCOEF,FREQ,ABSMU,IERR,-1)
+          CALL ABSNOSPLI(AFREQ,ABSCO,NCOEF,FREQ,ABSMU,IERR,-1)
         ENDIF      !IEFFI
 
-          IF (IERR.NE.0) THEN
+        IF (IERR.NE.0) THEN
 
-            WRITE(LUNGFO,*)
-            WRITE(LUNGFO,*)'*** ERROR IN YIELD ***'
-            WRITE(LUNGFO,*)'CALL TO ABSNOSPLI FAILED'
-            WRITE(LUNGFO,*)'CHECK PHOTONENERGIES IN NAMELIST FREQN AND FILE'
-            WRITE(LUNGFO,*)FILEFF
-            WRITE(LUNGFO,*)
-            WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)'*** ERROR IN YIELD ***'
+          WRITE(LUNGFO,*)'CALL TO ABSNOSPLI FAILED'
+          WRITE(LUNGFO,*)'CHECK PHOTONENERGIES IN NAMELIST FREQN AND FILE'
+          WRITE(LUNGFO,*)FILEFF
+          WRITE(LUNGFO,*)
+          WRITE(LUNGFO,*)
 
-            WRITE(6,*)
-            WRITE(6,*)'*** ERROR IN YIELD ***'
-            WRITE(6,*)'CALL TO ABSNOSPLI FAILED'
-            WRITE(6,*)'CHECK PHOTONENERGIES IN NAMELIST FREQN AND FILE'
-            WRITE(6,*)FILEFF
-            WRITE(6,*)
-            WRITE(6,*)
+          WRITE(6,*)
+          WRITE(6,*)'*** ERROR IN YIELD ***'
+          WRITE(6,*)'CALL TO ABSNOSPLI FAILED'
+          WRITE(6,*)'CHECK PHOTONENERGIES IN NAMELIST FREQN AND FILE'
+          WRITE(6,*)FILEFF
+          WRITE(6,*)
+          WRITE(6,*)
 
-            STOP
+          STOP
 
-          ENDIF   !IERR
+        ENDIF   !IERR
 
       ENDIF   !IEFFI
 
       ICAL=1
+
       RETURN
       END
