@@ -23,9 +23,10 @@
      &  PHAPERYM,PHAPERYP,PHAPERYPM,PHAPERYPP,
      &  PHGEOSUM,PHGEOSEL,PHELEM,PHBEAM,
      &  PHBETH,PHBETV,
+     &  wigthetaz,wigthetay,wigthetazcen,wigthetaycen,
+     &  iwigefold,
      &  nphasez,nphasey,mphasez,mphasey,NIDPHASE,NIDGEO,IDSEL,IHSEL,NPHELEM,iphfold
      &  ,iwigner,nwigthetaz,nwigthetay,nwigefold,nosplinewef
-     &  ,wigthetaz,wigthetay,wigthetazcen,wigthetaycen,iwigefold
 
       NAMELIST/PHASEN/
      &  phgshift,PHCENX,PHCENY,PHCENZ,PHWID,PHHIG,

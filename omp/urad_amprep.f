@@ -1,4 +1,4 @@
-*CMZ :          26/11/2025  13.12.14  by  Michael Scheer
+*CMZ :          15/08/2026  11.23.18  by  Michael Scheer
 *CMZ :  4.02/00 27/08/2025  14.45.47  by  Michael Scheer
 *CMZ :  4.01/07 18/10/2024  09.41.32  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  07.41.13  by  Michael Scheer
@@ -11,6 +11,8 @@
 *CMZ :  4.00/11 28/06/2021  10.33.06  by  Michael Scheer
 *-- Author : Michael Scheer
       subroutine urad_amprep(modewave)
+
+c     Calculates stokes_u, arad_u, and fbunch on the meter scale
 
       use omp_lib
       use uradphasemod
@@ -25,11 +27,14 @@
 cc+seq,uservar.
 
       complex*16 :: cde,czero=(0.0d0,0.0d0),ci=(0.0d0,1.0d0),cph00
+     &  ,cjvsto(4,3)
 
-      double precision :: h2,ddist,wlen,dphi,phase0,cjvsto(4,3)
+      double precision :: h2,ddist,wlen,dphi,phase0
 
       double complex , dimension (:,:), allocatable :: aradbuff
       double complex , dimension (:,:,:), allocatable :: arad
+      integer, dimension (:,:), allocatable :: nradth
+      integer, dimension (:), allocatable :: nrad
 
       double precision, dimension (:), allocatable :: frq
       double precision, dimension (:,:), allocatable :: wsstokes,pow
@@ -42,20 +47,21 @@ cc+seq,uservar.
 
       real eran(6),pran(3),rr(2)
 
-      double complex :: apol,amp0(6),damp(6),amp(6),zexp,
+      double complex :: apol,amp0(6),damp(6),amp(6),ampn(6),zexp,
      &  apolh,apolr,apoll,apol45,stokesv(4,3),cero=(0.0d0,0.0d0),cone=(1.0d0,0.0d0)
 
       double precision :: t,udgamtot,upow,vf0,vn,vx0,vx2,vxf0,vxi,vy0,vy2,vyf0,
      &  vyi,vz0,vz2,vzf0,vzi,wlen1,x0,x2,xf0,xi,xlell,y0,y2,yf0,yi,ypi,yy,yyp,
      &  z0,z2,zf0,zi,zpi,zz,zzp,fillb(41),stok1,stok2,stok3,stok4,speknor,
-     &  sqnbunch,sqnphsp,specnor,specnor_si,sbnor,rpin,r00(3),xph0,
+     &  sqnbunch,sqnphsp,specnor,specnor_si,root_specnor_si,sbnor,rpin,r00(3),xph0,
      &  r(3),r0(3),pw,ph,phsum,pkerr,ppin,parke,pc(3),pcbrill(3),om1,
      &  park,pr,hbarev,obs(3),om,fhigh,flow,gamma,eix,eiy,eiz,emassg,
      &  efx,efy,efz,eharm1,ecdipev,ebeam,dtpho,dt,dtelec,dd0,debeam,
      &  drn0(3),drn00(3),ds,dr0(3),dr00(3),drn(3),dpp,dph,dist,dist0,dobs(3),
      &  bunnor,clight,bunchx,beta,beff,spow,
-     &  zp0,yp0,rph,anor,fsum,smax,zob,yob,
-     &  xkellip,zampell,yampell,parkv,parkh,zpampell,ypampell,emom,dzpin,dypin,zmin,ymin,phgsh
+     &  zp0,yp0,rph,a2,anor,fsum,smax,zob,yob,
+     &  xkellip,zampell,yampell,parkv,parkh,zpampell,ypampell,emom,dzpin,dypin,zmin,ymin,phgsh,
+     &  emitho,emitvo
 
       double precision xprop,yprop(npinyprop_u),zprop(npinzprop_u),dy,dz,pinwprop,pinhprop
       double complex, dimension(:,:,:,:,:), allocatable :: fprop
@@ -73,18 +79,27 @@ cc+seq,uservar.
      &  ifail,ndimu,nstepu,ith,noespread,noemit,jbunch,jubunch,jhbunch,
      &  jcharge=-1,lmodeph,nclo,jeneloss=0,iamppin,
      &  iamppincirc=0,ifrob,iobfr,isub,jvelofield=0,nlbu=0,nepho,ielo,
-     &  modewave,iepho,ifieldprop,nzprop,nyprop,im,izm,iym,ifix
+     &  modewave,iepho,ifieldprop,nzprop,nyprop,im,izm,iym,ifix,lz,ly,
+     &  nradmax,iobsvradmax,izradmax,iyradmax,lunbun
 
       integer, dimension (:), allocatable :: lnbunch
 
       integer :: idebug=0, lbunch=0, ierr=0, ielec=0
       integer ibunch,ihbunch,mthreads,nobsv,nobsvo,iemit,noranone,iz,iy,ipz,ipy,nobsvz,nobsvy
-      integer iobm,iobp,iobfrm,iobfrp
+      integer iobm,iobp,iobfrm,iobfrp,neleco,noranoneo
       integer :: ical=0
 
       save ical
 c      integer iuser
 c      iuser=user(3)
+
+      emitho=emith_u
+      emitvo=emitv_u
+
+c      if (nelecampgenpho_u.ne.0) then
+c        emitho=0.0d0
+c        emitvo=0.0d0
+c      endif
 
       nelec_u=max(1,nelec_u)
       mthreads_u=max(1,mthreads_u)
@@ -117,15 +132,19 @@ c      iuser=user(3)
       ihbunch=ihbunch_u
       mthreads=mthreads_u
 
-      if (modepin_u.eq.1) then
-        iamppin=3
+      if (abs(modepin_u).eq.1) then
+        if (modepin_u.eq.1) then
+          iamppin=3
+        else
+          iamppin=-3
+        endif
         nobsv=1
       else
         iamppin=1
         nobsv=npiny_u*npinz_u
       endif
 
-      icbrill=nobsv/2+1
+      icbrill=nobsvo/2+1
 
 c      jhbunch=max(0,ihbunch)
       jhbunch=ihbunch
@@ -152,7 +171,7 @@ c     &    fpriv(3,npinzprop_u,npinyprop_u),
           print*,""
           print*,"*** Warning in urad_amprep: Could not allocate buffer for beam Ntuple ***"
           print*,""
-          return
+          goto 9999
         endif
         fieldbunch=czero
       endif
@@ -221,6 +240,9 @@ c          !all util_break
       yf0=y0
       zf0=z0
 
+      zi_u=z0
+      yi_u=y0
+
       vn=clight*beta
 
       vx0=vn/sqrt(1.0d0+(zp0**2+yp0**2))
@@ -254,14 +276,16 @@ c      dtim0=ds/beta
       ndimu=nint(nclo*1.1)
 
       r0=[x0,y0,z0]
-      dr0=[xf0-x0,yf0-y0,zf0-z0]
+c      dr0=[xf0-x0,yf0-y0,zf0-z0]
       dr0=[efx,efy,efz]*perlen_u
       r0=r0+dr0/2.0d0
 
       allocate(frq(nepho_u),
      &  uampex(nepho_u),uampey(nepho_u),uampez(nepho_u),
-     &  uampbx(nepho_u),uampby(nepho_u),uampbz(nepho_u),pow(nobsv,mthreads),
+     &  uampbx(nepho_u),uampby(nepho_u),uampbz(nepho_u),
      &  utraxyz(14,ndimu),ustokes(4,nepho_u))
+
+      allocate(pow(size(pow_u),mthreads))
 
       pow=0.0d0
       frq=epho_u
@@ -281,7 +305,10 @@ c      dtim0=ds/beta
 
       dtpho=perlen_u/clight
 
-      allocate(pherrc(nper_u),pherr(nper_u),arad(6,nepho_u*nobsv,mthreads),
+      allocate(pherrc(nper_u),pherr(nper_u),
+     &  arad(6,nepho_u*nobsv_u,mthreads),
+     &  nradth(nobsv_u,mthreads),
+     &  nrad(nobsv_u),
      &  expphiran(max(1,nelec_u)))
 
       allocate(pranall(2,nelec_u))
@@ -292,7 +319,10 @@ c      dtim0=ds/beta
       enddo
 
       if (ibunch.eq.0.or.
-     &    emith_u.eq.0.0d0.and.emitv_u.eq.0.0d0.and.espread_u.eq.0.0d0) then
+     &    emith_u.eq.0.0d0.and.emitv_u.eq.0.0d0.and.espread_u.eq.0.0d0
+     &    .or.
+     &    nelecampgenpho_u.ne.0
+     &    ) then
         iemit=0
         ibunch=0
         nelec=1
@@ -308,36 +338,49 @@ c      dtim0=ds/beta
       endif
 
       if (iemit.ne.0) then
+
         allocate(eall(6,nelec_u))
-        do i=1,nelec_u
-          xi=x0
-          if (modepin_u.ne.2) then
-            call util_get_electron(xbeta_u,betah_u,alphah_u,betav_u,alphav_u,
-     &        emith_u,emitv_u,
-     &        disph_u,dispph_u,dispv_u,disppv_u,
-     &        espread_u,bunchlen_u,xi,yi,zi,ypi,zpi,dpp,modebunch_u)
-          else
-            ! espread only for folding procedure
-            call util_get_electron(xbeta_u,betah_u,alphah_u,betav_u,alphav_u,
-     &        0.0d0,0.0d0,
-     &        disph_u,dispph_u,dispv_u,disppv_u,
-     &        espread_u,bunchlen_u,xi,yi,zi,ypi,zpi,dpp,modebunch_u)
-          endif
-          eall(1,i)=xi-x0
-          eall(2,i)=yi
-          eall(3,i)=zi
-          eall(4,i)=ypi
-          eall(5,i)=zpi
-          eall(6,i)=dpp
-        enddo
+
+        if (modebunch_u.eq.-1) then
+          open(newunit=lunbun,file='urad_phase.ele',status='old')
+          do i=1,nelec_u
+            read(lunbun,*) eall(:,i)
+          enddo
+          close(lunbun)
+        else
+          do i=1,nelec_u
+            xi=x0
+            if (modepin_u.ne.2) then
+              call util_get_electron(xbeta_u,betah_u,alphah_u,betav_u,alphav_u,
+     &          emith_u,emitv_u,
+     &          disph_u,dispph_u,dispv_u,disppv_u,
+     &          espread_u,bunchlen_u,xi,yi,zi,ypi,zpi,dpp,modebunch_u)
+            else
+              ! espread only for folding procedure
+              call util_get_electron(xbeta_u,betah_u,alphah_u,betav_u,alphav_u,
+     &          0.0d0,0.0d0,
+     &          disph_u,dispph_u,dispv_u,disppv_u,
+     &          espread_u,bunchlen_u,xi,yi,zi,ypi,zpi,dpp,modebunch_u)
+            endif
+            eall(1,i)=xi-x0
+            eall(2,i)=yi
+            eall(3,i)=zi
+            eall(4,i)=ypi
+            eall(5,i)=zpi
+            eall(6,i)=dpp
+          enddo
+        endif
+
         if (noranone.ne.0) eall(:,1)=0.0
       endif
 
       !allocate(affe(6,nepho_u*nobsv))
 
-      allocate(wsstokes(4,nepho_u*nobsv),stokes(4,nepho_u*nobsv,mthreads))
+      allocate(wsstokes(4,nepho_u*nobsvo),stokes(4,nepho_u*nobsvo,mthreads))
       stokes=0.0d0
       arad=(0.0d0,0.0d0)
+      nradth=0
+      nrad=0
 
       np2=nper_u/2
 
@@ -347,9 +390,9 @@ c      dtim0=ds/beta
       lmodeph=modeph_u
 
       if (pherror_u.ne.0.0d0.and.(lmodeph.lt.0.or.lmodeph.gt.2)) then
-        write(6,*) ""
-        write(6,*) "*** Error in urad_amprep: MODEPH must be 0,1, or 2 ***"
-        write(6,*) "*** Program aborted ***"
+        print*, ""
+        print*, "*** Error in urad_amprep: MODEPH must be 0,1, or 2 ***"
+        print*, "*** Program aborted ***"
       endif
 
       if (lmodeph.eq.0.and.eharm1.ne.0.0d0) then
@@ -373,17 +416,21 @@ c      dtim0=ds/beta
       mbunch=max(1,nelec_u)
       nelec=nelec_u
 
-      if (ibunch.ne.0.and.bunchcharge_u.ne.0.0d0) then
-        sqnbunch=mbunch
-        sqnphsp=sqrt(bunchcharge_u/echarge1)
-     &    *meinbunch
-     &    /(bunchcharge_u/echarge1)
-        bunnor=1.0d0/mbunch
-      else
-        sqnbunch=mbunch
-        sqnphsp=sqrt(dble(nelec_u))
-        bunnor=1.0d0/mbunch
-      endif
+c      if (ibunch.ne.0.and.bunchcharge_u.ne.0.0d0) then
+c        sqnbunch=mbunch
+c        sqnphsp=sqrt(bunchcharge_u/echarge1)
+c     &    *meinbunch
+c     &    /(bunchcharge_u/echarge1)
+c        bunnor=1.0d0/mbunch
+c      else
+c        sqnbunch=mbunch
+c        sqnphsp=sqrt(dble(nelec_u))
+c        bunnor=1.0d0/mbunch
+c      endif
+
+      sqnbunch=1.0d0
+      sqnphsp=1.0d0
+      bunnor=1.0d0
 
       beff=sqrt(beffv_u**2+beffh_u**2)
       parke=echarge1*beff*perlen_u/(2.*pi1*emasskg1*clight)
@@ -399,20 +446,31 @@ c      dtim0=ds/beta
       ebeam=ebeam_u
       debeam=espread_u
       stokesv=vstokes
-      specnor=
-     &  banwid_u
-     &  /(4.0d0*pi1**2*clight*hbarev)
-     &  /(4.0d0*pi1*eps01)
-     &  *curr_u
 
+c      specnor=
+c     &  banwid_u
+c     &  /(4.0d0*pi1**2*clight*hbarev)
+c     &  /(4.0d0*pi1*eps01)
+c     &  *curr_u
+      specnor=1.0d0
+
+      !Note: Amp0/sqrt(specnor_si) cancels the mm-scale,
+      !but amp0*1000 converts everything to then m-scale
       SPECNOR_SI= !merke/synchrotron_radiation.txt
      &  curr_u ! Strom
      &  /echarge1/hbar1*clight1/PI1*EPS01
      &  *banwid_u !BW
      &  /1.0d6 !m**2 > mm**2
 
-      sbnor=specnor*bunnor
-      speknor=specnor
+c      sbnor=specnor*bunnor
+c      speknor=specnor
+c      sbnor=bunnor
+      sbnor=bunnor*specnor_si
+      root_specnor_si=sqrt(specnor_si)
+
+c      anor=sqrt(sbnor/specnor_si)
+c      anor=sqrt(1.0d0/specnor_si)
+      anor=1.0d0
 
       jeneloss=0
       pw=pinw_u
@@ -463,13 +521,15 @@ c      dtim0=ds/beta
 
       ifix=ifixphase_u
 
+      !all util_break
+
 !$OMP PARALLEL NUM_THREADS(mthreads) DEFAULT(PRIVATE)
-!$OMP& FIRSTPRIVATE(nepho,nobsvz,nobsvy,nobsv,nelec,frq,nper_u,np2,perlen_u,clight,hbarev,
+!$OMP& FIRSTPRIVATE(ly,lz,kobsv,nepho,nobsvz,nobsvy,nobsv,nelec,frq,nper_u,np2,perlen_u,clight,hbarev,
 !$OMP& ifieldprop,xprop,nyprop,nzprop,yprop,zprop,cjvsto,fpriv,pinwprop,pinhprop,
 !$OMP& flow,fhigh,czero,cone,rea,expsh,ifix,zob,yob,
-!$OMP& x0,y0,z0,xf0,yf0,zf0,vx0,vy0,vz0,vxf0,vyf0,vzf0,gamma_u,sbnor,speknor,
-!$OMP& efx,efy,efz,ds,ndimu,curr_u,xlell,parke,amp,amp0,
-!$OMP& uampex,uampey,uampez,uampbx,uampby,uampbz,
+!$OMP& x0,y0,z0,xf0,yf0,zf0,vx0,vy0,vz0,vxf0,vyf0,vzf0,gamma_u,sbnor,speknor,bunnor,
+!$OMP& efx,efy,efz,ds,ndimu,curr_u,xlell,parke,amp,ampn,amp0,
+!$OMP& uampex,uampey,uampez,uampbx,uampby,uampbz,a2,anor,specnor_si,root_specnor_si,
 !$OMP& lmodeph,zp0,yp0,modewave,
 !$OMP& jbunch,jubunch,jhbunch,noespread,noemit,ebeam,
 !$OMP& stokesv,icbrill,obsv_u,emassg,debeam,dispv_u,disppv_u,
@@ -477,7 +537,7 @@ c      dtim0=ds/beta
 !$OMP& pran,pranall,eall,fillb,r0,dr0,iamppin,iamppincirc,pc,phase0,pr,banwid_u,
 !$OMP& pw,ph,idebug,pcbrill,wsstokes,vn,bunchlen_u,modebunch_u,icohere_u)
 !$OMP& SHARED(mthreads,stokes,pherr,expphiran,lbunch,lnbunch,modepin_u,fieldbunch,npinzo_u,nobsvo,dzpin,dypin,
-!$OMP& fbunch_u,jcharge,jeneloss,jvelofield,iemit,noranone,arad,pow,zmin,ymin,phgsh,fprop,stokesprop)
+!$OMP& fbunch_u,jcharge,jeneloss,jvelofield,iemit,noranone,nradth,arad,pow,zmin,ymin,phgsh,fprop,stokesprop)
 
       jbun=1
       isub=0
@@ -489,6 +549,7 @@ c      dtim0=ds/beta
 
 c      do ilo=1,nelec*nobsv
       do ielec=1,nelec
+            !allutil_break
       do iobsv=1,nobsv
 
         wsstokes=0.0d0
@@ -507,6 +568,7 @@ c        ibu=(ilo-1)/nobsv+1
         iz=mod(iobsv-1,nobsvz)+1
 
         !if (iz.gt.nobsvz/2+1) call til_break
+          !all util_break
 
 c        ielec=ibu
 
@@ -596,10 +658,18 @@ c+self.
         vyi=vxi*ypi
         vzi=vxi*zpi
 
-        obs=obsv_u(1:3,iobsv)
+        if (noranone.ne.0.and.ielec.eq.1.and.abs(iamppin).eq.3) then
+          kobsv=icbrill
+        else
+          kobsv=iobsv
+        endif
 
-        if (noranone.eq.0.or.ielec.ne.1.or.iobsv.ne.icbrill) then
-          if (iamppin.eq.3) then
+        !all util_break
+        obs=obsv_u(1:3,kobsv)
+
+        if (noranone.eq.0.or.ielec.ne.1.or.kobsv.ne.icbrill) then
+
+          if (abs(iamppin).eq.3) then
             !call util_random(2,pran)
             pran(1:2)=pranall(:,ielec)
             if (iamppincirc.eq.0) then
@@ -612,6 +682,21 @@ c+self.
               obs(3)=pc(3)+rpin*sin(ppin)
             endif
           endif
+
+          if (iamppin.eq.-3) then
+
+            ly=1+nint((obs(2)-(pc(2)-ph/2.0d0))/dypin)
+            lz=1+nint((obs(3)-(pc(3)-pw/2.0d0))/dzpin)
+            kobsv=lz+(ly-1)*npinzo_u
+
+            obs(2)=ymin+(ly-1)*dypin
+            obs(3)=zmin+(lz-1)*dzpin
+
+            if (abs(obs(2)).lt.1.0d-12) obs(2)=0.0d0
+            if (abs(obs(3)).lt.1.0d-12) obs(3)=0.0d0
+
+          endif
+
         endif
 
         vn=norm2([vxi,vyi,vzi])
@@ -650,7 +735,8 @@ c+self.
 
         do kfreq=1,nepho
 
-          iobfr=iobsv+nobsv*(kfreq-1)
+          !all util_break
+          iobfr=kobsv+nobsv*(kfreq-1)
 
           om=frq(kfreq)/hbarev
 
@@ -660,10 +746,13 @@ c     &        uampex(kfreq),uampey(kfreq),uampez(kfreq),
 c     &        uampbx(kfreq),uampby(kfreq),uampbz(kfreq)
 c     &        ]*1.0d3/sqrt(speknor/curr_u*0.10d0) !urad
 c          else
+            !Note: (uampex**2 = S0)
+            !Amp0/sqrt(specnor_si) * 1000 converts everything to m-scale
             amp0=[
      &        uampex(kfreq),uampey(kfreq),uampez(kfreq),
      &        uampbx(kfreq),uampby(kfreq),uampbz(kfreq)
-     &        ]*1.0d3/sqrt(speknor) !urad
+c     &        ]*1.0d3/sqrt(speknor) !urad
+     &        ] / root_specnor_si *1000.0d0
 c          endif
 
 c          call util_random(1,pran)
@@ -672,7 +761,10 @@ c          amp0=amp0*dcmplx(0.0d0,dble(pran(1)*twopi1))
           amp=(0.0d0,0.0d0)
           t=bunchx/vn
 
+          !allutil_break
           do i=1,nper_u
+
+            !if (i.eq.1.or.i.eq.nper_u) !all util_break
 
             r=r0+(i-np2-1)*dr0
             dobs=obs-r
@@ -681,7 +773,7 @@ c          amp0=amp0*dcmplx(0.0d0,dble(pran(1)*twopi1))
 
             if (kfreq.eq.1) then
               spow=spow+upow*(dist0/dist)**2
-              pow(iobsv,ith)=pow(iobsv,ith)+upow*(dist0/dist)**2
+              pow(kobsv,ith)=pow(kobsv,ith)+upow*(dist0/dist)**2
             endif
 
             if (lmodeph.eq.0) then
@@ -731,13 +823,25 @@ c25.4.2024     &          (1.0d0+parke**2/2.0d0)/2.0d0/gamma**2+
             damp=amp0*zexp*dist0/dist
             amp=amp+damp
 
+            if (i.eq.nper_u) then
+              if (ifix.ne.0) then
+                amp=amp*expphiran(ielec)
+              endif
+            endif
+
             if (jhbunch.ne.0) then
 
+c4.8.2026              if (
+c4.8.2026     &            ((iamppin.eq.3.and.kobsv.eq.icbrill).and.jhbunch.gt.0.and.
+c4.8.2026     &            mod(ielec,jhbunch).eq.0) .or.
+c4.8.2026     &            (jhbunch.lt.0.and.mod(ielec,-jhbunch).eq.0)) then
+
               if (
-     &            ((iamppin.eq.3.and.iobsv.eq.icbrill).and.jhbunch.gt.0.and.
+     &            ((iamppin.eq.3.or.kobsv.eq.icbrill).and.jhbunch.gt.0.and.
      &            mod(ielec,jhbunch).eq.0) .or.
      &            (jhbunch.lt.0.and.mod(ielec,-jhbunch).eq.0)) then
 
+            !allutil_break
                 if (i.eq.1) then
                   fillb(5)=r(1)
                   fillb(6)=r(2)
@@ -770,21 +874,39 @@ c                    expsh=cdexp(dcmplx(0.0d0,phgsh)) !*1.0d3
 c                    amp=amp/expsh
 c                  endif
 
+c                  a2=sum(abs(amp)**2)
+c                  if (a2.gt.0.0d0) then
+c                    stok1=a2*sbnor
+c                    print*,"S0:",stok1
+c                    anor=sqrt(stok1/a2/specnor_si)
+c                    anor=sqrt(sbnor/specnor_si)
+c                  else
+c                    anor=1.0d0
+c                  endif
+
+c                  ampn=amp*anor/1000.0d0
+c                  ampn=amp/1000.0d0
+                  ampn=amp
+c                  print*,"Probe:",
+c     &              sum(abs(ampn)**2)*specnor_si,
+c     &              ampn(3)
+
                   fillb(10:12)=r
                   fillb(13)=ypi
                   fillb(14)=zpi
-                  fillb(30)=dreal(amp(1))
-                  fillb(31)=dimag(amp(1))
-                  fillb(32)=dreal(amp(2))
-                  fillb(33)=dimag(amp(2))
-                  fillb(34)=dreal(amp(3))
-                  fillb(35)=dimag(amp(3))
-                  fillb(36)=dreal(amp(4))
-                  fillb(37)=dimag(amp(4))
-                  fillb(38)=dreal(amp(5))
-                  fillb(39)=dimag(amp(5))
-                  fillb(40)=dreal(amp(6))
-                  fillb(41)=dimag(amp(6))
+                  fillb(30)=dreal(ampn(1))
+                  fillb(31)=dimag(ampn(1))
+                  fillb(32)=dreal(ampn(2))
+                  fillb(33)=dimag(ampn(2))
+                  fillb(34)=dreal(ampn(3))
+                  fillb(35)=dimag(ampn(3))
+                  fillb(36)=dreal(ampn(4))
+                  fillb(37)=dimag(ampn(4))
+                  fillb(38)=dreal(ampn(5))
+                  fillb(39)=dimag(ampn(5))
+                  fillb(40)=dreal(ampn(6))
+                  fillb(41)=dimag(ampn(6))
+
                 endif
 
               endif
@@ -793,17 +915,15 @@ c                  endif
 
           enddo !nper_u
 
-          if (ifix.ne.0) then
-            amp=amp*expphiran(ielec)
-          endif
-
           if (modepin_u.ne.0) then
-            iy=int((obs(2)-ymin)/dypin)+1
-            iz=int((obs(3)-zmin)/dzpin)+1
+            iy=nint((obs(2)-ymin)/dypin)+1
+            iz=nint((obs(3)-zmin)/dzpin)+1
             !print*,ilo,ith,obs(3),zmin,dzpin,iz
             fieldbunch(1:6,iz,iy,kfreq)=fieldbunch(1:6,iz,iy,kfreq)+amp(1:6)
             fieldbunch(7,iz,iy,kfreq)=fieldbunch(7,iz,iy,kfreq)+cone
           endif
+
+          !allutil_break
 
           apolh=
      &      amp(1)*conjg(stokesv(1,1))
@@ -825,6 +945,7 @@ c                  endif
      &      +amp(2)*conjg(stokesv(4,2))
      &      +amp(3)*conjg(stokesv(4,3))
 
+          !if (kobsv.eq.icbrill) !all util_break
           stok1=dreal(apolr*conjg(apolr)+apoll*conjg(apoll))
           stok2=dreal(-stok1+2.0d0*apolh*conjg(apolh))
           stok3=dreal(2.0d0*apol45*conjg(apol45)-stok1)
@@ -839,7 +960,9 @@ c                  endif
 
           !affe(:,iobfr)=affe(:,iobfr)+amp
           !arad(:,iobfr,ith)=arad(:,iobfr,ith)+affe(:,iobfr)
+
           arad(:,iobfr,ith)=arad(:,iobfr,ith)+amp
+          if (kfreq.eq.1) nradth(kobsv,ith)=nradth(kobsv,ith)+1
 
 c          if (
 c     &        ((iamppin.eq.3.or.iobsv.eq.icbrill).and.jhbunch.gt.0.and.
@@ -851,9 +974,8 @@ c            endif
 c          endif
 
           if (jhbunch.ne.0) then
-
             if (
-     &          ((iamppin.eq.3.or.iobsv.eq.icbrill).and.jhbunch.gt.0.and.
+     &          ((iamppin.eq.3.or.kobsv.eq.icbrill).and.jhbunch.gt.0.and.
      &          mod(ielec,jhbunch).eq.0) .or.
      &          (jhbunch.lt.0.and.mod(ielec,-jhbunch).eq.0)) then
 
@@ -881,18 +1003,23 @@ c              print*,jhbunch,ith,ilo,jbun,isub,ibu
               fillb(28)=1
               fillb(29)=dtelec
 
-              fillb(30)=dreal(amp(1))
-              fillb(31)=dimag(amp(1))
-              fillb(32)=dreal(amp(2))
-              fillb(33)=dimag(amp(2))
-              fillb(34)=dreal(amp(3))
-              fillb(35)=dimag(amp(3))
-              fillb(36)=dreal(amp(4))
-              fillb(37)=dimag(amp(4))
-              fillb(38)=dreal(amp(5))
-              fillb(39)=dimag(amp(5))
-              fillb(40)=dreal(amp(6))
-              fillb(41)=dimag(amp(6))
+c              anor=sqrt(sbnor/specnor_si)
+c              ampn=amp*anor/1000.0d0
+c              ampn=amp/1000.0d0
+              ampn=amp
+
+              fillb(30)=dreal(ampn(1))
+              fillb(31)=dimag(ampn(1))
+              fillb(32)=dreal(ampn(2))
+              fillb(33)=dimag(ampn(2))
+              fillb(34)=dreal(ampn(3))
+              fillb(35)=dimag(ampn(3))
+              fillb(36)=dreal(ampn(4))
+              fillb(37)=dimag(ampn(4))
+              fillb(38)=dreal(ampn(5))
+              fillb(39)=dimag(ampn(5))
+              fillb(40)=dreal(ampn(6))
+              fillb(41)=dimag(ampn(6))
               lbunch=lbunch+1
               fbunch_u(:,lbunch)=fillb(:)
             endif !fill
@@ -900,13 +1027,13 @@ c              print*,jhbunch,ith,ilo,jbun,isub,ibu
           endif !jhbunch
 
           if (ifieldprop.eq.2) then
-            if (iobsv.eq.1) then
+            if (kobsv.eq.1) then
               fprop(1:3,1:nzprop,1:nyprop,kfreq,ith)=(0.0d0,0.0d0)
             endif
             call urad_phase_prop_point(obs,amp(1:3),nzprop,nyprop,
      &        xprop,yprop,zprop,pinwprop,pinhprop,frq(kfreq),fpriv)
             fprop(:,:,:,kfreq,ith)=fprop(:,:,:,kfreq,ith)+fpriv(:,:,:)
-            if (iobsv.eq.nobsv) then
+            if (kobsv.eq.nobsv) then
               i=0
               do ipy=1,nyprop
                 do ipz=1,nzprop
@@ -968,6 +1095,31 @@ c      enddo !ilo
       do ith=1,mthreads
         pow_u(:)=pow_u(:)+pow(:,ith)
         arad_u(:,:)=arad_u(:,:)+arad(:,:,ith)
+        nrad(:)=nrad(:)+nradth(:,ith)
+      enddo
+
+      !all util_break
+      nradmax=0
+      iobfr=0
+      do kfreq=1,nepho
+        iobsv=0
+        do iy=1,npinyo_u
+          do iz=1,npinzo_u
+            iobfr=iobfr+1
+            iobsv=iobsv+1
+            if (nrad(iobsv).ne.0) then
+              n=nrad(iobsv)
+              if (n.gt.nradmax) then
+                nradmax=n
+                iobsvradmax=iobsv
+                izradmax=iz
+                iyradmax=iy
+              endif
+              pow_u(iobsv)=pow_u(iobsv)/dble(nrad(iobsv))
+              arad_u(1:6,iobfr)=arad_u(1:6,iobfr)/dble(nrad(iobsv))
+            endif
+          enddo
+        enddo
       enddo
 
       if (globphase_u.eq.9999.0d0) then
@@ -979,11 +1131,11 @@ c      enddo !ilo
             arad_u(:,iobfr)=arad_u(:,iobfr)/cph00
           enddo
         enddo
-      else
+      else if (globphase_u.ne.0.0d0) then
         arad_u=arad_u*exp(ci*globphase_u)
       endif
 
-      pow_u=pow_u/sqnbunch
+      if (sqnbunch.ne.1.0d0) pow_u=pow_u/sqnbunch
 
       if (ifieldprop_u.eq.2) then
         smax=0.0d0
@@ -1006,9 +1158,11 @@ c      enddo !ilo
         enddo
       endif
 
+      !all util_break
+
       if (icohere_u.eq.0) then
 
-        arad_u=arad_u/sqnbunch
+        if (sqnbunch.ne.1.0d0) arad_u=arad_u/sqnbunch
 
         do ith=1,mthreads
           stokes_u(:,:)=stokes_u(:,:)+stokes(:,:,ith)
@@ -1016,7 +1170,7 @@ c      enddo !ilo
 
       else
 
-        do iobsv=1,nobsv
+        do iobsv=1,nobsvo
           do kfreq=1,nepho
 
             iobfr=iobsv+nobsv*(kfreq-1)
@@ -1058,6 +1212,14 @@ c      enddo !ilo
 
       endif !icohere_u
 
+      do iobsv=1,nobsvo
+        if (nrad(iobsv).eq.0) cycle
+        do kfreq=1,nepho
+          iobfr=iobsv+nobsv*(kfreq-1)
+          stokes_u(:,iobfr)=stokes_u(:,iobfr)/nrad(iobsv)
+        enddo
+      enddo
+
 c      if (ihbunch.ne.0) then
 c        n=0
 c        do i=1,nlbu
@@ -1073,17 +1235,35 @@ c      endif
 
       !deallocate(affe)
       deallocate(frq,uampex,uampey,uampez,uampbx,uampby,uampbz,utraxyz,
-     &  pherrc,pherr,expphiran,arad,pow,pranall,wsstokes,stokes)
+     &  pherrc,pherr,expphiran,arad,pow,pranall,wsstokes,stokes,nradth,nrad)
 
       if (iemit.ne.0) deallocate(eall)
 
-      iobfr=nobsv_u*nepho_u/2+1
-      amp(1:3)=arad_u(1:3,iobfr)
+c      iobfr=nobsv_u*nepho_u/2+1
+c
+c      !all util_break
+c      if (nrad(iobfr).eq.0) then
+c        do iobsv=1,nobsvo
+c          do kfreq=1,nepho
+c            iobfr=iobsv+(kfreq-1)*nobsvo
+c            if (nrad(iobfr).ne.0) then
+c              iobfr=-iobfr
+c              exit
+c            endif
+c          enddo
+c          if (iobfr.lt.0) then
+c            iobfr=-iobfr
+c            exit
+c          endif
+c        enddo
+c      endif
 
-      anor=sqrt(stokes_u(1,iobfr)/
-     &  (amp(1)*dconjg(amp(1))+amp(2)*dconjg(amp(2))+amp(3)*dconjg(amp(3))))
+c      amp(1:3)=arad_u(1:3,iobfr)
+c      anor=sqrt(stokes_u(1,iobfr)/
+c     &  sum(abs(amp)**2)/specnor_si)
+c      anor=sqrt(sbnor/specnor_si)
 
-      arad_u=arad_u*anor/sqrt(specnor_si)
+c      arad_u=arad_u*anor
 
       if (modepin_u.ne.0) then
         do iepho=1,nepho_u
@@ -1095,7 +1275,7 @@ c            fieldbunch(1:6,iz,iy,iepho)=fieldbunch(1:6,iz,iy,iepho)
             enddo
           enddo
         enddo
-        fieldbunch=fieldbunch*anor/sqrt(specnor_si)
+c        fieldbunch=fieldbunch*anor/sqrt(specnor_si)
       endif
 
 c      if (ifieldprop_u.eq.2) then
@@ -1103,6 +1283,16 @@ c      if (ifieldprop_u.eq.2) then
         stokesprop_u=stokesprop_u*specnor_si
       endif
 
-      ical=1
-      return
+c      print*,"Nrad_Max, iz,iy,iobsv:",nradmax,izradmax,iyradmax,iobsvradmax
+
+c      print*,specnor_si
+c      print'(5(1pe12.3))',stokes_u(1,1),abs(arad_u(3,1))**2*specnor_si
+
+9999  ical=1
+
+c      if (nelecampgenpho_u.ne.0) then
+c        emitho=emith_u
+c        emitvo=emitv_u
+c      endif
+
       end

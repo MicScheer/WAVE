@@ -5350,13 +5350,22 @@ def h1header_update(hist='?'):
     print("*** Non-existing histogram ***")
   #endif idx == -1
 
+  global Debug
+  if Debug: breakpoint()
+
   h = H1h
 
   nx = len(h)
 
   xmin = h.x.min()
   xmax = h.x.max()
-  dx = (xmax - xmin) / max(nx-1,1)
+
+  if nx > 1:
+    dx = (xmax - xmin) / max(nx-1,1)
+  else:
+    dx = 1.
+  #endif
+
   xmin -= dx / 2.
   xmax += dx / 2.
 
@@ -5380,6 +5389,7 @@ def h1header_update(hist='?'):
   head1[2] = nx
   head1[3] = xmin
   head1[4] = xmax
+  head1[5] = dx
 
   head1[7] = min(h.y)
   head1[8] = max(h.y)
@@ -10391,6 +10401,9 @@ def hbook1(idh=-1, tit='Histogram1D', nx=10, xmin=0., xmax=1., overwrite=False):
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
+  global Debug
+  if Debug: breakpoint()
+
   if type(idh) == int and idh <0:
     print("hbook1(idh=-1, tit='Histogram1D', nx=10, xmin=0., xmax=1.)")
     return 0
@@ -12332,7 +12345,9 @@ def GetIndexH1(idh='?'):
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
-  #nreakpoint()
+  global Debug
+  if Debug: breakpoint()
+
   if type(idh) == str:
     if idh == '?':
       print("\nUsage: index = GetIndex(idh), returns -1 if histogram has not been found")
@@ -15093,6 +15108,9 @@ def nproj1(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
+  global Debug
+  if Debug: breakpoint()
+
   idn = -1
 
   varl = nlistcolon(var)
@@ -16190,7 +16208,8 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   if plopt == '' or plopt == 'same' or plopt == 'S':
     if plopt == 'same' or plopt == 'S':
       if ey.max() == 0:
-        plopt = 'h'
+        if nx <= 101: plopt = 'h'
+        else: plopt = 'line'
       elif Inoerr == 0:
         plopt = 'e'
       #endif ey.max() == 0
@@ -16519,6 +16538,8 @@ def hplot(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', block
 
 
   idx = GetIndexH1(idh)
+
+  #reakpoint()
 
   if idx >= 0:
     hplot1d(idh,plopt,Tit,xTit,yTit,legend,block)
@@ -17485,11 +17506,11 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
     Kcolorbar[Kzone] = 0
 
     if Colorbarpad != '!':
-      fcm = Fig.colorbar(img, pad=Colorbarpad)
+      fcm = Fig.colorbar(img, pad=Colorbarpad,label=ztit)
       Kcolorbar[Kzone] = 1
 #      Zones[Kzone-1][5] = Kcolorbar
     else:
-      fcm = Fig.colorbar(img)
+      fcm = Fig.colorbar(img,label=ztit)
       Kcolorbar[Kzone] = 0
 #      Zones[Kzone-1][5] = Kcolorbar
     #endif Colorbarpad != '!'
@@ -17521,10 +17542,10 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
     Kcolorbar[Kzone] = 1
 
     if Colorbarpad != '!':
-      fcm = Fig.colorbar(colmap, pad=Colorbarpad)
+      fcm = Fig.colorbar(colmap, pad=Colorbarpad,label=ztit)
 #      Zones[Kzone-1][5] = Kcolorbar
     else:
-      fcm = Fig.colorbar(colmap)
+      fcm = Fig.colorbar(colmap,label=ztit)
 #      Zones[Kzone-1][5] = Kcolorbar
     #endif
 
@@ -18592,6 +18613,8 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
 
   fcm = Axes[len(Axes)-1]
 
+  #reakpoint()
+
   if hasattr(Ax,'zaxis') and ztit != '':
 
     tzexp = Ax.zaxis.get_offset_text()
@@ -18626,7 +18649,11 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
     fcm.ax.tick_params(labelsize=Axislabelsize)
     fcm.ax.get_yaxis().get_offset_text().set(size=Axislabelsize,
                                              position=(1+0.5*Nxzone,0.))
+    ztit = ''
   #endif hasattr(Ax,'zaxis') and ztit != ''
+
+  if ztit != '' and is3d == 0 and Kcolorbar[Kzone]:
+    text(1.1,0.5,ztit,angle=90)
 
   plt.show(block=False)
 
@@ -19991,7 +20018,7 @@ def nplmgs(nt='?',varlis='',select='',weights='',plopt='samemarker', legend='',
 
 def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
           scalex=1., scaley=1., scalez=1., scalet=1., cmap='', hist='!',
-          color='default',isort=0,nx=-1,ny=-1):
+          color='default',isort=0,nx=-1,ny=-1,titcolbar=''):
 
 #+seq,mshimportsind.
 # +PATCH,//WAVES/PYTHON
@@ -20055,9 +20082,7 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
 
 
   global Debug
-#  if Debug:
-#    print("Break in Nplot!")
-#    #reakpoint()
+  if Debug: breakpoint()
 
   NxBinMax = 0
   nto = nt
@@ -20481,10 +20506,10 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
       Kcolorbar[Kzone] = 1
 
       if Colorbarpad != '!':
-        fcm = Fig.colorbar(img, pad=Colorbarpad)
+        fcm = Fig.colorbar(img, pad=Colorbarpad,label=titcolbar)
         #      Zones[Kzone-1][5] = Kcolorbar
       else:
-        fcm = Fig.colorbar(img)
+        fcm = Fig.colorbar(img,label=titcolbar)
         #      Kcolorbar[Kzone] = 0
         #      Zones[Kzone-1][5] = Kcolorbar
         #endif
@@ -20555,10 +20580,10 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
     Kcolorbar[Kzone] = 1
 
     if Colorbarpad != '!':
-      fcm = Fig.colorbar(img, pad=Colorbarpad)
+      fcm = Fig.colorbar(img, pad=Colorbarpad,label=titcolbar)
 #      Zones[Kzone-1][5] = Kcolorbar
     else:
-      fcm = Fig.colorbar(img)
+      fcm = Fig.colorbar(img,label=titcolbar)
 #      Kcolorbar[Kzone] = 0
 #      Zones[Kzone-1][5] = Kcolorbar
     #endif
@@ -20597,7 +20622,7 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
 
 def nscat(nt='?',varlis='',select='',weights='',plopt='', legend='',
           scalex=1., scaley=1., scalez=1., scalet=1., cmap='', hist='!',
-          color='default',isort=0,nx=-1,ny=-1):
+          color='default',isort=0,nx=-1,ny=-1,titcolbar=''):
 
   varliso = varlis
 
@@ -20620,10 +20645,10 @@ def nscat(nt='?',varlis='',select='',weights='',plopt='', legend='',
       nplot(nt,varlis,select,weights,'scat2d',legend,scalex,scaley,scalez,scalet,cmap,hist,color,isort,nx,ny)
     else:
       varlis = varliso + ":" + weights
-      nplot(nt,varlis,select,'','scat2d',legend,scalex,scaley,scalez,scalet,cmap,hist,color,isort,nx,ny)
+      nplot(nt,varlis,select,'','scat2d',legend,scalex,scaley,scalez,scalet,cmap,hist,color,isort,nx,ny,titcolbar=titcolbar)
     #endif
   elif len(varlis) == 3:
-    nplot(nt,varlis,select,'','scat2d',legend,scalex,scaley,scalez,scalet,cmap,hist,color,isort,nx,ny)
+    nplot(nt,varlis,select,'','scat2d',legend,scalex,scaley,scalez,scalet,cmap,hist,color,isort,nx,ny,titcolbar=titcolbar)
   #endif
 
 #enddef nscat
@@ -24422,10 +24447,10 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
     Kcolorbar[Kzone] = 1
 
     if Colorbarpad != '!':
-      fcm = Fig.colorbar(img, pad=Colorbarpad)
+      fcm = Fig.colorbar(img, pad=Colorbarpad,label=ztit)
       #      Zones[Kzone-1][5] = Kcolorbar
     else:
-      fcm = Fig.colorbar(img)
+      fcm = Fig.colorbar(img,label=ztit)
     #endif
 
     ttit = ""

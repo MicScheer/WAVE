@@ -4,9 +4,10 @@
       module wignermod
 
       double precision, dimension(:,:,:,:,:,:), allocatable :: wigr,wigi,wigkr,wigki
-c      double precision, dimension(:,:,:,:), allocatable :: wigkr,wigki
-      double precision, dimension(:), allocatable :: wigthez,wigthey,wigz,wigy
-      double precision :: dzprop,dyprop,dzwig,dywig,pinwwig,pinhwig,thezwig,theywig
+      double precision, dimension(:), allocatable :: thetazwig,thetaywig,zwig,ywig
+
+      double precision :: dzprop,dyprop,dzwig,dywig,pinwwig,pinhwig,thezwig,theywig,
+     &  dtzwig,dtywig
 
       integer nywig,nzwig,nzthewig,nythewig,nzfringe,nyfringe
 

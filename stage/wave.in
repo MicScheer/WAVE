@@ -223,26 +223,25 @@
 
       DMYCUR=0.1 ! current [A] of the ring
 
-      XSTART=9999. ! initial x of the trajectory [m]
-                   ! 9999. means default is used if possible
-		   ! i.e. entrance of the device
-      XINTER=-9999.  ! if XINTER not -9999. and not missing tracking starts
-                     ! at XINTER. The particle is tracked forward or
-              ! backward to XSTART.
-              ! XSTART,YSTART,...,VXIN,... are overwritten
-              ! for restart of tracking now beginning at XSTART
-              ! 9999. means default is used if possible
-              ! i.e. entrance of the device
-              ! XINTER = XSTART = 9999. is allowed but makes no sense
-      XSTOP=9999. ! final x of the trajectory [m]
-                  ! 9999. means default is used if possible
-           ! i.e. exit of the device
-      YSTART=0.0  ! initial y of the trajectory [m]
-      ZSTART=0.0  ! initial z of the trajectory [m]
+      XSTART=9999.   ! initial x of the trajectory [m]
+                     ! 9999. means default is used if possible
+		     ! i.e. entrance of the device
+      XINTER=-9999.  ! if XINTER not -9999. tracking starts at XINTER.
+                     ! The particle is tracked forward or ! backward to XSTART.
+		     ! XSTART,YSTART,...,VXIN,... are overwritten
+		     ! for restart of tracking now beginning at XSTART
+		     ! 9999. means default is used if possible
+		     ! i.e. entrance of the device
+		     ! XINTER = XSTART = 9999. is allowed but makes no sense
+      XSTOP=9999.    ! final x of the trajectory [m]
+                     ! 9999. means default is used if possible
+		     ! i.e. exit of the device
+      YSTART=0.0     ! initial y of the trajectory [m]
+      ZSTART=0.0     ! initial z of the trajectory [m]
 
-      VXIN=1.0 ! initial x-component of velocity vector (relative)
-      VYIN=0.0 ! initial y-component of velocity vector (relative)
-      VZIN=0.0 ! initial z-component of velocity vector (relative)
+      VXIN=1.0       ! initial x-component of velocity vector (relative)
+      VYIN=0.0       ! initial y-component of velocity vector (relative)
+      VZIN=0.0       ! initial z-component of velocity vector (relative)
 
       BMOVECUT=1.E-6  ! in tracking routines, mag. fields below BMOVECUT
                       ! are treated as zero. This cuts might crucially effect
@@ -995,6 +994,7 @@
                      ! transform back to source plan and get
                      ! phase space distribution from geometrical
                      ! optic (namelist PHASEN)
+		     ! THIS IS ONLY CORRECT FOR A SINGLE SOURCE POINT!!
                      ! IPHASE.LT.0 means spline-integration used
                      ! ABS(IPHASE.GT.1) means additional application of
                      ! geometrical optic
@@ -1019,7 +1019,7 @@
               ! of electrons into account (namelist WFOLDN)
               ! =2: take beam energy spread into account by Monte-
               ! Carlo-technique (ISPECMODE = 5) (check precision) OBSOLETE
-              ! =3 like 1, but lin. interpolation rather than splinesused;
+              ! =3 like 1, but lin. interpolation rather than splines is used;
               !    needed when spectrum is not smooth enough
 
         IWFILSP0=0   ! write integration results (arrays SPEC,SPECT) to
@@ -1054,6 +1054,7 @@
         IAMPLI=0   ! IAMPLI>0:
                    ! reads or writes amplitudes of integration
 		   ! to file FILEAMPLI (array REAIMA).
+		   ! THIS IS ONLY CORRECT FOR A SINGLE SOURCE POINT!!
 		   ! Treatment of data is done in SR ADDAMPLI and
 		   ! controlled by namelist AMPLIN
 		   ! IAMPLI<0:
@@ -1073,6 +1074,19 @@
            IAMPJIT=0    ! Jitter on phase is calculated by tracking the device
                         ! period by period (IAMPLI.LT.0)
 
+           IGENPHO=0    ! Generate photons from field in pinhole, namelist GENPHON
+	                ! IBUNCH should be zero
+			
+			! Photons are written to ampgenpho.pho:
+			! 1. line header of run number and code, next lines:
+			! photon counter, electron counter, photon energy counter,
+			! beam energy counter, beam energy, weight, photon energy, z, y, zp, yp,
+			! S0, S1, S2, S3
+			
+			! Electrons are written to ampgenpho.elc:
+			! 1. line header of run number and code, next lines:
+			! electron counter, energy, weight, z, y, zp, yp
+	
         IWFILSPF=0   ! write folded integration results
                      ! (arrays SPECF,SPECTF) to FILESPF
 
@@ -3480,6 +3494,22 @@
 
       $END
 
+ $GENPHON
+
+      NGENPHOEFOLD=1  ! number of beam energy steps.
+                      ! If IWIGNER is set, number of steps is set max(NGENPHOEFOLD,NWIGEFOLD)
+
+      GENPHOPHSH=9999.0  !global phase shift [rad]
+                      !9999: Shift such, that the imaginary part of the on-axis horizontal field
+                      !      becomes zero
+      NOSPLINEEF=0    ! to use simple summation instead of spline integration
+      NELECGENPHO=1   ! number of electrons to generate photons
+      NPHO=1          ! number of photons per electron to be generated
+      MODERAN=1       ! 0: all grid points in pinhole
+                      ! else: NPHO random grid points
+
+      $END
+				
  $PHASEN
 
         PHCENX=0.0      !x of source plan center
@@ -3509,14 +3539,17 @@
 	PHGSHIFT=0.0    !global phase shift [rad]
 	                !9999: Shift such, that the imaginary part of the on-axis horizontal field
 			!      becomes zero
-        IWIGNER=0           ! calculate Wigner distribution function
-	                    !  1: All polarisations states, i.e. Wzz,Wyy,Wzy
-			    ! -1: Wzz only
-			    ! -2: Wyy only
-			    ! -3: Wzy only
-			    ! -4: Wyz only
+        IWIGNER=0       ! calculate Wigner distribution function
+	                !  1: All polarisations states, i.e. Wzz,Wyy,Wzy
+			! -1: Wzz only
+			! -2: Wyy only
+			! -3: Wzy only
+			! -4: Wyz only
+			! IBUNCH should be zero
 
 	NWIGEFOLD=15        ! number of beam energy steps
+                            ! If IGENPHO is set, number of steps is set max(NGENPHOEFOLD,NWIGEFOLD)
+		
 	NOSPLINEWEF=0	    ! to use simple summation instead of spline integration
 	
 	WIGTHETAZ=0.05e-3   ! Hori. opening angle of radiation cone [rad]	                    ! -9999: Estimated from device length and photon energy

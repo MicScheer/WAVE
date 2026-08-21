@@ -1,4 +1,4 @@
-*CMZ :          19/09/2025  15.04.03  by  Michael Scheer
+*CMZ :          20/08/2026  15.29.29  by  Michael Scheer
 *CMZ :  4.02/00 18/03/2025  16.37.16  by  Michael Scheer
 *CMZ :  4.01/02 19/04/2023  08.53.56  by  Michael Scheer
 *CMZ :  4.00/17 04/11/2022  09.31.48  by  Michael Scheer
@@ -116,11 +116,13 @@ C MODULES FOR THE INDIVIDUAL TASKS
       include 'gseed.cmn'
 *KEEP,random.
       include 'random.cmn'
+*KEEP,genpho.
+      include 'genpho.cmn'
 *KEEP,wvers.
       include 'wvers.cmn'
 *KEND.
 
-      INTEGER NPOL,irootmode,lun,lun99,i,lunpid,iutil_fexist
+      INTEGER NPOL,irootmode,lun,lun99,i,lunpid,iutil_fexist,istat
 
       DOUBLE PRECISION BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &            DTIM,BSHIFT,GAMMA
@@ -387,6 +389,13 @@ c+self. ,if=linux.
       enddo
       flush(lun)
       close(lun)
+
+      if (kgendone.ne.0) then
+        call wave_copy_file('genpho_espread.pho','ampgenpho.pho',istat)
+        call util_file_delete('genpho_espread.pho',istat)
+        call wave_copy_file('genpho_espread.elc','ampgenpho.elc',istat)
+        call util_file_delete('genpho_espread.elc',istat)
+      endif
 
       RETURN
 

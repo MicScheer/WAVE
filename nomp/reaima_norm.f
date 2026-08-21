@@ -1,4 +1,4 @@
-*CMZ :          26/11/2025  12.10.39  by  Michael Scheer
+*CMZ :          19/08/2026  15.15.44  by  Michael Scheer
 *-- Author :    Michael Scheer   22/11/2025
 *CMZ :  4.01/04 14/11/2023  11.45.54  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  13.01.26  by  Michael Scheer
@@ -120,7 +120,7 @@
       integer isour,iobsv,kfreq,kmax,ks,kr
 
       double precision :: smax,rmax,r,specnor_si,s,r1,r2,r3
-      double complex :: rea(5),expsh
+      double complex :: rea(8),expsh
 
       if (nsource.gt.1) then
         write(lungfo,*)''
@@ -158,9 +158,9 @@
             if (phgshift.eq.-9999.0d0) expsh=expsh*cdexp(dcmplx(0.0d0,-pi1/2.0d0))
             do iobsv=1,nobsv
               iobfr=iobsv+nobsv*(kfreq-1)
-              rea=dcmplx(reaima(1:5,1,iobfr),reaima(1:5,2,iobfr))/expsh
-              reaima(1:5,1,iobfr)=dreal(rea)
-              reaima(1:5,2,iobfr)=dimag(rea)
+              rea=dcmplx(reaima(1:8,1,iobfr),reaima(1:8,2,iobfr))/expsh
+              reaima(1:8,1,iobfr)=dreal(rea)
+              reaima(1:8,2,iobfr)=dimag(rea)
             enddo
           endif
         endif
@@ -175,7 +175,7 @@
      &        reaima(2,1,iobfr)**2+reaima(2,2,iobfr)**2+
      &        reaima(3,1,iobfr)**2+reaima(3,2,iobfr)**2
             r=sqrt(r/s*specnor_si)
-            reaima=reaima/dcmplx(r,1.0d0)
+            reaima=reaima/dcmplx(r,0.0d0)
             return
           endif
         enddo

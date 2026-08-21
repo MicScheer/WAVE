@@ -1,0 +1,64 @@
+Auf Branch develop
+Ihr Branch ist auf demselben Stand wie 'origin/develop'.
+
+Änderungen, die nicht zum Commit vorgemerkt sind:
+  (benutzen Sie "git add/rm <Datei>...", um die Änderungen zum Commit vorzumerken)
+  (benutzen Sie "git restore <Datei>...", um die Änderungen im Arbeitsverzeichnis zu verwerfen)
+	geändert:       input/wave.example
+	gelöscht:       input/wave.example.~28~
+	gelöscht:       input/wave.example.~29~
+	gelöscht:       input/wave_example_1.in.~1~
+	gelöscht:       input/wave_example_1.in.~2~
+	gelöscht:       input/wave_example_1.in.~3~
+	gelöscht:       input/wave_example_3.in.~1~
+	gelöscht:       input/wave_example_3.in.~2~
+	gelöscht:       input/wave_example_3.in.~3~
+	gelöscht:       input/wave_example_3.in.~4~
+	gelöscht:       input/wave_example_3.in.~5~
+	gelöscht:       input/wave_example_3.in.~6~
+	gelöscht:       input/wave_example_3.in~
+	gelöscht:       input/wave_example_5.adjust.~1~
+	gelöscht:       input/wave_example_9_fluxden_fluctuations.in.~1~
+	gelöscht:       input/wave_example_9_magseq.in.~1~
+	gelöscht:       input/wave_example_9_magseq.in.~2~
+	gelöscht:       input/wave_example_9_magseq.in.~3~
+	gelöscht:       input/wave_example_9_magseq.in~
+	gelöscht:       input/wave_example_9_wave.bmask.~1~
+	geändert:       main/contrl.cmn
+	geändert:       nomp/afolint.f
+	geändert:       nomp/ampfold.f
+	geändert:       nomp/beampow.f
+	geändert:       nomp/contrl.cmn
+	geändert:       nomp/gfinit.f
+	geändert:       nomp/halbach.cmn
+	geändert:       nomp/mod/uradphasemod.f
+	geändert:       nomp/mshplt.cmn
+	geändert:       nomp/phasef90.cmn
+	geändert:       nomp/reaima_norm.f
+	geändert:       nomp/spectrum.f
+	geändert:       nomp/wave.f
+	geändert:       nomp/waveinstances.f
+	geändert:       nomp/winstwigefold.f
+	geändert:       omp/contrl.cmn
+	geändert:       omp/mod/uradphasemod.f
+	geändert:       omp/mod/wignermod.f
+	geändert:       omp/phasef90.cmn
+	geändert:       omp/urad_amprep.f
+	geändert:       omp/urad_phase.f
+	geändert:       python/m_hbook.py
+	geändert:       python/msh_tex.py
+	geändert:       python/msh_tex_linux.py
+	geändert:       python/msh_tex_windows.py
+	geändert:       python/waveplot.py
+	geändert:       python/waves.py
+	geändert:       python/waveshop.py
+	geändert:       stage/wave.in
+
+Unversionierte Dateien:
+  (benutzen Sie "git add <Datei>...", um die Änderungen zum Commit vorzumerken)
+	changes_21.8.2026.lis
+	nomp/genpho.cmn
+	nomp/util_replace_namelist_variable.f
+	omp/genpho.cmn
+
+keine Änderungen zum Commit vorgemerkt (benutzen Sie "git add" und/oder "git commit -a")

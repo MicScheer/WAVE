@@ -1,3 +1,4 @@
+*CMZ :          07/11/2025  10.02.29  by  Michael Scheer
 *CMZ :  4.00/14 30/12/2021  15.41.22  by  Michael Scheer
 *CMZ :  4.00/13 07/12/2021  18.47.10  by  Michael Scheer
 *CMZ :  3.05/06 17/07/2018  11.15.16  by  Michael Scheer
@@ -555,42 +556,42 @@ C    CONTRIBUTIONS OF ALL POLES, STORE INFORMATION IN HISTOGRAMS
 
 
       DO IWALL=1,2
-      DO IMODE=0,4
+        DO IMODE=0,4
 
-      ID=IDPOWER+1000*IMODE+IWALL
+          ID=IDPOWER+1000*IMODE+IWALL
 
-      DO IPOL=1,NPOL
+          DO IPOL=1,NPOL
 C20.10.92       NN=IPOLLIM(2,IPOL)-IPOLLIM(1,IPOL)
-          NN=IPOLLIM(2,IPOL)-IPOLLIM(1,IPOL)+1
-      DO IBIN=1,NBIN
+            NN=IPOLLIM(2,IPOL)-IPOLLIM(1,IPOL)+1
+            DO IBIN=1,NBIN
 
-          XFILL=XI-DXBIN/2.+IBIN*DXBIN
-          CALL POWINT(XFILL,YFILL,IWALL,IMODE,IPOL,
-     &           IPOLLIM(1,IPOL),NN) !INTERPOLATION OF POWERDENSITY
-          IF (YFILL.LT.0.AND.IWARN1.NE.1) THEN
-         WRITE(LUNGFO,*)
-         WRITE(LUNGFO,*)'*** WARNING SR BEAMPOW ***'
-         WRITE(LUNGFO,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
-         WRITE(LUNGFO,*)'CHANGE SPACING'
-         WRITE(LUNGFO,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
-         WRITE(LUNGFO,*)
-         WRITE(6,*)
-         WRITE(6,*)'*** WARNING SR BEAMPOW ***'
-         WRITE(6,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
-         WRITE(6,*)'CHANGE SPACING'
-         WRITE(6,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
-         WRITE(6,*)
-         IWARN1=1
-          ENDIF !YFILL
-          IF (YFILL.LT.0.) THEN
-         YFILL=0.
-          ENDIF !YFILL
+              XFILL=XI-DXBIN/2.+IBIN*DXBIN
+              CALL POWINT(XFILL,YFILL,IWALL,IMODE,IPOL,
+     &          IPOLLIM(1,IPOL),NN) !INTERPOLATION OF POWERDENSITY
+              IF (YFILL.LT.0.AND.IWARN1.NE.1) THEN
+                WRITE(LUNGFO,*)
+                WRITE(LUNGFO,*)'*** WARNING SR BEAMPOW ***'
+                WRITE(LUNGFO,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
+                WRITE(LUNGFO,*)'CHANGE SPACING'
+                WRITE(LUNGFO,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
+                WRITE(LUNGFO,*)
+                WRITE(6,*)
+                WRITE(6,*)'*** WARNING SR BEAMPOW ***'
+                WRITE(6,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
+                WRITE(6,*)'CHANGE SPACING'
+                WRITE(6,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
+                WRITE(6,*)
+                IWARN1=1
+              ENDIF !YFILL
+              IF (YFILL.LT.0.) THEN
+                YFILL=0.
+              ENDIF !YFILL
 
-          CALL hfillm(ID,XFILL,0.,dble(YFILL))
+              CALL hfillm(ID,XFILL,0.,dble(YFILL))
 
-      ENDDO !IBIN
-      ENDDO !IPOL
-      ENDDO !IMODE
+            ENDDO !IBIN
+          ENDDO !IPOL
+        ENDDO !IMODE
       ENDDO !IWALL
 
 C--- TOTAL PHOTO DESORPTION
@@ -600,15 +601,15 @@ C INTEGRATION IS PERFORM ALONG THE BEAMLINE WHILE FLUX IS
 C CALCULATED NORMAL TO BEAM
 
       DO IWALL=1,2
-          TOTGAM(IWALL)  =HSUMM(IDPOWER+2000+IWALL)*DXBIN
-          TOTGAM(IWALL+2)=HSUMM(IDPOWER+4000+IWALL)*DXBIN
+        TOTGAM(IWALL)  =HSUMM(IDPOWER+2000+IWALL)*DXBIN
+        TOTGAM(IWALL+2)=HSUMM(IDPOWER+4000+IWALL)*DXBIN
 
-          TOTMAX(IWALL)  =hmaxm(IDPOWER+0000+IWALL)
-          TOTMAX(IWALL+2)=hmaxm(IDPOWER+3000+IWALL)
-          TOTMAX(IWALL+4)=hmaxm(IDPOWER+4000+IWALL)
+        TOTMAX(IWALL)  =hmaxm(IDPOWER+0000+IWALL)
+        TOTMAX(IWALL+2)=hmaxm(IDPOWER+3000+IWALL)
+        TOTMAX(IWALL+4)=hmaxm(IDPOWER+4000+IWALL)
       ENDDO !IWALL
 
-          TOTMAX(11)=DISMIN
+      TOTMAX(11)=DISMIN
 
 C****************************************************************
 C     NOW EVERYTHING FOR NORMAL ABSORBER
@@ -625,90 +626,89 @@ C21.9.92  CONS=8.85D-5*CLIGHT1/(4.*PI1*EMASSG1)
 
       DO IPOI=1,NCO
 
-      IF (WTRA(1,1,IPOI).GE.XIANF.AND.WTRA(1,1,IPOI).LE.XIEND) THEN
-           BY=WTRA(2,3,IPOI)
-      ELSE
-           BY=0.0
-      ENDIF
+        IF (WTRA(1,1,IPOI).GE.XIANF.AND.WTRA(1,1,IPOI).LE.XIEND) THEN
+          BY=WTRA(2,3,IPOI)
+        ELSE
+          BY=0.0
+        ENDIF
 
+        BYA=DABS(BY)
+        ZP=WTRA(3,2,IPOI)/WTRA(1,2,IPOI)
 
-      BYA=DABS(BY)
-      ZP=WTRA(3,2,IPOI)/WTRA(1,2,IPOI)
-
-      IF (INSIDE.EQ.0) THEN
+        IF (INSIDE.EQ.0) THEN
 
           IF (BYA.GT.POWBCUT) THEN
-         INSIDE=1
-         NPOL=NPOL+1
-         IF (NPOL.GT.NDPOL) THEN
-           WRITE(LUNGFO,*)
-           WRITE(LUNGFO,*)'*** ERROR IN BEAMPOW ***'
-           WRITE(LUNGFO,*)'DIMENSION EXCEEDED NDPOLP'
-           WRITE(LUNGFO,*)'CHECK NPOLMX AND POWBCUT IN NAMELIST SPECTN'
-           WRITE(LUNGFO,*)
-           WRITE(LUNGFO,*)'POLE NUMBER, (SLOPE ZP,X,BY) AT START, (SLOPE ZP,X,BY) AT END OF POLES ALREADY DETECTED:'
-           DO IPOL=1,NPOL-1
-             WRITE(LUNGFO,*)'POLES:',IPOL
-             WRITE(LUNGFO,*)
-     &              SNGL(WTRA(3,2,IPOLLIM(1,IPOL))
-     &              /WTRA(1,2,IPOLLIM(1,IPOL)))
-     &              ,SNGL(WTRA(1,1,IPOLLIM(1,IPOL)))
-     &              ,SNGL(WTRA(2,3,IPOLLIM(1,IPOL)))
-             WRITE(LUNGFO,*)
-     &              SNGL(WTRA(3,2,IPOLLIM(2,IPOL))
-     &              /WTRA(1,2,IPOLLIM(2,IPOL)))
-     &              ,SNGL(WTRA(1,1,IPOLLIM(2,IPOL)))
-     &              ,SNGL(WTRA(2,3,IPOLLIM(2,IPOL)))
-           ENDDO  !NPOL
-           WRITE(LUNGFO,*)'POLE NUMBER, (SLOPE ZP,X,BY) AT START OF CURRENT POLE:'
-             WRITE(LUNGFO,*)'POLES:',NPOL
-             WRITE(LUNGFO,*)
-     &              SNGL(WTRA(3,2,IPOI)
-     &              /WTRA(1,2,IPOI))
-     &              ,SNGL(WTRA(1,1,IPOI))
-     &              ,SNGL(WTRA(2,3,IPOI))
-           WRITE(6,*)
-           WRITE(6,*)'*** ERROR IN BEAMPOW ***'
-           WRITE(6,*)'DIMENSION EXCEEDED NDPOLP'
-           WRITE(6,*)'CHECK NPOLMX AND POWBCUT IN NAMELIST SPECTN'
-           WRITE(6,*)
-           WRITE(6,*)'POLE NUMBER, (SLOPE ZP,X,BY) AT START, (SLOPE ZP,X,BY) AT END OF POLES ALREADY DETECTED:'
-           DO IPOL=1,NPOL-1
-             WRITE(6,*)'POLES:',IPOL
-             WRITE(6,*)
-     &              SNGL(WTRA(3,2,IPOLLIM(1,IPOL))
-     &              /WTRA(1,2,IPOLLIM(1,IPOL)))
-     &              ,SNGL(WTRA(1,1,IPOLLIM(1,IPOL)))
-     &              ,SNGL(WTRA(2,3,IPOLLIM(1,IPOL)))
-             WRITE(6,*)
-     &              SNGL(WTRA(3,2,IPOLLIM(2,IPOL))
-     &              /WTRA(1,2,IPOLLIM(2,IPOL)))
-     &              ,SNGL(WTRA(1,1,IPOLLIM(2,IPOL)))
-     &              ,SNGL(WTRA(2,3,IPOLLIM(2,IPOL)))
-           ENDDO  !NPOL
-           WRITE(6,*)'POLE NUMBER, (SLOPE ZP,X,BY) AT START OF CURRENT POLE:'
-             WRITE(6,*)'POLES:',NPOL
-             WRITE(6,*)
-     &              SNGL(WTRA(3,2,IPOI)
-     &              /WTRA(1,2,IPOI))
-     &              ,SNGL(WTRA(1,1,IPOI))
-     &              ,SNGL(WTRA(2,3,IPOI))
-           STOP
-         ENDIF !NPOL
-         IPOLLIM(1,NPOL)=IPOI
+            INSIDE=1
+            NPOL=NPOL+1
+            IF (NPOL.GT.NDPOL) THEN
+              WRITE(LUNGFO,*)
+              WRITE(LUNGFO,*)'*** ERROR IN BEAMPOW ***'
+              WRITE(LUNGFO,*)'DIMENSION EXCEEDED NDPOLP'
+              WRITE(LUNGFO,*)'CHECK NPOLMX AND POWBCUT IN NAMELIST SPECTN'
+              WRITE(LUNGFO,*)
+              WRITE(LUNGFO,*)'POLE NUMBER, (SLOPE ZP,X,BY) AT START, (SLOPE ZP,X,BY) AT END OF POLES ALREADY DETECTED:'
+              DO IPOL=1,NPOL-1
+                WRITE(LUNGFO,*)'POLES:',IPOL
+                WRITE(LUNGFO,*)
+     &            SNGL(WTRA(3,2,IPOLLIM(1,IPOL))
+     &            /WTRA(1,2,IPOLLIM(1,IPOL)))
+     &            ,SNGL(WTRA(1,1,IPOLLIM(1,IPOL)))
+     &            ,SNGL(WTRA(2,3,IPOLLIM(1,IPOL)))
+                WRITE(LUNGFO,*)
+     &            SNGL(WTRA(3,2,IPOLLIM(2,IPOL))
+     &            /WTRA(1,2,IPOLLIM(2,IPOL)))
+     &            ,SNGL(WTRA(1,1,IPOLLIM(2,IPOL)))
+     &            ,SNGL(WTRA(2,3,IPOLLIM(2,IPOL)))
+              ENDDO  !NPOL
+              WRITE(LUNGFO,*)'POLE NUMBER, (SLOPE ZP,X,BY) AT START OF CURRENT POLE:'
+              WRITE(LUNGFO,*)'POLES:',NPOL
+              WRITE(LUNGFO,*)
+     &          SNGL(WTRA(3,2,IPOI)
+     &          /WTRA(1,2,IPOI))
+     &          ,SNGL(WTRA(1,1,IPOI))
+     &          ,SNGL(WTRA(2,3,IPOI))
+              WRITE(6,*)
+              WRITE(6,*)'*** ERROR IN BEAMPOW ***'
+              WRITE(6,*)'DIMENSION EXCEEDED NDPOLP'
+              WRITE(6,*)'CHECK NPOLMX AND POWBCUT IN NAMELIST SPECTN'
+              WRITE(6,*)
+              WRITE(6,*)'POLE NUMBER, (SLOPE ZP,X,BY) AT START, (SLOPE ZP,X,BY) AT END OF POLES ALREADY DETECTED:'
+              DO IPOL=1,NPOL-1
+                WRITE(6,*)'POLES:',IPOL
+                WRITE(6,*)
+     &            SNGL(WTRA(3,2,IPOLLIM(1,IPOL))
+     &            /WTRA(1,2,IPOLLIM(1,IPOL)))
+     &            ,SNGL(WTRA(1,1,IPOLLIM(1,IPOL)))
+     &            ,SNGL(WTRA(2,3,IPOLLIM(1,IPOL)))
+                WRITE(6,*)
+     &            SNGL(WTRA(3,2,IPOLLIM(2,IPOL))
+     &            /WTRA(1,2,IPOLLIM(2,IPOL)))
+     &            ,SNGL(WTRA(1,1,IPOLLIM(2,IPOL)))
+     &            ,SNGL(WTRA(2,3,IPOLLIM(2,IPOL)))
+              ENDDO  !NPOL
+              WRITE(6,*)'POLE NUMBER, (SLOPE ZP,X,BY) AT START OF CURRENT POLE:'
+              WRITE(6,*)'POLES:',NPOL
+              WRITE(6,*)
+     &          SNGL(WTRA(3,2,IPOI)
+     &          /WTRA(1,2,IPOI))
+     &          ,SNGL(WTRA(1,1,IPOI))
+     &          ,SNGL(WTRA(2,3,IPOI))
+              STOP
+            ENDIF !NPOL
+            IPOLLIM(1,NPOL)=IPOI
           ENDIF   !POWBCUT
 
-      ELSE  !INSIDE
+        ELSE  !INSIDE
 
           IF (BYOLD*BY.LE.0..OR.BYA.LT.POWBCUT) THEN
-         INSIDE=0
+            INSIDE=0
 C20.10.92      IPOLLIM(2,NPOL)=IPOI
-         IPOLLIM(2,NPOL)=IPOI-1
+            IPOLLIM(2,NPOL)=IPOI-1
           ENDIF   !POWBCUT
 
-      ENDIF !INSIDE
+        ENDIF !INSIDE
 
-      BYOLD=BY
+        BYOLD=BY
       ENDDO !IPOI
 
       IF (INSIDE.EQ.1) IPOLLIM(2,NPOL)=NCO
@@ -719,17 +719,17 @@ C--- LOOP OVER ALL POLES
 
 C--- LOOP OVER POINTS OF REFERENCE ORBIT
 
-      DO IPOI=IPOLLIM(1,IPOL),IPOLLIM(2,IPOL)
+        DO IPOI=IPOLLIM(1,IPOL),IPOLLIM(2,IPOL)
 
 C--- FIND POINT P WHERE RADIATION HITS THE WALL (LOGBOOK S.21)
 C    AND CALCULATE POWER DENSITY
 
-      X=WTRA(1,1,IPOI)
-      Z=WTRA(3,1,IPOI)
-      ZP=WTRA(3,2,IPOI)/WTRA(1,2,IPOI)
-      BYA=DABS(WTRA(2,3,IPOI))
-      SINPHI=DSQRT(ZP**2/(1.+ZP**2))
-      COSPHI=DSQRT(1./(1.+ZP**2))
+          X=WTRA(1,1,IPOI)
+          Z=WTRA(3,1,IPOI)
+          ZP=WTRA(3,2,IPOI)/WTRA(1,2,IPOI)
+          BYA=DABS(WTRA(2,3,IPOI))
+          SINPHI=DSQRT(ZP**2/(1.+ZP**2))
+          COSPHI=DSQRT(1./(1.+ZP**2))
 
 C--- POWER
 
@@ -737,17 +737,17 @@ C--- POWER
           PX=XABSORB
           DIS2=(X-PX)**2+(Z-PZ)**2
           DIS1=DSQRT(DIS2)
-            IF (PX.LT.X) THEN
-         D2POW=0.0
+          IF (PX.LT.X) THEN
+            D2POW=0.0
           ELSE
 C21.9.92         D2POW=CONS*DMYENERGY**4*DMYCUR*BYA/DIS2*POWCOR
-              D2POW=10.84/2.*1.D6*DMYENERGY**4*DMYCUR*BYA/DIS2
-            ENDIF
+            D2POW=10.84/2.*1.D6*DMYENERGY**4*DMYCUR*BYA/DIS2
+          ENDIF
           IF (D2POW.GT.0.0.AND.DIS1.LT.DISMINA) DISMINA=DIS1
 C21.9.92     D1POW=D2POW*2.*DIS1/DMYGAMMA !D2POW INTEGRATED OVER Y
           IF(D2POW.NE.0.) THEN
             D1POW=(CGAM1*CLIGHT1/(2.D0*PI1))
-     &              *DMYENERGY**3*DMYCUR*BYA/DIS1  !D2POW INTEGRATED OVER Y
+     &        *DMYENERGY**3*DMYCUR*BYA/DIS1  !D2POW INTEGRATED OVER Y
           ELSE
             D1POW=0.0
           ENDIF
@@ -755,66 +755,66 @@ C21.9.92     D1POW=D2POW*2.*DIS1/DMYGAMMA !D2POW INTEGRATED OVER Y
           IF(ECGAM.NE.0.0) THEN
 C240593     DNGAM=3.25*D1POW/ECGAM/POWCOR
 C           RATE OF PHOTONS PER UNIT LENGTH
-         DNGAM=15.*DSQRT(3.D0)/8.*D1POW/ECGAM/POWCOR
+            DNGAM=15.*DSQRT(3.D0)/8.*D1POW/ECGAM/POWCOR
           ELSE
-         DNGAM=0.0
+            DNGAM=0.0
           ENDIF   !ECGAM
           RADPOW(13,IPOL,IPOI)=PZ
           RADPOW(15,IPOL,IPOI)=D2POW*COSPHI
           RADPOW(17,IPOL,IPOI)=DNGAM*COSPHI
           RADPOW(19,IPOL,IPOI)=D1POW*COSPHI/POWCOR
 
-      ENDDO !IPOI
+        ENDDO !IPOI
       ENDDO !NPOL
 
 C- ASCENDING ORDER
 
       DO IPOL=1,NPOL
 
-          ISTART=IPOLLIM(1,IPOL)
-          IEND=IPOLLIM(2,IPOL)
+        ISTART=IPOLLIM(1,IPOL)
+        IEND=IPOLLIM(2,IPOL)
 
-          IF (RADPOW(13,IPOL,ISTART).GT.RADPOW(13,IPOL,IEND)) THEN
+        IF (RADPOW(13,IPOL,ISTART).GT.RADPOW(13,IPOL,IEND)) THEN
 
-         DO IMODE=0,3
-           DO IPOI=ISTART,IEND
-             RADPOW(14,IPOL,IPOI)=
-     &              RADPOW(13+2*IMODE,IPOL,IEND-IPOI+ISTART)
-           ENDDO  !IPOI
-           DO IPOI=ISTART,IEND
-             RADPOW(13+2*IMODE,IPOL,IPOI)=
-     &              RADPOW(14,IPOL,IPOI)
-           ENDDO  !IPOI
-         ENDDO !IMODE
+          DO IMODE=0,3
+            DO IPOI=ISTART,IEND
+              RADPOW(14,IPOL,IPOI)=
+     &          RADPOW(13+2*IMODE,IPOL,IEND-IPOI+ISTART)
+            ENDDO  !IPOI
+            DO IPOI=ISTART,IEND
+              RADPOW(13+2*IMODE,IPOL,IPOI)=
+     &          RADPOW(14,IPOL,IPOI)
+            ENDDO  !IPOI
+          ENDDO !IMODE
 
-          ENDIF
+        ENDIF
 
       ENDDO !IPOL
 
 C--- CHECK SPACING
 
       DO IPOL=1,NPOL
-      DO IPOI=IPOLLIM(1,IPOL),IPOLLIM(2,IPOL)-1
+        DO IPOI=IPOLLIM(1,IPOL),IPOLLIM(2,IPOL)-1
           X1=RADPOW(13,IPOL,IPOI)
           X2=RADPOW(13,IPOL,IPOI+1)
           IF(X1.GE.X2) THEN
-         WRITE(LUNGFO,*)
-         WRITE(LUNGFO,*)'*** WARNING SR BEAMPOW ***'
-         WRITE(LUNGFO,*)'BAD SPACING OF POINTS ON ABSORBER OCCURED'
-           WRITE(LUNGFO,*)'CHECK RESULTS CAREFULLY'
-         WRITE(LUNGFO,*)'TRY OTHER VALUES OF MYINUM OR ABSORBER'
-         WRITE(LUNGFO,*)'OR OTHER FIELD CONFIGURATION OR ...'
-         WRITE(LUNGFO,*)
-         WRITE(6,*)
-         WRITE(6,*)'*** WARNING SR BEAMPOW ***'
-         WRITE(6,*)'BAD SPACING OF POINTS ON ABSORBER OCCURED'
-           WRITE(6,*)'CHECK RESULTS CAREFULLY'
-         WRITE(6,*)'TRY OTHER VALUES OF MYINUM OR OTHER ABSORBER'
-         WRITE(6,*)'OR OTHER FIELD CONFIGURATION OR ...'
-         WRITE(6,*)
+            WRITE(LUNGFO,*)
+            WRITE(LUNGFO,*)'*** WARNING SR BEAMPOW ***'
+            WRITE(LUNGFO,*)'BAD SPACING OF POINTS ON ABSORBER OCCURED'
+            WRITE(LUNGFO,*)'CHECK RESULTS CAREFULLY'
+            WRITE(LUNGFO,*)'TRY OTHER VALUES OF MYINUM OR ABSORBER'
+            WRITE(LUNGFO,*)'OR OTHER FIELD CONFIGURATION OR ...'
+            WRITE(LUNGFO,*)
+            WRITE(6,*)
+            WRITE(6,*)'*** WARNING SR BEAMPOW ***'
+            WRITE(6,*)'BAD SPACING OF POINTS ON ABSORBER OCCURED'
+            WRITE(6,*)'CHECK RESULTS CAREFULLY'
+            WRITE(6,*)'TRY OTHER VALUES OF MYINUM OR OTHER ABSORBER'
+            WRITE(6,*)'OR OTHER FIELD CONFIGURATION OR ...'
+            WRITE(6,*)
 C20.10.92      STOP
           ENDIF
-      ENDDO   !IPOI
+        ENDDO   !IPOI
       ENDDO !IPOL
 
 C--- INTERPOLATE POWER DENSITY DISTRIBUTION BY SPLINES AND SUM UP
@@ -826,94 +826,94 @@ C    CONTRIBUTIONS OF ALL POLES, STORE INFORMATION IN HISTOGRAMS
 
       ID=IDPOWER+5001
       call hbook1m(ID,'2D POW. DENS. ON ABSORBER',
-     &              NBIN,XI,XE,VMX)
+     &  NBIN,XI,XE,VMX)
 
       ID=IDPOWER+5002
       call hbook1m(ID,'PHOTON RATE ON ABSORBER',
-     &              NBIN,XI,XE,VMX)
+     &  NBIN,XI,XE,VMX)
 
       ID=IDPOWER+5003
       call hbook1m(ID,'1D POW. DENS.,ABSORBER',
-     &              NBIN,XI,XE,VMX)
+     &  NBIN,XI,XE,VMX)
 
       DO IPOL=1,NPOL
-          NN=IPOLLIM(2,IPOL)-IPOLLIM(1,IPOL)+1
-      DO IBIN=1,NBIN
+        NN=IPOLLIM(2,IPOL)-IPOLLIM(1,IPOL)+1
+        DO IBIN=1,NBIN
 
           ID=IDPOWER+5001
           XFILL=XI-DZBIN/2.+IBIN*DZBIN
           CALL POWINT(XFILL,YFILL,13,0,IPOL,
-     &           IPOLLIM(1,IPOL),NN) !INTERPOLATION OF POWERDENSITY
+     &      IPOLLIM(1,IPOL),NN) !INTERPOLATION OF POWERDENSITY
           IF (YFILL.LT.0.AND.IWARN2.NE.1) THEN
-         WRITE(LUNGFO,*)
-         WRITE(LUNGFO,*)'*** WARNING SR BEAMPOW ***'
-         WRITE(LUNGFO,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
-         WRITE(LUNGFO,*)'CHANGE SPACING'
-         WRITE(LUNGFO,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
-         WRITE(LUNGFO,*)
-         WRITE(6,*)
-         WRITE(6,*)'*** WARNING SR BEAMPOW ***'
-         WRITE(6,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
-         WRITE(6,*)'CHANGE SPACING'
-         WRITE(6,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
-         WRITE(6,*)
-         IWARN2=1
+            WRITE(LUNGFO,*)
+            WRITE(LUNGFO,*)'*** WARNING SR BEAMPOW ***'
+            WRITE(LUNGFO,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
+            WRITE(LUNGFO,*)'CHANGE SPACING'
+            WRITE(LUNGFO,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
+            WRITE(LUNGFO,*)
+            WRITE(6,*)
+            WRITE(6,*)'*** WARNING SR BEAMPOW ***'
+            WRITE(6,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
+            WRITE(6,*)'CHANGE SPACING'
+            WRITE(6,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
+            WRITE(6,*)
+            IWARN2=1
           ENDIF !YFILL
           IF (YFILL.LT.0.) THEN
-         YFILL=0.
+            YFILL=0.
           ENDIF !YFILL
 
           CALL hfillm(ID,XFILL,0.,dble(YFILL))
 
           ID=IDPOWER+5002
           CALL POWINT(XFILL,YFILL,13,1,IPOL,
-     &           IPOLLIM(1,IPOL),NN)
+     &      IPOLLIM(1,IPOL),NN)
           IF (YFILL.LT.0.AND.IWARN3.NE.1) THEN
-         WRITE(LUNGFO,*)
-         WRITE(LUNGFO,*)'*** WARNING SR BEAMPOW ***'
-         WRITE(LUNGFO,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
-         WRITE(LUNGFO,*)'CHANGE SPACING'
-         WRITE(LUNGFO,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
-         WRITE(LUNGFO,*)
-         WRITE(6,*)
-         WRITE(6,*)'*** WARNING SR BEAMPOW ***'
-         WRITE(6,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
-         WRITE(6,*)'CHANGE SPACING'
-         WRITE(6,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
-         WRITE(6,*)
-         IWARN3=1
+            WRITE(LUNGFO,*)
+            WRITE(LUNGFO,*)'*** WARNING SR BEAMPOW ***'
+            WRITE(LUNGFO,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
+            WRITE(LUNGFO,*)'CHANGE SPACING'
+            WRITE(LUNGFO,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
+            WRITE(LUNGFO,*)
+            WRITE(6,*)
+            WRITE(6,*)'*** WARNING SR BEAMPOW ***'
+            WRITE(6,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
+            WRITE(6,*)'CHANGE SPACING'
+            WRITE(6,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
+            WRITE(6,*)
+            IWARN3=1
           ENDIF !YFILL
           IF (YFILL.LT.0.) THEN
-         YFILL=0.
+            YFILL=0.
           ENDIF !YFILL
 
           CALL hfillm(ID,XFILL,0.,dble(yfill))
 
           ID=IDPOWER+5003
           CALL POWINT(XFILL,YFILL,13,2,IPOL,
-     &           IPOLLIM(1,IPOL),NN)
+     &      IPOLLIM(1,IPOL),NN)
           IF (YFILL.LT.0.AND.IWARN4.NE.1) THEN
-         WRITE(LUNGFO,*)
-         WRITE(LUNGFO,*)'*** WARNING SR BEAMPOW ***'
-         WRITE(LUNGFO,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
-         WRITE(LUNGFO,*)'CHANGE SPACING'
-         WRITE(LUNGFO,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
-         WRITE(LUNGFO,*)
-         WRITE(6,*)
-         WRITE(6,*)'*** WARNING SR BEAMPOW ***'
-         WRITE(6,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
-         WRITE(6,*)'CHANGE SPACING'
-         WRITE(6,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
-         WRITE(6,*)
-         IWARN4=1
+            WRITE(LUNGFO,*)
+            WRITE(LUNGFO,*)'*** WARNING SR BEAMPOW ***'
+            WRITE(LUNGFO,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
+            WRITE(LUNGFO,*)'CHANGE SPACING'
+            WRITE(LUNGFO,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
+            WRITE(LUNGFO,*)
+            WRITE(6,*)
+            WRITE(6,*)'*** WARNING SR BEAMPOW ***'
+            WRITE(6,*)'PROBLEMS WITH SPLINE-INTERPOLATION'
+            WRITE(6,*)'CHANGE SPACING'
+            WRITE(6,*)'NEGATIVE INTERPOLATION RESULT SET TO ZERO'
+            WRITE(6,*)
+            IWARN4=1
           ENDIF !YFILL
           IF (YFILL.LT.0.) THEN
-         YFILL=0.
+            YFILL=0.
           ENDIF !YFILL
 
           CALL hfillm(ID,XFILL,0.,dble(yfill))
 
-      ENDDO !IBIN
+        ENDDO !IBIN
       ENDDO !IPOL
 
       TOTGAM(5)=HSUMM(IDPOWER+5002)*DZBIN

@@ -1,4 +1,4 @@
-*CMZ :          11/12/2025  16.49.02  by  Michael Scheer
+*CMZ :          17/08/2026  10.54.29  by  Michael Scheer
 *CMZ :  4.02/00 27/08/2025  15.28.58  by  Michael Scheer
 *CMZ :  4.01/07 30/09/2024  14.48.47  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.52.02  by  Michael Scheer
@@ -1901,6 +1901,10 @@ c        else
           CALL PHASE_omp
 c        endif
       ENDIF !(IPHASE.NE.0)
+
+      IF(IGENPHO.NE.0.and.icluster.ge.0) THEN
+        CALL GENPHO
+      ENDIF !(IGENPHO.NE.0)
 
       IF(IWFILRAY.NE.0) THEN
 

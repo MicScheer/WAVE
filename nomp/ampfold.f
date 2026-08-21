@@ -1,3 +1,4 @@
+*CMZ :          15/11/2025  11.25.31  by  Michael Scheer
 *CMZ :  4.01/05 19/04/2024  10.29.48  by  Michael Scheer
 *CMZ :  4.01/04 14/11/2023  13.37.28  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.11  by  Michael Scheer
@@ -136,7 +137,7 @@ C--- PERFORM FOLDING
 
         if (ieb.eq.1) then
           i1=1
-          i2=3
+          i2=5
         else
           i1=6
           i2=8

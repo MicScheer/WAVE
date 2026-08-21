@@ -1,5 +1,5 @@
 global TeX_mu0eq,TeX_mu0,TeX_mueq,TeX_muplus,TeX_mu,TeX_mum,TeX_murad
-global TeX_chi2ndf,TeX_chi2prob,TeX_beta,TeX_gamma,TeX_egammaev,TeX_foregammaeq
+global TeX_chi2ndf,TeX_chi2prob,TeX_beta,TeX_Ngamma,TeX_gamma,TeX_egammaev,TeX_foregammaeq
 global TeX_pow,TeX_rKauf,TeX_rKzu,TeX_eKauf,TeX_eKzu,TeX_plus,TeX_mul,TeX_slash,Tex_blank
 
 TeX_muplus = '$\mu$ + '
@@ -12,8 +12,11 @@ TeX_mum = '[' + '$\mu$' + 'm]'
 
 TeX_chi2ndf = '$\chi^2/Ndf$'
 TeX_chi2prob = '$\chi^2 prob$'
-TeX_beta = 'N$_{\beta}$'
-TeX_gamma = 'N$_{\gamma}$'
+TeX_beta = '${\beta}$'
+TeX_beta_h = '${\beta}_h$'
+TeX_beta_v = '${\beta}_v$'
+TeX_gamma = '${\gamma}$'
+TeX_Ngamma = '$N_{\gamma}$'
 TeX_egammaev = "$E_{\gamma}$ [eV]"
 TeX_foregammaeq = "for E$_{\gamma}$="
 

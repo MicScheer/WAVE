@@ -1,4 +1,4 @@
-*CMZ :          20/11/2025  17.24.32  by  Michael Scheer
+*CMZ :          06/08/2026  11.34.16  by  Michael Scheer
 *CMZ :  4.02/00 13/09/2025  10.16.17  by  Michael Scheer
 *CMZ :  4.01/07 13/08/2024  10.11.51  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.49.56  by  Michael Scheer
@@ -16,6 +16,8 @@
      &  disph,dispph,dispv,disppv,
      &  modeph,pherror,phgshift,modewave
      &  )
+
+c    Calculates stokes_u, arad_u, and fieldbunch on the mm scale
 
       use omp_lib
       use uradphasemod
@@ -46,66 +48,98 @@ c+seq,uservar.
 
       if (ktime.eq.1) call util_zeit_kommentar_delta(6,'Entered urad_phase',1)
 
-      mthreads_u=mthreads
-
-      nelec_u=nelec
-      noranone_u=noranone
-      icohere_u=icohere
-      modebunch=modebunch_u
-      bunchlen_u=bunchlen
-      bunchcharge_u=bunchcharge
-      ihbunch_u=ihbunch
-
-      perlen_u=perlen/1000.0d0
-      shift_u=shift/1000.0d0
-      nper_u=nper
-      beffv_u=beffv
-      beffh_u=beffh
-
       ebeam_u=ebeam
       gamma_u=ebeam_u/emassg1
-      step_u=step/1000.0d0
-      nstep_u=max(1,nint(perlen_u/step_u))
-
-      curr_u=curr
-
-      pincen_u=pincen/1000.0d0
-      pinw_u=pinw/1000.0d0
-      pinh_u=pinh/1000.0d0
-      npiny_u=npiny
-      npinz_u=npinz
-      modepin_u=modepin
-
-      ephmin_u=ephmin_u
-      ephmax_u=ephmax_u
-      banwid_u=banwid
-      nepho_u=nepho
-
-      npiny_u=max(1,npiny_u)
-      npinz_u=max(1,npinz_u)
-
-      nlpoi_u=nlpoi
-
-      if (modepin.ne.1) then
-        nobsv_u=npiny_u*npinz_u
-      else
-        npinz_u=1
-        npiny_u=1
-        nobsv_u=1
-      endif
 
       if (ical.eq.0) then
 
+        mthreads_u=mthreads
+
+        if (modewave.ne.0) then
+          npinzo_u=npinz
+          npinyo_u=npiny
+        endif
+
+        nelec_u=nelec
+        noranone_u=noranone
+        icohere_u=icohere
+        modebunch=modebunch_u
+        bunchlen_u=bunchlen
+        bunchcharge_u=bunchcharge
+        ihbunch_u=ihbunch
+
+        perlen_u=perlen/1000.0d0
+        shift_u=shift/1000.0d0
+        nper_u=nper
+        beffv_u=beffv
+        beffh_u=beffh
+
+        step_u=step/1000.0d0
+        nstep_u=max(1,nint(perlen_u/step_u))
+
+        curr_u=curr
+
+        pincen_u=pincen/1000.0d0
+        pinw_u=pinw/1000.0d0
+        pinh_u=pinh/1000.0d0
+        npiny_u=npiny
+        npinz_u=npinz
+        modepin_u=modepin
+
+        ephmin_u=ephmin_u
+        ephmax_u=ephmax_u
+        banwid_u=banwid
+        nepho_u=nepho
+
+        npiny_u=max(1,npiny_u)
+        npinz_u=max(1,npinz_u)
+
+        nlpoi_u=nlpoi
+        phgshift_u=phgshift
+
+        nobsv_u=npiny_u*npinz_u
+c        if (ifieldprop_u.ne.0) then
+          allocate(arad_u(6,nobsv_u*nepho_u))
+c        endif
+
+c        if (modepin.ne.1) then
+          nobsv_u=npiny_u*npinz_u
+c        else
+        if (abs(modepin).eq.1) then
+          if (phgshift.ne.0.0d0) then
+            print*,"        *** Warning in urad_phase: For this Monte-Carlo mode, PHGSHIFT must be 0.0 ***"
+            print*,"        *** PHGSHIFT set 0.0 ***"
+            phgshift=0.0d0
+          endif
+c          npinz_u=1
+c          npiny_u=1
+c          nobsv_u=1
+        endif
+
+c        if (ifieldprop_u.eq.0) then
+c          allocate(arad_u(6,nobsv_u*nepho_u))
+c        endif
+
         allocate(epho_u(nepho),obsv_u(3,nobsv_u),
-     &    arad_u(6,nobsv_u*nepho_u),
      &    specpow_u(nobsv_u),
      &    stokes_u(4,nobsv_u*nepho_u),pow_u(nobsv_u))
 
+        !all util_break
         if (ihbunch_u.gt.0) then
-          allocate(fbunch_u(41,nelec_u/ihbunch_u*nepho_u))
+          allocate(fbunch_u(41,nelec_u/ihbunch_u*nepho_u),stat=kalloerr)
+          if (kalloerr.ne.0) then
+              print*,'*** Error in urad_phase: Could not allocate fbunch_u(41,nelec_u/ihbunch_u*nepho_u)'
+              print*,'*** Please check IHBUNCH ***'
+              stop
+          endif
           fbunch_u=0.0d0
         else if (ihbunch_u.lt.0) then
-          allocate(fbunch_u(41,nobsv_u*nelec_u/(-ihbunch_u)*nepho_u))
+          allocate(fbunch_u(41,nobsv_u*nelec_u/(-ihbunch_u)*nepho_u),stat=kalloerr)
+          if (kalloerr.ne.0) then
+            print*,'*** Error in urad_phase: Could not allocate fbunch_u(41,nobsv_u*nelec_u/(-ihbunch_u)*nepho_u)'
+            print*,'*** Please check IHBUNCH ***'
+            stop
+          endif
           fbunch_u=0.0d0
         endif
       endif
@@ -136,9 +170,11 @@ c+seq,uservar.
       do iy=1,npiny_u
         y=y+dy
         z=zmin-dz
+        if (abs(y).le.1.0d-15) y=0.0d0
         do iz=1,npinz_u
           iobsv=iobsv+1
           z=z+dz
+          if (abs(z).le.1.0d-15) z=0.0d0
           obsv_u(1,iobsv)=pincen_u(1)
           obsv_u(2,iobsv)=y
           obsv_u(3,iobsv)=z
@@ -192,8 +228,8 @@ c              r=xx*(1.0d0+h2/2.0d0-h2**2/8.0d0)
 
       modeph=modeph_u
       pherror_u=pherror
-      phgshift_u=phgshift
 
+c     urad_amprep calculates stokes_u and arad_u on the m scale
       call urad_amprep(modewave)
 
       stokes_u=stokes_u/1.0d6 ! photons/mm**2
@@ -202,6 +238,7 @@ c              r=xx*(1.0d0+h2/2.0d0-h2**2/8.0d0)
         fbunch_u(4:14,:)=fbunch_u(4:14,:)*1000.0d0 ! mm
         fbunch_u(17:19,:)=fbunch_u(17:19,:)*1000.0d0 ! mm
         fbunch_u(22:26,:)=fbunch_u(22:26,:)/1.0d6 ! 1/mm**2
+        fbunch_u(30:41,:)=fbunch_u(30:41,:)/1.0d3 ! 1/mm
       endif
 
       icbrill=nobsv_u/2+1
@@ -210,7 +247,11 @@ c              r=xx*(1.0d0+h2/2.0d0-h2**2/8.0d0)
           iobfr=icbrill+nobsv_u*(ifrq-1)
           rea(1:2)=(0.0d0,0.0d0)
           rea(3)=arad_u(3,iobfr)
-          expsh=rea(3)/abs(rea(3))*1.0d3
+          if (abs(rea(3)).ne.0.0d0) then
+            expsh=rea(3)/abs(rea(3))*1.0d3
+          else
+            expsh=1.0d3
+          endif
           if (phgshift.eq.-9999.0d0) expsh=expsh*cdexp(dcmplx(0.0d0,-pi1/2.0d0))
           DO iobs=1,nobsv_u
             iobfr=iobs+nobsv_u*(ifrq-1)
@@ -224,10 +265,10 @@ c              r=xx*(1.0d0+h2/2.0d0-h2**2/8.0d0)
         arad_u=arad_u/1.0d3
       endif
 
-      pincen_u=pincen_u*1000.0d0
-      pinw_u=pinw_u*1000.0d0
-      pinh_u=pinh_u*1000.0d0
-      obsv_u=obsv_u*1000.0d0
+c      pincen_u=pincen_u*1000.0d0
+c      pinw_u=pinw_u*1000.0d0
+c      pinh_u=pinh_u*1000.0d0
+c      obsv_u=obsv_u*1000.0d0
 
 c      if (modewave.ne.0) call util_zeit_kommentar(6,'Leaving urad_phase')
       if (ktime.eq.1) call util_zeit_kommentar_delta(6,'Leaving urad_phase',0)

@@ -45,7 +45,7 @@
      &  ,IW_BLEN,IW_BLENF,IW_CIRC
      &  ,IHLIMIT_C,IHISINI_C,ihisascii,iroottrees,IBFORCE
      &  ,iampli,kampli,IAMPJIT,IUNDULATOR,IWIGGLER,IEXPERT,IBSUPER,IBERROR
-     &  ,ieneloss,iefield,iroothdf5,nocern,iadjust,iwarnbmap,iwarnmyb,mthreads
+     &  ,ieneloss,iefield,iroothdf5,nocern,iadjust,iwarnbmap,iwarnmyb,mthreads,igenpho
 
       CHARACTER(65) CODE
       CHARACTER     CHISASCII
@@ -96,7 +96,7 @@
      &  ,IW_BLEN,IW_BLENF,IW_CIRC
      &  ,IHLIMIT_C,IHISINI_C,ihisascii,iroottrees,IBFORCE
      &  ,iampli,kampli,IAMPJIT,IUNDULATOR,IWIGGLER,IEXPERT,IBSUPER,IBERROR
-     &  ,ieneloss,iefield,iroothdf5,iwarnbmap,iwarnmyb,mthreads
+     &  ,ieneloss,iefield,iroothdf5,iwarnbmap,iwarnmyb,mthreads,igenpho
      &  ,CODE,CHISASCII
 
 
@@ -138,5 +138,5 @@
      &  ,IMAGSPLN,IHINPUT,IHOUTP,IMHBCOM, ihisascii,iroottrees,
      &  ieneloss,iefield,iroothdf5,
      &  iampli,kampli,IAMPJIT,IUNDULATOR,IWIGGLER,IEXPERT,IBSUPER,IBERROR,ibforce,
-     &  nocern,iadjust,mthreads,
+     &  nocern,iadjust,mthreads,igenpho,
      &  CHISASCII

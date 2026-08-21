@@ -5402,13 +5402,22 @@ def h1header_update(hist='?'):
     print("*** Non-existing histogram ***")
   #endif idx == -1
 
+  global Debug
+  if Debug: breakpoint()
+
   h = H1h
 
   nx = len(h)
 
   xmin = h.x.min()
   xmax = h.x.max()
-  dx = (xmax - xmin) / max(nx-1,1)
+
+  if nx > 1:
+    dx = (xmax - xmin) / max(nx-1,1)
+  else:
+    dx = 1.
+  #endif
+
   xmin -= dx / 2.
   xmax += dx / 2.
 
@@ -5432,6 +5441,7 @@ def h1header_update(hist='?'):
   head1[2] = nx
   head1[3] = xmin
   head1[4] = xmax
+  head1[5] = dx
 
   head1[7] = min(h.y)
   head1[8] = max(h.y)
@@ -10443,6 +10453,9 @@ def hbook1(idh=-1, tit='Histogram1D', nx=10, xmin=0., xmax=1., overwrite=False):
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
+  global Debug
+  if Debug: breakpoint()
+
   if type(idh) == int and idh <0:
     print("hbook1(idh=-1, tit='Histogram1D', nx=10, xmin=0., xmax=1.)")
     return 0
@@ -12384,7 +12397,9 @@ def GetIndexH1(idh='?'):
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
-  #nreakpoint()
+  global Debug
+  if Debug: breakpoint()
+
   if type(idh) == str:
     if idh == '?':
       print("\nUsage: index = GetIndex(idh), returns -1 if histogram has not been found")
@@ -15145,6 +15160,9 @@ def nproj1(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
 
 
+  global Debug
+  if Debug: breakpoint()
+
   idn = -1
 
   varl = nlistcolon(var)
@@ -16242,7 +16260,8 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   if plopt == '' or plopt == 'same' or plopt == 'S':
     if plopt == 'same' or plopt == 'S':
       if ey.max() == 0:
-        plopt = 'h'
+        if nx <= 101: plopt = 'h'
+        else: plopt = 'line'
       elif Inoerr == 0:
         plopt = 'e'
       #endif ey.max() == 0
@@ -16571,6 +16590,8 @@ def hplot(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', block
 
 
   idx = GetIndexH1(idh)
+
+  #reakpoint()
 
   if idx >= 0:
     hplot1d(idh,plopt,Tit,xTit,yTit,legend,block)
@@ -17537,11 +17558,11 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
     Kcolorbar[Kzone] = 0
 
     if Colorbarpad != '!':
-      fcm = Fig.colorbar(img, pad=Colorbarpad)
+      fcm = Fig.colorbar(img, pad=Colorbarpad,label=ztit)
       Kcolorbar[Kzone] = 1
 #      Zones[Kzone-1][5] = Kcolorbar
     else:
-      fcm = Fig.colorbar(img)
+      fcm = Fig.colorbar(img,label=ztit)
       Kcolorbar[Kzone] = 0
 #      Zones[Kzone-1][5] = Kcolorbar
     #endif Colorbarpad != '!'
@@ -17573,10 +17594,10 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
     Kcolorbar[Kzone] = 1
 
     if Colorbarpad != '!':
-      fcm = Fig.colorbar(colmap, pad=Colorbarpad)
+      fcm = Fig.colorbar(colmap, pad=Colorbarpad,label=ztit)
 #      Zones[Kzone-1][5] = Kcolorbar
     else:
-      fcm = Fig.colorbar(colmap)
+      fcm = Fig.colorbar(colmap,label=ztit)
 #      Zones[Kzone-1][5] = Kcolorbar
     #endif
 
@@ -18644,6 +18665,8 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
 
   fcm = Axes[len(Axes)-1]
 
+  #reakpoint()
+
   if hasattr(Ax,'zaxis') and ztit != '':
 
     tzexp = Ax.zaxis.get_offset_text()
@@ -18678,7 +18701,11 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
     fcm.ax.tick_params(labelsize=Axislabelsize)
     fcm.ax.get_yaxis().get_offset_text().set(size=Axislabelsize,
                                              position=(1+0.5*Nxzone,0.))
+    ztit = ''
   #endif hasattr(Ax,'zaxis') and ztit != ''
+
+  if ztit != '' and is3d == 0 and Kcolorbar[Kzone]:
+    text(1.1,0.5,ztit,angle=90)
 
   plt.show(block=False)
 
@@ -20043,7 +20070,7 @@ def nplmgs(nt='?',varlis='',select='',weights='',plopt='samemarker', legend='',
 
 def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
           scalex=1., scaley=1., scalez=1., scalet=1., cmap='', hist='!',
-          color='default',isort=0,nx=-1,ny=-1):
+          color='default',isort=0,nx=-1,ny=-1,titcolbar=''):
 
 #+seq,mshimportsind.
 # +PATCH,//WAVES/PYTHON
@@ -20107,9 +20134,7 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
 
 
   global Debug
-#  if Debug:
-#    print("Break in Nplot!")
-#    #reakpoint()
+  if Debug: breakpoint()
 
   NxBinMax = 0
   nto = nt
@@ -20533,10 +20558,10 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
       Kcolorbar[Kzone] = 1
 
       if Colorbarpad != '!':
-        fcm = Fig.colorbar(img, pad=Colorbarpad)
+        fcm = Fig.colorbar(img, pad=Colorbarpad,label=titcolbar)
         #      Zones[Kzone-1][5] = Kcolorbar
       else:
-        fcm = Fig.colorbar(img)
+        fcm = Fig.colorbar(img,label=titcolbar)
         #      Kcolorbar[Kzone] = 0
         #      Zones[Kzone-1][5] = Kcolorbar
         #endif
@@ -20607,10 +20632,10 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
     Kcolorbar[Kzone] = 1
 
     if Colorbarpad != '!':
-      fcm = Fig.colorbar(img, pad=Colorbarpad)
+      fcm = Fig.colorbar(img, pad=Colorbarpad,label=titcolbar)
 #      Zones[Kzone-1][5] = Kcolorbar
     else:
-      fcm = Fig.colorbar(img)
+      fcm = Fig.colorbar(img,label=titcolbar)
 #      Kcolorbar[Kzone] = 0
 #      Zones[Kzone-1][5] = Kcolorbar
     #endif
@@ -20649,7 +20674,7 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
 
 def nscat(nt='?',varlis='',select='',weights='',plopt='', legend='',
           scalex=1., scaley=1., scalez=1., scalet=1., cmap='', hist='!',
-          color='default',isort=0,nx=-1,ny=-1):
+          color='default',isort=0,nx=-1,ny=-1,titcolbar=''):
 
   varliso = varlis
 
@@ -20672,10 +20697,10 @@ def nscat(nt='?',varlis='',select='',weights='',plopt='', legend='',
       nplot(nt,varlis,select,weights,'scat2d',legend,scalex,scaley,scalez,scalet,cmap,hist,color,isort,nx,ny)
     else:
       varlis = varliso + ":" + weights
-      nplot(nt,varlis,select,'','scat2d',legend,scalex,scaley,scalez,scalet,cmap,hist,color,isort,nx,ny)
+      nplot(nt,varlis,select,'','scat2d',legend,scalex,scaley,scalez,scalet,cmap,hist,color,isort,nx,ny,titcolbar=titcolbar)
     #endif
   elif len(varlis) == 3:
-    nplot(nt,varlis,select,'','scat2d',legend,scalex,scaley,scalez,scalet,cmap,hist,color,isort,nx,ny)
+    nplot(nt,varlis,select,'','scat2d',legend,scalex,scaley,scalez,scalet,cmap,hist,color,isort,nx,ny,titcolbar=titcolbar)
   #endif
 
 #enddef nscat
@@ -24474,10 +24499,10 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
     Kcolorbar[Kzone] = 1
 
     if Colorbarpad != '!':
-      fcm = Fig.colorbar(img, pad=Colorbarpad)
+      fcm = Fig.colorbar(img, pad=Colorbarpad,label=ztit)
       #      Zones[Kzone-1][5] = Kcolorbar
     else:
-      fcm = Fig.colorbar(img)
+      fcm = Fig.colorbar(img,label=ztit)
     #endif
 
     ttit = ""
@@ -28658,9 +28683,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
       #endif
     #endif
 
@@ -28682,9 +28707,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("s0f",plopt,Tit,xTit,yTit)
@@ -28704,9 +28729,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("s0e",plopt,Tit,xTit,yTit)
@@ -28727,9 +28752,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("s0ef",plopt,Tit,xTit,yTit)
@@ -28822,9 +28847,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("m0",plopt,Tit,xTit,yTit)
@@ -28844,9 +28869,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("m0f",plopt,Tit,xTit,yTit)
@@ -28866,9 +28891,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("m0e",plopt,Tit,xTit,yTit)
@@ -28889,9 +28914,9 @@ def hcs0123(key='s0123', plopt='2d', Tit='!', xTit='!', yTit='!'):
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
     sethistcolor('black')
     hcfluxden("m0ef",plopt,Tit,xTit,yTit)
@@ -30333,9 +30358,9 @@ def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='!'):
 
   if yTit == "!":
     if Kcurr == 0:
-      yTitBrill = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      yTitBrill = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      yTitBrill = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$'
+      yTitBrill = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$'
     #endif
   #endif
 
@@ -30344,9 +30369,9 @@ def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='!'):
   if ipola==-1 and ibril==-1 and yTit=="!":
     tit = 'Flux-density distribution'
     if Kcurr == 0:
-      yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
   #endif ipola==-1 and ibril==-1 and yTit=="!"
 
@@ -31183,9 +31208,9 @@ def hflux(key='f', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='!'):
   if ipola==-1 and yTit=="!":
     tit = '\nFlux'
     if Kcurr == 0:
-      yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      yTit = TeX_gamma + '/s/' + str(bw) + ' %BW'
+      yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW'
   #endif ipola==-1 and and yTit=="!"
 
   x = Wselx; y = Wsely*1000.; z=Wselz*1000.
@@ -31877,9 +31902,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(idx37,'z','spec',select,1000.,1.e-6,0,'HpinH')
     tit = 'Hori. cut of flux-dens. dist.'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
   elif key == 'FF' or key == 'FDF':
     idx37 = GetIndexN('n3701')
@@ -31899,9 +31924,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n37,'z','spec','',1000.,1.e-6,0,'HpinH')
     tit = 'Hori. cut of flux-dens. dist.\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 
   elif key == 'AYRF' or key == 'EYRF':
@@ -32377,9 +32402,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s0','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S0'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1':
     idx4700 = GetIndexN('n4700')
@@ -32398,9 +32423,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s1','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S1'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2':
     idx4700 = GetIndexN('n4700')
@@ -32419,9 +32444,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s2','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3':
     idx4700 = GetIndexN('n4700')
@@ -32440,9 +32465,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s3','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S3'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0F':
     idx4701 = GetIndexN('n4701')
@@ -32461,9 +32486,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s0','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S0\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1F':
     idx4701 = GetIndexN('n4701')
@@ -32482,9 +32507,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s1','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S1\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2F':
     idx4701 = GetIndexN('n4701')
@@ -32503,9 +32528,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s2','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3F':
     idx4701 = GetIndexN('n4701')
@@ -32524,9 +32549,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s3','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S3\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0E':
     idx4702 = GetIndexN('n4702')
@@ -32545,9 +32570,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s0','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S0 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1E':
     idx4702 = GetIndexN('n4702')
@@ -32566,9 +32591,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s1','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S1 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2E':
     idx4702 = GetIndexN('n4702')
@@ -32587,9 +32612,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s2','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3E':
     idx4702 = GetIndexN('n4702')
@@ -32608,9 +32633,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s3','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S3 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0EF':
     idx4703 = GetIndexN('n4703')
@@ -32629,9 +32654,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s0','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S0\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1EF':
     idx4703 = GetIndexN('n4703')
@@ -32650,9 +32675,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s1','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S1\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2EF':
     idx4703 = GetIndexN('n4703')
@@ -32671,9 +32696,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s2','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3EF':
     idx4703 = GetIndexN('n4703')
@@ -32692,9 +32717,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s3','',1000.,1.e-6,0,'HpinH')
     tit = 'Density distribution of S3\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Stokes
 
 #{Merit
@@ -32715,9 +32740,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1':
     idx4700 = GetIndexN('n4700')
@@ -32736,9 +32761,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P1**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2':
     idx4700 = GetIndexN('n4700')
@@ -32757,9 +32782,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P2**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3':
     idx4700 = GetIndexN('n4700')
@@ -32778,9 +32803,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4700,'z','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P3**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0F':
     idx4701 = GetIndexN('n4701')
@@ -32799,9 +32824,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1F':
     idx4701 = GetIndexN('n4701')
@@ -32820,9 +32845,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P1**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2F':
     idx4701 = GetIndexN('n4701')
@@ -32841,9 +32866,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P2**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3F':
     idx4701 = GetIndexN('n4701')
@@ -32862,9 +32887,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4701,'z','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P3**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0E':
     idx4702 = GetIndexN('n4702')
@@ -32883,9 +32908,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1E':
     idx4702 = GetIndexN('n4702')
@@ -32904,9 +32929,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P1**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2E':
     idx4702 = GetIndexN('n4702')
@@ -32925,9 +32950,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P2**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3E':
     idx4702 = GetIndexN('n4702')
@@ -32946,9 +32971,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4702,'z','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P3**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0EF':
     idx4703 = GetIndexN('n4703')
@@ -32967,9 +32992,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1EF':
     idx4703 = GetIndexN('n4703')
@@ -32988,9 +33013,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P1**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2EF':
     idx4703 = GetIndexN('n4703')
@@ -33009,9 +33034,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit S0*P2**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3EF':
     idx4703 = GetIndexN('n4703')
@@ -33030,9 +33055,9 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
     istat = nproj1(n4703,'z','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinH')
     tit = 'Figure of merit of S0*P3**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Merit
 #{Power
   elif key == 'POW':
@@ -33340,9 +33365,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(idx37,'y','spec',select,1000.,1.e-6,0,'HpinV')
     tit = 'Vert. cut of flux-dens. dist.'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'AYRF' or key == 'EYRF':
     idx37 = GetIndexN('n3701')
@@ -33522,9 +33547,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n37,'y','spec','',1000.,1.e-6,0,'HpinV')
     tit = 'Vert. cut of flux-dens. dist.\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
 #{Polarization
   elif key == 'P0EF':
@@ -33835,9 +33860,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1':
     idx4700 = GetIndexN('n4700')
@@ -33856,9 +33881,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2':
     idx4700 = GetIndexN('n4700')
@@ -33877,9 +33902,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3':
     idx4700 = GetIndexN('n4700')
@@ -33898,9 +33923,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0F':
     idx4701 = GetIndexN('n4701')
@@ -33919,9 +33944,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1F':
     idx4701 = GetIndexN('n4701')
@@ -33940,9 +33965,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2F':
     idx4701 = GetIndexN('n4701')
@@ -33961,9 +33986,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3F':
     idx4701 = GetIndexN('n4701')
@@ -33982,9 +34007,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0E':
     idx4702 = GetIndexN('n4702')
@@ -34003,9 +34028,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1E':
     idx4702 = GetIndexN('n4702')
@@ -34024,9 +34049,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2E':
     idx4702 = GetIndexN('n4702')
@@ -34045,9 +34070,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3E':
     idx4702 = GetIndexN('n4702')
@@ -34066,9 +34091,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0EF':
     idx4703 = GetIndexN('n4703')
@@ -34087,9 +34112,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s0','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S0\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1EF':
     idx4703 = GetIndexN('n4703')
@@ -34108,9 +34133,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s1','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S1\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2EF':
     idx4703 = GetIndexN('n4703')
@@ -34129,9 +34154,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s2','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3EF':
     idx4703 = GetIndexN('n4703')
@@ -34150,9 +34175,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s3','',1000.,1.e-6,0,'HpinV')
     tit = 'Density distribution of S3\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Stokes
 
 #{Merit
@@ -34173,9 +34198,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1':
     idx4700 = GetIndexN('n4700')
@@ -34194,9 +34219,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2':
     idx4700 = GetIndexN('n4700')
@@ -34215,9 +34240,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3':
     idx4700 = GetIndexN('n4700')
@@ -34236,9 +34261,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4700,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P3**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0F':
     idx4701 = GetIndexN('n4701')
@@ -34257,9 +34282,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1F':
     idx4701 = GetIndexN('n4701')
@@ -34278,9 +34303,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2F':
     idx4701 = GetIndexN('n4701')
@@ -34299,9 +34324,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3F':
     idx4701 = GetIndexN('n4701')
@@ -34320,9 +34345,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4701,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P3**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0E':
     idx4702 = GetIndexN('n4702')
@@ -34341,9 +34366,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1E':
     idx4702 = GetIndexN('n4702')
@@ -34362,9 +34387,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2E':
     idx4702 = GetIndexN('n4702')
@@ -34383,9 +34408,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3E':
     idx4702 = GetIndexN('n4702')
@@ -34404,9 +34429,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4702,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P3**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0EF':
     idx4703 = GetIndexN('n4703')
@@ -34425,9 +34450,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1EF':
     idx4703 = GetIndexN('n4703')
@@ -34446,9 +34471,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s0*(s1/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P1**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2EF':
     idx4703 = GetIndexN('n4703')
@@ -34467,9 +34492,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s0*(s2/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit S0*P2**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3EF':
     idx4703 = GetIndexN('n4703')
@@ -34488,9 +34513,9 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
     istat = nproj1(n4703,'y','s0*(s3/s0)**2','',1000.,1.e-6,0,'HpinV')
     tit = 'Figure of merit of S0*P3**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Merit
 
 #{Power
@@ -34746,9 +34771,9 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
     istat = nproj1(n6000,'z','spec',selcut + select,1000.,1.e-6,0,'HpinPhH')
     tit = 'Hori. cut of flux-dens. dist.'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 
   elif key == 'APH':
@@ -34860,9 +34885,9 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
     istat = nproj1("n6000",'z','specf',selcut + select,1000.,1.e-6,0,'HpinPhH')
     tit = 'Hori. cut of flux-dens. dist.\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 
   else:
@@ -35052,9 +35077,9 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
     istat = nproj1(n6000,'y','spec',selcut + select,1000.,1.e-6,0,'HpinPhV')
     tit = 'Vert. cut of flux-dens. dist.'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 
   elif key == 'APH':
@@ -35166,9 +35191,9 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
     istat = nproj1("n6000",'y','specf',selcut + select,1000.,1.e-6,0,'HpinPhV')
     tit = 'Vert. cut of flux-dens. dist.\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 
   else:
@@ -35384,9 +35409,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(idx37,'z:y','spec',select,1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Flux-density distribution'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
   elif key == 'FF' or key == 'FDF':
     idx37 = GetIndexN('n3701')
     n37 = Ntup[idx37]
@@ -35404,9 +35429,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n37,'z:y','spec','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Flux-density distribution\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'AZR' or key == 'EZR':
     if select == '':
@@ -35856,9 +35881,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s0','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S0'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1':
     idx4700 = GetIndexN('n4700')
@@ -35877,9 +35902,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s1','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S1'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2':
     idx4700 = GetIndexN('n4700')
@@ -35898,9 +35923,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3':
     idx4700 = GetIndexN('n4700')
@@ -35919,9 +35944,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s3','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S3'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0F':
     idx4701 = GetIndexN('n4701')
@@ -35940,9 +35965,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s0','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S0\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1F':
     idx4701 = GetIndexN('n4701')
@@ -35961,9 +35986,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s1','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S1\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2F':
     idx4701 = GetIndexN('n4701')
@@ -35982,9 +36007,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3F':
     idx4701 = GetIndexN('n4701')
@@ -36003,9 +36028,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s3','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S3\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0E':
     idx4702 = GetIndexN('n4702')
@@ -36024,9 +36049,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s0','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S0 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif Kcurr == 0
 
   elif key == 'S1E':
@@ -36046,9 +36071,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s1','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S1 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
   elif key == 'S2E':
     idx4702 = GetIndexN('n4702')
@@ -36067,9 +36092,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3E':
     idx4702 = GetIndexN('n4702')
@@ -36088,9 +36113,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s3','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S3 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S0EF':
     idx4703 = GetIndexN('n4703')
@@ -36112,9 +36137,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
 
     tit = 'Density distribution of S0\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S1EF':
     idx4703 = GetIndexN('n4703')
@@ -36133,9 +36158,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s1','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S1\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S2EF':
     idx4703 = GetIndexN('n4703')
@@ -36154,9 +36179,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'S3EF':
     idx4703 = GetIndexN('n4703')
@@ -36175,9 +36200,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s3','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Density distribution of S3\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Stokes
 
 #{Merit
@@ -36198,9 +36223,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1':
     idx4700 = GetIndexN('n4700')
@@ -36219,9 +36244,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s0*(s1/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P1**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2':
     idx4700 = GetIndexN('n4700')
@@ -36240,9 +36265,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s0*(s2/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P2**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3':
     idx4700 = GetIndexN('n4700')
@@ -36261,9 +36286,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4700,'z:y','s0*(s3/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P3**2'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0F':
     idx4701 = GetIndexN('n4701')
@@ -36282,9 +36307,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1F':
     idx4701 = GetIndexN('n4701')
@@ -36303,9 +36328,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s0*(s1/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P1**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2F':
     idx4701 = GetIndexN('n4701')
@@ -36324,9 +36349,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s0*(s2/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P2**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3F':
     idx4701 = GetIndexN('n4701')
@@ -36345,9 +36370,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4701,'z:y','s0*(s3/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P3**2\nwith emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0E':
     idx4702 = GetIndexN('n4702')
@@ -36366,9 +36391,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1E':
     idx4702 = GetIndexN('n4702')
@@ -36387,9 +36412,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s0*(s1/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P1**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2E':
     idx4702 = GetIndexN('n4702')
@@ -36408,9 +36433,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s0*(s2/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P2**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3E':
     idx4702 = GetIndexN('n4702')
@@ -36429,9 +36454,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4702,'z:y','s0*(s3/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P3**2 with e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M0EF':
     idx4703 = GetIndexN('n4703')
@@ -36450,9 +36475,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s0*((s1/s0)**2+(s2/s0)**2+(s3/s0)**2)','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M1EF':
     idx4703 = GetIndexN('n4703')
@@ -36471,9 +36496,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s0*(s1/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P1**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M2EF':
     idx4703 = GetIndexN('n4703')
@@ -36492,9 +36517,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s0*(s2/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit S0*P2**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 
   elif key == 'M3EF':
     idx4703 = GetIndexN('n4703')
@@ -36513,9 +36538,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
     istat = nproj2(n4703,'z:y','s0*(s3/s0)**2','',1000.,1000.,1.e-6,0,0,'Hpin')
     tit = 'Figure of merit of S0*P3**2\nwith emittance and e-spread'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
 #}Merit
 
   else:
@@ -36810,9 +36835,9 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
     istat = nproj2(n6000,'z:y','spec',select,1000.,1000.,1.0e-6,0,0,'HpinPh')
     tit = 'Flux-density'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
     #ztit = 'a.u.'
 
@@ -36826,9 +36851,9 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
     istat = nproj2(n6000,'z:y','specf',select,1000.,1000.,1.0e-6,0,0,'HpinPh')
     tit = 'Flux-density with emittance'
     if Kcurr == 0:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
     else:
-      ztit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+      ztit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     #endif
 #    ztit = 'a.u.'
 
@@ -37408,7 +37433,7 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
 
   #endif Isurf != 1 and Ihist != 1:
 
-  wtit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+  wtit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
 
   #reakpoint()
   if lz == 1:
@@ -37957,7 +37982,7 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
 
   #endif Isurf != 1 and Ihist != 1:
 
-  wtit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+  wtit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/mrad$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
 
   #reakpoint()
   if lz == 1:
@@ -38844,9 +38869,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
       #endif
     #endif
 
@@ -38870,9 +38895,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     if Tit == '!': Tit = "Incoh. mean flux-density of S" + sstok +"\nat x={:.3g}m, y={:.3g}mm, z={:.3g}mm".format(x,y,z)
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     hplot1d(hist,plopt,Tit,xTit,yTit)
     #optstat(kstat)
 
@@ -38891,9 +38916,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     if Tit == '!': Tit = "Single electron flux-density of S" + sstok +"\nat x={:.3g}m, y={:.3g}mm, z={:.3g}mm".format(x,y,z)
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     hplot1d(hist,plopt,Tit,xTit,yTit)
 
   elif key == "fd":
@@ -38909,9 +38934,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     if Tit == '!': Tit = "Single electron flux-density\nat x={:.3g}m, y={:.3g}mm, z={:.3g}mm".format(x,y,z)
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     hplot1d('HbunFd1',plopt,Tit,xTit,yTit)
 
   elif key == "zizpi":
@@ -39093,9 +39118,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
 
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW'
       #endif
     #endif
 
@@ -39120,9 +39145,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
         Tit = "Incoh. flux of S" + sstok + " through pinhole ({:.3g}mm x {:.3g}mm)\nat x={:.3g}m, y={:.3g}mm, z={:.3g}mm".format(pinw,pinh,pinx,piny,pinz)
     if yTit == "!":
       if Kcurr == 0:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        yTit = TeX_gamma + '/s/' + str(bw) + ' %BW'
+        yTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW'
     hplot1d(hist,plopt,Tit,xTit,yTit)
     #optstat(kstat)
 
@@ -39139,9 +39164,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     yTit = "y [mm]"
     if zTit == "!":
       if Kcurr == 0:
-        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        zTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        zTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     hcopy2d('h11000','HDist',Tit,scalex,scaley,reset=1,overwrite=True)
     nproj2('n30','zobs:yobs','spec',select,scalex,scaley,1.e-6,idh='HDist')
     hplot2d('HDist',tit=Tit,xtit=xTit,ytit=yTit,ztit=zTit)
@@ -39177,9 +39202,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     yTit = "y [mm]"
     if zTit == "!":
       if Kcurr == 0:
-        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        zTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        zTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     nplot('n30','zobs:yobs',select,'spec',select,
           scalex=scalex,scaley=scaley,scalez=1.e-6)
     if not isame: txyz(Tit,xTit,yTit,zTit)
@@ -39198,9 +39223,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     yTit = "y [mm]"
     if zTit == "!":
       if Kcurr == 0:
-        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        zTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        zTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     hcopy2d('h11000','HDist',Tit,scalex,scaley,reset=1,overwrite=True)
     stok = "s" + str(idiststo)
     nproj2('n30','zobs:yobs',stok,select,scalex,scaley,1.e-6,idh='HDist')
@@ -39219,9 +39244,9 @@ def nbeam(key="fdfdf", select="!", plopt="!", Tit="!", xTit="!", yTit="!", zTit=
     yTit = "y [mm]"
     if zTit == "!":
       if Kcurr == 0:
-        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+        zTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
       else:
-        zTit = TeX_gamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
+        zTit = TeX_Ngamma + '/s/' + str(bw) + ' %BW/mm$^{2}$'
     stok = "s" + str(idiststo-5)
     nplot('n30','zobs:yobs',select,stok,select,
           scalex=scalex,scaley=scaley,scalez=1.e-6)
@@ -39667,7 +39692,7 @@ def WaveOverview():
           Ttit = "Flux-density\nat x={:,.2f}m, y={:,.1f}mm, z={:,.1f}mm".format(x,y,z)
           hplot1d(h148)
           xTit = 'Photon energy [eV]'
-          yTit = TeX_gamma + '/s/' + str(Wbw*100.) + ' %BW'
+          yTit = TeX_Ngamma + '/s/' + str(Wbw*100.) + ' %BW'
           txyz(Ttit,xTit,yTit)
 
           zone(4,2,7,'s')
@@ -43203,7 +43228,7 @@ def hbetahana():
   optstat(False)
   hplot1d("h3110")
   optstat(kstat)
-  txyz('Horizontal Beta-Function (analytically)','s [m]',Tex_beta + ' ' + TeX_blank + '[m]$')
+  txyz('Horizontal Beta-Function (analytically)','s [m]',TeX_beta + ' $[m]$')
 #enddef hbetahana()
 
 def hbetahpara():
@@ -43218,7 +43243,7 @@ def hbetahpara():
   optstat(False)
   hplot1d("h3120")
   optstat(kstat)
-  txyz('Horizontal Beta-Function (parabolic ansatz)','s [m]',Tex_beta + ' ' + TeX_blank + '[m]$')
+  txyz('Horizontal Beta-Function (parabolic ansatz)','s [m]',TeX_beta + ' $[m]$')
 #enddef hbetahpara()
 
 def hbetav():
@@ -43233,7 +43258,7 @@ def hbetav():
   optstat(False)
   hplot1d("h3200")
   optstat(kstat)
-  txyz('Vertical Beta-Function','s [m]',Tex_beta + ' ' + TeX_blank + '[m]$')
+  txyz('Vertical Beta-Function','s [m]',TeX_beta + ' $[m]$')
 #enddef hbetav()
 
 def hbetah():
@@ -43248,7 +43273,7 @@ def hbetah():
   optstat(False)
   hplot1d("h3100")
   optstat(kstat)
-  txyz('Horizontal Beta-Function','s [m]',Tex_beta + ' ' + TeX_blank + ' [m]$')
+  txyz('Horizontal Beta-Function','s [m]',TeX_beta + ' ' + TeX_blank + ' [m]$')
 #enddef hbetah()
 
 def hchromhsr3():
@@ -43323,7 +43348,7 @@ def hdisp():
   optstat(False)
   kstat=Kstat
   optstat(False)
-  hplot1d("h3450",Tit='Horizontal Dispersion',xTit='s [m]',yTit=Tex_eta + ' [m]$')
+  hplot1d("h3450",Tit='Horizontal Dispersion',xTit='s [m]',yTit=TeX_eta + ' [m]$')
   optstat(kstat)
 
 #enddef hdisp()
@@ -43340,10 +43365,11 @@ def hbetahp():
   optstat(False)
   hplot1d("h3100")
   optstat(kstat)
-  txyz('Derivative of Horizontal Beta-Function','s [m]',Tex_beta + '$')
+  txyz('Derivative of Horizontal Beta-Function','s [m]',TeX_beta + '$')
 #enddef hbetahp()
 
 def hbeta():
+
   global Wbeta, Kstat
 
   if Wbeta == 0:
@@ -43360,12 +43386,14 @@ def hbeta():
   hv = hget("h3200")
 
   setlinecolor('r')
-  hplot(hh,legend=r + Tex_beta + '_h$')
+  hplot(hh,legend=TeX_beta_h)
+
   setlinecolor('b')
-  hplot(hv,'same',legend=r + Tex_beta + '_v$')
+
+  hplot(hv,'same',legend=TeX_beta_v)
 
   legend()
-  txyz('Beta-Functions','s [m]',r + Tex_beta + ' ' + Tex_blank + '[m]$')
+  txyz('Beta-Functions','s [m]',TeX_beta + ' $[m]$')
 
   setlinecolor(lc)
   optstat(kstat)
@@ -43388,12 +43416,12 @@ def hbetap():
   hv = hget("h3400")
 
   setlinecolor('r')
-  hplot(hh,legend=r + Tex_beta + "_h'$")
+  hplot(hh,legend=TeX_beta + "_h'$")
   setlinecolor('b')
-  hplot(hv,'same',legend=r + Tex_beta + "_v'$")
+  hplot(hv,'same',legend=TeX_beta + "_v'$")
 
   legend()
-  txyz('Derivatives of Beta-Functions','s [m]',r + Tex_beta + ' ' + Tex_blank + '[m]$')
+  txyz('Derivatives of Beta-Functions','s [m]',TeX_beta + ' $[m]$')
 
   setlinecolor(lc)
   optstat(kstat)

@@ -1,4 +1,4 @@
-*CMZ :          04/11/2025  14.11.47  by  Michael Scheer
+*CMZ :          21/08/2026  10.17.11  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  13.23.19  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
@@ -16,7 +16,7 @@
 *CMZ :  3.08/01 03/04/2019  11.56.15  by  Michael Scheer
 *CMZ :  3.07/01 29/03/2019  14.35.23  by  Michael Scheer
 *-- Author :    Michael Scheer   27/03/2019
-      subroutine winstwigefold(kwigerr)
+      subroutine winstwigefold(kwigerr,kgenphoerr)
 
       use omp_lib
       use clustermod
@@ -54,6 +54,8 @@
       include 'random.cmn'
 *KEEP,waveenv.
       include 'waveenv.cmn'
+*KEEP,genpho.
+      include 'genpho.cmn'
 *KEEP,phyconparam.
       include 'phyconparam.cmn'
 *KEEP,wvers.
@@ -68,8 +70,12 @@
 
       double precision, dimension (:), allocatable :: zw,yw
 
-      double precision :: ebeam,ebeammin,ebeammax,debeam,deltae,ezr,ezi,eyr,eyi,wig,
-     &  g(nwigefold+1),gsum,be(1000),bw(1000)
+      double precision ::
+     &  ebeam,ebeammin,ebeammax,debeam,deltae,ezr,ezi,eyr,eyi,wig,
+     &  g(nwigefold+1),gsum,be(1000),bw(1000),bx,by,bz,ax,ay,az
+
+      real ee,gg,s0,s1,s2,s3,s4,egam,z,y,zp,yp
+      integer igam,iegam,iebeam,iele
 
       integer isystem
       external isystem
@@ -79,13 +85,14 @@
       equivalence (ibackspace,cbs)
 
       integer iwrun,ipos(2,nwigefold),kwigerr,npola,kpola,iz,iy,itz,ity,ifrq,kfrq,iwcode,
-     &  lz,ly,ltz,lty,lpola,isour,nsource
+     &  lz,ly,ltz,lty,lpola,isour,nsource,kgenphoerr
 
       integer :: iline=0,kempty,iwig,iwigdum
       integer :: ihtracko,ihfreqo,lunin,lunout,nlast,nl,lunrun,nfirst,ni,l2,l1,k2,k1,istat,ipid,
-     &  iend,ianf,m1,m2,n1,n2,lunfis,ieof,lunwef
+     &  iend,ianf,m1,m2,n1,n2,lunfis,ieof,lunwef,lunpho,lunelc
 
       character(2048) cline,cstage,cstage0,cins,clineb,cline1
+      character(32) c32
       character(64) c64,cpid
 
       logical lexist
@@ -133,40 +140,76 @@
 !******************************************************************************
 *KEND.
 
+      open(newunit=lunin,file="WAVE_CODE.DAT")
+      call util_skip_comment_end(lunin,ieof)
+      if (ieof.ne.0) then
+        iwrun=1
+      else
+        read(lunin,*)iwrun
+        iwrun=iwrun+1
+      endif
+      close(lunin)
+
+      if (khalba.ne.0.and.nhhalba.ne.0) then
+        call bhalba(0.0d0,0.0d0,0.0d0,bx,by,bz,ax,ay,az)
+        nhhalba=0
+      endif
+
+      if (khalbasy.ne.0.and.nhhalbasy.ne.0) then
+        call bhalbasy(0.0d0,0.0d0,0.0d0,bx,by,bz,ax,ay,az)
+        nhhalbasy=0
+      endif
+
+      if (kellip.ne.0.and.nharmell.ne.0) then
+        call bellip(0.0d0,0.0d0,0.0d0,bx,by,bz,ax,ay,az)
+        nharmell=0
+      endif
+
+      !allutil_break
       if (kellip.ne.0.and.nharmell.ne.0) then
         write(6,*)
         write(6,*)'*** WARNING IN WINSTWIGEFOLD: KELLIP.NE.0.AND.NHARMELL.NE.0!'
         write(6,*)'*** This means that for all beam energies the undulator field is different!'
-        write(6,*)'*** This is only useful for test purposes!'
+c        write(6,*)'*** This is only useful for test purposes!'
         write(6,*)
+        stop "*** This is not allowed ***"
       endif
 
       if (KHALBA.ne.0.and.NHHALBA.ne.0) then
         write(6,*)
         write(6,*)'*** WARNING IN WINSTWIGEFOLD: KHALBA.NE.0.AND.NHHALBA.NE.0!'
         write(6,*)'*** This means that for all beam energies the undulator field is different!'
-        write(6,*)'*** This is only useful for test purposes!'
+c        write(6,*)'*** This is only useful for test purposes!'
         write(6,*)
+        stop "*** This is not allowed ***"
       endif
 
       if (KHALBASY.ne.0.and.NHHALBASY.ne.0) then
         write(6,*)
         write(6,*)'*** WARNING IN WINSTWIGEFOLD: KHALBASY.NE.0.AND.NHHALBASY.NE.0!'
         write(6,*)'*** This means that for all beam energies the undulator field is different!'
-        write(6,*)'*** This is only useful for test purposes!'
+c        write(6,*)'*** This is only useful for test purposes!'
         write(6,*)
+        stop "*** This is not allowed ***"
       endif
 
       open(newunit=lunwef,file="wigner.wef")
+      open(newunit=lunpho,file="genpho_espread.pho")
+      open(newunit=lunelc,file="genpho_espread.elc")
+
+      write(cline,*) '*',iwrun, trim(code)
+      write(lunpho,'(a)') adjustl(trim(cline))
+      write(lunelc,'(a)') adjustl(trim(cline))
 
       kwigerr=0
+
+      nwigefold=nwigefold/2*2+1
+      ngenphoefold=ngenphoefold/2*2+1
 
       ebeammin=dmyenergy*(1.0d0-nsige*espread)
       ebeammax=dmyenergy*(1.0d0+nsige*espread)
       debeam=(ebeammax-ebeammin)/dble(nwigefold-1)
       deltae=espread*dmyenergy
-
-      nwigefold=nwigefold/2*2+1
 
       ihtracko=ihtrack
       ihfreqo=ihfreq
@@ -188,7 +231,7 @@
         write(cline,*)'Winstwigefold:',iwigefold,' of ',nwigefold
         write(6,'(a)',advance='no') cline(1:len_trim(cline))
         do ic=1,len_trim(cline)
-           write(6,'(a)',advance='no') cbs
+          write(6,'(a)',advance='no') cbs
         enddo
 
         be(iwigefold)=ebeam
@@ -215,38 +258,64 @@
             cycle
           endif
 
-          call util_lower_case(cline1)
+          !call util_lower_case(cline1)
 
-          c64="DMYENERGY"
-          call util_string_substring_igncase(cline1,trim(c64),ianf,iend,istat)
-          if (istat.eq.0) then
-            write(c64,*) ebeam
-            call util_string_trim(c64,ni,nl)
-            cline="      DMYENERGY=" // c64(ni:nl)
-          endif
+          c32="DMYENERGY"
+          write(c64,*) ebeam
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
 
-          c64="NWIGEFOLD"
-          call util_string_substring_igncase(cline1,trim(c64),ianf,iend,istat)
-          if (istat.eq.0) then
-            cline="      NWIGEFOLD=0"
-          endif
+          c32="B0HALBA"
+          write(c64,*) B0HALBA
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
 
-          c64="IHTRACK"
-          call util_string_substring_igncase(cline1,trim(c64),ianf,iend,istat)
-          if (istat.eq.0) then
-            cline="      IHTRACK=0"
-          endif
+          c32="B0HALBASY"
+          write(c64,*) B0HALBASY
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
 
-          c64="IHFREQ"
-          call util_string_substring_igncase(cline1,trim(c64),ianf,iend,istat)
-          if (istat.eq.0) then
-            cline="      IHFREQ=0"
-          endif
+          c32="B0ELLIPV"
+          write(c64,*) B0ELLIPV
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
+
+          c32="B0ELLIPH"
+          write(c64,*) B0ELLIPH
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
+
+          c32="ESPREAD"
+          c64="0.0d0"
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
+
+          c32="NHHALBA"
+          c64="0"
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
+
+          c32="NHHALBA"
+          c64="0"
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
+
+          c32="NHARMELL"
+          c64="0"
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
+
+          c32="NHHALBASY"
+          c64="0"
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
+
+          c32="NGENPHOEFOLD"
+          c64="0"
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
+
+          c32="IHTRACK"
+          c64="0"
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
+
+          c32="IHFREQ"
+          c64="0"
+          call util_replace_namelist_variable(cline1,c32,c64,cline,istat)
 
           write(lunout,'(a)') trim(cline)
 
         enddo
-
+        stop
 99      close(lunout)
         close(lunin)
 
@@ -413,7 +482,7 @@
 
 c        print*,trim(cline)
 
-        call util_break
+        !allutil_break
 
         istat=isystem(trim(cline))
 
@@ -428,67 +497,91 @@ c        print*,trim(cline)
           call sleep(1)
         enddo
 
-        open(newunit=lunrun,file=trim(cstage)//chpathsep//"wigner.wav",status='old')
-        read(lunrun,'(a)') cline
-        read(cline(2:),*) nsource,nfreq,iwigdum,mphasez,mphasey,nwigthetaz,nwigthetay
+        if (iwigner.ne.0) then
 
-        if (iwigefold.eq.1) then
+          open(newunit=lunrun,file=trim(cstage)//chpathsep//"wigner.wav",status='old')
+          read(lunrun,'(a)') cline
+          read(cline(2:),*) nsource,nfreq,iwigdum,mphasez,mphasey,nwigthetaz,nwigthetay
 
-          write(lunwef,'(a)') trim(cline)
+          if (iwigefold.eq.1) then
 
-          allocate(thez(nwigthetaz),they(nwigthetay),
-     &      zw(mphasez),yw(mphasey),
-     &      fdwigzy(mphasez,mphasey),fdwigtzty(nwigthetaz,nwigthetay))
+            write(lunwef,'(a)') trim(cline)
 
-          if (iwigner.gt.0) then
-            npola=4
-          else
-            npola=1
+            allocate(thez(nwigthetaz),they(nwigthetay),
+     &        zw(mphasez),yw(mphasey),
+     &        fdwigzy(mphasez,mphasey),fdwigtzty(nwigthetaz,nwigthetay))
+
+            if (iwigner.gt.0) then
+              npola=4
+            else
+              npola=1
+            endif
+
+            allocate(wigefold(mphasez,mphasey,nwigthetaz,nwigthetay,nfreq,nwigefold,npola),
+     &        esourz(mphasez,mphasey,nfreq,npola),
+     &        esoury(mphasez,mphasey,nfreq,npola))
+
+            wigefold=0.0d0
+
           endif
 
-          allocate(wigefold(mphasez,mphasey,nwigthetaz,nwigthetay,nfreq,nwigefold,npola),
-     &      esourz(mphasez,mphasey,nfreq,npola),
-     &      esoury(mphasez,mphasey,nfreq,npola))
+          do isour=1,nsource
+            do ifrq=1,nfreq
 
-          wigefold=0.0d0
+              do kpola=1,npola
 
-        endif
+                do ity=1,nwigthetay
+                  do itz=1,nwigthetaz
+                    do iy=1,mphasey
+                      do iz=1,mphasez
 
-        do isour=1,nsource
-          do ifrq=1,nfreq
+                        read(lunrun,*) lpola,lz,ly,ltz,lty,kfrq,
+     &                    freq(kfrq),zw(iz),yw(iy),thez(itz),they(ity),
+     &                    ezr,ezi,eyr,eyi,
+     &                    wig,fdwigzy(iz,iy),fdwigtzty(itz,ity)
 
-            do kpola=1,npola
+                        esourz(iz,iy,ifrq,kpola)=dcmplx(ezr,ezi)
+                        esoury(iz,iy,ifrq,kpola)=dcmplx(eyr,eyi)
 
-              do ity=1,nwigthetay
-                do itz=1,nwigthetaz
-                  do iy=1,mphasey
-                    do iz=1,mphasez
-
-                      read(lunrun,*) lpola,lz,ly,ltz,lty,kfrq,
-     &                  freq(kfrq),zw(iz),yw(iy),thez(itz),they(ity),
-     &                  ezr,ezi,eyr,eyi,
-     &                  wig,fdwigzy(iz,iy),fdwigtzty(itz,ity)
-
-                      esourz(iz,iy,ifrq,kpola)=dcmplx(ezr,ezi)
-                      esoury(iz,iy,ifrq,kpola)=dcmplx(eyr,eyi)
-
-                      if (nosplinewef.ne.0) then
-                        wigefold(iz,iy,itz,ity,ifrq,1,kpola)=wigefold(iz,iy,itz,ity,ifrq,1,kpola)
-     &                    +g(iwigefold)*debeam*wig
-                      else
-                        wigefold(iz,iy,itz,ity,ifrq,1,kpola)=wigefold(iz,iy,itz,ity,ifrq,1,kpola)
-     &                    +g(iwigefold)*wig
-                      endif
+                        if (nosplinewef.ne.0) then
+                          wigefold(iz,iy,itz,ity,ifrq,1,kpola)=wigefold(iz,iy,itz,ity,ifrq,1,kpola)
+     &                      +g(iwigefold)*debeam*wig
+                        else
+                          wigefold(iz,iy,itz,ity,ifrq,1,kpola)=wigefold(iz,iy,itz,ity,ifrq,1,kpola)
+     &                      +g(iwigefold)*wig
+                        endif
+                      enddo
                     enddo
                   enddo
                 enddo
-              enddo
 
-            enddo !kpola
-          enddo !nfreq
-        enddo !nsource
+              enddo !kpola
+            enddo !nfreq
+          enddo !nsource
 
-        close(lunrun)
+          close(lunrun)
+
+        endif !iwigner
+
+        if (igenpho.ne.0) then
+          callutil_break
+          open(newunit=lunrun,file=trim(cstage)//chpathsep//"ampgenpho.pho",status='old')
+          do while (.true.)
+            read(lunrun,*,iostat=istat) igam,iele,iegam,iebeam,ee,gg,egam,z,y,zp,yp,s0,s1,s2,s3,s4
+            write(lunpho,*) igam,iele,iegam,iwigefold,ee,sngl(g(iwigefold)),egam,z,y,zp,yp,s0,s1,s2,s3,s4
+            if (istat.ne.0) exit
+          enddo
+          close(lunrun)
+
+          open(newunit=lunrun,file=trim(cstage)//chpathsep//"ampgenpho.elc",status='old')
+          do while (.true.)
+            read(lunrun,*,iostat=istat) iele,ee,gg,egam,z,y,zp,yp
+            write(lunelc,*) iele,ee,sngl(g(iwigefold)),z,y,zp,yp
+            if (istat.ne.0) exit
+          enddo
+          close(lunrun)
+
+        endif !igenpho
 
         ebeam=ebeam+debeam
 
@@ -527,8 +620,12 @@ c        print*,trim(cline)
       enddo
 
       close(lunwef)
+      close(lunpho)
+      close(lunelc)
 
-      deallocate(thez,they,zw,yw,esourz,esoury,fdwigzy,fdwigtzty)
+      if (iwigner.ne.0) deallocate(thez,they,zw,yw,esourz,esoury,fdwigzy,fdwigtzty)
+
+      kgendone=1
 
       return
       end

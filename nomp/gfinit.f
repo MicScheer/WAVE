@@ -1,4 +1,4 @@
-*CMZ :          11/12/2025  17.00.00  by  Michael Scheer
+*CMZ :          19/08/2026  07.48.42  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  09.46.32  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
@@ -246,7 +246,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -464,6 +464,8 @@ c+seq,gseed,if=grndm.
       include 'undumagc.cmn'
 *KEEP,waveenv.
       include 'waveenv.cmn'
+*KEEP,genpho.
+      include 'genpho.cmn'
 *KEND.
 
       integer irootmode

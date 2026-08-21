@@ -1,3 +1,4 @@
+*CMZ :          15/11/2025  11.33.39  by  Michael Scheer
 *CMZ :  4.01/07 30/09/2024  14.57.39  by  Michael Scheer
 *CMZ :  4.01/05 19/04/2024  12.22.35  by  Michael Scheer
 *CMZ :  4.01/04 14/11/2023  13.46.13  by  Michael Scheer
@@ -124,6 +125,12 @@ c14.11.2023      if (icomp.eq.1) return
           DO IY=1,NOBSVY
 
             DO IZ=1,NOBSVZ
+
+c              if (icomp.eq.3.and.ireim.eq.1
+c     &          .and.iy.eq.nobsvy/2+1
+c     &          .and.iz.eq.nobsvz/2+1
+c     &          ) call util_break
+
               IMASH=IZ+(IY-1)*NOBSVZ
               IOBFR=imash+NOBSV*(IFREQ-1)
               wobs1(iz)=reaima(icomp,ireim,iobfr)
@@ -147,6 +154,8 @@ c              endif
             ENDDO
 
           ENDDO   !IY
+
+c          if (icomp.eq.3.and.ireim.eq.1) call util_break
 
         ELSE !(NOBSVZ.GT.1)
 
@@ -291,5 +300,6 @@ c            wobs1(iy)=reaima(icomp,ireim,iobfr)
 
       ENDIF !IFOLD
 
+c      if (icomp.eq.3.and.ireim.eq.1) call util_break
       RETURN
       END

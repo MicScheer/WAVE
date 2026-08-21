@@ -1,4 +1,4 @@
-*CMZ :          19/09/2025  14.59.51  by  Michael Scheer
+*CMZ :          21/08/2026  09.58.08  by  Michael Scheer
 *CMZ :  4.02/00 15/09/2025  14.44.23  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
@@ -32,6 +32,12 @@
       include 'cmpara.cmn'
 *KEEP,myfiles.
       include 'myfiles.cmn'
+*KEEP,halbach.
+      include 'halbach.cmn'
+*KEEP,halbasy.
+      include 'halbasy.cmn'
+*KEEP,ellip.
+      include 'ellip.cmn'
 *KEEP,b0scglob.
       include 'b0scglob.cmn'
 *KEEP,freqs.
@@ -42,6 +48,8 @@
       include 'ampli.cmn'
 *KEEP,phasef90.
       include 'phasef90.cmn'
+*KEEP,genpho.
+      include 'genpho.cmn'
 *KEEP,wfoldf90.
       include 'wfoldf90.cmn'
 *KEEP,photon.
@@ -54,11 +62,13 @@
       include 'wvers.cmn'
 *KEND.
 
+      double precision bx,by,bz,ax,ay,az
+
       integer lun0,lunin,lunclu,kins,ins,m1,m2,n1,n2,irun,istat,lunout,ianf,iend,ipid,
      &  lunfis,ieof,l1,l2,ialldone,masterpid,n1ins,n2ins,lpid,npids,i,idum,
      &  lunpid,lun10,i10,k10,ndim,kcount,lstat,kempty,k1,k2,ierr,kbuncherr,
      &  kstat,luni,lun,lunsi,iel1,iel2,lunspai,lunspao,iutil_fexist,nread,
-     &  nfirst,nlast,icheckpid,lunbun,lunbu,ni,nl,nwords,kwigerr
+     &  nfirst,nlast,icheckpid,lunbun,lunbu,ni,nl,nwords,kwigerr,kgenphoerr
 
       integer isystem
       external isystem
@@ -146,20 +156,49 @@
       read(lunin,randomn)
       read(lunin,cluster)
       read(lunin,b0scglobn)
+      read(lunin,halbach)
+      read(lunin,halbasy)
+      read(lunin,ellipn)
       read(lunin,myfiles)
       read(lunin,wfoldn)
       read(lunin,bunchn)
       read(lunin,freqn)
+      read(lunin,genphon)
       read(lunin,phasen)
       read(lunin,berrorn)
       ihphotons=0
       if (ieneloss.lt.0) read(lunin,photonn)
       close(lunin)
 
-      iwigefold=0
-      if (ispec.eq.0) iwigner=0
+      if (ispec.eq.0) then
+        iwigner=0
+        igenpho=0
+        kgendone=0
+      endif
 
-      if (iwigner.ne.0.and.nwigefold.gt.1.and.espread.ne.0.0d0) then
+c      if (iwigner.ne.0.and.igenpho.ne.0) then
+c        write(6,*)
+c        write(6,*)"*** Both, IWIGNER and IGENPHO not zero, setting IWIGNER=0 ***"
+c        write(6,*)
+c        write(lungfo,*)
+c        write(lungfo,*)"*** Both, IWIGNER and IGENPHO not zero, setting IWIGNER=0 ***"
+c        write(lungfo,*)
+c        IWIGNER=0
+c      endif
+
+      if (iwigner.ne.0.and.igenpho.ne.0) then
+          nwigefold=max(nwigefold,ngenphoefold)
+          ngenphoefold=nwigefold
+      else if (igenpho.ne.0) then
+          nwigefold=ngenphoefold
+      endif
+
+      if (
+     &    (iwigner.ne.0.and.nwigefold.gt.1
+     &    .or.
+     &    igenpho.ne.0.and.ngenphoefold.gt.1)
+     &    .and.
+     &    espread.ne.0.0d0) then
 
         irnsize=64
 
@@ -177,12 +216,21 @@
           call util_random_init(irnsize,irnseed)
         endif
 
-        kwigerr=0
-        call winstwigefold(kwigerr)
-        if (kwigerr.ne.0) then
-          stop '*** Aborting due to bad return from winstwigefold ***'
+        if (iwigner.ne.0.or.igenpho.ne.0) then
+          kwigerr=0
+          kgenphoerr=0
+          call winstwigefold(kwigerr,kgenphoerr)
+          if (
+     &        iwigner.ne.0.and.kwigerr.ne.0
+     &        .or.
+     &        igenpho.ne.0.and.kgenphoerr.ne.0
+     &        ) then
+            stop '*** Aborting due to bad return from winstwigefold ***'
+          endif
         endif
+
         return
+
       endif
 
       if (kampli.ne.0.or.iundulator.eq.2) then

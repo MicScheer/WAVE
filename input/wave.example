@@ -1074,6 +1074,19 @@
            IAMPJIT=0    ! Jitter on phase is calculated by tracking the device
                         ! period by period (IAMPLI.LT.0)
 
+           IGENPHO=0    ! Generate photons from field in pinhole, namelist GENPHON
+	                ! IBUNCH should be zero
+			
+			! Photons are written to ampgenpho.pho:
+			! 1. line header of run number and code, next lines:
+			! photon counter, electron counter, photon energy counter,
+			! beam energy counter, beam energy, weight, photon energy, z, y, zp, yp,
+			! S0, S1, S2, S3
+			
+			! Electrons are written to ampgenpho.elc:
+			! 1. line header of run number and code, next lines:
+			! electron counter, energy, weight, z, y, zp, yp
+	
         IWFILSPF=0   ! write folded integration results
                      ! (arrays SPECF,SPECTF) to FILESPF
 
@@ -3481,6 +3494,22 @@
 
       $END
 
+ $GENPHON
+
+      NGENPHOEFOLD=1  ! number of beam energy steps.
+                      ! If IWIGNER is set, number of steps is set max(NGENPHOEFOLD,NWIGEFOLD)
+
+      GENPHOPHSH=9999.0  !global phase shift [rad]
+                      !9999: Shift such, that the imaginary part of the on-axis horizontal field
+                      !      becomes zero
+      NOSPLINEEF=0    ! to use simple summation instead of spline integration
+      NELECGENPHO=1   ! number of electrons to generate photons
+      NPHO=1          ! number of photons per electron to be generated
+      MODERAN=1       ! 0: all grid points in pinhole
+                      ! else: NPHO random grid points
+
+      $END
+				
  $PHASEN
 
         PHCENX=0.0      !x of source plan center
@@ -3516,8 +3545,11 @@
 			! -2: Wyy only
 			! -3: Wzy only
 			! -4: Wyz only
+			! IBUNCH should be zero
 
 	NWIGEFOLD=15        ! number of beam energy steps
+                            ! If IGENPHO is set, number of steps is set max(NGENPHOEFOLD,NWIGEFOLD)
+		
 	NOSPLINEWEF=0	    ! to use simple summation instead of spline integration
 	
 	WIGTHETAZ=0.05e-3   ! Hori. opening angle of radiation cone [rad]	                    ! -9999: Estimated from device length and photon energy
