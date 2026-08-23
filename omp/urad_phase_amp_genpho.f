@@ -1,4 +1,4 @@
-*CMZ :          23/08/2026  09.58.03  by  Michael Scheer
+*CMZ :          23/08/2026  13.27.54  by  Michael Scheer
 *-- Author :    Michael Scheer   05/01/2026
         subroutine urad_phase_amp_genpho(zi,yi,ny,nz,obsv,
      &    moderan,nelec,noranone,npho,nepho,
@@ -229,32 +229,22 @@ c                rn(1)=sqrt(1.0d0-(rn(2)**2+rn(3)**2))
 
                 ngam=ngam+1
                 photons(ngam)=epho(iepho)
-                if (photons(ngam).ne.photons(ngam)) print*,ngam
                 ngam=ngam+1
                 photons(ngam)=zph+zel
-                if (photons(ngam).ne.photons(ngam)) print*,ngam
-                print*,'z',iz,iy,ngam,zph
                 ngam=ngam+1
                 photons(ngam)=yph+yel
-                if (photons(ngam).ne.photons(ngam)) print*,ngam
-                print*,'y',iz,iy,ngam,yph
                 ngam=ngam+1
                 photons(ngam)=rn(3)/rn(1)+zpel
-                if (photons(ngam).ne.photons(ngam)) print*,ngam
                 ngam=ngam+1
                 photons(ngam)=rn(2)/rn(1)+ypel
                 ngam=ngam+1
                 photons(ngam)=stok1*specnor_si
-                if (photons(ngam).ne.photons(ngam)) print*,ngam
                 ngam=ngam+1
                 photons(ngam)=stok2*specnor_si
                 ngam=ngam+1
-                if (photons(ngam).ne.photons(ngam)) print*,ngam
                 photons(ngam)=stok3*specnor_si
-                if (photons(ngam).ne.photons(ngam)) print*,ngam
                 ngam=ngam+1
                 photons(ngam)=stok4*specnor_si
-                if (photons(ngam).ne.photons(ngam)) print*,ngam
 
               enddo !nepho
 

@@ -1,7 +1,8 @@
+*CMZ :          23/08/2026  10.44.02  by  Michael Scheer
 *CMZ :  2.66/07 04/03/2010  21.48.04  by  Michael Scheer
 *-- Author :    Michael Scheer   04/03/2010
       subroutine util_bessel(n,x,bessel,jfail)
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -52,7 +53,7 @@ c Calculates BESSEL-function Jn(x)
       parameter(ndimp=1000)
 
       double complex z
-     &  ,f(ndimp),g(ndimp),fp(ndimp),gp(ndimp),sig(ndimp),eta(ndimp),zlmin
+     &  ,f(ndimp),g(ndimp),fp(ndimp),gp(ndimp),sig(ndimp),eta,zlmin
 
       double precision x,bessel
 
