@@ -1,4 +1,4 @@
-*CMZ :          23/08/2026  13.27.54  by  Michael Scheer
+*CMZ :          28/08/2026  08.14.45  by  Michael Scheer
 *-- Author :    Michael Scheer   05/01/2026
         subroutine urad_phase_amp_genpho(zi,yi,ny,nz,obsv,
      &    moderan,nelec,noranone,npho,nepho,
@@ -51,7 +51,7 @@
      &  a(16),p(9),
      &  z2(2),y2(2),ty2(2),tz2(2)
 
-      callutil_break
+      !allutil_break
 
       cjvsto=dconjg(vstokes)
 
@@ -377,5 +377,5 @@ c                photons(ngam)=(erx**2+eix**2+ery**2+eiy**2+erz**2+eiz**2)*specn
 
       endif !moderan
 
-      callutil_break
+      !allutil_break
       end

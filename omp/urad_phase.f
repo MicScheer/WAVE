@@ -1,4 +1,4 @@
-*CMZ :          06/08/2026  11.34.16  by  Michael Scheer
+*CMZ :          31/08/2026  07.37.54  by  Michael Scheer
 *CMZ :  4.02/00 13/09/2025  10.16.17  by  Michael Scheer
 *CMZ :  4.01/07 13/08/2024  10.11.51  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.49.56  by  Michael Scheer
@@ -47,6 +47,12 @@ c+seq,uservar.
       save ical
 
       if (ktime.eq.1) call util_zeit_kommentar_delta(6,'Entered urad_phase',1)
+
+      if (modepin.ne.0.and.nelec.eq.1) then
+        print*,""
+        print*,"        *** Warning in urad_phase: Nelec = 1 and ModePin = 1"
+        print*,""
+      endif
 
       ebeam_u=ebeam
       gamma_u=ebeam_u/emassg1

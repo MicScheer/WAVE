@@ -1,4 +1,4 @@
-*CMZ :          15/08/2026  11.23.18  by  Michael Scheer
+*CMZ :          01/09/2026  13.05.56  by  Michael Scheer
 *CMZ :  4.02/00 27/08/2025  14.45.47  by  Michael Scheer
 *CMZ :  4.01/07 18/10/2024  09.41.32  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  07.41.13  by  Michael Scheer
@@ -318,6 +318,7 @@ c      dr0=[xf0-x0,yf0-y0,zf0-z0]
         expphiran(i)=exp(dcmplx(0.0d0,twopi1*pran(3)))
       enddo
 
+      callutil_break
       if (ibunch.eq.0.or.
      &    emith_u.eq.0.0d0.and.emitv_u.eq.0.0d0.and.espread_u.eq.0.0d0
      &    .or.
@@ -477,7 +478,7 @@ c      anor=sqrt(1.0d0/specnor_si)
       ph=pinh_u
       !pr=pinr
       pc=pincen_u
-      do iobsv=1,nobsv
+      do iobsv=1,nobsvo
         if (abs(obsv_u(2,iobsv)).lt.1.0d-9) obsv_u(2,iobsv)=0.0d0
         if (abs(obsv_u(3,iobsv)).lt.1.0d-9) obsv_u(3,iobsv)=0.0d0
       enddo
@@ -521,7 +522,7 @@ c      anor=sqrt(1.0d0/specnor_si)
 
       ifix=ifixphase_u
 
-      !all util_break
+      callutil_break
 
 !$OMP PARALLEL NUM_THREADS(mthreads) DEFAULT(PRIVATE)
 !$OMP& FIRSTPRIVATE(ly,lz,kobsv,nepho,nobsvz,nobsvy,nobsv,nelec,frq,nper_u,np2,perlen_u,clight,hbarev,
@@ -549,80 +550,94 @@ c      anor=sqrt(1.0d0/specnor_si)
 
 c      do ilo=1,nelec*nobsv
       do ielec=1,nelec
-            !allutil_break
-      do iobsv=1,nobsv
 
-        wsstokes=0.0d0
+        callutil_break
 
-        !affe=(0.0D0,0.0D0)
-        spow=0.0d0
+        do iobsv=1,nobsv
 
-        ith=OMP_GET_THREAD_NUM()+1
+          wsstokes=0.0d0
 
-c        iobsv=mod(ilo-1,nobsv)+1
-c        ibu=(ilo-1)/nobsv+1
-        ibu=ielec
-        jbun=ibu
+          !affe=(0.0D0,0.0D0)
+          spow=0.0d0
 
-        iy=(iobsv-1)/nobsvz+1
-        iz=mod(iobsv-1,nobsvz)+1
+          ith=OMP_GET_THREAD_NUM()+1
 
-        !if (iz.gt.nobsvz/2+1) call til_break
-          !all util_break
+          ! iobsv=mod(ilo-1,nobsv)+1
+          ! ibu=(ilo-1)/nobsv+1
+          ibu=ielec
+          jbun=ibu
 
-c        ielec=ibu
+          iy=(iobsv-1)/nobsvz+1
+          iz=mod(iobsv-1,nobsvz)+1
 
-        xi=x0
-        yi=y0
-        zi=z0
+          !if (iz.gt.nobsvz/2+1) callutil_break
+          callutil_break
 
-        zpi=vz0/vx0
-        ypi=vy0/vx0
+          !ielec=ibu
 
-        x2=xf0
-        y2=yf0
-        z2=zf0
+          xi=x0
+          yi=y0
+          zi=z0
 
-        vx2=vxf0
-        vy2=vyf0
-        vz2=vzf0
+          zpi=vz0/vx0
+          ypi=vy0/vx0
 
-        gamma=gamma_u
+          x2=xf0
+          y2=yf0
+          z2=zf0
 
-        dpp=0.0d0
+          vx2=vxf0
+          vy2=vyf0
+          vz2=vzf0
 
-        if (iemit.ne.0) then
+          gamma=gamma_u
 
-          if (noranone.eq.0.or.ielec.ne.1) then
+          dpp=0.0d0
 
-            bunchx=eall(1,ielec)
+          if (iemit.ne.0) then
 
-            xi=xi+bunchx
-            yy=eall(2,ielec)
-            zz=eall(3,ielec)
+            if (noranone.eq.0.or.ielec.ne.1) then
 
-            yyp=eall(4,ielec)
-            zzp=eall(5,ielec)
+              bunchx=eall(1,ielec)
 
-            dpp=eall(6,ielec)
-            gamma=(1.0d0+dpp)*gamma_u
+              xi=xi+bunchx
+              yy=eall(2,ielec)
+              zz=eall(3,ielec)
 
-            ! assume beta(s)=beta0(s)+s**2/beta(0) and alpha0=-s/beta(0)
-            ! and a drift transfer-matrix ((1,s),(1,0))
+              yyp=eall(4,ielec)
+              zzp=eall(5,ielec)
 
-            zi=zz-x0*zzp !inverse transformation
-            zpi=zzp
+              dpp=eall(6,ielec)
+              gamma=(1.0d0+dpp)*gamma_u
 
-            yi=yy-x0*yyp
-            ypi=yyp
+              ! assume beta(s)=beta0(s)+s**2/beta(0) and alpha0=-s/beta(0)
+              ! and a drift transfer-matrix ((1,s),(1,0))
 
-            ! simple treatment of closed orbit, assume small angles
+              zi=zz-x0*zzp !inverse transformation
+              zpi=zzp
 
-            zi=zi+z0
-            zpi=zpi+zp0
+              yi=yy-x0*yyp
+              ypi=yyp
 
-            yi=yi+y0
-            ypi=ypi+yp0
+              ! simple treatment of closed orbit, assume small angles
+
+              zi=zi+z0
+              zpi=zpi+zp0
+
+              yi=yi+y0
+              ypi=ypi+yp0
+
+            else
+
+              xi=x0
+              yi=y0
+              zi=z0
+              ypi=yp0
+              zpi=zp0
+
+              bunchx=0.0d0
+
+            endif
 
           else
 
@@ -634,111 +649,99 @@ c        ielec=ibu
 
             bunchx=0.0d0
 
-          endif
-
-        else
-
-          xi=x0
-          yi=y0
-          zi=z0
-          ypi=yp0
-          zpi=zp0
-
-          bunchx=0.0d0
-
-        endif !iemit
+          endif !iemit
 
 c+self,if=old.
 c        zi=zi+dpp*di0
 c        zpi=zpi+dpp*dd0
 c+self.
-        vn=clight*dsqrt((1.0d0-1.0d0/gamma)*(1.0d0+1.0d0/gamma))
+          vn=clight*dsqrt((1.0d0-1.0d0/gamma)*(1.0d0+1.0d0/gamma))
 
-        vxi=vn/sqrt(1.0d0+ypi**2+zpi**2)
-        vyi=vxi*ypi
-        vzi=vxi*zpi
+          vxi=vn/sqrt(1.0d0+ypi**2+zpi**2)
+          vyi=vxi*ypi
+          vzi=vxi*zpi
 
-        if (noranone.ne.0.and.ielec.eq.1.and.abs(iamppin).eq.3) then
-          kobsv=icbrill
-        else
-          kobsv=iobsv
-        endif
+          if (noranone.ne.0.and.ielec.eq.1.and.abs(iamppin).eq.3) then
+            kobsv=icbrill
+          else
+            kobsv=iobsv
+          endif
 
-        !all util_break
-        obs=obsv_u(1:3,kobsv)
+          callutil_break
+          obs=obsv_u(1:3,kobsv)
 
-        if (noranone.eq.0.or.ielec.ne.1.or.kobsv.ne.icbrill) then
+          if (noranone.eq.0.or.ielec.ne.1.or.kobsv.ne.icbrill) then
 
-          if (abs(iamppin).eq.3) then
-            !call util_random(2,pran)
-            pran(1:2)=pranall(:,ielec)
-            if (iamppincirc.eq.0) then
-              obs(2)=pc(2)+(pran(1)-0.5)*ph
-              obs(3)=pc(3)+(pran(2)-0.5)*pw
-            else
-              rpin=(pran(1)-0.5)*pr
-              ppin=pran(2)*twopi1
-              obs(2)=pc(2)+rpin*cos(ppin)
-              obs(3)=pc(3)+rpin*sin(ppin)
+            if (abs(iamppin).eq.3) then
+              !call util_random(2,pran)
+              pran(1:2)=pranall(:,ielec)
+              if (iamppincirc.eq.0) then
+                obs(2)=pc(2)+(pran(1)-0.5)*ph
+                obs(3)=pc(3)+(pran(2)-0.5)*pw
+              else
+                rpin=(pran(1)-0.5)*pr
+                ppin=pran(2)*twopi1
+                obs(2)=pc(2)+rpin*cos(ppin)
+                obs(3)=pc(3)+rpin*sin(ppin)
+              endif
             endif
+
+            if (iamppin.eq.-3) then
+
+              ly=1+nint((obs(2)-(pc(2)-ph/2.0d0))/dypin)
+              lz=1+nint((obs(3)-(pc(3)-pw/2.0d0))/dzpin)
+              kobsv=lz+(ly-1)*npinzo_u
+
+              obs(2)=ymin+(ly-1)*dypin
+              obs(3)=zmin+(lz-1)*dzpin
+
+              if (abs(obs(2)).lt.1.0d-12) obs(2)=0.0d0
+              if (abs(obs(3)).lt.1.0d-12) obs(3)=0.0d0
+
+            endif
+
           endif
 
-          if (iamppin.eq.-3) then
+          vn=norm2([vxi,vyi,vzi])
+          eix=vxi/vn
+          eiy=vyi/vn
+          eiz=vzi/vn
 
-            ly=1+nint((obs(2)-(pc(2)-ph/2.0d0))/dypin)
-            lz=1+nint((obs(3)-(pc(3)-pw/2.0d0))/dzpin)
-            kobsv=lz+(ly-1)*npinzo_u
-
-            obs(2)=ymin+(ly-1)*dypin
-            obs(3)=zmin+(lz-1)*dzpin
-
-            if (abs(obs(2)).lt.1.0d-12) obs(2)=0.0d0
-            if (abs(obs(3)).lt.1.0d-12) obs(3)=0.0d0
-
+          h2=((obs(2)-yi)**2+(obs(3)-zi)**2)/(obs(1)-xph0)**2
+          if (h2.lt.0.01) then
+            rph=abs(obs(1)-xph0)*(1.0d0+(((((-0.0205078125D0*h2+0.02734375D0)*h2
+     &        -0.0390625D0)*h2+0.0625D0)*h2-0.125D0)*h2+0.5D0)*h2)
+          else
+            rph=sqrt((obs(1)-xph0)**2+((obs(2)-yi)**2+(obs(3)-zi)**2))
           endif
 
-        endif
+          phase0=(rph-(obsv_u(1,icbrill)-xph0))/clight
 
-        vn=norm2([vxi,vyi,vzi])
-        eix=vxi/vn
-        eiy=vyi/vn
-        eiz=vzi/vn
-
-        h2=((obs(2)-yi)**2+(obs(3)-zi)**2)/(obs(1)-xph0)**2
-        if (h2.lt.0.01) then
-          rph=abs(obs(1)-xph0)*(1.0d0+(((((-0.0205078125D0*h2+0.02734375D0)*h2
-     &      -0.0390625D0)*h2+0.0625D0)*h2-0.125D0)*h2+0.5D0)*h2)
-        else
-          rph=sqrt((obs(1)-xph0)**2+((obs(2)-yi)**2+(obs(3)-zi)**2))
-        endif
-
-        phase0=(rph-(obsv_u(1,icbrill)-xph0))/clight
-
-        call urad_e_b_field(
-     &    jcharge,curr_u,
-     &    gamma,udgamtot,
-     &    xi,yi,zi,vxi,vyi,vzi,
-     &    xf0,yf0,zf0,efx,efy,efz,
-     &    x2,y2,z2,vx2,vy2,vz2,dtelec,ds,
+          call urad_e_b_field(
+     &      jcharge,curr_u,
+     &      gamma,udgamtot,
+     &      xi,yi,zi,vxi,vyi,vzi,
+     &      xf0,yf0,zf0,efx,efy,efz,
+     &      x2,y2,z2,vx2,vy2,vz2,dtelec,ds,
      &      0,nstepu,ndimu,utraxyz,phase0,
-     &    obs(1),obs(2),obs(3),flow,fhigh,
-     &    nepho,frq,uampex,uampey,uampez,uampbx,uampby,uampbz,
-     &    ustokes,upow,
-     &    jeneloss,jvelofield,ifail,ith,banwid_u,modewave
-     &    )
+     &      obs(1),obs(2),obs(3),flow,fhigh,
+     &      nepho,frq,uampex,uampey,uampez,uampbx,uampby,uampbz,
+     &      ustokes,upow,
+     &      jeneloss,jvelofield,ifail,ith,banwid_u,modewave
+     &      )
 
-        r0=[xi,yi,zi]
-        dr0=[x2-xi,y2-yi,z2-zi]
+          r0=[xi,yi,zi]
+          dr0=[x2-xi,y2-yi,z2-zi]
 
-        drn=dr0/norm2(dr0)
-        r0=r0+dr0/2.0d0
+          drn=dr0/norm2(dr0)
+          r0=r0+dr0/2.0d0
 
-        do kfreq=1,nepho
+          do kfreq=1,nepho
 
-          !all util_break
-          iobfr=kobsv+nobsv*(kfreq-1)
+            !all util_break
+            iobfr=kobsv+nobsvo*(kfreq-1)
 
-          om=frq(kfreq)/hbarev
+            om=frq(kfreq)/hbarev
 
 c          if (modewave.eq.0) then
 c            amp0=[
@@ -758,30 +761,30 @@ c          endif
 c          call util_random(1,pran)
 c          amp0=amp0*dcmplx(0.0d0,dble(pran(1)*twopi1))
 
-          amp=(0.0d0,0.0d0)
-          t=bunchx/vn
+            amp=(0.0d0,0.0d0)
+            t=bunchx/vn
 
-          !allutil_break
-          do i=1,nper_u
+            callutil_break
+            do i=1,nper_u
 
-            !if (i.eq.1.or.i.eq.nper_u) !all util_break
+              !if (i.eq.1.or.i.eq.nper_u) !all util_break
 
-            r=r0+(i-np2-1)*dr0
-            dobs=obs-r
-            dist0=norm2(obs-r0)
-            dist=norm2(dobs)
+              r=r0+(i-np2-1)*dr0
+              dobs=obs-r
+              dist0=norm2(obs-r0)
+              dist=norm2(dobs)
 
-            if (kfreq.eq.1) then
-              spow=spow+upow*(dist0/dist)**2
-              pow(kobsv,ith)=pow(kobsv,ith)+upow*(dist0/dist)**2
-            endif
+              if (kfreq.eq.1) then
+                spow=spow+upow*(dist0/dist)**2
+                pow(kobsv,ith)=pow(kobsv,ith)+upow*(dist0/dist)**2
+              endif
 
-            if (lmodeph.eq.0) then
+              if (lmodeph.eq.0) then
 !!!!!                dt=xlell/clight*((1.0d0+parke**2/2.0d0)/2.0d0/gamma**2+
 !!!!!     &            (((ypi-dobs(2)/dobs(1))**2+(zpi-dobs(3)/dobs(1))**2))/2.0d0)
-              h2=
-     &          (ypi-yp0-dobs(2)/dobs(1))**2 +
-     &          (zpi-zp0-dobs(3)/dobs(1))**2
+                h2=
+     &            (ypi-yp0-dobs(2)/dobs(1))**2 +
+     &            (zpi-zp0-dobs(3)/dobs(1))**2
 c26.4.2024     &          ((ypi-yp0-dobs(2))/dobs(1))**2 +
 c26.4.2024     &          ((zpi-zp0-dobs(3))/dobs(1))**2
 
@@ -790,65 +793,65 @@ c     &          (
 c     &          (1.0d0+parke**2/2.0d0)/2.0d0/gamma**2+h2/2.0d0-h2**2/8.0d0
 c     &          )
 
-              dph=om*(t+pherr(i))
+                dph=om*(t+pherr(i))
 
-              dt=xlell/clight*
-     &          (
-     &          (1.0d0+parke**2/2.0d0)/2.0d0/gamma**2+
-     &          (((((-0.0205078125D0*h2+0.02734375D0)*h2
-     &          -0.0390625D0)*h2+0.0625D0)*h2-0.125D0)*h2+0.5D0)*h2
-     &          )
+                dt=xlell/clight*
+     &            (
+     &            (1.0d0+parke**2/2.0d0)/2.0d0/gamma**2+
+     &            (((((-0.0205078125D0*h2+0.02734375D0)*h2
+     &            -0.0390625D0)*h2+0.0625D0)*h2-0.125D0)*h2+0.5D0)*h2
+     &            )
 
-              t=t+dt
-            else if (lmodeph.eq.1.or.lmodeph.eq.2) then
-              dph=om*t
-              pkerr=parke*(1.0d0+pherr(i))
+                t=t+dt
+              else if (lmodeph.eq.1.or.lmodeph.eq.2) then
+                dph=om*t
+                pkerr=parke*(1.0d0+pherr(i))
 !!!!!                dt=xlell/clight*((1.0d0+pkerr**2/2.0d0)/2.0d0/gamma**2+
 !!!!!     &            (((ypi-dobs(2)/dobs(1))**2+(zpi-dobs(3)/dobs(1))**2))/2.0d0)
-              h2=
-     &          (ypi-yp0-dobs(2)/dobs(1))**2 +
-     &          (zpi-zp0-dobs(3)/dobs(1))**2
+                h2=
+     &            (ypi-yp0-dobs(2)/dobs(1))**2 +
+     &            (zpi-zp0-dobs(3)/dobs(1))**2
 c26.4.2024              h2=((ypi-yp0-dobs(2))**2+(zpi-zp0-dobs(3))**2)/dobs(1)**2
-              dt=xlell/clight*
-     &          (
+                dt=xlell/clight*
+     &            (
 c25.4.2024     &          (1.0d0+parke**2/2.0d0)/2.0d0/gamma**2+
-     &          (1.0d0+pkerr**2/2.0d0)/2.0d0/gamma**2+
-     &          (((((-0.0205078125D0*h2+0.02734375D0)*h2
-     &          -0.0390625D0)*h2+0.0625D0)*h2-0.125D0)*h2+0.5D0)*h2
-     &          )
-              t=t+dt
-            endif !lmodeph
+     &            (1.0d0+pkerr**2/2.0d0)/2.0d0/gamma**2+
+     &            (((((-0.0205078125D0*h2+0.02734375D0)*h2
+     &            -0.0390625D0)*h2+0.0625D0)*h2-0.125D0)*h2+0.5D0)*h2
+     &            )
+                t=t+dt
+              endif !lmodeph
 
-            zexp=cdexp(dcmplx(0.0d0,dph))
-            damp=amp0*zexp*dist0/dist
-            amp=amp+damp
+              zexp=cdexp(dcmplx(0.0d0,dph))
+              damp=amp0*zexp*dist0/dist
+              amp=amp+damp
 
-            if (i.eq.nper_u) then
-              if (ifix.ne.0) then
-                amp=amp*expphiran(ielec)
+              if (i.eq.nper_u) then
+                if (ifix.ne.0) then
+                  amp=amp*expphiran(ielec)
+                endif
               endif
-            endif
 
-            if (jhbunch.ne.0) then
+              if (jhbunch.ne.0) then
 
 c4.8.2026              if (
 c4.8.2026     &            ((iamppin.eq.3.and.kobsv.eq.icbrill).and.jhbunch.gt.0.and.
 c4.8.2026     &            mod(ielec,jhbunch).eq.0) .or.
 c4.8.2026     &            (jhbunch.lt.0.and.mod(ielec,-jhbunch).eq.0)) then
 
-              if (
-     &            ((iamppin.eq.3.or.kobsv.eq.icbrill).and.jhbunch.gt.0.and.
-     &            mod(ielec,jhbunch).eq.0) .or.
-     &            (jhbunch.lt.0.and.mod(ielec,-jhbunch).eq.0)) then
+                if (
+     &              ((iamppin.eq.3.or.kobsv.eq.icbrill).and.jhbunch.gt.0.and.
+     &              mod(ielec,jhbunch).eq.0) .or.
+     &              (jhbunch.lt.0.and.mod(ielec,-jhbunch).eq.0)) then
 
-            !allutil_break
-                if (i.eq.1) then
-                  fillb(5)=r(1)
-                  fillb(6)=r(2)
-                  fillb(7)=r(3)
-                  fillb(8)=ypi
-                  fillb(9)=zpi
-                else if (i.eq.nper_u) then
+                  if (i.eq.1) then
+                    callutil_break
+                    fillb(5)=r(1)
+                    fillb(6)=r(2)
+                    fillb(7)=r(3)
+                    fillb(8)=ypi
+                    fillb(9)=zpi
+                  else if (i.eq.nper_u) then
 
 C Bug, if nobsv.gt.1, since phase not globally shifted
 c                  if (abs(phgsh).eq.9999.0d0) then
@@ -886,83 +889,83 @@ c                  endif
 
 c                  ampn=amp*anor/1000.0d0
 c                  ampn=amp/1000.0d0
-                  ampn=amp
+                    ampn=amp
 c                  print*,"Probe:",
 c     &              sum(abs(ampn)**2)*specnor_si,
 c     &              ampn(3)
 
-                  fillb(10:12)=r
-                  fillb(13)=ypi
-                  fillb(14)=zpi
-                  fillb(30)=dreal(ampn(1))
-                  fillb(31)=dimag(ampn(1))
-                  fillb(32)=dreal(ampn(2))
-                  fillb(33)=dimag(ampn(2))
-                  fillb(34)=dreal(ampn(3))
-                  fillb(35)=dimag(ampn(3))
-                  fillb(36)=dreal(ampn(4))
-                  fillb(37)=dimag(ampn(4))
-                  fillb(38)=dreal(ampn(5))
-                  fillb(39)=dimag(ampn(5))
-                  fillb(40)=dreal(ampn(6))
-                  fillb(41)=dimag(ampn(6))
+                    fillb(10:12)=r
+                    fillb(13)=ypi
+                    fillb(14)=zpi
+                    fillb(30)=dreal(ampn(1))
+                    fillb(31)=dimag(ampn(1))
+                    fillb(32)=dreal(ampn(2))
+                    fillb(33)=dimag(ampn(2))
+                    fillb(34)=dreal(ampn(3))
+                    fillb(35)=dimag(ampn(3))
+                    fillb(36)=dreal(ampn(4))
+                    fillb(37)=dimag(ampn(4))
+                    fillb(38)=dreal(ampn(5))
+                    fillb(39)=dimag(ampn(5))
+                    fillb(40)=dreal(ampn(6))
+                    fillb(41)=dimag(ampn(6))
+
+                  endif
 
                 endif
 
               endif
 
+            enddo !nper_u
+
+            callutil_break
+
+            if (modepin_u.ne.0) then
+              iy=nint((obs(2)-ymin)/dypin)+1
+              iz=nint((obs(3)-zmin)/dzpin)+1
+              !print*,ilo,ith,obs(3),zmin,dzpin,iz
+              fieldbunch(1:6,iz,iy,kfreq)=fieldbunch(1:6,iz,iy,kfreq)+amp(1:6)
+              fieldbunch(7,iz,iy,kfreq)=fieldbunch(7,iz,iy,kfreq)+cone
             endif
 
-          enddo !nper_u
+            apolh=
+     &        amp(1)*conjg(stokesv(1,1))
+     &        +amp(2)*conjg(stokesv(1,2))
+     &        +amp(3)*conjg(stokesv(1,3))
 
-          if (modepin_u.ne.0) then
-            iy=nint((obs(2)-ymin)/dypin)+1
-            iz=nint((obs(3)-zmin)/dzpin)+1
-            !print*,ilo,ith,obs(3),zmin,dzpin,iz
-            fieldbunch(1:6,iz,iy,kfreq)=fieldbunch(1:6,iz,iy,kfreq)+amp(1:6)
-            fieldbunch(7,iz,iy,kfreq)=fieldbunch(7,iz,iy,kfreq)+cone
-          endif
+            apolr=
+     &        amp(1)*conjg(stokesv(2,1))
+     &        +amp(2)*conjg(stokesv(2,2))
+     &        +amp(3)*conjg(stokesv(2,3))
 
-          !allutil_break
+            apoll=
+     &        amp(1)*conjg(stokesv(3,1))
+     &        +amp(2)*conjg(stokesv(3,2))
+     &        +amp(3)*conjg(stokesv(3,3))
 
-          apolh=
-     &      amp(1)*conjg(stokesv(1,1))
-     &      +amp(2)*conjg(stokesv(1,2))
-     &      +amp(3)*conjg(stokesv(1,3))
+            apol45=
+     &        amp(1)*conjg(stokesv(4,1))
+     &        +amp(2)*conjg(stokesv(4,2))
+     &        +amp(3)*conjg(stokesv(4,3))
 
-          apolr=
-     &      amp(1)*conjg(stokesv(2,1))
-     &      +amp(2)*conjg(stokesv(2,2))
-     &      +amp(3)*conjg(stokesv(2,3))
+            !if (kobsv.eq.icbrill) !all util_break
+            stok1=dreal(apolr*conjg(apolr)+apoll*conjg(apoll))
+            stok2=dreal(-stok1+2.0d0*apolh*conjg(apolh))
+            stok3=dreal(2.0d0*apol45*conjg(apol45)-stok1)
+            stok4=dreal(apolr*conjg(apolr)-apoll*conjg(apoll))
 
-          apoll=
-     &      amp(1)*conjg(stokesv(3,1))
-     &      +amp(2)*conjg(stokesv(3,2))
-     &      +amp(3)*conjg(stokesv(3,3))
+            wsstokes(1,iobfr)=wsstokes(1,iobfr)+stok1*sbnor
+            wsstokes(2,iobfr)=wsstokes(2,iobfr)+stok2*sbnor
+            wsstokes(3,iobfr)=wsstokes(3,iobfr)+stok3*sbnor
+            wsstokes(4,iobfr)=wsstokes(4,iobfr)+stok4*sbnor
 
-          apol45=
-     &      amp(1)*conjg(stokesv(4,1))
-     &      +amp(2)*conjg(stokesv(4,2))
-     &      +amp(3)*conjg(stokesv(4,3))
+            stokes(1:4,iobfr,ith)=stokes(1:4,iobfr,ith)+wsstokes(1:4,iobfr)
 
-          !if (kobsv.eq.icbrill) !all util_break
-          stok1=dreal(apolr*conjg(apolr)+apoll*conjg(apoll))
-          stok2=dreal(-stok1+2.0d0*apolh*conjg(apolh))
-          stok3=dreal(2.0d0*apol45*conjg(apol45)-stok1)
-          stok4=dreal(apolr*conjg(apolr)-apoll*conjg(apoll))
+            !affe(:,iobfr)=affe(:,iobfr)+amp
+            !arad(:,iobfr,ith)=arad(:,iobfr,ith)+affe(:,iobfr)
 
-          wsstokes(1,iobfr)=wsstokes(1,iobfr)+stok1*sbnor
-          wsstokes(2,iobfr)=wsstokes(2,iobfr)+stok2*sbnor
-          wsstokes(3,iobfr)=wsstokes(3,iobfr)+stok3*sbnor
-          wsstokes(4,iobfr)=wsstokes(4,iobfr)+stok4*sbnor
-
-          stokes(1:4,iobfr,ith)=stokes(1:4,iobfr,ith)+wsstokes(1:4,iobfr)
-
-          !affe(:,iobfr)=affe(:,iobfr)+amp
-          !arad(:,iobfr,ith)=arad(:,iobfr,ith)+affe(:,iobfr)
-
-          arad(:,iobfr,ith)=arad(:,iobfr,ith)+amp
-          if (kfreq.eq.1) nradth(kobsv,ith)=nradth(kobsv,ith)+1
+            arad(:,iobfr,ith)=arad(:,iobfr,ith)+amp
+            if (kfreq.eq.1) nradth(kobsv,ith)=nradth(kobsv,ith)+1
 
 c          if (
 c     &        ((iamppin.eq.3.or.iobsv.eq.icbrill).and.jhbunch.gt.0.and.
@@ -973,119 +976,126 @@ c              print*,jhbunch,ith,ilo,ielec
 c            endif
 c          endif
 
-          if (jhbunch.ne.0) then
-            if (
-     &          ((iamppin.eq.3.or.kobsv.eq.icbrill).and.jhbunch.gt.0.and.
-     &          mod(ielec,jhbunch).eq.0) .or.
-     &          (jhbunch.lt.0.and.mod(ielec,-jhbunch).eq.0)) then
+            if (jhbunch.ne.0) then
+              if (
+     &            ((iamppin.eq.3.or.kobsv.eq.icbrill).and.jhbunch.gt.0.and.
+     &            mod(ielec,jhbunch).eq.0) .or.
+     &            (jhbunch.lt.0.and.mod(ielec,-jhbunch).eq.0)) then
 
 c              print*,jhbunch,ith,ilo,jbun,isub,ibu
-              fillb(1)=jbun
-              fillb(2)=isub
-              fillb(3)=ibu
-              fillb(4)=bunchx
-              fillb(15)=gamma*emassg
-              fillb(16)=udgamtot*emassg
-              fillb(17)=obs(1)
-              fillb(18)=obs(2)
-              fillb(19)=obs(3)
-              fillb(20)=kfreq
-              fillb(21)=frq(kfreq)
+                fillb(1)=jbun
+                fillb(2)=isub
+                fillb(3)=ibu
+                fillb(4)=bunchx
+                fillb(15)=gamma*emassg
+                fillb(16)=udgamtot*emassg
+                fillb(17)=obs(1)
+                fillb(18)=obs(2)
+                fillb(19)=obs(3)
+                fillb(20)=kfreq
+                fillb(21)=frq(kfreq)
 
-              fillb(22)=wsstokes(1,iobfr)*nelec
+                ! 29.8.2026 fillb(22)=wsstokes(1,iobfr)*nelec
 
-              fillb(23)=wsstokes(1,iobfr)*nelec
-              fillb(24)=wsstokes(2,iobfr)*nelec
-              fillb(25)=wsstokes(3,iobfr)*nelec
-              fillb(26)=wsstokes(4,iobfr)*nelec
+                ! 29.8.2026 fillb(23)=wsstokes(1,iobfr)*nelec
+                ! 29.8.2026 fillb(24)=wsstokes(2,iobfr)*nelec
+                ! 29.8.2026 fillb(25)=wsstokes(3,iobfr)*nelec
+                ! 29.8.2026 fillb(26)=wsstokes(4,iobfr)*nelec
 
-              fillb(27)=spow
-              fillb(28)=1
-              fillb(29)=dtelec
+                fillb(22)=wsstokes(1,iobfr)
+
+                fillb(23)=wsstokes(1,iobfr)
+                fillb(24)=wsstokes(2,iobfr)
+                fillb(25)=wsstokes(3,iobfr)
+                fillb(26)=wsstokes(4,iobfr)
+
+                fillb(27)=spow
+                fillb(28)=1
+                fillb(29)=dtelec
 
 c              anor=sqrt(sbnor/specnor_si)
 c              ampn=amp*anor/1000.0d0
 c              ampn=amp/1000.0d0
-              ampn=amp
+                ampn=amp
 
-              fillb(30)=dreal(ampn(1))
-              fillb(31)=dimag(ampn(1))
-              fillb(32)=dreal(ampn(2))
-              fillb(33)=dimag(ampn(2))
-              fillb(34)=dreal(ampn(3))
-              fillb(35)=dimag(ampn(3))
-              fillb(36)=dreal(ampn(4))
-              fillb(37)=dimag(ampn(4))
-              fillb(38)=dreal(ampn(5))
-              fillb(39)=dimag(ampn(5))
-              fillb(40)=dreal(ampn(6))
-              fillb(41)=dimag(ampn(6))
-              lbunch=lbunch+1
-              fbunch_u(:,lbunch)=fillb(:)
-            endif !fill
+                fillb(30)=dreal(ampn(1))
+                fillb(31)=dimag(ampn(1))
+                fillb(32)=dreal(ampn(2))
+                fillb(33)=dimag(ampn(2))
+                fillb(34)=dreal(ampn(3))
+                fillb(35)=dimag(ampn(3))
+                fillb(36)=dreal(ampn(4))
+                fillb(37)=dimag(ampn(4))
+                fillb(38)=dreal(ampn(5))
+                fillb(39)=dimag(ampn(5))
+                fillb(40)=dreal(ampn(6))
+                fillb(41)=dimag(ampn(6))
+                lbunch=lbunch+1
+                fbunch_u(:,lbunch)=fillb(:)
+              endif !fill
 
-          endif !jhbunch
+            endif !jhbunch
 
-          if (ifieldprop.eq.2) then
-            if (kobsv.eq.1) then
-              fprop(1:3,1:nzprop,1:nyprop,kfreq,ith)=(0.0d0,0.0d0)
-            endif
-            call urad_phase_prop_point(obs,amp(1:3),nzprop,nyprop,
-     &        xprop,yprop,zprop,pinwprop,pinhprop,frq(kfreq),fpriv)
-            fprop(:,:,:,kfreq,ith)=fprop(:,:,:,kfreq,ith)+fpriv(:,:,:)
-            if (kobsv.eq.nobsv) then
-              i=0
-              do ipy=1,nyprop
-                do ipz=1,nzprop
-                  i=i+1+nzprop*nyprop*(kfreq-1)
-                  apolh=
-     &              fprop(1,ipz,ipy,kfreq,ith)*cjvsto(1,1)+
-     &              fprop(2,ipz,ipy,kfreq,ith)*cjvsto(1,2)+
-     &              fprop(3,ipz,ipy,kfreq,ith)*cjvsto(1,3)
+            if (ifieldprop.eq.2) then
+              if (kobsv.eq.1) then
+                fprop(1:3,1:nzprop,1:nyprop,kfreq,ith)=(0.0d0,0.0d0)
+              endif
+              call urad_phase_prop_point(obs,amp(1:3),nzprop,nyprop,
+     &          xprop,yprop,zprop,pinwprop,pinhprop,frq(kfreq),fpriv)
+              fprop(:,:,:,kfreq,ith)=fprop(:,:,:,kfreq,ith)+fpriv(:,:,:)
+              if (kobsv.eq.nobsv) then
+                i=0
+                do ipy=1,nyprop
+                  do ipz=1,nzprop
+                    i=i+1+nzprop*nyprop*(kfreq-1)
+                    apolh=
+     &                fprop(1,ipz,ipy,kfreq,ith)*cjvsto(1,1)+
+     &                fprop(2,ipz,ipy,kfreq,ith)*cjvsto(1,2)+
+     &                fprop(3,ipz,ipy,kfreq,ith)*cjvsto(1,3)
 
-                  apolr=
-     &              fprop(1,ipz,ipy,kfreq,ith)*cjvsto(2,1)+
-     &              fprop(2,ipz,ipy,kfreq,ith)*cjvsto(2,2)+
-     &              fprop(3,ipz,ipy,kfreq,ith)*cjvsto(2,3)
+                    apolr=
+     &                fprop(1,ipz,ipy,kfreq,ith)*cjvsto(2,1)+
+     &                fprop(2,ipz,ipy,kfreq,ith)*cjvsto(2,2)+
+     &                fprop(3,ipz,ipy,kfreq,ith)*cjvsto(2,3)
 
-                  apoll=
-     &              fprop(1,ipz,ipy,kfreq,ith)*cjvsto(3,1)+
-     &              fprop(2,ipz,ipy,kfreq,ith)*cjvsto(3,2)+
-     &              fprop(3,ipz,ipy,kfreq,ith)*cjvsto(3,3)
+                    apoll=
+     &                fprop(1,ipz,ipy,kfreq,ith)*cjvsto(3,1)+
+     &                fprop(2,ipz,ipy,kfreq,ith)*cjvsto(3,2)+
+     &                fprop(3,ipz,ipy,kfreq,ith)*cjvsto(3,3)
 
-                  apol45=
-     &              fprop(1,ipz,ipy,kfreq,ith)*cjvsto(4,1)+
-     &              fprop(2,ipz,ipy,kfreq,ith)*cjvsto(4,2)+
-     &              fprop(3,ipz,ipy,kfreq,ith)*cjvsto(4,3)
+                    apol45=
+     &                fprop(1,ipz,ipy,kfreq,ith)*cjvsto(4,1)+
+     &                fprop(2,ipz,ipy,kfreq,ith)*cjvsto(4,2)+
+     &                fprop(3,ipz,ipy,kfreq,ith)*cjvsto(4,3)
 
-                  stok1=dreal(
-     &              apolr*conjg(apolr)+
-     &              apoll*conjg(apoll))
+                    stok1=dreal(
+     &                apolr*conjg(apolr)+
+     &                apoll*conjg(apoll))
 
-                  stok2=-stok1+
-     &              dreal(2.*apolh*conjg(apolh))
+                    stok2=-stok1+
+     &                dreal(2.*apolh*conjg(apolh))
 
-                  stok3=
-     &              dreal(2.*apol45*conjg(apol45))-
-     &              stok1
+                    stok3=
+     &                dreal(2.*apol45*conjg(apol45))-
+     &                stok1
 
-                  stok4=dreal(
-     &              apolr*conjg(apolr)-
-     &              apoll*conjg(apoll))
+                    stok4=dreal(
+     &                apolr*conjg(apolr)-
+     &                apoll*conjg(apoll))
 
-                  stokesprop(1,ipz,ipy,kfreq,ith)=stokesprop(1,ipz,ipy,kfreq,ith)+stok1
-                  stokesprop(2,ipz,ipy,kfreq,ith)=stokesprop(2,ipz,ipy,kfreq,ith)+stok2
-                  stokesprop(3,ipz,ipy,kfreq,ith)=stokesprop(3,ipz,ipy,kfreq,ith)+stok3
-                  stokesprop(4,ipz,ipy,kfreq,ith)=stokesprop(4,ipz,ipy,kfreq,ith)+stok4
+                    stokesprop(1,ipz,ipy,kfreq,ith)=stokesprop(1,ipz,ipy,kfreq,ith)+stok1
+                    stokesprop(2,ipz,ipy,kfreq,ith)=stokesprop(2,ipz,ipy,kfreq,ith)+stok2
+                    stokesprop(3,ipz,ipy,kfreq,ith)=stokesprop(3,ipz,ipy,kfreq,ith)+stok3
+                    stokesprop(4,ipz,ipy,kfreq,ith)=stokesprop(4,ipz,ipy,kfreq,ith)+stok4
 
+                  enddo
                 enddo
-              enddo
+              endif
             endif
-          endif
 
-        enddo !kfreq
+          enddo !kfreq
 
-      enddo !iobsv
+        enddo !iobsv
       enddo !nelec
 c      enddo !ilo
 
@@ -1098,7 +1108,7 @@ c      enddo !ilo
         nrad(:)=nrad(:)+nradth(:,ith)
       enddo
 
-      !all util_break
+      callutil_break
       nradmax=0
       iobfr=0
       do kfreq=1,nepho
@@ -1158,7 +1168,7 @@ c      enddo !ilo
         enddo
       endif
 
-      !all util_break
+      callutil_break
 
       if (icohere_u.eq.0) then
 
@@ -1212,13 +1222,21 @@ c      enddo !ilo
 
       endif !icohere_u
 
-      do iobsv=1,nobsvo
-        if (nrad(iobsv).eq.0) cycle
-        do kfreq=1,nepho
-          iobfr=iobsv+nobsv*(kfreq-1)
-          stokes_u(:,iobfr)=stokes_u(:,iobfr)/nrad(iobsv)
+      if (modepin_u.eq.0) then
+        do iobsv=1,nobsvo
+          if (nrad(iobsv).eq.0) cycle
+          do kfreq=1,nepho
+            iobfr=iobsv+nobsv*(kfreq-1)
+            stokes_u(:,iobfr)=stokes_u(:,iobfr)/nrad(iobsv)
+          enddo
         enddo
-      enddo
+      else
+        do kfreq=1,nepho
+          i1=1+nobsv*(kfreq-1)
+          i2=icbrill+nobsv*(kfreq-1)
+          stokes_u(:,i1)=(stokes_u(:,i1)+stokes_u(:,i2))/nelec
+        enddo
+      endif
 
 c      if (ihbunch.ne.0) then
 c        n=0
