@@ -1,4 +1,4 @@
-*CMZ :          01/09/2026  13.05.56  by  Michael Scheer
+*CMZ :          02/09/2026  09.04.08  by  Michael Scheer
 *CMZ :  4.02/00 27/08/2025  14.45.47  by  Michael Scheer
 *CMZ :  4.01/07 18/10/2024  09.41.32  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  07.41.13  by  Michael Scheer
@@ -318,7 +318,7 @@ c      dr0=[xf0-x0,yf0-y0,zf0-z0]
         expphiran(i)=exp(dcmplx(0.0d0,twopi1*pran(3)))
       enddo
 
-      callutil_break
+      !allutil_break
       if (ibunch.eq.0.or.
      &    emith_u.eq.0.0d0.and.emitv_u.eq.0.0d0.and.espread_u.eq.0.0d0
      &    .or.
@@ -522,7 +522,7 @@ c      anor=sqrt(1.0d0/specnor_si)
 
       ifix=ifixphase_u
 
-      callutil_break
+      !allutil_break
 
 !$OMP PARALLEL NUM_THREADS(mthreads) DEFAULT(PRIVATE)
 !$OMP& FIRSTPRIVATE(ly,lz,kobsv,nepho,nobsvz,nobsvy,nobsv,nelec,frq,nper_u,np2,perlen_u,clight,hbarev,
@@ -551,7 +551,7 @@ c      anor=sqrt(1.0d0/specnor_si)
 c      do ilo=1,nelec*nobsv
       do ielec=1,nelec
 
-        callutil_break
+        !allutil_break
 
         do iobsv=1,nobsv
 
@@ -570,8 +570,8 @@ c      do ilo=1,nelec*nobsv
           iy=(iobsv-1)/nobsvz+1
           iz=mod(iobsv-1,nobsvz)+1
 
-          !if (iz.gt.nobsvz/2+1) callutil_break
-          callutil_break
+          !if (iz.gt.nobsvz/2+1) !allutil_break
+          !allutil_break
 
           !ielec=ibu
 
@@ -667,7 +667,7 @@ c+self.
             kobsv=iobsv
           endif
 
-          callutil_break
+          !allutil_break
           obs=obsv_u(1:3,kobsv)
 
           if (noranone.eq.0.or.ielec.ne.1.or.kobsv.ne.icbrill) then
@@ -764,7 +764,7 @@ c          amp0=amp0*dcmplx(0.0d0,dble(pran(1)*twopi1))
             amp=(0.0d0,0.0d0)
             t=bunchx/vn
 
-            callutil_break
+            !allutil_break
             do i=1,nper_u
 
               !if (i.eq.1.or.i.eq.nper_u) !all util_break
@@ -775,6 +775,7 @@ c          amp0=amp0*dcmplx(0.0d0,dble(pran(1)*twopi1))
               dist=norm2(dobs)
 
               if (kfreq.eq.1) then
+                !allu
                 spow=spow+upow*(dist0/dist)**2
                 pow(kobsv,ith)=pow(kobsv,ith)+upow*(dist0/dist)**2
               endif
@@ -845,7 +846,7 @@ c4.8.2026     &            (jhbunch.lt.0.and.mod(ielec,-jhbunch).eq.0)) then
      &              (jhbunch.lt.0.and.mod(ielec,-jhbunch).eq.0)) then
 
                   if (i.eq.1) then
-                    callutil_break
+                    !allutil_break
                     fillb(5)=r(1)
                     fillb(6)=r(2)
                     fillb(7)=r(3)
@@ -918,7 +919,7 @@ c     &              ampn(3)
 
             enddo !nper_u
 
-            callutil_break
+            !allutil_break
 
             if (modepin_u.ne.0) then
               iy=nint((obs(2)-ymin)/dypin)+1
@@ -1125,7 +1126,7 @@ c      enddo !ilo
                 izradmax=iz
                 iyradmax=iy
               endif
-              pow_u(iobsv)=pow_u(iobsv)/dble(nrad(iobsv))
+              if (kfreq.eq.1) pow_u(iobsv)=pow_u(iobsv)/dble(nrad(iobsv))
               arad_u(1:6,iobfr)=arad_u(1:6,iobfr)/dble(nrad(iobsv))
             endif
           enddo
@@ -1168,7 +1169,7 @@ c      enddo !ilo
         enddo
       endif
 
-      callutil_break
+      !allutil_break
 
       if (icohere_u.eq.0) then
 
@@ -1222,6 +1223,7 @@ c      enddo !ilo
 
       endif !icohere_u
 
+      !allu
       if (modepin_u.eq.0) then
         do iobsv=1,nobsvo
           if (nrad(iobsv).eq.0) cycle
@@ -1232,7 +1234,7 @@ c      enddo !ilo
         enddo
       else
         do kfreq=1,nepho
-          i1=1+nobsv*(kfreq-1)
+          i1=1+nobsvo*(kfreq-1)
           i2=icbrill+nobsv*(kfreq-1)
           stokes_u(:,i1)=(stokes_u(:,i1)+stokes_u(:,i2))/nelec
         enddo
