@@ -1,3 +1,4 @@
+*CMZ :          09/09/2026  08.13.57  by  Michael Scheer
 *CMZ :  4.00/14 16/12/2021  15.05.33  by  Michael Scheer
 *-- Author :    Michael Scheer   07/12/2021
       subroutine mh_h1out(ind)
@@ -34,7 +35,7 @@
         ihkind=1
       endif
 
-      write(lunhis,*)'! ------------------------------------------------'
+      write(lunhis,*)'! E -----------------------------------------------'
       write(lunhis,*)histos_mh(ind)%id,ihkind,'   ! id and kind of histogram or Ntuple'
 
       write(lunhis,*)len_trim(histos_mh(ind)%title),'   ! length of title'
@@ -61,8 +62,8 @@
 
       do ix=1,nx
         x=x+dx
-        write(lunhis,'(i10,2e25.12e3,a)') ix,x,histos_mh(ind)%channels(2,ix,1),
-     &    '   ! ix, x, content'
+        write(lunhis,'(i10,5e25.12e3,a)') ix,x,histos_mh(ind)%channels(2:5,ix,1),
+     &    '   ! ix, x, cont, mean, rms, sum2'
       enddo !nx
 
       lastid_mh=histos_mh(ind)%id

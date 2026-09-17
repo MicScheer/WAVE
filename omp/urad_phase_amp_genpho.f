@@ -1,4 +1,4 @@
-*CMZ :          28/08/2026  08.14.45  by  Michael Scheer
+*CMZ :  4.02/01 28/08/2026  08.14.45  by  Michael Scheer
 *-- Author :    Michael Scheer   05/01/2026
         subroutine urad_phase_amp_genpho(zi,yi,ny,nz,obsv,
      &    moderan,nelec,noranone,npho,nepho,

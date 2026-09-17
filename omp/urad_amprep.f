@@ -1,4 +1,5 @@
-*CMZ :          02/09/2026  09.04.08  by  Michael Scheer
+*CMZ :          10/09/2026  14.01.05  by  Michael Scheer
+*CMZ :  4.02/01 02/09/2026  09.04.08  by  Michael Scheer
 *CMZ :  4.02/00 27/08/2025  14.45.47  by  Michael Scheer
 *CMZ :  4.01/07 18/10/2024  09.41.32  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  07.41.13  by  Michael Scheer
@@ -33,9 +34,6 @@ cc+seq,uservar.
 
       double complex , dimension (:,:), allocatable :: aradbuff
       double complex , dimension (:,:,:), allocatable :: arad
-      integer, dimension (:,:), allocatable :: nradth
-      integer, dimension (:), allocatable :: nrad
-
       double precision, dimension (:), allocatable :: frq
       double precision, dimension (:,:), allocatable :: wsstokes,pow
       double precision, dimension (:,:,:,:,:), allocatable :: stokesprop
@@ -80,7 +78,7 @@ cc+seq,uservar.
      &  jcharge=-1,lmodeph,nclo,jeneloss=0,iamppin,
      &  iamppincirc=0,ifrob,iobfr,isub,jvelofield=0,nlbu=0,nepho,ielo,
      &  modewave,iepho,ifieldprop,nzprop,nyprop,im,izm,iym,ifix,lz,ly,
-     &  nradmax,iobsvradmax,izradmax,iyradmax,lunbun
+     &  lunbun
 
       integer, dimension (:), allocatable :: lnbunch
 
@@ -307,8 +305,6 @@ c      dr0=[xf0-x0,yf0-y0,zf0-z0]
 
       allocate(pherrc(nper_u),pherr(nper_u),
      &  arad(6,nepho_u*nobsv_u,mthreads),
-     &  nradth(nobsv_u,mthreads),
-     &  nrad(nobsv_u),
      &  expphiran(max(1,nelec_u)))
 
       allocate(pranall(2,nelec_u))
@@ -380,8 +376,6 @@ c      dr0=[xf0-x0,yf0-y0,zf0-z0]
       allocate(wsstokes(4,nepho_u*nobsvo),stokes(4,nepho_u*nobsvo,mthreads))
       stokes=0.0d0
       arad=(0.0d0,0.0d0)
-      nradth=0
-      nrad=0
 
       np2=nper_u/2
 
@@ -538,7 +532,8 @@ c      anor=sqrt(1.0d0/specnor_si)
 !$OMP& pran,pranall,eall,fillb,r0,dr0,iamppin,iamppincirc,pc,phase0,pr,banwid_u,
 !$OMP& pw,ph,idebug,pcbrill,wsstokes,vn,bunchlen_u,modebunch_u,icohere_u)
 !$OMP& SHARED(mthreads,stokes,pherr,expphiran,lbunch,lnbunch,modepin_u,fieldbunch,npinzo_u,nobsvo,dzpin,dypin,
-!$OMP& fbunch_u,jcharge,jeneloss,jvelofield,iemit,noranone,nradth,arad,pow,zmin,ymin,phgsh,fprop,stokesprop)
+!$OMP& fbunch_u,jcharge,jeneloss,jvelofield,iemit,noranone,arad,pow,
+!$OMP& nrad_u,zmin,ymin,phgsh,fprop,stokesprop)
 
       jbun=1
       isub=0
@@ -678,6 +673,9 @@ c+self.
               if (iamppincirc.eq.0) then
                 obs(2)=pc(2)+(pran(1)-0.5)*ph
                 obs(3)=pc(3)+(pran(2)-0.5)*pw
+                iy=nint((obs(2)-ymin)/dypin)+1
+                iz=nint((obs(3)-zmin)/dzpin)+1
+                kobsv=iz+nobsvz*(iy-1)
               else
                 rpin=(pran(1)-0.5)*pr
                 ppin=pran(2)*twopi1
@@ -738,7 +736,7 @@ c+self.
 
           do kfreq=1,nepho
 
-            !all util_break
+            !allutil_break
             iobfr=kobsv+nobsvo*(kfreq-1)
 
             om=frq(kfreq)/hbarev
@@ -895,7 +893,7 @@ c                  print*,"Probe:",
 c     &              sum(abs(ampn)**2)*specnor_si,
 c     &              ampn(3)
 
-                    fillb(10:12)=r
+                    fillb(10:12)=r+dr0
                     fillb(13)=ypi
                     fillb(14)=zpi
                     fillb(30)=dreal(ampn(1))
@@ -922,8 +920,6 @@ c     &              ampn(3)
             !allutil_break
 
             if (modepin_u.ne.0) then
-              iy=nint((obs(2)-ymin)/dypin)+1
-              iz=nint((obs(3)-zmin)/dzpin)+1
               !print*,ilo,ith,obs(3),zmin,dzpin,iz
               fieldbunch(1:6,iz,iy,kfreq)=fieldbunch(1:6,iz,iy,kfreq)+amp(1:6)
               fieldbunch(7,iz,iy,kfreq)=fieldbunch(7,iz,iy,kfreq)+cone
@@ -966,7 +962,15 @@ c     &              ampn(3)
             !arad(:,iobfr,ith)=arad(:,iobfr,ith)+affe(:,iobfr)
 
             arad(:,iobfr,ith)=arad(:,iobfr,ith)+amp
-            if (kfreq.eq.1) nradth(kobsv,ith)=nradth(kobsv,ith)+1
+            if (kfreq.eq.1) then
+              nrad_u(kobsv)=nrad_u(kobsv)+1
+              !allu
+c              print*,ielec,kobsv,iobfr
+              if (iobfr.eq.19) then
+                !print*,ielec,kobsv, wsstokes(1,iobfr),nradth(kobsv,ith),stokes(1,iobfr,ith)
+                !allutil_break
+              endif
+            endif
 
 c          if (
 c     &        ((iamppin.eq.3.or.iobsv.eq.icbrill).and.jhbunch.gt.0.and.
@@ -1106,39 +1110,15 @@ c      enddo !ilo
       do ith=1,mthreads
         pow_u(:)=pow_u(:)+pow(:,ith)
         arad_u(:,:)=arad_u(:,:)+arad(:,:,ith)
-        nrad(:)=nrad(:)+nradth(:,ith)
       enddo
 
-      callutil_break
-      nradmax=0
-      iobfr=0
-      do kfreq=1,nepho
-        iobsv=0
-        do iy=1,npinyo_u
-          do iz=1,npinzo_u
-            iobfr=iobfr+1
-            iobsv=iobsv+1
-            if (nrad(iobsv).ne.0) then
-              n=nrad(iobsv)
-              if (n.gt.nradmax) then
-                nradmax=n
-                iobsvradmax=iobsv
-                izradmax=iz
-                iyradmax=iy
-              endif
-              if (kfreq.eq.1) pow_u(iobsv)=pow_u(iobsv)/dble(nrad(iobsv))
-              arad_u(1:6,iobfr)=arad_u(1:6,iobfr)/dble(nrad(iobsv))
-            endif
-          enddo
-        enddo
-      enddo
 
       if (globphase_u.eq.9999.0d0) then
         do kfreq=1,nepho
-          iobfr=icbrill+nobsv*(kfreq-1)
+          iobfr=icbrill+nobsvo*(kfreq-1)
           cph00=arad_u(3,iobfr)/abs(arad_u(3,iobfr))
           do iobsv=1,nobsv
-            iobfr=iobsv+nobsv*(kfreq-1)
+            iobfr=iobsv+nobsvo*(kfreq-1)
             arad_u(:,iobfr)=arad_u(:,iobfr)/cph00
           enddo
         enddo
@@ -1174,9 +1154,9 @@ c      enddo !ilo
       if (icohere_u.eq.0) then
 
         if (sqnbunch.ne.1.0d0) arad_u=arad_u/sqnbunch
-
         do ith=1,mthreads
           stokes_u(:,:)=stokes_u(:,:)+stokes(:,:,ith)
+          !print*,stokes_u(1,19)
         enddo
 
       else
@@ -1184,7 +1164,7 @@ c      enddo !ilo
         do iobsv=1,nobsvo
           do kfreq=1,nepho
 
-            iobfr=iobsv+nobsv*(kfreq-1)
+            iobfr=iobsv+nobsvo*(kfreq-1)
 
             amp(1:3)=arad_u(1:3,iobfr) !/sqnphsp
 
@@ -1223,22 +1203,6 @@ c      enddo !ilo
 
       endif !icohere_u
 
-      !allu
-      if (modepin_u.eq.0) then
-        do iobsv=1,nobsvo
-          if (nrad(iobsv).eq.0) cycle
-          do kfreq=1,nepho
-            iobfr=iobsv+nobsv*(kfreq-1)
-            stokes_u(:,iobfr)=stokes_u(:,iobfr)/nrad(iobsv)
-          enddo
-        enddo
-      else
-        do kfreq=1,nepho
-          i1=1+nobsvo*(kfreq-1)
-          i2=icbrill+nobsv*(kfreq-1)
-          stokes_u(:,i1)=(stokes_u(:,i1)+stokes_u(:,i2))/nelec
-        enddo
-      endif
 
 c      if (ihbunch.ne.0) then
 c        n=0
@@ -1255,8 +1219,8 @@ c      endif
 
       !deallocate(affe)
       deallocate(frq,uampex,uampey,uampez,uampbx,uampby,uampbz,utraxyz,
-     &  pherrc,pherr,expphiran,arad,pow,pranall,wsstokes,stokes,nradth,nrad)
-
+     &  pherrc,pherr,expphiran,arad,pow,pranall,wsstokes,stokes,
+     &  )
       if (iemit.ne.0) deallocate(eall)
 
 c      iobfr=nobsv_u*nepho_u/2+1

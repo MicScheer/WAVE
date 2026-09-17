@@ -472,11 +472,15 @@ H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
 Nmin, Nmax, Nmean, Nrms, Nsum, Nxopt, Nyopt, Nlook, \
 TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
 H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+NxHbook2,NyHbook2
 
 Tdf = type(pd.DataFrame())
 nt = pd.DataFrame([],columns=['x'])
 exec("global TpdS; TpdS = type(nt.x)")
+
+NxHbook2 = 101
+NyHbook2 = 101
 
 Tfig = None
 Figman = None
@@ -675,7 +679,8 @@ def set_console_title(console='Python'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -1078,7 +1083,8 @@ def util_spline_coef(x,y,yp1=9999.,ypn=9999.):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -1945,7 +1951,6 @@ def _options3d():
 
     Wmaster.wait_window(Win3d)
 #enddef _options3d()
-
 def _optdate():
   global Kdate
   if Kdate == False: Kdate = True
@@ -2233,53 +2238,6 @@ def _titles():
     global Wmaster
     Wmaster.wait_window(Wint)
 #enddef _titles()
-
-def _options3d():
-    global Wmain, Wmaster, Win3d, Myfont, comboscol, combocmap, combomod3d, Cmaps
-
-    Win3d = Toplevel()
-    Win3d.attributes('-topmost', 1)
-
-    fmo = Frame(Win3d)
-    lcm = Label(fmo,text='Mode',width=10,font=Myfont)
-    lcm.pack(side=LEFT)
-    combomod3d = ttk.Combobox(fmo,values=Mode3ds)
-    idx = getmode3dindex(Mode3d)
-    if idx >= 0 and idx < len(Mode3ds): combomod3d.current(idx)
-    combomod3d.bind("<<ComboboxSelected>>",_combomod3d)
-    combomod3d.pack(side=RIGHT)
-    fmo.pack()
-
-    fcm = Frame(Win3d)
-    lcm = Label(fcm,text='color map',width=10,font=Myfont)
-    lcm.pack(side=LEFT)
-    combocmap = ttk.Combobox(fcm,values=Cmaps)
-    idx = getcmapindex(Cmap)
-    if idx >= 0 and idx < len(Cmaps): combocmap.current(idx)
-    combocmap.bind("<<ComboboxSelected>>",_combocmap)
-    combocmap.pack(side=RIGHT)
-    fcm.pack()
-
-    flc = Frame(Win3d)
-    llc = Label(flc,text='surface color',width=10,font=Myfont)
-    llc.pack(side=LEFT)
-    comboscol = ttk.Combobox(flc,values=Surfcolors)
-    idx = getsurfcolorindex(Surfcolor)
-    if idx >= 0 and idx < len(Surfcolors): comboscol.current(idx)
-    comboscol.bind("<<ComboboxSelected>>",_comboscol)
-    comboscol.pack(side=RIGHT)
-    flc.pack()
-
-    cbCmap= Checkbutton(Win3d,text="Use color map",  onvalue=1, offvalue=0, variable=Icmap).pack()
-
-    bClose = Button(Win3d,text='Ok',command=_setopt3d).pack()
-
-    wid,h,x,y = getgeo()
-    sgeo = '+' + str(x+wid//3) + '+' + str(y+h-170)
-    Win3d.geometry(sgeo)
-
-    Wmaster.wait_window(Win3d)
-#enddef _options3d()
 
 def _nextzone():
     global Wins, Erows, Ecols, Ekzon, Winz, Nyzone, Nxzone
@@ -4124,7 +4082,6 @@ def _options3d():
 
     Wmaster.wait_window(Win3d)
 #enddef _options3d()
-
 def _optdate():
   global Kdate
   if Kdate == False: Kdate = True
@@ -4412,53 +4369,6 @@ def _titles():
     global Wmaster
     Wmaster.wait_window(Wint)
 #enddef _titles()
-
-def _options3d():
-    global Wmain, Wmaster, Win3d, Myfont, comboscol, combocmap, combomod3d, Cmaps
-
-    Win3d = Toplevel()
-    Win3d.attributes('-topmost', 1)
-
-    fmo = Frame(Win3d)
-    lcm = Label(fmo,text='Mode',width=10,font=Myfont)
-    lcm.pack(side=LEFT)
-    combomod3d = ttk.Combobox(fmo,values=Mode3ds)
-    idx = getmode3dindex(Mode3d)
-    if idx >= 0 and idx < len(Mode3ds): combomod3d.current(idx)
-    combomod3d.bind("<<ComboboxSelected>>",_combomod3d)
-    combomod3d.pack(side=RIGHT)
-    fmo.pack()
-
-    fcm = Frame(Win3d)
-    lcm = Label(fcm,text='color map',width=10,font=Myfont)
-    lcm.pack(side=LEFT)
-    combocmap = ttk.Combobox(fcm,values=Cmaps)
-    idx = getcmapindex(Cmap)
-    if idx >= 0 and idx < len(Cmaps): combocmap.current(idx)
-    combocmap.bind("<<ComboboxSelected>>",_combocmap)
-    combocmap.pack(side=RIGHT)
-    fcm.pack()
-
-    flc = Frame(Win3d)
-    llc = Label(flc,text='surface color',width=10,font=Myfont)
-    llc.pack(side=LEFT)
-    comboscol = ttk.Combobox(flc,values=Surfcolors)
-    idx = getsurfcolorindex(Surfcolor)
-    if idx >= 0 and idx < len(Surfcolors): comboscol.current(idx)
-    comboscol.bind("<<ComboboxSelected>>",_comboscol)
-    comboscol.pack(side=RIGHT)
-    flc.pack()
-
-    cbCmap= Checkbutton(Win3d,text="Use color map",  onvalue=1, offvalue=0, variable=Icmap).pack()
-
-    bClose = Button(Win3d,text='Ok',command=_setopt3d).pack()
-
-    wid,h,x,y = getgeo()
-    sgeo = '+' + str(x+wid//3) + '+' + str(y+h-170)
-    Win3d.geometry(sgeo)
-
-    Wmaster.wait_window(Win3d)
-#enddef _options3d()
 
 def _nextzone():
     global Wins, Erows, Ecols, Ekzon, Winz, Nyzone, Nxzone
@@ -5016,7 +4926,8 @@ def hdump(hist='?',filh='hdump.dat'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5104,7 +5015,8 @@ def hprint(hist='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5181,7 +5093,8 @@ def hfun(hist='?',fun='x', nx=101, xmin=-0.5, xmax=100.5):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5292,7 +5205,8 @@ def h1header_update(hist='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5472,7 +5386,8 @@ def h1reset(h):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5551,7 +5466,8 @@ def hdelete(h='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5639,7 +5555,8 @@ def hmin(h='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -5722,7 +5639,8 @@ def hmax(h='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6069,7 +5987,8 @@ def mhb_mkdir(chdir='!'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6174,7 +6093,8 @@ def mhb_ldir():
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6249,7 +6169,8 @@ def mhb_pwd(isilent=0,iretval=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6319,7 +6240,8 @@ def mhb_cd(cdir='!'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6642,7 +6564,7 @@ def pplot(pname="WavePlot.pdf",w=0,h=0):
   LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
   Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
   FillColor,WisLinux,Ishow,Sepp,Backslash,Kcolorbar,kcolorbar
-
+  #reakpoint()
   Fig = plt.gcf()
   wo,ho = getplotsize()
 
@@ -6674,7 +6596,8 @@ def h1pack(idh='?', data=None):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6756,7 +6679,8 @@ def hcopn(idh='?', nt='', varlis='x:y:ey', ntit='!',kweedzero=1):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6893,7 +6817,8 @@ def nrandom(nt='?',varlis='', n=100, width=[1.], modu='u', iplot=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -6988,7 +6913,8 @@ def nhull2d(nt='?',varlis='',select='', iplot=1, iretval=1):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7198,7 +7124,8 @@ def vhull2d(vx,vy,varlis='',iplot=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7503,7 +7430,8 @@ def nhull3dbad(nt='?',varlis='',select='', plopt='',iplot=1, iretval=0,color='!'
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -7920,7 +7848,8 @@ def nappend(nt='?', nt2=''):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8008,7 +7937,8 @@ def nfill(nt='?', data=''):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8135,7 +8065,8 @@ def npeaksabs(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretva
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8263,7 +8194,8 @@ def hpeaks(h='?', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8342,7 +8274,8 @@ def npeaks(nt='?', varlis='', select='', pkmin=0.5,nsmooth=0,isilent=0,iretval=0
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8465,7 +8398,8 @@ def nstat(nt='?',var='',select='', iretval=1, isilent=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8652,7 +8586,8 @@ def nsum(nt='?',var='',select='', iretval=1, isilent=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8760,7 +8695,8 @@ def nmax(nt='?',var='',select='',iretval=1):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8871,7 +8807,8 @@ def nmin(nt='?',var='',select='', iretval=1):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -8982,7 +8919,8 @@ def nminmax(nt='?',var='',select='',iretval=1):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -9311,7 +9249,8 @@ def nrenvars(nt,varlis):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -9400,7 +9339,8 @@ def nparse(nt,varlis):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -9591,7 +9531,8 @@ def set_linecolor(lcol='r'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -9659,7 +9600,8 @@ def h2fill(idh='?', x=1.e30, y=1.e30, w=1.):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -9877,7 +9819,8 @@ def h1fill(idh=-1, x=1.e30, wei=1.):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10019,6 +9962,26 @@ def h1fill(idh=-1, x=1.e30, wei=1.):
 
 #enddef h1fill
 
+def getnxhbook2():
+  global NxHbook2
+  return NxHbook2
+#enddef getnxhbook2
+
+def getnyhbook2():
+  global NyHbook2
+  return NyHbook2
+#enddef getnyhbook2
+
+def setnyhbook2(n):
+  global NyHbook2
+  if n>0: NyHbook2 = n
+#enddef setnyhbook2
+
+def setnxhbook2(n):
+  global NxHbook2
+  if n>0: NxHbook2 = n
+#enddef setnxhbook2
+
 def hbook2(idh=-1, tit='Histogram2D',
            nx=10, xmin=0., xmax=1., ny=10, ymin=0., ymax=1.0, overwrite=False):
 
@@ -10037,7 +10000,8 @@ def hbook2(idh=-1, tit='Histogram2D',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10110,9 +10074,15 @@ def hbook2(idh=-1, tit='Histogram2D',
     return -3
   #endif ymin >= ymax
 
-  if nx > 1000:
-    print("*** Warning in hbook2: Number of x-channels too high, will set it to 1000 ***")
-    nx = 1000
+  global NxHbook2, NyHbook2
+
+  if NxHbook2 < 1: NxHbook2 = 101
+  if NyHbook2 < 1: NyHbook2 = 101
+
+  if nx > NxHbook2:
+    print("\n*** Warning in hbook2: Number of x-channels too high, will set it to " + str(NxHbook2) +  " ***")
+    print("*** Use sethbook2nx() to change this limit ***")
+    nx = NxHbook2
   #endif
 
   if nx <= 0:
@@ -10122,6 +10092,8 @@ def hbook2(idh=-1, tit='Histogram2D',
     dx = (xmax-xmin)
     x = np.array([(xmin+xmax)/2.])
   else:
+#    dx = (xmax-xmin)/(nx-1)
+#    x = np.linspace(xmin,xmax,nx)
     dx = (xmax-xmin)/nx
     x = np.linspace(xmin,xmax,nx+1)
     x = x[:-1] + dx/2.
@@ -10129,9 +10101,16 @@ def hbook2(idh=-1, tit='Histogram2D',
 
   ix = np.arange(1,nx+1)
 
-  if ny > 1000:
-    print("*** Warning in hbook2: Number of y-channels too high, will set it to 1000 ***")
-    ny = 1000
+  try:
+    if NyHbook2 < 1: NyHbook2 = 101
+  except:
+    NyHbook2 = 101
+  #endtry
+
+  if ny > NyHbook2:
+    print("\n*** Warning in hbook2: Number of y-channels too high, will set it to " + str(NyHbook2) +  " ***")
+    print("*** Use sethbook2ny() to change this limit ***")
+    ny = NyHbook2
   #endif
 
   if ny <= 0:
@@ -10141,7 +10120,9 @@ def hbook2(idh=-1, tit='Histogram2D',
     dy = (ymax-ymin)
     y = np.array([(ymin+ymax)/2.])
   else:
-    dy = (ymax-ymin)/ny
+#    dy = (ymax-ymin)/(ny-1)
+#    y = np.linspace(ymin,ymax,ny)
+    dy = (ymax-ymin)/(ny)
     y = np.linspace(ymin,ymax,ny+1)
     y = y[:-1] + dy/2.
   #endif ny <= 0:
@@ -10215,7 +10196,8 @@ def h2reset(idh):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10354,7 +10336,8 @@ def hbook1(idh=-1, tit='Histogram1D', nx=10, xmin=0., xmax=1., overwrite=False):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10489,7 +10472,8 @@ def nscan(nt='?',varlis='',select='',isilent=0,ifirst=0,ilast=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10629,7 +10613,8 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -10684,7 +10669,8 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 
   #global N,Ney,Nfit #,FitFit, FitPar #,Nfitint ,Nfitxy
 
@@ -10925,7 +10911,8 @@ def nintern(nt='?',varlis='',select='',xint='!'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11043,7 +11030,8 @@ def ninter(nt='?',varlis='',select='',xint='!'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11215,7 +11203,8 @@ def nspline(nt='?',varlis='',select='',xspl='!',periodic=False):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11349,7 +11338,8 @@ def nsolve(nt='?',varlis='',select='',val=0.0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11473,7 +11463,8 @@ def ndump(nt='',varlis='',select='',fout='ndump.dat', sep=' ',floatform='%.5e',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11632,7 +11623,8 @@ def nreset(nt='?', varlis=''):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11742,7 +11734,8 @@ def ndelete(nt='?',isilent=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11839,7 +11832,8 @@ def ncre(ntname='', nttit='', varlis='', ioverwrite=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -11990,7 +11984,8 @@ def GetIndexH2(idh='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12094,7 +12089,8 @@ def GetIndexN(nt='?', isilent=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12214,7 +12210,8 @@ def GetIndexNct(idh='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12298,7 +12295,8 @@ def GetIndexH1(idh='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12405,7 +12403,8 @@ def GetIndex(idh='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12507,7 +12506,8 @@ def h1opt(idh):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12635,7 +12635,8 @@ def voptpar(vx,vy):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12751,7 +12752,8 @@ def h1print(idh='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12831,7 +12833,8 @@ def H1Info(idh='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -12933,7 +12936,8 @@ def H2Info(idh='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13056,7 +13060,8 @@ def hstat2d(idh='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13130,7 +13135,8 @@ def H1List():
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13195,7 +13201,8 @@ def H2List():
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
   print("\n Index in H2, ID, Title  Nxbins Xmin Xmax, Nybins Ymin, Ymax, ContMin, ContMax, Status")
   print("--------------------------------------------------------------")
 
@@ -13304,7 +13311,8 @@ def nentry(nt='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13386,7 +13394,8 @@ def ninfo(nt='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13488,7 +13497,8 @@ def nlist():
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13558,7 +13568,8 @@ def NctList():
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13627,7 +13638,8 @@ def ncolumns(fname='ntuple.dat', skiphead=-1, sep=' '):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13733,7 +13745,8 @@ def ncolumnsguess(fname='ntuple.dat'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13850,7 +13863,8 @@ silent=0, comment='*', sep=' ',iguessncols=1, iplot=1):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -13937,7 +13951,8 @@ silent=0, comment='*', sep=' ', iguessncols=1, iplot=1):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -14021,7 +14036,8 @@ comment='*', sep=' '):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -14182,7 +14198,8 @@ comment='*', sep=' ',iguessncols=1, ioverwrite=1):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -14347,7 +14364,8 @@ def nproj2(nt='?', xy='', weight=1., select='',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -14460,7 +14478,9 @@ def nproj2(nt='?', xy='', weight=1., select='',
     #endif len(nt) == 0
   #endif select:
 
-  if type(xy) == str: xy = nlistcolon(xy)
+  if type(xy) == str:
+    xy = nlistcolon(xy)
+  #endif
 
   if type(xy) != list or len(xy) == 0:
     print("*** Error in nproj2: No list given for variables ***")
@@ -14478,6 +14498,13 @@ def nproj2(nt='?', xy='', weight=1., select='',
     w = nparse(nt,weight)
     wt = weight
   #endif weight == 1. or weight == '' or weight == '!'
+
+  if len(xy) > 2:
+    #reakpoint()
+    w3 = "(" + nparse(nt,xy[2]) + ") * " + str(scalez)
+    wt = xy[2]
+    w = "(" + w + ") * (" + w3 + ")"
+  #endif
 
   scom = "global N; N = pd.DataFrame([" + x + "," + y + "," + w + "]).T"
   exec(scom)
@@ -14570,6 +14597,8 @@ def nproj2(nt='?', xy='', weight=1., select='',
       print("--- Have created histogram: ", idx, " ",hname," ",Nhead[idn][2])
 
   #endif idx == -1
+
+  #reakpoint()
 
   nx = H2hh[2]
   xmin = H2hh[3]
@@ -14719,7 +14748,8 @@ def nproj2n(nt='?', xy='', weight=1., select='',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -15061,7 +15091,8 @@ def nproj1(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -15373,7 +15404,8 @@ def nproj1n(nt='?', var='', weight=1., select='', scalex=1., scaley = 1,
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -15691,7 +15723,8 @@ def hstat1d(idh='?'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -15851,7 +15884,8 @@ def vstat(x='?',y=''):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -16014,7 +16048,8 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -16239,6 +16274,7 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
 
   iplot = 0
 
+  #reakpoint()
   if plopt == 'e' or Ierr:
 
     lincol = Markercolor
@@ -16465,7 +16501,7 @@ def hplot1d(idh='?', plopt='2d', Tit='!', xTit='', yTit='', legend='',
   txyz(Tit,xTit,yTit)
   showplot()
 
-  if Kpdf:
+  if Kpdf and WaveFilePrefix != '':
     Npdf += 1
     fout = WaveFilePrefix + str(Npdf) + ".pdf"
     pplot(fout,'A4','landscape')
@@ -16490,7 +16526,8 @@ def hplot(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', block
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -16570,7 +16607,8 @@ def hplave(idh, plopt='!', Tit='!', xTit='', yTit='', zTit = '', legend='', bloc
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -17082,7 +17120,8 @@ def showplot(visible=True,kpdf=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -17238,7 +17277,8 @@ def showplot(visible=True,kpdf=0):
 
   Kplots[Kzone-1] = 1
 
-  if kpdf:
+  if kpdf and WaveFilePrefix != '':
+#    print(len(WaveFilePrefix))
     Npdf += 1
     fout = WaveFilePrefix + str(Npdf) + ".pdf"
     pplot(fout,'A4','landscape')
@@ -17250,7 +17290,7 @@ def showplot(visible=True,kpdf=0):
 def optconsole(con=True): global Igetconsole; Igetconsole = con
 
 def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
-            cmap='', surfcolor='', tit='', xtit='', ytit='', ztit=''):
+            cmap='', surfcolor='', tit=' ', xtit=' ', ytit=' ', ztit=' '):
 
   import numpy as np
 
@@ -17266,7 +17306,8 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -17383,6 +17424,14 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
   #print("--- Break in hplot2d ---")
   #reakpoint()
 
+  #print("Break in hplot2d")
+  #reakpoint()
+
+  if tit == '': tit = ' '
+  if xtit == '': xtit = ' '
+  if ytit == '': ytit = ' '
+  if ztit == '': ztit = ' '
+
   if Ihist:
 
     if surfcolor == '': surfcolor = Surfcolor
@@ -17441,7 +17490,6 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
     if surfcolor: cmap = None
 
     Ax.plot_surface(xsh,ysh,zsh,rstride=1, cstride=1, shade=True, cmap=cmap,color=surfcolor)
-
     txyz(tit,xtit,ytit,ztit)
 
   elif Icont3d:
@@ -17522,7 +17570,7 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
     Axes.append(fcm)
 #    npl(nhpl2d,"x:y","","z",plopt)
 
-  elif Iinter == 0 :
+  elif Iinter == 0:
 
     getzone()
 
@@ -17556,7 +17604,7 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
     Axes.append(fcm)
 
   else:
-
+    #reakpoint()
     getzone()
 
     Ax.tick_params(labelsize=Axislabelsize, pad=Axislabeldist)
@@ -17567,7 +17615,7 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
                'catrom', 'gaussian', 'bessel', 'mitchell', 'sinc', 'lanczos']
 
     zsh = z.values.reshape(nx,ny)
-    zsh = zsh.T
+#    zsh = zsh.T
 
     if cmap == '' or cmap == '!': cmap=Cmap
 
@@ -17576,6 +17624,8 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
 #    zsh = ls.shade(zsh,plt.cm.copper)
 
     txyz(tit,xtit,ytit)
+
+    #reakpoint()
 
     colmap = Ax.imshow(zsh,
                        interpolation='spline36'
@@ -17587,8 +17637,9 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
 
     if Colorbarpad != '!':
       fcm = Fig.colorbar(colmap, pad=Colorbarpad)
-      Zones[Kzone-1][5] = Kcolorbar
-#    else:
+      #Zones[Kzone-1][4] = Kcolorbar
+      Kcolorbar[Kzone] = 1
+    else:
       fcm = Fig.colorbar(colmap)
       Kcolorbar[Kzone] = 1
 #      Zones[Kzone-1][5] = Kcolorbar
@@ -17613,7 +17664,7 @@ def hplot2d(idh, plopt='!', block=False, scalex=1., scaley=1., scalez=1.,
     WaveDump = fout
   #endif Kdump
 
-  if Kpdf:
+  if Kpdf and WaveFilePrefix != '':
     Npdf += 1
     fout = WaveFilePrefix + str(Npdf) + ".pdf"
     pplot(fout)
@@ -18134,7 +18185,8 @@ def set_title(title='Title',tfs=-9.,titx=-9.,tity=-9):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -18210,7 +18262,8 @@ def set_x_title(xtit='xTit',pos=0.5):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -18277,7 +18330,8 @@ def set_z_title(ztit='zTit',pos=0.5):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -18346,7 +18400,8 @@ def set_titles(gtit='',pltit='Title',xtit='xTit', ytit='yTit', ztit=''):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -18417,7 +18472,8 @@ def set_global_title(gtit='', fontsize='!'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -18497,7 +18553,8 @@ def txyz(pltit='Title',xtit='', ytit='', ztit='', tfs=-9., xyzfs=-9,
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -19364,7 +19421,8 @@ def hcopy1d(idh,idnew,tit='',scalex=1.,scaley=1., reset=0, overwrite=True):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -19485,7 +19543,8 @@ def hcopy2d(idh,idnew,tit='',scalex=1.,scaley=1., scalez=1., reset=0, overwrite=
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -20034,7 +20093,8 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -20143,18 +20203,19 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
 
   plotoptions(plopt)
 
-  if len(varlis) == 1 or len(varlis) == 2 and Iprof:
-    if hist == '!':
-      if hexist("HnPlot"):
-        hdelete("HnPlot")
-      #endif
-      hist = "HnPlot"
+  if type(hist) == str and hist == '!':
+    hist = "HnPlot"
+    if hexist("HnPlot"):
+      hdelete("HnPlot")
     #endif
-  else:
-    if hist == '!':
-      if hexist("HnPlot2"):
-        hdelete("HnPlot2")
-      #endif
+
+  if len(varlis) == 1 or len(varlis) == 2 and Iprof:
+    hist = "HnPlot"
+    if hexist("HnPlot"):
+      hdelete("HnPlot")
+    #endif
+    if hexist("HnPlot2"):
+      hdelete("HnPlot2")
       hist = "HnPlot2"
     #endif
   #endif
@@ -20610,7 +20671,7 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
   Kplots[Kzone-1] = 1
   showplot()
 
-  if Kpdf:
+  if Kpdf and WaveFilePrefix != '':
     Npdf += 1
     fout = WaveFilePrefix + str(Npdf) + ".pdf"
     pplot(fout)
@@ -20734,7 +20795,8 @@ def vprint(v):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -20801,7 +20863,8 @@ def vprintxy(x,y):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -20880,7 +20943,8 @@ def vplxy(x='!',y='!',plopt='',label='',color='!',fillcolor='none'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -21132,7 +21196,8 @@ def vplxyey(x,y,ey='',plopt='o',label='',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -21213,7 +21278,8 @@ def vplxyerr(x,y,ey='',ex='',plopt='o',label='',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -21296,7 +21362,8 @@ def vinter(x,y,xint='!'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -21404,7 +21471,8 @@ def vintern(x,y,xint='!'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -21578,7 +21646,8 @@ def vspline_index(x,y,nspl=1001, periodic=False, ypp1=0.0, yppn=0.0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -21698,7 +21767,8 @@ def vspline(x,y,xspl='!', periodic=False, ypp1=0.0, yppn=0.0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -21869,7 +21939,8 @@ def vspline_old(x,y,xspl='!', periodic=False):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22082,7 +22153,8 @@ def nupdate_header(nt,reindex=1):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22239,7 +22311,8 @@ def vsolve(x,y,val=0.0,xmin=-1.0e30,xmax=1.0e30):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22365,7 +22438,8 @@ def vsolvelin(x,y,val=0.0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22435,7 +22509,8 @@ def voptspl(x,y):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22540,7 +22615,8 @@ def ncopn(nt,ncnam,varlis='',select='',ioverwrite=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22647,7 +22723,8 @@ def ncopv(nt,varlis,select=''):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -22778,7 +22855,8 @@ def nclone(nt,ncnam,nctit='',ioverwrite=0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -23692,7 +23770,8 @@ def getzone(projection=''):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -23886,7 +23965,8 @@ def set_console_title(console='Python'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -23959,7 +24039,8 @@ def get_console(console=''):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -24039,7 +24120,8 @@ def getax(visible=True):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -24112,7 +24194,8 @@ def vplbxy(x,y,u,v,scale=-9999.0,plopt='',tit='',xtit='',ytit='',ztit='',label='
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -24212,7 +24295,8 @@ def vplbxyz(x,y,z,u,v,w,scale,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -24293,7 +24377,8 @@ def vplxyz(x,y,z,plopt='',tit='',xtit='',ytit='',ztit='',label='',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -24489,7 +24574,8 @@ def vplxyzt(x,y,z,t,plopt='',tit='',xtit='',ytit='',ztit='', label='',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -24653,7 +24739,8 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -24990,7 +25077,8 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -25045,7 +25133,8 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 
 #  global Kold, Kstat, Mode2d, Nfitxy, Kplots, Kzone,
 
@@ -25140,7 +25229,8 @@ def vfit(fitfun, x, y, ey = '', absolute_sigma='default', parstart=None,
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -25195,7 +25285,8 @@ def vfit(fitfun, x, y, ey = '', absolute_sigma='default', parstart=None,
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 
   from scipy.optimize import curve_fit
 
@@ -25433,7 +25524,8 @@ def vfitdipole(x,y, ey = '', fringemodel='quintic-spline',absolute_sigma='defaul
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -25519,7 +25611,8 @@ def vfitexp(x,y, ey = '', absolute_sigma='default', parstart=None,
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -25593,7 +25686,8 @@ def vfitexp2(x,y, ey = '', absolute_sigma='default', parstart=None,
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -25673,7 +25767,8 @@ def vfitgauss(x,y, ey = '', absolute_sigma='default',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -25745,7 +25840,8 @@ def vfitcosh(x,y, ey = '', absolute_sigma='default',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -25817,7 +25913,8 @@ def vfitcos(x,y, ey = '', absolute_sigma='default',
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -25886,7 +25983,8 @@ def hget(idh=''):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -25964,7 +26062,8 @@ def nget(idn=''):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -26905,7 +27004,8 @@ def set_y_title_abs(ytit='yTit', pos=0.5):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -27383,6 +27483,8 @@ gtit = set_global_title
 setgeo = window_geometry
 setfit = optfit
 
+opt3d = _options3d
+
 tgruen = tgreen
 trot = tred
 tblau = tblue
@@ -27393,6 +27495,9 @@ thellblau = tcyan
 ryst = rystat
 pyst = pystat
 myst = mystat
+
+setstat = optstat
+setnstat = optnstat
 #end of aliases in m_hbook
 
 #end of m_hbook
@@ -27977,7 +28082,8 @@ def mhb_to_pylist(fmh = 'WAVE.mhb', Debug = 0):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 
   Wnfrq = 0
   Wispe = 0
@@ -28029,11 +28135,17 @@ def mhb_to_pylist(fmh = 'WAVE.mhb', Debug = 0):
   fmhb = open(fmh,'r')
 
   Nline = 0
+
+  global Nhisterr
+  Nhisterr=0
+  #reakpoint()
   while 1:
 
     Nline += 1
 
     line = fmhb.readline() # first line is comment
+    if Nline == 1 and line[3] == 'E': Nhisterr=1
+
     if Debug > 0: print(line)
 
     if not line:
@@ -28057,6 +28169,7 @@ def mhb_to_pylist(fmh = 'WAVE.mhb', Debug = 0):
 
     if kind == 1:
 
+#      Debug = 1
       ntitlen = fmhb.readline()
       tit = fmhb.readline()
       sitems = tit.split('$')
@@ -28135,8 +28248,21 @@ def mhb_to_pylist(fmh = 'WAVE.mhb', Debug = 0):
         sumsq+=c*c
         if c < contmn: contmn=c
         if c > contmx: contmx=c
-        if Debug > 0: print("ix, x, cont: ",ix," ",x," ",c)
-        cont1.append([ix,x,c,c,0.0,c*c,1.])
+        if Nhisterr:
+          ave = float(items[3])
+          sig = float(items[4])
+          hs2 = float(items[5])
+          if ave: ents = c/ave
+          else: ents=0.0
+          if Debug > 0: print("ix, x, cont, ave, sig, sum2: ",ix," ",x," ",c, " ", ave," ",sig, " ", hs2)
+        else:
+          ave = c
+          sig = 0.0
+          hs2 = c*c
+          ents = 1.0
+          if Debug > 0: print("ix, x, cont: ",ix," ",x," ",c)
+        #endif
+        cont1.append([ix,x,c,ave,sig,hs2,ents])
       #endfor i in range():
 
       ny = 0
@@ -29716,7 +29842,8 @@ def wave_title(gtit='Run_and_Code', fontsize=-9):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -29884,7 +30011,8 @@ def wave_input_parameters():
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -29999,7 +30127,7 @@ def wave_input_parameters():
 
 #enddef wave_input_parameters()
 
-def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='!'):
+def hcfluxden(key='fd', plopt='!', Tit='!', xTit='!', yTit='!', clipe='!'):
 
 #+seq,mshimportsind.
 # +PATCH,//WAVES/PYTHON
@@ -30013,7 +30141,8 @@ def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='!'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -30097,6 +30226,15 @@ def hcfluxden(key='fd', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='!'):
     clipe = 'no'
 
   plotopt(plopt)
+
+  if plopt == '!' or plopt == 'same' or plopt == 'S':
+    if Wipin == 3.0:
+      if Isame: plopt = 'sameprof'
+      else: plopt = 'prof'
+    else:
+      plopt='2d'
+    #endif
+  #endif
 
   pinx = Wpinx
   piny = Wpiny * 1000.
@@ -30750,7 +30888,8 @@ def nspec(key='f', select='', plopt='surf', idh='Hspec'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -30876,7 +31015,8 @@ def hflux(key='f', plopt='2d', Tit='!', xTit='!', yTit='!', clipe='!'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -31516,7 +31656,8 @@ def create_hpin(overwrite=True):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -31622,7 +31763,8 @@ def create_hspec(overwrite=True):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -31702,7 +31844,8 @@ def ndistpinh(key='f', select='', plopt='2d', idh='HpinH'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -33170,7 +33313,8 @@ def ndistpinv(key='f', select='', plopt='2d', idh='HpinV'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -34601,7 +34745,8 @@ def ndistphaseh(key='f', select='', plopt='2d', idh='HpinPhH'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -34908,7 +35053,8 @@ def ndistphasev(key='f', select='', plopt='2d', idh='HpinPhV'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -35215,7 +35361,8 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -35276,6 +35423,9 @@ def ndistpin(key='f', select='', plopt='!', idh='Hpin'):
   ,FiggeoEph, Ioverview,WclipE, Icallfromoverview,Kpreload
   global IzCut,IyCut
 
+
+  #rint("Breakpoint in ndistpin")
+  #reakpoint()
 
   if getecho():
     s = "ndistpin(key='" + key + "', select='" + str(select) + "', plopt='" + plopt +  "', idh='" + idh + "')"
@@ -36575,7 +36725,8 @@ def ndistphase(key='f', select='', plopt='3d', idh='HpinPh'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -36888,7 +37039,8 @@ def ndistwigner(key='WzzZ', select='', plopt='boxes',wfile='wigner.wav'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -37447,7 +37599,8 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -37989,7 +38142,8 @@ def hbeampow(key='WALL1'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -38112,7 +38266,8 @@ def ndistpowh(key='pow', select='', plopt='2d', idh='HpinH'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -38204,7 +38359,8 @@ def ndistpowvint(key='power', select='', plopt='2d', idh='HpinH'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -38353,7 +38509,8 @@ def ndistpowv(key='pow', select='', plopt='2d', idh='HpinV'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -38440,7 +38597,8 @@ def ndistpow(key='pow', select='', plopt='3d', idh='Hpin'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -39261,7 +39419,8 @@ def tobs1():
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -39343,7 +39502,8 @@ def tpinhole():
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -39843,7 +40003,8 @@ def WfileOpen():
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -40555,7 +40716,8 @@ def Mmenu_gray(fgcol='gray'):
   Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
   TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
   H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
-  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
 #+KEEP,plotglobind,T=PYTHON.
 #*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
   global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
@@ -43066,6 +43228,7 @@ def readwavein():
   iiwaves = 0
   iewaves = 0
 
+  #Debug = 1
   for line in Fwin:
 
     if Debug > 0:
@@ -43090,7 +43253,7 @@ def readwavein():
     if len(pure) == 0:
       hline[0] = line
       hline[4] = 'b'
-    elif pure[0] == '!':
+    elif pure[0] == '!' or pure[0] == '*':
       hline[0] = line
       hline[4] = 'c'
     else:
@@ -43128,7 +43291,11 @@ def readwavein():
         if Debug > 1:
           print(varnam)
 
-        varval = words[1].strip()
+        try:
+          varval = words[1].strip()
+        except:
+          print("*** Break in readwavein ***")
+          breakpoint()
 
         if varval[0] == "'" or varval[0] == '"':
           hline[4] = 'v'

@@ -1,3 +1,4 @@
+*CMZ :          07/09/2026  16.13.10  by  Michael Scheer
 *CMZ :  3.07/00 16/03/2019  15.27.40  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.10  by  Michael Scheer
 *CMZ :  2.70/12 01/03/2013  16.28.23  by  Michael Scheer
@@ -109,6 +110,12 @@ C--- INTEGRATES THE SPLINES THAT INTERPOLATE THE INTENSITY INSIDE THE PINHOLE
 
 C--- TAKE INNER EDGE OF PINHOLE INTO ACCOUNT, I.E. SET MOBSVZ,MOBVY,MOBSV
 C    TO ORIGINAL VALUES. THEY HAVE BEEN OVERWRITTEN IN SR WFOLINT
+
+
+      if (ipin.eq.3) then
+        call blensto3(istok,kfreq)
+        return
+      endif
 
       MOBSVZ=MOBSVZ-2*MMEDGEZ
       MOBSVY=MOBSVY-2*MMEDGEY

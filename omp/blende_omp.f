@@ -1,3 +1,5 @@
+*CMZ :          08/09/2026  12.37.41  by  Michael Scheer
+*CMZ :  4.02/01 24/11/2025  18.47.11  by  Michael Scheer
 *CMZ :  3.08/01 04/04/2019  12.00.57  by  Michael Scheer
 *CMZ :  3.07/00 16/03/2019  15.27.40  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.10  by  Michael Scheer
@@ -73,9 +75,11 @@
       include 'observf90u.cmn'
 *KEND.
 
-C--- INTEGRATES THE SPLINES THAT INTERPOLATE THE INTENSITY INSIDE THE PINHOLE
+C--- INTEGRATES THE SPLINES THAT INTERPOLATE THE INTENSITY INSIDE THE PINHOLE (IPIN.NE.3)
+C    OR SIMPLY SUM UP (IPIN.EQ.3)
 
       use circpinmod
+      use uradphasemod
 
       IMPLICIT NONE
 
@@ -116,6 +120,11 @@ C--- INTEGRATES THE SPLINES THAT INTERPOLATE THE INTENSITY INSIDE THE PINHOLE
       DATA ICAL/0/
 
       save ical
+
+      IF (IPIN.EQ.3) THEN
+        call blende3(isour,kfreq)
+        return
+      ENDIF
 
       IF (IPINCIRC.EQ.0) THEN
 

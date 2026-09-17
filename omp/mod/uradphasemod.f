@@ -11,6 +11,8 @@
       double precision, dimension(:), allocatable ::  epho_u,specpow_u,pow_u,
      &  obsvzprop_u,obsvyprop_u
 
+      integer*8, dimension(:), allocatable :: nrad_u
+
       double precision
      &  ebeam_u,gamma_u,curr_u,banwid_u,
      &  xi_u,xe_u,yi_u,ye_u,zi_u,ze_u,step_u,

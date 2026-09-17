@@ -1,4 +1,5 @@
-*CMZ :          24/09/2025  12.48.34  by  Michael Scheer
+*CMZ :          13/09/2026  08.38.55  by  Michael Scheer
+*CMZ :  4.02/01 24/09/2025  12.48.34  by  Michael Scheer
 *CMZ :  4.02/00 13/09/2025  10.12.52  by  Michael Scheer
 *CMZ :  4.01/07 11/08/2024  15.26.17  by  Michael Scheer
 *CMZ :  4.01/05 15/04/2024  09.37.27  by  Michael Scheer
@@ -52,7 +53,8 @@ c      aradprop_u=(0.0d0,0.0d0)
         phlowz=0.0d0
       endif
 
-      da=pinw_u/1000.0d0*pinh_u/1000.0d0/dble(max(1,npinz_u-1)*max(1,npiny_u-1))
+c13.9.2026      da=pinw_u/1000.0d0*pinh_u/1000.0d0/dble(max(1,npinz_u-1)*max(1,npiny_u-1))
+      da=pinw_u*pinh_u/dble(max(1,npinz_u-1)*max(1,npiny_u-1))
 
       n=0
 
@@ -92,9 +94,13 @@ c        ith=OMP_GET_THREAD_NUM()+1
 
         DO IOBS=1,NOBSV_u
 
-          XOBS=OBSV_u(1,IOBS)/1000.0d0
-          YOBS=OBSV_u(2,IOBS)/1000.0d0
-          ZOBS=OBSV_u(3,IOBS)/1000.0d0
+c13.9.2026          XOBS=OBSV_u(1,IOBS)/1000.0d0
+c13.9.2026          YOBS=OBSV_u(2,IOBS)/1000.0d0
+c13.9.2026          ZOBS=OBSV_u(3,IOBS)/1000.0d0
+
+          XOBS=OBSV_u(1,IOBS)
+          YOBS=OBSV_u(2,IOBS)
+          ZOBS=OBSV_u(3,IOBS)
 
           dx=xobs-x
           dx2=dx*dx
