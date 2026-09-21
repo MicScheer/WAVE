@@ -564,7 +564,7 @@ Nxyz = pd.DataFrame(columns=['x','y','z'])
 #CanButId = 0
 #Legend = []
 
-Mode3ds = ['none','boxes','cont3d','hist','inter','surf','trisurf']
+Mode3ds = ['none','scatter','boxes','cont3d','hist','inter','surf','trisurf']
 global \
 Wave, Root, WaveOut, Editor, WinGeo, \
 Debug,FWAVEIN,FWVS,Wavein,WaveinO,Wmenu,Mapping,MenuVeto,MenuAllVeto,NMenuAllVeto,\
@@ -10674,6 +10674,7 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
 
   #global N,Ney,Nfit #,FitFit, FitPar #,Nfitint ,Nfitxy
 
+  #reakpoint()
   if type(nt) == str and nt == '?':
     print("\nUsage: nfitxy(nt='',varlis='',select='',fitfun=None, absolute_sigma='default'," + \
     "parstart=None, bounds=None, method=None,isilent=0, ninter=101," + \
@@ -10805,6 +10806,8 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
 #  Nfitxy.to_csv(Fout,header=False,index=False,sep=' ')
 #  Fout.close()
 
+  Nfitxy = nsort(Nfitxy,"x")
+
   nupdate_header(Nfitxy)
 
   if iplot:
@@ -10885,6 +10888,7 @@ def nfitg(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
 def nfitp1(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
            parstart=None, bounds=None, method=None,isilent=0, ninter=101,
            iretval=1,iplot=0,fitcol='!'):
+
   if iretval:
     par,sigma,chi2ndf,f = nfitxy(nt,varlis,select,1, absolute_sigma, \
            parstart, bounds, method,isilent, ninter, \
@@ -10896,7 +10900,6 @@ def nfitp1(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
            iretval,iplot,fitcol)
     return
   #endif
-
 
 def nintern(nt='?',varlis='',select='',xint='!'):
 #+seq,mshimportsind.
@@ -20317,6 +20320,7 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
 
   elif len(varlis) == 2:
 
+    breakpoint()
     getzone()
 
     Ax.tick_params(labelsize=Axislabelsize, pad=Axislabeldist)
@@ -20474,6 +20478,37 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
 #20.5.2024          hplot2d(hist,plopt)
           hplave(hist,plopt)
           iplot = 1
+
+        elif Iscat2d or Iscatter:
+
+          Ax.tick_params(labelsize=Axislabelsize, pad=Axislabeldist3d)
+
+          sx = "(" + nparse(nt,varlis[0]) + ") * " + str(scalex)
+          sy = "(" + nparse(nt,varlis[1]) + ") * " + str(scaley)
+          sz = "(" + nparse(nt,weights) + ") * " + str(scalez)
+
+          if cmap == '' or cmap == '!': cmap=Cmap
+
+          s = Markersize*Markersize
+
+          sopt = ",s=s" + ",c=" + sz + ",cmap='" + cmap + "', linewidth=0.0, \
+          marker='" + Markertype + "'"
+          img = eval('Ax.scatter(' + sx + ',' + sy + sopt + ')')
+
+          Kcolorbar[Kzone] = 1
+
+          if Colorbarpad != '!':
+            fcm = Fig.colorbar(img, pad=Colorbarpad,label=titcolbar)
+          else:
+            fcm = Fig.colorbar(img,label=titcolbar)
+          #endif
+
+          ttit = weights
+
+          fcm.set_label(label=ttit, labelpad=Axistitledist, size=Axislabelsize)
+          fcm.ax.tick_params(labelsize=Axislabelsize)
+
+          Axes.append(fcm)
 
         else:
           #Kcolorbar[Kzone] = 1
@@ -24792,6 +24827,7 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
   # weights are applied to y. For Gaussian uncertenties use 1/sigma not
   # 1/sigma**2
 
+  #reakpoint()
   if len(ey):
     iey = 1
     weight = 1.0/ey
@@ -24834,7 +24870,7 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
   chi2ndf = 0.0
   FitChi2Prob = 0.0
 
-  ndf = ndat-npar-1
+  ndf = ndat - npar
 
   if not iey: ey = 1.
 
@@ -24864,6 +24900,7 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
 
   Ffit = open("vfit.dat","w")
   for i in range(ninter):
+    xx += dx
     ff = np.polyval(par,xx)
     Ffit.write(str(xx) + " " + str(ff) + " \n")
   #endfor
@@ -25137,9 +25174,13 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
   NxHbook2,NyHbook2
 
 #  global Kold, Kstat, Mode2d, Nfitxy, Kplots, Kzone,
+  #reakpoint()
 
   nt = hcopn(idh,'nHfit',kweedzero=1)
   if H1I < 0: return None,None,None,None
+
+  for i in range(len(nt)):
+    if nt.ey[i] == 0: nt.ey[i] = 1.0e-30
 
   par,sigma,chi2ndf,f = nfitxy(nt,'x:y:ey',select,fitfun, absolute_sigma, \
   parstart,bounds,method,isilent, ninter,1,0,fitcol,kweedzero)
@@ -25195,6 +25236,19 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
 
     #endif Kstat
   #endif iplot
+
+  if iretval: return par,sigma,chi2ndf,f
+  else: return
+
+#enddef
+
+def hfitp1(idh, select='',absolute_sigma='default', parstart=None, bounds=None,
+          method=None,isilent=0, ninter=101, iretval=1, iplot=1, fitcol='!',
+          kweedzero=1):
+
+  #reakpoint()
+  par,sigma,chi2ndf,f = hfit(idh,1, select,absolute_sigma, parstart, \
+  bounds,method,isilent,ninter,1,iplot,fitcol,kweedzero)
 
   if iretval: return par,sigma,chi2ndf,f
   else: return
@@ -25339,7 +25393,7 @@ def vfit(fitfun, x, y, ey = '', absolute_sigma='default', parstart=None,
 
   chi2ndf = 0.0
   chi2 = 0.0
-  ndf = ndat - npar - 1
+  ndf = ndat - npar
 
   if not iey: ef = 1.
 
@@ -27448,6 +27502,7 @@ lhmlila = lhmmagenta
 vfitxypoly = vfitpoly
 circ = circle
 vgrafit = vfitp1
+hgrafit = hfitp1
 ngrafit = nfitp1
 shell = os.system
 she = os.system
@@ -28616,11 +28671,26 @@ def mhb_to_pylist(fmh = 'WAVE.mhb', Debug = 0):
   n222 = nget('n222')
 
   if n222.ispe.max():
+
+    if n222.neph.max() > 0:
+      fil = "ampgenpho.pho"
+      if fexist(fil):
+        namppho = ncread("namppho","igam:iele:iegam:iebeam:ebeam:g:egam:x:z:y:tz:ty:s0:s1:s2:s3:s4",fil)
+      #endif
+      fil = "ampgenpho.elc"
+      if fexist(fil):
+        nampele = ncread("nampele","i:e:g:z:y:zp:yp","ampgenpho.elc")
+      #endif
+    #endif
+
     if n222.iwig.max():
       nwig = ncread("nwig","kpol:iz:iy:itz:ity:iegam:egam:z:y:tz:ty:ezr:ezi:eyr:eyi:wig:fdzy:fdtzty",'wigner.wav')
       if n222.iwef.max():
         nwef = ncread("nwef","kpol:iz:iy:itz:ity:iegam:egam:z:y:tz:ty:ezr:ezi:eyr:eyi:wig:fdzy:fdtzty",'wigner.wef')
-  #endif
+      #endif
+    #endif
+
+  #endif ispec
 
   wave_input_parameters()
 
@@ -38128,6 +38198,564 @@ def ndistwignere(key='WzzZ', select='', plopt='boxes',wfile='wigner.wef'):
 #  print('\nHint: Use "Options/Clear Canvas" to reset zones \n')
 #enddef ndistwignere()
 
+def ndistelec(key='ZY', select=''):
+
+#+seq,mshimportsind.
+# +PATCH,//WAVES/PYTHON
+# +KEEP,statusglobind,T=PYTHON.
+  global Istatus, WarningText, ErrorText, Gdebug
+
+  # Histograms and Ntuples
+  global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
+  Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
+  H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
+  TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
+  H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
+#+KEEP,plotglobind,T=PYTHON.
+#*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
+  global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
+  Fig1,Ax1,Fig6,Ax6,Fig2,Ax2,Fig7,Ax7,Fig3,Ax3,Fig8,Ax8, Figgeoms, \
+  Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
+  Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
+  FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
+  Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
+  Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
+  MarkerSize, MarkerType, MarkerColor, \
+  Markersize, Markertype, Markercolor, \
+  Fillstyle, FillStyle, \
+  Textcolor, WaveFilePrefix,WaveDump, \
+  LineStyle, LineWidth, LineColor, \
+  Linestyle, Linewidth, Linecolor, \
+  Author, \
+  Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
+  LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
+  Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Iscat2d, \
+  Ifill1d, TitPad, Xtitle, Ytitle, \
+  Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
+  LexpX,LexpY,LexpRot,LexpPow,\
+  GtitFontSize,Titfontsize,Atitfontsize,Axislabelsize,Textfontsize,Datefontsize,\
+  Statfontsize, Axislabeldist, Axislabeldist3d, Axisdist, Axisdist3d, \
+  XFit, YFit, Xfit, Yfit,Ystat, YStat, \
+  GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
+  StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
+  AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
+  Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
+  LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow,Sepp,Backslash,Kcolorbar,kcolorbar
+#+PATCH,//WAVES/PYTHON
+#+KEEP,vecglobind,T=PYTHON.
+
+  global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
+  VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
+
+#+KEEP,nxyzglobind,T=PYTHON.
+#*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
+  global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
+
+
+  global Wdirs, Wfiles, Wfile, Wcode, Wrun \
+  ,Webea ,Wcurr ,Wipin ,Wcir ,Wpiny ,Wpinx ,Wpinz ,Wpinw ,Wpinh ,Wpinr \
+  ,Wmpiz ,Wmpiy ,Wmpir ,Wmpip ,Wicbr ,Wselx ,Wsely ,Wselz ,Wphax \
+  ,Wsigz ,Wsigy ,Wsgzp ,Wsgyp ,Wespr ,Wif2p ,Wnfrq ,Wflow ,Wfhig \
+  ,WflowExp, WfhigExp, WnfrqExp \
+  ,Wispe ,Wispm ,Widip ,Wnlpo ,Wbw ,Wibun ,Wnbun ,Wneib ,Wiamp \
+  ,Wielo ,Wifol ,Wiefo ,Wirun ,Widat ,Witim ,Wvers ,Wisto, Wbeta, Wibri, Koverview \
+  ,Wnoby ,Wnobz ,Wwal1 ,Wwal2 ,Wxabs ,Wzab1 ,Wzab2, KCode, Kebeam, Kcurr \
+  ,Wesel,Wener,Wfd,Wiesel, Vfd, IsameCanvas, TextIn, LastPlot,Lastwin \
+  ,FiggeoEph, Ioverview,WclipE, Icallfromoverview,Kpreload
+  global IzCut,IyCut
+
+
+  if nexist("n222"):
+    n222 = nget("n222")
+    nelecgenpho = int(n222.neph.max())
+    modran = int(n222.igmo.max())
+  else:
+    nelecgenpho = 0
+  #endif
+
+  if getecho():
+    s = "ndistelec(key=" + str(key) + ", select=" + str(select) + ")"
+    print(s)
+  #endif
+
+  if nelecgenpho == 0:
+    print('*** No electrons of photon generation for this run ***')
+    return
+  #endif
+
+  if not nexist("nampele"):
+    fil = "ampgenpho.elc"
+    if fexist(fil):
+      nampele = ncread("nampele","i:e:g:y:z:yp:zp",fil)
+    else:
+      print("*** Data file ampgenpho.elc not found ***")
+      return
+    #endif
+  else:
+    nampele = nget("nampele")
+  #endif
+
+  keyu = key.upper()
+  keyl = key.lower()
+
+  #reakpoint()
+
+  spinx = "Distribution at x = 0"
+
+  if keyl == 'eel':
+    #ptstat(kstat)
+    htit = 'Energy Distribution'
+    npl(nampele,"e*g")
+    txyz(htit,"E[GeV]")
+  elif keyl == 'z':
+    #ptstat(kstat)
+    htit = 'Hori. Beam Profile at x = 0'
+    npl(nampele,"z*g")
+    txyz(htit,"z[mm]")
+  elif keyl == 'zp':
+    #ptstat(kstat)
+    htit = 'Hori. Beam Slope Profile at x = 0'
+    npl(nampele,"zp*g")
+    txyz(htit,"z'[mrad]")
+  elif keyl == 'y':
+    #ptstat(kstat)
+    htit = 'Vert. Beam Profile at x = 0'
+    npl(nampele,"y*g")
+    txyz(htit,"y[mm]")
+  elif keyl == 'yp':
+    #ptstat(kstat)
+    htit = 'Vert. Beam Slope Profile at x = 0'
+    npl(nampele,"yp*g")
+    txyz(htit,"y'[mrad]")
+  elif keyl == 'zzp':
+    nplot(nampele,"z:zp")
+    txyz(spinx,"z[mm]","z'[mrad]")
+  elif keyl == 'zpyp':
+    nplot(nampele,"zp:yp")
+    txyz(spinx,"z'[mrad]","y'[mrad]")
+  elif keyl == 'yyp':
+    nplot(nampele,"y:yp")
+    txyz(spinx,"y[mm]","y'[mrad]")
+  elif keyl == 'zy':
+    nplot(nampele,"z:y")
+    txyz('',"z[mm]","y[mm]")
+  #endif
+
+  showplot()
+#endif
+
+def ndistphotons(key='zys0', select=''):
+
+#+seq,mshimportsind.
+# +PATCH,//WAVES/PYTHON
+# +KEEP,statusglobind,T=PYTHON.
+  global Istatus, WarningText, ErrorText, Gdebug
+
+  # Histograms and Ntuples
+  global H1h, H1hh, H2h, H2hh, H1, H2, H1head, H2head, H1HLast, Nhead, Ntup, \
+  Nctup, Nh1, Nh2, Nntup, Nnctup, Hdir, Ndir, Kdir, Cdir, Fdir, \
+  H1Last, H2Last, NLast, H1h, H2h, N, Nct, Ind, IndLast, \
+  Nmin, Nmax, Nmean, Nrms, Nxopt, Nyopt, Nlook, Nsum, \
+  TpdS, Tdf, Tfig, Tax, Tax3d, Tax2d , H1ind, H2ind, Ncind, \
+  H1ILast, NiLast, H1I, H2I, H2ILast, Ni, NctI, Nind, Nsel, Nlines, Ncolon, \
+  FitPar, FitFit, FitSig, FitChi2ndf, FitNdf, FitChi2Prob,Figman,TnpFloat64,Tnpcmpl128, \
+  NxHbook2,NyHbook2
+#+KEEP,plotglobind,T=PYTHON.
+#*CMZ :          28/09/2019  14.39.13  by  Michael Scheer
+  global MPLmain, MPLmaster, Nfigs,Figgeom, Figgeom2, FiggeomR, FiggeomL, XtermGeo, Figs,Fig,Ax,\
+  Fig1,Ax1,Fig6,Ax6,Fig2,Ax2,Fig7,Ax7,Fig3,Ax3,Fig8,Ax8, Figgeoms, \
+  Fig4,Ax4,Fig9,Ax9,Fig5,Ax5,Fig10,Ax10,\
+  Screewidth, Screenheight, ScaleSizeX, ScaleSizeY, \
+  FirstConsole, Console, Igetconsole,Klegend, Fwidth, Fheight, Fxoff, Fyoff, \
+  Kfig, Kax, Ihist,Iprof, Imarker, Ierr,Inoerr, Isurf, Iinter, Isame, Itight, IsameGlobal, Iline, CMap, Cmap, Tcmap, Surfcolor, Cmaps, \
+  Iplotopt, Ispline, Kecho, Kdump,Kpdf, Ndump,Npdf, Legend, \
+  Kplots,Nwins, Zones, Kzone, Nxzone, Nyzone, Zone, Axes, Icmap, \
+  Mode3d,Mode3D, Mode2d,Mode2D, CanButId, CanButIds, \
+  MarkerSize, MarkerType, MarkerColor, \
+  Markersize, Markertype, Markercolor, \
+  Fillstyle, FillStyle, \
+  Textcolor, WaveFilePrefix,WaveDump, \
+  LineStyle, LineWidth, LineColor, \
+  Linestyle, Linewidth, Linecolor, \
+  Author, \
+  Tightpad, Xtightpad,Ytightpad, ColorbarPad,\
+  LeftMargin,RightMargin,TopMargin,BottomMargin, Xspace, Yspace, \
+  Histcolor, Histedgecolor, Histbarwidth, Kdate, Kfit, Kstat, YTitle, YGTitle,x_of_xlab,y_of_xlab,x_of_ylab,y_of_ylab, Ygtitle, \
+  Icont3d, Iboxes, Inoempty, Iclosed,Itrisurf, Iscatter, Iscat3d, Iscat2d, \
+  Ifill1d, TitPad, Xtitle, Ytitle, \
+  Gtit,Xtit,Ytit,Ztit,Ttit,Ptit,Colors, Surfcolors,Linestyles, Markertypes, \
+  LexpX,LexpY,LexpRot,LexpPow,\
+  GtitFontSize,Titfontsize,Atitfontsize,Axislabelsize,Textfontsize,Datefontsize,\
+  Statfontsize, Axislabeldist, Axislabeldist3d, Axisdist, Axisdist3d, \
+  XFit, YFit, Xfit, Yfit,Ystat, YStat, \
+  GtitFontSize,TitFontSize,AtitFontSize,AxisLabelSize,TextFontSize,DateFontSize,\
+  StatFontSize, AxisLabelDist, AxisLabelDist3d, AxisTitleDist, AxisTitleDist3d, \
+  AtitFontSize3d, Atitfontsize3d, NXtick,NXtick3d, Nxtick,Nxtick3d, Ktitles,  Dummy,\
+  ZoomXmin,ZoomXmax, ZoomYmin, ZoomYmax,ZoomZmin,ZoomZmax,\
+  Tdate, TdateOv, Trun, TrunOv, Icallfromoverview,\
+  LogX,LogY, LogZ, NxBinMax, Khdeleted, Waveplot, \
+  Mrun, Mcomment, Mdate, ROFx, Rofy, Hull2D,Hull3DList,THull3D,Hull3D, Kgrid, KxAxis,KyAxis,KzAxis,Kbox, \
+  FillColor,WisLinux,Ishow,Sepp,Backslash,Kcolorbar,kcolorbar
+#+PATCH,//WAVES/PYTHON
+#+KEEP,vecglobind,T=PYTHON.
+
+  global VsortX, VsortY, VoptX, VoptY, VsplX, VsplY, Vspl1, Vspl2, VsplI, \
+  VsplCoef, Nspline,Ninter, Nfitxy, Nfitint, Vxint, Vyint, SplineMode, \
+  VxyzX,VxyzY,VxyzZ,Tnpa,Tnone,VxyzE
+
+#+KEEP,nxyzglobind,T=PYTHON.
+#*CMZ :          29/09/2019  11.11.01  by  Michael Scheer
+  global N1, N2, N3, N4, N5, N6, N7,N8,N9,Nv, Nx, Nxy, Nxyz
+
+
+  global Wdirs, Wfiles, Wfile, Wcode, Wrun \
+  ,Webea ,Wcurr ,Wipin ,Wcir ,Wpiny ,Wpinx ,Wpinz ,Wpinw ,Wpinh ,Wpinr \
+  ,Wmpiz ,Wmpiy ,Wmpir ,Wmpip ,Wicbr ,Wselx ,Wsely ,Wselz ,Wphax \
+  ,Wsigz ,Wsigy ,Wsgzp ,Wsgyp ,Wespr ,Wif2p ,Wnfrq ,Wflow ,Wfhig \
+  ,WflowExp, WfhigExp, WnfrqExp \
+  ,Wispe ,Wispm ,Widip ,Wnlpo ,Wbw ,Wibun ,Wnbun ,Wneib ,Wiamp \
+  ,Wielo ,Wifol ,Wiefo ,Wirun ,Widat ,Witim ,Wvers ,Wisto, Wbeta, Wibri, Koverview \
+  ,Wnoby ,Wnobz ,Wwal1 ,Wwal2 ,Wxabs ,Wzab1 ,Wzab2, KCode, Kebeam, Kcurr \
+  ,Wesel,Wener,Wfd,Wiesel, Vfd, IsameCanvas, TextIn, LastPlot,Lastwin \
+  ,FiggeoEph, Ioverview,WclipE, Icallfromoverview,Kpreload
+  global IzCut,IyCut
+
+
+  if nexist("n222"):
+    n222 = nget("n222")
+    nelecgenpho = int(n222.neph.max())
+    modran = int(n222.igmo.max())
+  else:
+    nelecgenpho = 0
+  #endif
+
+  if getecho():
+    s = "ndistphotons(key=" + str(key) + ", select=" + str(select) + ")"
+    print(s)
+  #endif
+
+  if nelecgenpho == 0:
+    print('*** No photon data for this run ***')
+    return
+  #endif
+
+  if not nexist("namppho"):
+    fil = "ampgenpho.pho"
+    if fexist(fil):
+      namppho = ncread("namppho","igam:iele:iegam:iebeam:ebeam:g:egam:x:z:y:tz:ty:s0:s1:s2:s3:s4",fil)
+    else:
+      print("*** Data file ampgenpho.pho not found ***")
+      return
+    #endif
+  else:
+    namppho = nget("namppho")
+  #endif
+
+  keyu = key.upper()
+  keyl = key.lower()
+
+  selgam = "iegam==" + str(Wiesel)
+
+  nz = int(Wmpiz)
+  ny = int(Wmpiy)
+  pinx = Wpinx*1000.
+  pinw = Wpinw*1000.
+  pinh = Wpinh*1000.
+
+  ymin = -pinh/2.0
+  ymax =  pinh/2.0
+  zmin = -pinw/2.0
+  zmax =  pinw/2.0
+
+  tzmn = namppho.tz.min()
+  tymn = namppho.ty.min()
+  tzmx = namppho.tz.max()
+  tymx = namppho.ty.max()
+
+  if ny > 1:
+    dy = pinh/(ny-1)
+    dty = (tymx-tymn)/(ny-1)
+  else:
+    dy = pinh / 2.
+    dty = tymx / 2.
+  if nz > 1:
+    dz = pinw/(nz-1)
+    dtz = (tzmx-tzmn)/(nz-1)
+  else:
+    dz = pinw / 2.
+    dtz = tzmx / 2.
+  #endif
+
+  a = ' and '
+  sizcut = "iz==" + str(int(nz/2)+1)
+  siycut = "iy==" + str(int(ny/2)+1)
+
+  plopt = Mode3d
+
+  colorbarpad = getcolorbarpad()
+
+  kplane = 0
+
+  if keyu == 'ZYS0' or keyu == 'ZYS1' or keyu == 'ZYS2' or keyu == 'ZYS3':
+    kplane = 1
+  elif keyu == 'TZTYS0' or keyu == 'TZTYS1' or keyu == 'TZTYS2' or keyu == 'TZTYS3':
+    kplane = 2
+  elif keyu == 'ZTZS0' or keyu == 'ZTZS1' or keyu == 'ZTZS2' or keyu == 'ZTZS3':
+    kplane = 3
+  elif keyu == 'YTYS0' or keyu == 'YTYS1' or keyu == 'YTYS2' or keyu == 'YTYS3':
+    kplane = 4
+  else:
+    print('\n*** Unknown key:',key)
+    return
+  #endif
+
+  if len(select):
+    sel = select + a + selgam
+  else:
+    sel = selgam
+  #endif
+
+  #reakpoint()
+
+  if plopt != 'scatter':
+
+    if kplane == 1:
+
+      nstok = keyu[-1]
+      sn = str(nstok)
+
+      hnam = 'HPhzyS' + sn
+      stok = 's' + sn +'*g'
+
+      set_plot_params_3d()
+
+      wtit = 'N' + TeX_gamma + '/s/0.1' + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+
+      #htit += htit + '  (' + str(Wesel) + ' eV, ' + str(EbeamList[IEbeam-1]) + ' GeV)'
+      htit = 'S' + sn + ' ( x = ' + str(pinx/1000) + ' m, ' + str(Wesel) + ' eV)'
+
+      h = hbook2(hnam,htit,
+                 nz,zmin-dz/2.,zmax+dz/2.,
+                 ny,ymin-dy/2.,ymax+dy/2.,
+                 overwrite=True)
+
+      istat = nproj2(namppho,'z:y',stok,sel,1.0,1.0,1.0,nz,ny,hnam)
+
+      xtit = 'z [mm]'
+      ytit = 'y [mm]'
+
+      if h.y.min() < h.y.max():
+        hplot2d(hnam,plopt,tit=htit,xtit=xtit,ytit=ytit,ztit=wtit)
+      else:
+        npl(namppho,'z:y',sel,stok)
+        txyz(htit,xtit,ytit,' ')
+      #endif
+
+    elif kplane == 2:
+
+      nstok = keyu[-1]
+      sn = str(nstok)
+
+      hnam = 'HPhtztyS' + sn
+      htit = 'S' + sn + ' ( x = ' + str(pinx/1000) + ' m, ' + str(Wesel) + ' eV)'
+      stok = 's' + sn +'*g'
+
+      set_plot_params_3d()
+
+      wtit = 'N' + TeX_gamma + '/s/0.1' + ' %BW/mrad$^{2}$/' + str(int(Curr*1000.+0.5)) + "mA"
+
+      #htit += htit + '  (' + str(Wesel) + ' eV, ' + str(EbeamList[IEbeam-1]) + ' GeV)'
+
+      h = hbook2(hnam,htit,
+                 nz,tzmn-dtz/2.,tzmx+dtz/2.,
+                 ny,tymn-dty/2.,tymx+dty/2.,
+                 overwrite=True)
+
+      istat = nproj2(namppho,'tz:ty',stok,sel,1.0,1.0,1.0,nz,ny,hnam)
+
+      xtit = 'Theta_z [mrad]'
+      ytit = 'Theta_y [mrad]'
+
+      if h.y.min() < h.y.max():
+        hplot2d(hnam,plopt,tit=htit,xtit=xtit,ytit=ytit,ztit=wtit)
+      else:
+        npl(namppho,'tz:ty',sel,stok)
+        txyz(htit,xtit,ytit,' ')
+      #endif
+
+    elif kplane == 3:
+
+      nstok = keyu[-1]
+      sn = str(nstok)
+
+      hnam = 'HPztzS' + sn
+      htit = 'S' + sn + ' x = ' + str(pinx)
+      stok = 's' + sn +'*g'
+
+      set_plot_params_3d()
+
+      wtit = 'N' + TeX_gamma + '/s/0.1' + ' %BW/mm$^{2}$/' + str(int(Curr*1000.+0.5)) + "mA"
+
+      #htit += htit + '  (' + str(Wesel) + ' eV, ' + str(EbeamList[IEbeam-1]) + ' GeV)'
+      htit = 'S' + sn + ' ( x = ' + str(pinx/1000) + ' m, ' + str(Wesel) + ' eV)'
+
+      h = hbook2(hnam,htit,
+                 nz,zmin-dz/2.,zmax+dz/2.,
+                 nz,tzmn-dtz/2.,tzmx+dtz/2.,
+                 overwrite=True)
+
+      istat = nproj2(namppho,'z:tz',stok,sel,1.0,1.0,1.0,nz,nz,hnam)
+
+      xtit = 'z [mm]'
+      ytit = 'Theta_z [mrad]'
+
+      if h.y.min() < h.y.max():
+        hplot2d(hnam,plopt,tit=htit,xtit=xtit,ytit=ytit,ztit=wtit)
+      else:
+        npl(namppho,'z:tz',sel,stok)
+        txyz(htit,xtit,ytit,' ')
+      #endif
+
+    elif kplane == 4:
+
+      nstok = keyu[-1]
+      sn = str(nstok)
+
+      hnam = 'HPytyS' + sn
+      htit = 'S' + sn + ' x = ' + str(pinx)
+      stok = 's' + sn +'*g'
+
+      set_plot_params_3d()
+
+      wtit = 'N' + TeX_gamma + '/s/0.1' + ' %BW/mm$^{2}$/' + str(int(Curr*1000.+0.5)) + "mA"
+
+      #htit += htit + '  (' + str(Wesel) + ' eV, ' + str(EbeamList[IEbeam-1]) + ' GeV)'
+      htit = 'S' + sn + ' ( x = ' + str(pinx/1000) + ' m, ' + str(Wesel) + ' eV)'
+
+      h = hbook2(hnam,htit,
+                 ny,ymin-dy/2.,ymax+dy/2.,
+                 ny,tymn-dty/2.,tymx+dty/2.,
+                 overwrite=True)
+
+      istat = nproj2(namppho,'y:ty',stok,sel,1.0,1.0,1.0,ny,ny,hnam)
+
+      xtit = 'y [mm]'
+      ytit = 'Theta_y [mrad]'
+
+      if h.y.min() < h.y.max():
+        hplot2d(hnam,plopt,tit=htit,xtit=xtit,ytit=ytit,ztit=wtit)
+      else:
+        npl(namppho,'y:ty',sel,stok)
+        txyz(htit,xtit,ytit,' ')
+      #endif
+
+    #endif kplane
+
+  else: #scatter
+
+    if kplane == 1:
+
+      nstok = keyu[-1]
+      sn = str(nstok)
+
+      hnam = 'HPhzyS' + sn
+      stok = 's' + sn +'*g'
+
+      set_plot_params_3d()
+
+      wtit = 'N' + TeX_gamma + '/s/0.1' + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+
+      htit = 'S' + sn + ' ( x = ' + str(pinx/1000) + ' m, ' + str(Wesel) + ' eV)'
+
+      xtit = 'z [mm]'
+      ytit = 'y [mm]'
+
+      nscat(namppho,'z:y',sel,stok)
+
+      txyz(htit,xtit,ytit,wtit)
+
+
+    elif kplane == 2:
+
+      nstok = keyu[-1]
+      sn = str(nstok)
+
+      hnam = 'HPhtztyS' + sn
+      stok = 's' + sn +'*g'
+
+      set_plot_params_3d()
+
+      wtit = 'N' + TeX_gamma + '/s/0.1' + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+
+      htit = 'S' + sn + ' ( x = ' + str(pinx/1000) + ' m, ' + str(Wesel) + ' eV)'
+
+      xtit = 'Theta_z [mrad]'
+      ytit = 'Theta_y [mrad]'
+
+      nscat(namppho,'tz:ty',sel,stok)
+
+      txyz(htit,xtit,ytit,wtit)
+
+    elif kplane == 3:
+
+      nstok = keyu[-1]
+      sn = str(nstok)
+
+      hnam = 'HPhtztyS' + sn
+      stok = 's' + sn +'*g'
+
+      set_plot_params_3d()
+
+      wtit = 'N' + TeX_gamma + '/s/0.1' + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+
+      htit = 'S' + sn + ' ( x = ' + str(pinx/1000) + ' m, ' + str(Wesel) + ' eV)'
+
+      xtit = 'z [mm]'
+      ytit = 'Theta_z [mrad]'
+
+      nscat(namppho,'z:tz',sel,stok)
+
+      txyz(htit,xtit,ytit,wtit)
+
+    elif kplane == 4:
+
+      nstok = keyu[-1]
+      sn = str(nstok)
+
+      hnam = 'HPhtztyS' + sn
+      stok = 's' + sn +'*g'
+
+      set_plot_params_3d()
+
+      wtit = 'N' + TeX_gamma + '/s/0.1' + ' %BW/mm$^{2}$/' + str(int(Wcurr*1000.+0.5)) + "mA"
+
+      htit = 'S' + sn + ' ( x = ' + str(pinx/1000) + ' m, ' + str(Wesel) + ' eV)'
+
+      xtit = 'y [mm]'
+      ytit = 'Theta_y [mrad]'
+
+      nscat(namppho,'y:ty',sel,stok)
+
+      txyz(htit,xtit,ytit,wtit)
+
+    #endif plane
+
+  #endif scatter
+
+  showplot()
+
+#enddef ndistphotons
+
 def hbeampow(key='WALL1'):
 
 #+seq,mshimportsind.
@@ -40781,6 +41409,11 @@ def Mmenu_gray(fgcol='gray'):
   global Mmenu, mTraj, mSources, mSpectra, mFluxden, mStokden, mPoladen,mOptics, \
   mMeriden, mBrill, mFlux, mStok, mPola, mMeri, mDist, mDistStokes, mDistPola,\
   mDistMeri, mDistPower, mEsel, mBunch, mBunchSpec, mBunchPhaseSpace, mBunchDist
+
+  #reakpoint()
+
+  n222 = nget("n222")
+
   if not Wfile:
     for i in range(1,Mmenu.index('end')+1):
       if i>1: return
@@ -40912,9 +41545,19 @@ def Mmenu_gray(fgcol='gray'):
 
   #endif not Wispe
 
-  if not Wibun:
+  if n222.neph.max() == 0:
 
     Mmenu.entryconfig(9,foreground=fgcol)
+    for i in range(1,mPho.index('end')+1):
+      mPho.entryconfig(i,foreground=fgcol)
+
+    Mmenu.entryconfig(10,foreground=fgcol)
+    for i in range(1,mPhoEle.index('end')+1):
+      mPhoEle.entryconfig(i,foreground=fgcol)
+
+  if not Wibun:
+
+    Mmenu.entryconfig(11,foreground=fgcol)
 
     mBunch.config(foreground=fgcol)
     for i in range(1,mBunch.index('end')+1):
@@ -40993,7 +41636,7 @@ def Mmenu_gray(fgcol='gray'):
     for i in range(1,mOptics.index('end')+1):
       mOptics.entryconfig(i,foreground=fgcol)
     #endfor
-    Mmenu.entryconfig(10,foreground=fgcol)
+    Mmenu.entryconfig(12,foreground=fgcol)
 
   #endif not Wbeta
 
@@ -47989,6 +48632,76 @@ mDistWigner.add_command(label="WyzY_E Y-Theta_Y",  command= lambda key='WyzY': _
 mEsel = Menu(Mmenu,tearoff=1,font=Myfont)
 NMmenu += 1
 Mmenu.add_command(label='Select photon energy', command=_mesel)
+
+#{ Photons from field
+
+def _namppho(key='zys0',select=''):
+
+  if nexist("namppho"):
+    namppho = nget("namppho")
+  else:
+    return
+  #endif
+
+  ndistphotons(key,select)
+
+  #ninfo("namppho")
+
+#enddef
+
+mPho = Menu(Mmenu,tearoff=1,font=Myfont)
+
+mPho.add_command(label="S0(Z,Y)",  command= lambda key='ZYS0': _namppho(key))
+mPho.add_command(label="S1(Z,Y)",  command= lambda key='ZYS1': _namppho(key))
+mPho.add_command(label="S2(Z,Y)",  command= lambda key='ZYS2': _namppho(key))
+mPho.add_command(label="S3(Z,Y)",  command= lambda key='ZYS3': _namppho(key))
+
+mPho.add_command(label="S0(Z,Theata_Z)",  command= lambda key='ZTZS0': _namppho(key))
+mPho.add_command(label="S1(Z,Theata_Z)",  command= lambda key='ZTZS1': _namppho(key))
+mPho.add_command(label="S2(Z,Theata_Z)",  command= lambda key='ZTZS2': _namppho(key))
+mPho.add_command(label="S3(Z,Theata_Z)",  command= lambda key='ZTZS3': _namppho(key))
+
+mPho.add_command(label="S0(Y,Theata_Y)",  command= lambda key='YTYS0': _namppho(key))
+mPho.add_command(label="S1(Y,Theata_Y)",  command= lambda key='YTYS1': _namppho(key))
+mPho.add_command(label="S2(Y,Theata_Y)",  command= lambda key='YTYS2': _namppho(key))
+mPho.add_command(label="S3(Y,Theata_Y)",  command= lambda key='YTYS3': _namppho(key))
+
+mPho.add_command(label="S0(Theata_Z,Theata_Y)",  command= lambda key='TZTYS0': _namppho(key))
+mPho.add_command(label="S1(Theata_Z,Theata_Y)",  command= lambda key='TZTYS1': _namppho(key))
+mPho.add_command(label="S2(Theata_Z,Theata_Y)",  command= lambda key='TZTYS2': _namppho(key))
+mPho.add_command(label="S3(Theata_Z,Theata_Y)",  command= lambda key='TZTYS3': _namppho(key))
+
+NMmenu += 1
+Mmenu.add_cascade(label='Photons from field in pinhole',  menu=mPho)
+
+def _nampele(key='zys0',select=''):
+
+  if nexist("namppho"):
+    namppho = nget("namppho")
+  else:
+    return
+  #endif
+
+  ndistelec(key,select)
+
+#enddef
+
+mPhoEle = Menu(Mmenu,tearoff=1,font=Myfont)
+
+mPhoEle.add_command(label="Z",  command= lambda key='Z': _nampele(key))
+mPhoEle.add_command(label="ZP",  command= lambda key='ZP': _nampele(key))
+mPhoEle.add_command(label="Y",  command= lambda key='Y': _nampele(key))
+mPhoEle.add_command(label="YP",  command= lambda key='YP': _nampele(key))
+mPhoEle.add_command(label="Z-Y",  command= lambda key='ZY': _nampele(key))
+mPhoEle.add_command(label="Z-Z'",  command= lambda key='ZZP': _nampele(key))
+mPhoEle.add_command(label="Y-Y'",  command= lambda key='YYP': _nampele(key))
+mPhoEle.add_command(label="Z'-Y'",  command= lambda key='ZPYP': _nampele(key))
+mPhoEle.add_command(label="E",  command= lambda key='E': _nampele(key))
+
+NMmenu += 1
+Mmenu.add_cascade(label='Electrons for photon generation from field',  menu=mPhoEle)
+#endif ampgenpho
+#}
 
 #{Bunch
 NMmenu += 1

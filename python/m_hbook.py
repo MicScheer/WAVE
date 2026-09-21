@@ -1205,7 +1205,7 @@ Nxyz = pd.DataFrame(columns=['x','y','z'])
 #CanButId = 0
 #Legend = []
 
-Mode3ds = ['none','boxes','cont3d','hist','inter','surf','trisurf']
+Mode3ds = ['none','scatter','boxes','cont3d','hist','inter','surf','trisurf']
 # +PATCH,//WAVES/PYTHON
 # +KEEP,mhbglobal,T=PYTHON.
 # }
@@ -10672,6 +10672,7 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
 
   #global N,Ney,Nfit #,FitFit, FitPar #,Nfitint ,Nfitxy
 
+  #reakpoint()
   if type(nt) == str and nt == '?':
     print("\nUsage: nfitxy(nt='',varlis='',select='',fitfun=None, absolute_sigma='default'," + \
     "parstart=None, bounds=None, method=None,isilent=0, ninter=101," + \
@@ -10803,6 +10804,8 @@ def nfitxy(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
 #  Nfitxy.to_csv(Fout,header=False,index=False,sep=' ')
 #  Fout.close()
 
+  Nfitxy = nsort(Nfitxy,"x")
+
   nupdate_header(Nfitxy)
 
   if iplot:
@@ -10883,6 +10886,7 @@ def nfitg(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
 def nfitp1(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
            parstart=None, bounds=None, method=None,isilent=0, ninter=101,
            iretval=1,iplot=0,fitcol='!'):
+
   if iretval:
     par,sigma,chi2ndf,f = nfitxy(nt,varlis,select,1, absolute_sigma, \
            parstart, bounds, method,isilent, ninter, \
@@ -10894,7 +10898,6 @@ def nfitp1(nt='?',varlis='',select='',fitfun=None, absolute_sigma='default',
            iretval,iplot,fitcol)
     return
   #endif
-
 
 def nintern(nt='?',varlis='',select='',xint='!'):
 #+seq,mshimportsind.
@@ -20315,6 +20318,7 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
 
   elif len(varlis) == 2:
 
+    breakpoint()
     getzone()
 
     Ax.tick_params(labelsize=Axislabelsize, pad=Axislabeldist)
@@ -20472,6 +20476,37 @@ def nplot(nt='?',varlis='',select='',weights='',plopt='', legend='',
 #20.5.2024          hplot2d(hist,plopt)
           hplave(hist,plopt)
           iplot = 1
+
+        elif Iscat2d or Iscatter:
+
+          Ax.tick_params(labelsize=Axislabelsize, pad=Axislabeldist3d)
+
+          sx = "(" + nparse(nt,varlis[0]) + ") * " + str(scalex)
+          sy = "(" + nparse(nt,varlis[1]) + ") * " + str(scaley)
+          sz = "(" + nparse(nt,weights) + ") * " + str(scalez)
+
+          if cmap == '' or cmap == '!': cmap=Cmap
+
+          s = Markersize*Markersize
+
+          sopt = ",s=s" + ",c=" + sz + ",cmap='" + cmap + "', linewidth=0.0, \
+          marker='" + Markertype + "'"
+          img = eval('Ax.scatter(' + sx + ',' + sy + sopt + ')')
+
+          Kcolorbar[Kzone] = 1
+
+          if Colorbarpad != '!':
+            fcm = Fig.colorbar(img, pad=Colorbarpad,label=titcolbar)
+          else:
+            fcm = Fig.colorbar(img,label=titcolbar)
+          #endif
+
+          ttit = weights
+
+          fcm.set_label(label=ttit, labelpad=Axistitledist, size=Axislabelsize)
+          fcm.ax.tick_params(labelsize=Axislabelsize)
+
+          Axes.append(fcm)
 
         else:
           #Kcolorbar[Kzone] = 1
@@ -24790,6 +24825,7 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
   # weights are applied to y. For Gaussian uncertenties use 1/sigma not
   # 1/sigma**2
 
+  #reakpoint()
   if len(ey):
     iey = 1
     weight = 1.0/ey
@@ -24832,7 +24868,7 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
   chi2ndf = 0.0
   FitChi2Prob = 0.0
 
-  ndf = ndat-npar-1
+  ndf = ndat - npar
 
   if not iey: ey = 1.
 
@@ -24862,6 +24898,7 @@ def vfitpoly(nord,x,y, ey='', cov='default', isilent=0, ninter=101, iretval=1,
 
   Ffit = open("vfit.dat","w")
   for i in range(ninter):
+    xx += dx
     ff = np.polyval(par,xx)
     Ffit.write(str(xx) + " " + str(ff) + " \n")
   #endfor
@@ -25135,9 +25172,13 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
   NxHbook2,NyHbook2
 
 #  global Kold, Kstat, Mode2d, Nfitxy, Kplots, Kzone,
+  #reakpoint()
 
   nt = hcopn(idh,'nHfit',kweedzero=1)
   if H1I < 0: return None,None,None,None
+
+  for i in range(len(nt)):
+    if nt.ey[i] == 0: nt.ey[i] = 1.0e-30
 
   par,sigma,chi2ndf,f = nfitxy(nt,'x:y:ey',select,fitfun, absolute_sigma, \
   parstart,bounds,method,isilent, ninter,1,0,fitcol,kweedzero)
@@ -25193,6 +25234,19 @@ def hfit(idh, fitfun, select='',absolute_sigma='default', parstart=None,
 
     #endif Kstat
   #endif iplot
+
+  if iretval: return par,sigma,chi2ndf,f
+  else: return
+
+#enddef
+
+def hfitp1(idh, select='',absolute_sigma='default', parstart=None, bounds=None,
+          method=None,isilent=0, ninter=101, iretval=1, iplot=1, fitcol='!',
+          kweedzero=1):
+
+  #reakpoint()
+  par,sigma,chi2ndf,f = hfit(idh,1, select,absolute_sigma, parstart, \
+  bounds,method,isilent,ninter,1,iplot,fitcol,kweedzero)
 
   if iretval: return par,sigma,chi2ndf,f
   else: return
@@ -25337,7 +25391,7 @@ def vfit(fitfun, x, y, ey = '', absolute_sigma='default', parstart=None,
 
   chi2ndf = 0.0
   chi2 = 0.0
-  ndf = ndat - npar - 1
+  ndf = ndat - npar
 
   if not iey: ef = 1.
 
@@ -27446,6 +27500,7 @@ lhmlila = lhmmagenta
 vfitxypoly = vfitpoly
 circ = circle
 vgrafit = vfitp1
+hgrafit = hfitp1
 ngrafit = nfitp1
 shell = os.system
 she = os.system
