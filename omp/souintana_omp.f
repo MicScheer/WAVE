@@ -1,4 +1,6 @@
-*CMZ :          12/08/2025  12.29.42  by  Michael Scheer
+*CMZ :          12/09/2026  07.21.18  by  Michael Scheer
+*CMZ :  4.02/01 24/11/2025  18.18.04  by  Michael Scheer
+*CMZ :  4.02/00 12/08/2025  12.29.42  by  Michael Scheer
 *CMZ :  4.01/07 11/05/2024  10.21.49  by  Michael Scheer
 *CMZ :  4.01/05 19/04/2024  15.05.35  by  Michael Scheer
 *CMZ :  4.01/04 26/11/2023  16.52.38  by  Michael Scheer
@@ -17,7 +19,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE souintana_omp(ISOUR,IOBSV,INSIDE)
 
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -79,6 +81,7 @@
       use bunchmod
       use wbetaf90m
       use souintmod
+      use uradphasemod
 
 C--- EVALUATE INTEGRALES FOR A SINGLE SOURCE
 C---- RESULTS ARE STORE IN AFREQ AND SPECPOW
@@ -138,7 +141,7 @@ c      common/kobsc/ampzmax,kobs
 
       double precision rn_cross_beta(3), rn_cross_rn_cross_beta(3)
       double precision h2,ddist,dist0,dist02
-     & ,vn,dgamma
+     &  ,vn,dgamma
 
 c      COMPLEX*16 ZIOM,ZI,ZIDOM,ZONE,ZICR1,ZIC
       COMPLEX*16 EXPOM1,EXPOM,DEXPOMPH1,DEXPOMPH,DDEXPOMPH,DEXPOM,EXPOMV2,
@@ -400,6 +403,8 @@ c Transfermatrices
         endif
 
       endif !isour
+
+      nrad_u(iobsv)=nrad_u(iobsv)+1
 
       if (inside.ne.-3.or.ielec.eq.1) then
         xobsv=obsv(1,iobsv)
@@ -1746,6 +1751,8 @@ c            slope=sqrt(vyelec**2+vzelec**2)/vxelec
         ENDIF  !(IAMPLI.LT.0)
 
         if (jpin.eq.3) then
+
+          callutil_break
 
           FSPEC(1)=ISOUR
           FSPEC(2)=IOBSV

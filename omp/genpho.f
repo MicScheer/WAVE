@@ -1,7 +1,8 @@
-*CMZ :          21/08/2026  16.04.50  by  Michael Scheer
+*CMZ :          21/09/2026  21.30.55  by  Michael Scheer
+*CMZ :  4.02/01 21/08/2026  16.04.50  by  Michael Scheer
 *-- Author :    Michael Scheer   17/08/2026
       SUBROUTINE GENPHO
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -119,7 +120,7 @@
       real, dimension(:), allocatable :: photons,electrons
 
       real :: ephomin,ephomax,
-     &  sigz,sigzp,sigy,sigyp,z,y,g=1.0,zmin,zmax,ymin,ymax
+     &  sigz,sigzp,sigy,sigyp,z,y,g=1.0,zmin,zmax,ymin,ymax,zp,yp
 
       integer :: iz,iy,nedz,nedy,ifrq,iobs,ngam,iel,l,i,lunapho,lunaele,iepho,ndimpho,
      &  jobs,jobfr,kpin,ndimele,
@@ -135,7 +136,6 @@
 
       ndimpho=ndimapho*ngam*nfreq*NELECGENPHO
       ndimele=ndimaele*nelecgenpho
-      print*,"GENPHO: ndimpho:",ndimpho
       allocate(photons(ndimpho),electrons(ndimele))
       photons=0.0
       electrons=0.0
@@ -200,8 +200,6 @@ c      print*,''
 
       nedz=(nobsvz-mobsvz)/2
       nedy=(nobsvy-mobsvy)/2
-      iobs=0
-      jobs=0
 
       if (abs(genphophsh).eq.9999.0d0) then
         do ifrq=1,nfreq
@@ -210,6 +208,8 @@ c      print*,''
           rea(3)=dcmplx(reaima(3,1,iobfr),reaima(3,2,iobfr))
           expsh=rea(3)/abs(rea(3))
           if (genphophsh.eq.-9999.0d0) expsh=expsh*cdexp(dcmplx(0.0d0,-pi1/2.0d0))
+          iobs=0
+          jobs=0
           do iy=1,nobsvy
             do iz=1,nobsvz
               iobs=iobs+1
@@ -303,8 +303,10 @@ c      endif
       do iel=1,nelecgenpho
         do i=1,ngam
           do iepho=1,nfreq
-            z=photons(l+1)
-            y=photons(l+2)
+            z=photons(l+1)*1000.
+            y=photons(l+2)*1000.
+            zp=photons(l+3)*1000.
+            yp=photons(l+4)*1000.
 c            if(kpin.ne.0) then
 c              if (z.lt.zmin.or.z.gt.zmax.or.y.lt.ymin.or.y.gt.ymax) then
 c                l=l+ndimapho
@@ -313,18 +315,21 @@ c              endif
 c            endif
             write(lunapho,*) i,iel,iepho,iefold,dmyenergy,g,
      &        photons(l:l),
-     &        photons(l+1:l+4)*1000.0,
+     &        pincen(1)*1000.,y,z,yp,zp,
      &        photons(l+5:l+8)
             l=l+ndimapho
           enddo
         enddo
       enddo
 
-      l=1
+      l=0
       do i=1,nelecgenpho
+        z=electrons(l+1)*1000.0
+        y=electrons(l+2)*1000.0
+        zp=electrons(l+3)*1000.0
+        yp=electrons(l+4)*1000.0
         write(lunaele,*) i,dmyenergy,g,
-     &    electrons(l:l+1)*1000.0,
-     &    electrons(l+2:l+3)*1000.0
+     &    y-yp*pincen(1),z-zp*pincen(1),yp,zp
         l=l+4
       enddo
 

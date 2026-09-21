@@ -1,3 +1,4 @@
+*CMZ :          12/09/2026  07.20.44  by  Michael Scheer
 *CMZ :  4.01/07 30/09/2024  14.51.49  by  Michael Scheer
 *CMZ :  4.01/04 14/11/2023  11.33.48  by  Michael Scheer
 *CMZ :  4.01/03 02/06/2023  08.38.01  by  Michael Scheer
@@ -72,6 +73,7 @@
 
       use bunchmod
       use souintmod
+      use uradphasemod
       use omp_lib
 
 C--- EVALUATE INTEGRALES FOR A SINGLE SOURCE
@@ -749,6 +751,8 @@ C REAL PART OF INTEGRAND {
         else
           iobsv=jobsv
         endif
+
+        nrad_u(iobsv)=nrad_u(iobsv)+1
 
         jliob=ISOUR+NSOURCE*(IOBSV-1)
 

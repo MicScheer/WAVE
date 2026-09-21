@@ -1,3 +1,4 @@
+*CMZ :          07/09/2026  13.40.59  by  Michael Scheer
 *CMZ :  3.00/00 11/03/2013  15.12.11  by  Michael Scheer
 *CMZ :  2.70/05 02/01/2013  12.39.05  by  Michael Scheer
 *CMZ :  2.68/00 25/05/2012  16.46.29  by  Michael Scheer
@@ -61,10 +62,11 @@
 *KEEP,observf90u.
       include 'observf90u.cmn'
 *KEND.
+      use uradphasemod
 
-        IMPLICIT NONE
+      IMPLICIT NONE
 
-        INTEGER ISOUR,ICAL,IOBSV,IOBSVZ
+      INTEGER ISOUR,ICAL,IOBSV,IOBSVZ,ly,lz,nr
 
 *KEEP,cmpara.
       include 'cmpara.cmn'
@@ -80,52 +82,64 @@
       include 'phycon.cmn'
 *KEND.
 
-        DATA ICAL/0/
+      DATA ICAL/0/
 
-        IF (ICAL.EQ.0) THEN
+      IF (ICAL.EQ.0) THEN
 
-          DO IOBSV=1,NOBSV
-            SPECPOWT(IOBSV)=0.D0
-          ENDDO
+        DO IOBSV=1,NOBSV
+          SPECPOWT(IOBSV)=0.D0
+        ENDDO
 
-          DO IOBSVZ=1,NOBSVZ
-            SPECPOWVT(IOBSVZ)=0.D0
-          ENDDO
+        DO IOBSVZ=1,NOBSVZ
+          SPECPOWVT(IOBSVZ)=0.D0
+        ENDDO
 
-          SPECPOWVHT=0.D0
+        SPECPOWVHT=0.D0
 
-          ICAL=1
+        ICAL=1
 
-        ENDIF  !ICAL
+      ENDIF  !ICAL
 
-        IF (IPIN.NE.0.AND.IPIN.NE.2.and.ipin.ne.3) THEN
+      IF (IPIN.NE.0.AND.IPIN.NE.2.and.ipin.ne.3) THEN
 
-          DO IOBSVZ=1,NOBSVZ
-            CALL BLENDEPOWV(ISOUR,IOBSVZ)
-          ENDDO
+        DO IOBSVZ=1,NOBSVZ
+          CALL BLENDEPOWV(ISOUR,IOBSVZ)
+        ENDDO
 
-          CALL BLENDEPOWVH(ISOUR)
+        CALL BLENDEPOWVH(ISOUR)
 
-          DO IOBSV=1,NOBSV
-            SPECPOWT(IOBSV)=
-     &        SPECPOWT(IOBSV)+SPECPOW(ISOUR+NSOURCE*(IOBSV-1))
-          ENDDO
+        DO IOBSV=1,NOBSV
+          SPECPOWT(IOBSV)=
+     &      SPECPOWT(IOBSV)+SPECPOW(ISOUR+NSOURCE*(IOBSV-1))
+        ENDDO
 
-          DO IOBSVZ=1,NOBSVZ
-            ILIOBZ=ISOUR+NSOURCE*(IOBSVZ-1)
-            SPECPOWVT(IOBSVZ)=SPECPOWVT(IOBSVZ)+SPECPOWV(ILIOBZ)
-          ENDDO
+        DO IOBSVZ=1,NOBSVZ
+          ILIOBZ=ISOUR+NSOURCE*(IOBSVZ-1)
+          SPECPOWVT(IOBSVZ)=SPECPOWVT(IOBSVZ)+SPECPOWV(ILIOBZ)
+        ENDDO
 
-          SPECPOWVHT=SPECPOWVHT+SPECPOWVH(ISOUR)
+        SPECPOWVHT=SPECPOWVHT+SPECPOWVH(ISOUR)
 
-        ELSE   !IPIN
+      ELSE   !IPIN
 
-          DO IOBSV=1,NOBSV
+        iobsv=0
 
-            SPECPOWT(IOBSV)=SPECPOWT(IOBSV)+
-     &        SPECPOW(ISOUR+NSOURCE*(IOBSV-1))
+        nr=0
+        do ly=1,nobsvy
+          do lz=1,nobsvz
 
-            if (ipin.eq.3) then
+            iobsv=iobsv+1
+
+              if (nrad_u(iobsv).eq.0) cycle
+
+              SPECPOWT(IOBSV)=SPECPOWT(IOBSV)+
+     &          SPECPOW(ISOUR+NSOURCE*(IOBSV-1))
+
+            if (
+     &          ly.ge.(NOBSVy-MOBSVy)/2+1.and.ly.le.(NOBSVy-MOBSVy)/2+MOBSVy
+     &          .and.
+     &          lz.ge.(NOBSVz-MOBSVz)/2+1.and.lz.le.(NOBSVz-MOBSVz)/2+MOBSVz) then
+
               if (ipincirc.eq.0) then
                 specpowvh(isour)=specpowvh(isour)+
      &            SPECPOW(ISOUR+NSOURCE*(IOBSV-1))
@@ -135,13 +149,24 @@
      &            SPECPOW(ISOUR+NSOURCE*(IOBSV-1))
      &            *pinr*twopi1
               endif
+
+              nr=nr+1
+
             endif
 
-          ENDDO   !NOBSV
+            SPECPOWT(IOBSV)=SPECPOWT(iobsv)/nrad_u(iobsv)
+            SPECPOW(ISOUR+NSOURCE*(IOBSV-1))=SPECPOW(ISOUR+NSOURCE*(IOBSV-1))/nrad_u(iobsv)
 
-          SPECPOWVHT=SPECPOWVHT+SPECPOWVH(ISOUR)
+          ENDDO   !iz
+        enddo !iy
 
-        ENDIF  !IPIN
+        if (nr.ne.0) then
+          specpowvh(isour)=specpowvh(isour)/nr
+        endif
+
+        SPECPOWVHT=SPECPOWVHT+SPECPOWVH(ISOUR)
+
+      ENDIF  !IPIN
 
       RETURN
       END

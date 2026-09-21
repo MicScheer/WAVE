@@ -1,4 +1,5 @@
-*CMZ :          21/08/2026  10.17.11  by  Michael Scheer
+*CMZ :          21/09/2026  20.33.28  by  Michael Scheer
+*CMZ :  4.02/01 21/08/2026  10.17.11  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  13.23.19  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
@@ -74,7 +75,7 @@
      &  ebeam,ebeammin,ebeammax,debeam,deltae,ezr,ezi,eyr,eyi,wig,
      &  g(nwigefold+1),gsum,be(1000),bw(1000),bx,by,bz,ax,ay,az
 
-      real ee,gg,s0,s1,s2,s3,s4,egam,z,y,zp,yp
+      real ee,gg,s0,s1,s2,s3,s4,egam,x,z,y,zp,yp
       integer igam,iegam,iebeam,iele
 
       integer isystem
@@ -567,16 +568,16 @@ c        print*,trim(cline)
           callutil_break
           open(newunit=lunrun,file=trim(cstage)//chpathsep//"ampgenpho.pho",status='old')
           do while (.true.)
-            read(lunrun,*,iostat=istat) igam,iele,iegam,iebeam,ee,gg,egam,z,y,zp,yp,s0,s1,s2,s3,s4
-            write(lunpho,*) igam,iele,iegam,iwigefold,ee,sngl(g(iwigefold)),egam,z,y,zp,yp,s0,s1,s2,s3,s4
+            read(lunrun,*,iostat=istat) igam,iele,iegam,iebeam,ee,gg,egam,x,y,z,yp,zp,s0,s1,s2,s3,s4
+            write(lunpho,*) igam,iele,iegam,iwigefold,ee,sngl(g(iwigefold)),egam,x,y,z,yp,zp,s0,s1,s2,s3,s4
             if (istat.ne.0) exit
           enddo
           close(lunrun)
 
           open(newunit=lunrun,file=trim(cstage)//chpathsep//"ampgenpho.elc",status='old')
           do while (.true.)
-            read(lunrun,*,iostat=istat) iele,ee,gg,egam,z,y,zp,yp
-            write(lunelc,*) iele,ee,sngl(g(iwigefold)),z,y,zp,yp
+            read(lunrun,*,iostat=istat) iele,ee,gg,egam,y,z,yp,zp
+            write(lunelc,*) iele,ee,sngl(g(iwigefold)),y,z,yp,zp
             if (istat.ne.0) exit
           enddo
           close(lunrun)

@@ -1,3 +1,4 @@
+*CMZ :          12/09/2026  07.12.59  by  Michael Scheer
 *CMZ :  4.01/03 01/06/2023  06.50.18  by  Michael Scheer
 *CMZ :  4.00/16 09/09/2022  17.17.34  by  Michael Scheer
 *CMZ :  4.00/15 26/03/2022  11.38.18  by  Michael Scheer
@@ -72,6 +73,7 @@
       use ompmod
       use wbetaf90m
       use souintmod
+      use uradphasemod
 
 C--- EVALUATE INTEGRALES FOR A SINGLE SOURCE
 
@@ -228,6 +230,10 @@ c        print*," "
         endif
 
         allocate(wbetasub(16,3))
+        if (iundulator.ne.2) then
+          allocate(nrad_u(nobsv+1))
+          nrad_u=0
+        endif
 
         ICAL=1
       ENDIF !ICAL
