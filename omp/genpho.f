@@ -1,4 +1,4 @@
-*CMZ :          21/09/2026  21.30.55  by  Michael Scheer
+*CMZ :          22/09/2026  09.49.16  by  Michael Scheer
 *CMZ :  4.02/01 21/08/2026  16.04.50  by  Michael Scheer
 *-- Author :    Michael Scheer   17/08/2026
       SUBROUTINE GENPHO
@@ -142,46 +142,6 @@
       allocate(arad(6,mobsv*nfreq))
       arad=(0.0d0,0.0d0)
 
-      s1=sourcea(1,1,1)
-      s2=sourcee(1,1,1)
-
-      call util_beta_function_drift(
-     &  s0h,beta0h,gamma0h,
-     &  s1,betah,betaph,alpha1h,gamma1h,phase1h,
-     &  s2h,beta2h,betap2h,alpha2h,gamma2h,phase2h)
-
-      call util_beta_function_drift(
-     &  s0v,beta0v,gamma0v,
-     &  s1,betav,betapv,alpva1v,gamma1v,phase1v,
-     &  s2v,beta2v,betap2v,alpva2v,gamma2v,phase2v)
-
-c      print*,''
-c      print*,'      --- Subroutine GENPHO ---   '
-c      print*,''
-
-      if (
-     &    abs((s2+s1)/2.0d0).gt.1.0d0/dble(myinum)
-     &    ) then
-        print*,''
-        print*,"*** Warning in GENPHO: X of source center not in origin ***"
-        print*,''
-      endif
-
-      if (
-     &    abs(s0h).gt.1.0d0/dble(myinum)
-     &    ) then
-        print*,''
-        print*,"*** Warning in GENPHO: Minimum of horizontal beta-function not in origin ***"
-        print*,''
-      endif
-
-      if (
-     &    abs(s0v).gt.1.0d0/dble(myinum)
-     &    ) then
-        print*,''
-        print*,"*** Warning in GENPHO: Minimum of vertical beta-function not in origin ***"
-        print*,''
-      endif
 
       if(
      &    abs(disp0).gt.1.0d-6
@@ -260,11 +220,11 @@ c      print*,''
      &  /echarge1/hbar1*clight1/PI1*EPS01
      &  *banwid !BW
 
-      sigz=sqrt(eps0h*beta0h)
-      sigzp=sqrt(eps0h/beta0h)
+      sigz=bsigz(1)
+      sigzp=bsigzp(1)
 
-      sigy=sqrt(eps0v*beta0v)
-      sigyp=sqrt(eps0v/beta0v)
+      sigy=bsigy(1)
+      sigyp=bsigyp(1)
 
       ephomin=freq(1)
       ephomax=freq(nfreq)

@@ -28679,7 +28679,7 @@ def mhb_to_pylist(fmh = 'WAVE.mhb', Debug = 0):
       #endif
       fil = "ampgenpho.elc"
       if fexist(fil):
-        nampele = ncread("nampele","i:e:g:z:y:zp:yp","ampgenpho.elc")
+        nampele = ncread("nampele","i:e:g:y:z:yp:zp","ampgenpho.elc")
       #endif
     #endif
 
