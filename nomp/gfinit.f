@@ -1,4 +1,5 @@
-*CMZ :          19/08/2026  07.48.42  by  Michael Scheer
+*CMZ :          22/09/2026  15.48.58  by  Michael Scheer
+*CMZ :  4.02/01 19/08/2026  07.48.42  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  09.46.32  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.38.28  by  Michael Scheer
@@ -672,6 +673,7 @@ c     WRITE(6,*)'READING NAMELIST BGRIDN'
       READ(LUNGFI, BGRIDN )
 c     WRITE(6,*)'READING NAMELIST SPECDIPN'
       READ(LUNGFI, SPECDIPN )
+      READ(LUNGFI, GENPHON )
 
 C--- READ AND WRITE CURRENT NUMBER
 
@@ -690,6 +692,8 @@ C          IF(IGFLOAT.NE.0) ICODE=-ICODE
       CLOSE(LUNCOD)
 
 C--- OPEN OUTPUT-FILE
+
+      IF (NELECGENPHO.EQ.0.OR.NPHO.EQ.0) IGENPHO=0
 
       call util_file_delete(trim(filegfo),istat)
       OPEN (UNIT=LUNGFO,FILE=FILEGFO)
@@ -777,6 +781,12 @@ c     WRITE(6,*)'READING NAMELIST BFORCN'
 
       IF (MPINZ.LE.0) MPINZ=1
       IF (MPINY.LE.0) MPINY=1
+
+      callutil_break
+      IF (IPIN.EQ.3) THEN
+        MPINY=MAX(MPINY,3)
+        MPINZ=MAX(MPINZ,3)
+      ENDIF
 
       IF (IF1DIM.NE.0) THEN
         IF1DIM=1

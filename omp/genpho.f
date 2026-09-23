@@ -1,8 +1,8 @@
-*CMZ :          22/09/2026  09.49.16  by  Michael Scheer
+*CMZ :          22/09/2026  15.05.26  by  Michael Scheer
 *CMZ :  4.02/01 21/08/2026  16.04.50  by  Michael Scheer
 *-- Author :    Michael Scheer   17/08/2026
       SUBROUTINE GENPHO
-*KEEP,gplhint.
+*KEEP,GPLHINT.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -126,7 +126,14 @@
      &  jobs,jobfr,kpin,ndimele,
      &  ndimapho=9,ndimaele=4
 
+      character(256) comlin
+      character(64) c64
       character(12) chspacer
+
+      print*,""
+      print*,"     Generating photons from field amplitude"
+      call zeit(6)
+      print*,""
 
       if (moderan.gt.0) then
         ngam=npho
@@ -241,6 +248,17 @@
       open(newunit=lunapho,file='ampgenpho.pho')
       open(newunit=lunaele,file='ampgenpho.elc')
 
+      write(c64,*) icode
+      comlin='* '//adjustl(trim(c64))//' '//'ampgenpho.pho'
+      write(lunapho,'(a)') trim(comlin)
+      comlin='* iGam iEle iEgam iEfold Ebeam g Egam x y z yp zp S0 S1 S2 S3'
+      write(lunapho,'(a)') trim(comlin)
+      open(newunit=lunaele,file='ampgenpho.elc')
+      comlin='* '//adjustl(trim(c64))//' '//'ampgenpho.elc'
+      write(lunaele,'(a)') trim(comlin)
+      comlin='* i E g y z yp zp'
+      write(lunaele,'(a)') trim(comlin)
+
       l=1
 c      zmin=photons(2)
 c      zmax=photons(ndimpho-ndimapho+2)
@@ -260,6 +278,10 @@ c        ymin=obsvy(2)-obsvdy/10.
 c        ymax=obsvy(nobsvy-1)+obsvdy/10.
 c      endif
 
+      print*,"     Writing photons and electrons to file"
+      call zeit(6)
+      print*,""
+
       do iel=1,nelecgenpho
         do i=1,ngam
           do iepho=1,nfreq
@@ -276,7 +298,7 @@ c            endif
             write(lunapho,*) i,iel,iepho,iefold,dmyenergy,g,
      &        photons(l:l),
      &        pincen(1)*1000.,y,z,yp,zp,
-     &        photons(l+5:l+8)
+     &        photons(l+5:l+8)/1.0e6
             l=l+ndimapho
           enddo
         enddo
@@ -295,6 +317,9 @@ c            endif
 
       close(lunapho)
       close(lunaele)
+
+      call zeit(6)
+      print*,"     Done"
 
       RETURN
       END
