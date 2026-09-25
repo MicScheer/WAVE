@@ -1,4 +1,5 @@
-*CMZ :          21/08/2026  09.58.08  by  Michael Scheer
+*CMZ :          22/09/2026  15.45.43  by  Michael Scheer
+*CMZ :  4.02/01 21/08/2026  09.58.08  by  Michael Scheer
 *CMZ :  4.02/00 15/09/2025  14.44.23  by  Michael Scheer
 *CMZ :  4.01/03 12/06/2023  11.06.51  by  Michael Scheer
 *CMZ :  4.01/00 05/12/2022  09.54.57  by  Michael Scheer
@@ -175,6 +176,8 @@
         igenpho=0
         kgendone=0
       endif
+
+      if (nelecgenpho.eq.0.or.npho.eq.0) igenpho=0
 
 c      if (iwigner.ne.0.and.igenpho.ne.0) then
 c        write(6,*)
