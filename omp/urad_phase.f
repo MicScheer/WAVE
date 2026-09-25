@@ -1,4 +1,5 @@
-*CMZ :          31/08/2026  07.37.54  by  Michael Scheer
+*CMZ :          08/09/2026  12.41.50  by  Michael Scheer
+*CMZ :  4.02/01 31/08/2026  07.37.54  by  Michael Scheer
 *CMZ :  4.02/00 13/09/2025  10.16.17  by  Michael Scheer
 *CMZ :  4.01/07 13/08/2024  10.11.51  by  Michael Scheer
 *CMZ :  4.01/05 26/04/2024  10.49.56  by  Michael Scheer
@@ -42,11 +43,13 @@ c+seq,uservar.
       integer :: ktime=0,ical=0,
      &  npiny,npinz,nper,nepho,mthreads,nelec,icohere,ihbunch,i,nlpoi,
      &  modeph,modepin,modesphere,modebunch,iy,iz,iobsv,noranone,modewave,
-     &  icbrill,iobs,iobfr,ifrq,kalloerr
+     &  icbrill,iobs,iobfr,ifrq,kalloerr,nobsv
 
       save ical
 
       if (ktime.eq.1) call util_zeit_kommentar_delta(6,'Entered urad_phase',1)
+
+      nobsv=npinz*npiny
 
       if (modepin.ne.0.and.nelec.eq.1) then
         print*,""
@@ -128,7 +131,8 @@ c        endif
 
         allocate(epho_u(nepho),obsv_u(3,nobsv_u),
      &    specpow_u(nobsv_u),
-     &    stokes_u(4,nobsv_u*nepho_u),pow_u(nobsv_u))
+     &    stokes_u(4,nobsv_u*nepho_u),pow_u(nobsv_u),nrad_u(nobsv_u+1))
+        nrad_u=0
 
         !all util_break
         if (ihbunch_u.gt.0) then
@@ -237,6 +241,10 @@ c              r=xx*(1.0d0+h2/2.0d0-h2**2/8.0d0)
 
 c     urad_amprep calculates stokes_u and arad_u on the m scale
       call urad_amprep(modewave)
+
+      nrad_u(nobsv+1)=sum(nrad_u(1:nobsv))
+
+      !allutil_break
 
       stokes_u=stokes_u/1.0d6 ! photons/mm**2
 
