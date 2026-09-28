@@ -24,6 +24,8 @@
      &  pinxprop_u,pinwprop_u,pinhprop_u,globphase_u,globphaseprop_u,
      &  wavzstart,wavystart,wavzamp,wavyamp,defl_u
 
+      real, dimension(:), allocatable :: photons_u,electrons_u
+
       integer nstep_u,nepho_u,nobsv_u,nbunch_u,npiny_u,npinz_u,ianalytic_u,nharm_u,
      &  nper_u,modeph_u,modepin_u,modesphere_u,noranone_u,nlpoi_u,ifixphase_u,ifold_u,
      &  nobsvprop_u,npinyprop_u,npinzprop_u,npinzo_u,npinyo_u,ifieldprop_u,ifieldsym_u

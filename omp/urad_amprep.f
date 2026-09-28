@@ -1,4 +1,4 @@
-*CMZ :          10/09/2026  14.01.05  by  Michael Scheer
+*CMZ :          27/09/2026  10.43.18  by  Michael Scheer
 *CMZ :  4.02/01 02/09/2026  09.04.08  by  Michael Scheer
 *CMZ :  4.02/00 27/08/2025  14.45.47  by  Michael Scheer
 *CMZ :  4.01/07 18/10/2024  09.41.32  by  Michael Scheer
@@ -20,10 +20,117 @@ c     Calculates stokes_u, arad_u, and fbunch on the meter scale
 
       implicit none
 
-*KEEP,phyconparam.
-      include 'phyconparam.cmn'
-*KEEP,track.
-      include 'track.cmn'
+*KEEP,PHYCONPARAM.
+c-----------------------------------------------------------------------
+c     phyconparam.cmn
+c-----------------------------------------------------------------------
+
+      complex*16, parameter :: zone1=(1.0d0,0.0d0), zi1=(0.0d0,1.0d0)
+
+      complex*16, dimension(4,3), parameter ::
+     &  vstokes=reshape([
+     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
+     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
+     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
+     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
+     &  ( 0.0000000000000000d0,  0.0000000000000000d0),
+     &  ( 0.0000000000000000d0, -0.70710678118654746d0),
+     &  ( 0.0000000000000000d0, -0.70710678118654746d0),
+     &  ( 0.70710678118654746d0, 0.0000000000000000d0),
+     &  (-0.70710678118654746d0,-0.70710678118654746d0),
+     &  ( 0.70710678118654746d0, 0.0000000000000000d0),
+     &  (-0.70710678118654746d0, 0.0000000000000000d0),
+     &  (-0.70710678118654746d0, 0.0000000000000000d0)
+     &  ],[4,3])
+
+c      vstokes(1,1)=( 0.0d0,        0.0d0)      !horizontal polarization
+c      vstokes(1,2)=( 0.0d0,        0.0d0)
+c      vstokes(1,3)=(-sqrt(1./2.),       -sqrt(1./2.))
+c
+c      vstokes(2,1)=( 0.0d0,        0.0d0)      !right handed polarization
+c      vstokes(2,2)=( 0.0d0,       -sqrt(1./2.))
+c      vstokes(2,3)=(+sqrt(1./2.),        0.0d0)
+c
+c      vstokes(3,1)=( 0.0d0,        0.0d0)      !left handed polarization
+c      vstokes(3,2)=( 0.0d0,       -sqrt(1./2.))
+c      vstokes(3,3)=(-sqrt(1./2.),        0.0d0)
+c
+c      vstokes(4,1)=( 0.0d0,        0.0d0)      !45 degree linear polarization
+c      vstokes(4,2)=( sqrt(1./2.),        0.0d0)
+c      vstokes(4,3)=(-sqrt(1./2.),        0.0d0)
+
+      double precision, parameter ::
+     &  HBAREV1=6.58211889D-16
+     &  ,CLIGHT1=2.99792458D8
+     &  ,EMASSKG1=9.10938188D-31
+     &  ,EMASSE1=0.510998902D6
+     &  ,EMASSG1=0.510998902D-3
+     &  ,ECHARGE1=1.602176462D-19
+     &  ,ERAD1=2.8179380D-15
+     &  ,EPS01=8.854187817D-12
+     &  ,PI1=3.141592653589793D0
+     &  ,rmu04pi1=1.0D-7
+     &  ,dnull1=0.0d0
+     &  ,done1=1.0d0
+     & ,HPLANCK1=6.62606876D-34
+
+      double precision, parameter ::
+     & GRARAD1=PI1/180.0d0
+     & ,RADGRA1=180.0d0/PI1
+     & ,HBAR1=HBAREV1*ECHARGE1
+     & ,WTOE1=CLIGHT1*HPLANCK1/ECHARGE1*1.0d9
+     & ,CQ1=55.0d0/32.0d0/DSQRT(3.0D0)*HBAR1/EMASSKG1/CLIGHT1
+     & ,CGAM1=4.0d0/3.0d0*PI1*ERAD1/EMASSG1**3
+     & ,POL1CON1=8.0d0/5.0d0/DSQRT(3.0D0)
+     & ,POL2CON1=8.0d0/5.0d0/DSQRT(3.0D0)/2.0d0/PI1/3600.0d0
+     &  *EMASSKG1/HBAR1/ERAD1*EMASSG1**5
+     & ,TWOPI1=2.0D0*PI1
+     & ,HALFPI1=PI1/2.0D0
+     & ,sqrttwopi1=sqrt(twopi1)
+     & ,rmu01=4.0D0*PI1/1.0D7
+     & ,alpha1=echarge1**2/(4.0d0*pi1*eps01*hbar1*clight1)
+     & ,gaussn1=1.0d0/sqrt(twopi1)
+     & ,cK934=ECHARGE1/(2.0d0*PI1*EMASSKG1*CLIGHT1)/100.0d0
+     & ,powcon1=cgam1/2.0d0/pi1*clight1*(clight1/1.0d9)**2*emassg1
+     &  ,gamma1=1.0d0/emassg1
+     &  ,emom1=emasse1*dsqrt((gamma1-1.0d0)*(gamma1+1.0d0))
+     &  ,rho1=emom1/clight1
+     &  ,omegac1=1.5d0*gamma1**3*clight1/rho1
+     &  ,ecdipev1=omegac1*hbar1/echarge1
+     &  ,ecdipkev1=ecdipev1/1000.0d0
+
+c-----------------------------------------------------------------------
+c     end of phyconparam.cmn
+c-----------------------------------------------------------------------
+*KEEP,TRACK.
+      INTEGER NCO,MCO,IBYONLY,ITRACK
+
+      DOUBLE PRECISION PHIX,PHIMX,PHIMN
+     &  ,XMX,XMN,YMX,YMN,ZMX,ZMN
+     &  ,BXMX,BXMN,BYMX,BYMN,BZMX,BZMN
+     &  ,XMXAE,XMNAE,YMXAE,YMNAE,ZMXAE,ZMNAE
+     &  ,BXMXAE,BXMNAE,BYMXAE,BYMNAE,BZMXAE,BZMNAE
+     &  ,BINT0,PINT,tint
+     &  ,BINT1X,BINT1Y,BINT1Z,BINT2X,BINT2Y,BINT2Z,BINT3Y,BINT3YA
+     &  ,DTIM0,DS0
+     &  ,B2INTY
+     &  ,WTRA2I,TTRA2I,HTRA2I,WTRA2IC,
+     &  XTRACK,YTRACK,ZTRACK,
+     &  VXTRACK,VYTRACK,VZTRACK
+
+      COMMON/MINMAXC/
+     &  PHIX,PHIMX,PHIMN,XMX,XMN,YMX,YMN,ZMX,ZMN
+     &  ,BXMX,BXMN,BYMX,BYMN,BZMX,BZMN
+     &  ,XMXAE,XMNAE,YMXAE,YMNAE,ZMXAE,ZMNAE
+     &  ,BXMXAE,BXMNAE,BYMXAE,BYMNAE,BZMXAE,BZMNAE
+     &  ,BINT0,PINT,tint
+     &  ,BINT1X,BINT1Y,BINT1Z,BINT2X,BINT2Y,BINT2Z,BINT3Y,BINT3YA
+     &  ,DTIM0,DS0
+     &  ,WTRA2I,TTRA2I,HTRA2I,WTRA2IC
+     &  ,B2INTY
+     &  ,XTRACK,YTRACK,ZTRACK
+     &  ,VXTRACK,VYTRACK,VZTRACK
+     &  ,NCO,MCO,IBYONLY,ITRACK
 *KEND.
 cc+seq,uservar.
 
@@ -41,7 +148,7 @@ cc+seq,uservar.
 
       complex*16, dimension (:), allocatable :: expphiran
       real, dimension (:), allocatable :: pherr,pherrc,phiran
-      real, dimension(:,:), allocatable :: pranall,eall
+      real, dimension(:,:), allocatable :: pranall,eall,photons
 
       real eran(6),pran(3),rr(2)
 
@@ -59,7 +166,7 @@ cc+seq,uservar.
      &  bunnor,clight,bunchx,beta,beff,spow,
      &  zp0,yp0,rph,a2,anor,fsum,smax,zob,yob,
      &  xkellip,zampell,yampell,parkv,parkh,zpampell,ypampell,emom,dzpin,dypin,zmin,ymin,phgsh,
-     &  emitho,emitvo
+     &  emitho,emitvo,rn(3)
 
       double precision xprop,yprop(npinyprop_u),zprop(npinzprop_u),dy,dz,pinwprop,pinhprop
       double complex, dimension(:,:,:,:,:), allocatable :: fprop
@@ -72,13 +179,13 @@ cc+seq,uservar.
 
       double complex :: rea(3),expsh
 
-      integer :: kfreq,iobsv,i,np2,nelec,mbunch,meinbunch,ibu,jbun,
+      integer :: l,kfreq,iobsv,i,np2,nelec,mbunch,meinbunch,ibu,jbun,
      &  kran=6,icbrill,ilo,kobsv,i1,i2,n,
      &  ifail,ndimu,nstepu,ith,noespread,noemit,jbunch,jubunch,jhbunch,
      &  jcharge=-1,lmodeph,nclo,jeneloss=0,iamppin,
      &  iamppincirc=0,ifrob,iobfr,isub,jvelofield=0,nlbu=0,nepho,ielo,
      &  modewave,iepho,ifieldprop,nzprop,nyprop,im,izm,iym,ifix,lz,ly,
-     &  lunbun
+     &  lunbun,npho(1000),lpho,mpho
 
       integer, dimension (:), allocatable :: lnbunch
 
@@ -93,6 +200,8 @@ c      iuser=user(3)
 
       emitho=emith_u
       emitvo=emitv_u
+
+      npho=1
 
 c      if (nelecampgenpho_u.ne.0) then
 c        emitho=0.0d0
@@ -153,6 +262,14 @@ c      jhbunch=max(0,ihbunch)
 c      if (jhbunch.ne.0) then
 c        jhbunch=max(1,jhbunch)
 c      endif
+      !print*,size(photons_u)
+      !allu
+
+      if (modewave.eq.0) then
+        mpho=size(photons_u)/mthreads
+        allocate(photons(mpho,mthreads))
+        photons=0.0
+      endif
 
       nepho=nepho_u
       if (ifieldprop_u.eq.2) then
@@ -317,8 +434,8 @@ c      dr0=[xf0-x0,yf0-y0,zf0-z0]
       !allutil_break
       if (ibunch.eq.0.or.
      &    emith_u.eq.0.0d0.and.emitv_u.eq.0.0d0.and.espread_u.eq.0.0d0
-     &    .or.
-     &    nelecampgenpho_u.ne.0
+c     &    .or.
+c     &    nelecampgenpho_u.ne.0
      &    ) then
         iemit=0
         ibunch=0
@@ -332,6 +449,10 @@ c      dr0=[xf0-x0,yf0-y0,zf0-z0]
         print*,''
         print*,'--- Warning in urad_amprep: Nelec adjusted to multiple of number of threads:',nelec_u
         print*,''
+      endif
+
+      if (modewave.eq.0) then
+        electrons_u=0.0
       endif
 
       if (iemit.ne.0) then
@@ -369,6 +490,15 @@ c      dr0=[xf0-x0,yf0-y0,zf0-z0]
         endif
 
         if (noranone.ne.0) eall(:,1)=0.0
+
+        if (modewave.eq.0) then
+          l=0
+          do i=1,nelec_u
+            electrons_u(l+1:l+5)=eall(2:6,i)
+            l=l+5
+          enddo
+        endif
+
       endif
 
       !allocate(affe(6,nepho_u*nobsv))
@@ -532,8 +662,8 @@ c      anor=sqrt(1.0d0/specnor_si)
 !$OMP& pran,pranall,eall,fillb,r0,dr0,iamppin,iamppincirc,pc,phase0,pr,banwid_u,
 !$OMP& pw,ph,idebug,pcbrill,wsstokes,vn,bunchlen_u,modebunch_u,icohere_u)
 !$OMP& SHARED(mthreads,stokes,pherr,expphiran,lbunch,lnbunch,modepin_u,fieldbunch,npinzo_u,nobsvo,dzpin,dypin,
-!$OMP& fbunch_u,jcharge,jeneloss,jvelofield,iemit,noranone,arad,pow,
-!$OMP& nrad_u,zmin,ymin,phgsh,fprop,stokesprop)
+!$OMP& fbunch_u,jcharge,jeneloss,jvelofield,iemit,noranone,arad,pow,photons,
+!$OMP& nrad_u,zmin,ymin,phgsh,fprop,stokesprop,npho,mpho)
 
       jbun=1
       isub=0
@@ -913,7 +1043,7 @@ c     &              ampn(3)
 
                 endif
 
-              endif
+              endif !jhbunch.ne.0
 
             enddo !nper_u
 
@@ -962,6 +1092,37 @@ c     &              ampn(3)
             !arad(:,iobfr,ith)=arad(:,iobfr,ith)+affe(:,iobfr)
 
             arad(:,iobfr,ith)=arad(:,iobfr,ith)+amp
+
+            !allu
+
+            rn(1)=
+     &        real(amp(2)*conjg(amp(6))-amp(3)*conjg(amp(5)))
+            rn(2)=
+     &            real(amp(3)*conjg(amp(4))-amp(1)*conjg(amp(6)))
+            rn(3)=
+     &        real(amp(1)*conjg(amp(5))-amp(2)*conjg(amp(4)))
+
+            rn(2)=rn(2)/rn(1)
+            rn(3)=rn(3)/rn(1)
+            rn(1)=sqrt(1.0d0-(rn(2)**2+rn(3)**2))
+
+            !allu
+
+            if (modewave.eq.0) then
+              if (npho(ith).le.mpho-8) then
+                photons(npho(ith),ith)=frq(kfreq)
+                photons(npho(ith)+1,ith)=obs(2)
+                photons(npho(ith)+2,ith)=obs(3)
+                photons(npho(ith)+3,ith)=rn(2)
+                photons(npho(ith)+4,ith)=rn(3)
+                photons(npho(ith)+5,ith)=wsstokes(1,iobfr)
+                photons(npho(ith)+6,ith)=wsstokes(2,iobfr)
+                photons(npho(ith)+7,ith)=wsstokes(3,iobfr)
+                photons(npho(ith)+8,ith)=wsstokes(4,iobfr)
+              endif
+              npho(ith)=npho(ith)+9
+            endif
+
             if (kfreq.eq.1) then
               nrad_u(kobsv)=nrad_u(kobsv)+1
               !allu
@@ -1107,7 +1268,13 @@ c      enddo !ilo
 !$OMP END DO
 !$OMP END PARALLEL
 
+      !allu
+      lpho=0
       do ith=1,mthreads
+        if (modewave.eq.0) then
+          photons_u(lpho+1:lpho+mpho)=photons(1:mpho,ith)
+          lpho=lpho+mpho
+        endif
         pow_u(:)=pow_u(:)+pow(:,ith)
         arad_u(:,:)=arad_u(:,:)+arad(:,:,ith)
       enddo
