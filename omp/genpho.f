@@ -1,8 +1,8 @@
-*CMZ :          22/09/2026  15.05.26  by  Michael Scheer
+*CMZ :          30/09/2026  10.56.39  by  Michael Scheer
 *CMZ :  4.02/01 21/08/2026  16.04.50  by  Michael Scheer
 *-- Author :    Michael Scheer   17/08/2026
       SUBROUTINE GENPHO
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
@@ -64,6 +64,7 @@
       use ompmod
       use omp_lib
       use wobsvmod
+      use bunchmod
 
       IMPLICIT NONE
 
@@ -124,7 +125,7 @@
 
       integer :: iz,iy,nedz,nedy,ifrq,iobs,ngam,iel,l,i,lunapho,lunaele,iepho,ndimpho,
      &  jobs,jobfr,kpin,ndimele,
-     &  ndimapho=9,ndimaele=4
+     &  ndimapho=9,ndimaele=4,ihb
 
       character(256) comlin
       character(64) c64
@@ -282,7 +283,13 @@ c      endif
       call zeit(6)
       print*,""
 
-      do iel=1,nelecgenpho
+      if (ihbunch.gt.1) then
+        ihb=ihbunch
+      else
+        ihb=1
+      endif
+
+      do iel=1,nelecgenpho,ihb
         do i=1,ngam
           do iepho=1,nfreq
             z=photons(l+1)*1000.
