@@ -1,4 +1,4 @@
-*CMZ :          22/09/2026  15.48.58  by  Michael Scheer
+*CMZ :  4.03/00 22/09/2026  15.48.58  by  Michael Scheer
 *CMZ :  4.02/01 19/08/2026  07.48.42  by  Michael Scheer
 *CMZ :  4.02/00 19/09/2025  09.46.32  by  Michael Scheer
 *CMZ :  4.01/07 19/11/2024  14.51.23  by  Michael Scheer
@@ -247,7 +247,7 @@
 *-- Author : Michael Scheer
       SUBROUTINE GFINIT(BETX0,BETY0,BETZ0,BETXF0,BETYF0,BETZF0,
      &                     DTIM,BSHIFT,GAMMA)
-*KEEP,GPLHINT.
+*KEEP,gplhint.
 !******************************************************************************
 !
 !      Copyright 2013 Helmholtz-Zentrum Berlin (HZB)
