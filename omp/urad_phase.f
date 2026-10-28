@@ -1,4 +1,4 @@
-*CMZ :          20/10/2026  11.02.17  by  Michael Scheer
+*CMZ :          28/10/2026  17.56.51  by  Michael Scheer
 *CMZ :  4.03/00 08/09/2026  12.41.50  by  Michael Scheer
 *CMZ :  4.02/01 31/08/2026  07.37.54  by  Michael Scheer
 *CMZ :  4.02/00 13/09/2025  10.16.17  by  Michael Scheer
@@ -68,6 +68,10 @@ c      endif
         if (modewave.ne.0) then
           npinzo_u=npinz
           npinyo_u=npiny
+        endif
+
+        if (modewave.eq.1) then
+          allocate(electrons_u(5*nelec))
         endif
 
         nelec_u=nelec
