@@ -1,4 +1,5 @@
-*CMZ :          08/09/2026  12.41.50  by  Michael Scheer
+*CMZ :          20/10/2026  11.02.17  by  Michael Scheer
+*CMZ :  4.03/00 08/09/2026  12.41.50  by  Michael Scheer
 *CMZ :  4.02/01 31/08/2026  07.37.54  by  Michael Scheer
 *CMZ :  4.02/00 13/09/2025  10.16.17  by  Michael Scheer
 *CMZ :  4.01/07 13/08/2024  10.11.51  by  Michael Scheer
@@ -51,11 +52,11 @@ c+seq,uservar.
 
       nobsv=npinz*npiny
 
-      if (modepin.ne.0.and.nelec.eq.1) then
-        print*,""
-        print*,"        *** Warning in urad_phase: Nelec = 1 and ModePin = 1"
-        print*,""
-      endif
+c      if (modepin.ne.0.and.nelec.eq.1) then
+c        print*,""
+c        print*,"        *** Warning in urad_phase: Nelec = 1 and ModePin = 1"
+c        print*,""
+c      endif
 
       ebeam_u=ebeam
       gamma_u=ebeam_u/emassg1
@@ -95,8 +96,8 @@ c+seq,uservar.
         npinz_u=npinz
         modepin_u=modepin
 
-        ephmin_u=ephmin_u
-        ephmax_u=ephmax_u
+        ephmin_u=ephmin
+        ephmax_u=ephmax
         banwid_u=banwid
         nepho_u=nepho
 
@@ -236,7 +237,7 @@ c              r=xx*(1.0d0+h2/2.0d0-h2**2/8.0d0)
       dispph_u=disppv
       espread_u=espread
 
-      modeph=modeph_u
+      modeph_u=modeph
       pherror_u=pherror
 
 c     urad_amprep calculates stokes_u and arad_u on the m scale
